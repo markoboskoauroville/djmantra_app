@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DJ Mantra: no status bar (more room for the decks); the action bar stays,
+     as it holds the app menu (Preferences, sound settings) on Android. The
+     display cutout is used in landscape. -->
+<resources>
+    <style name="DJMantraTheme" parent="@android:style/Theme.DeviceDefault.DayNight">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>

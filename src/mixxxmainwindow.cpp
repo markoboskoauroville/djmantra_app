@@ -471,7 +471,8 @@ void MixxxMainWindow::initialize() {
         ControlObject::set(ConfigKey("[AutoDJ]", "enabled"), 1.0);
     }
     // The Android smoke test in CI waits for this line
-    qInfo() << "DJ Mantra main window ready";
+    qInfo() << "DJ Mantra main window ready, full screen:" << isFullScreen()
+            << "size" << size();
 #ifdef __ANDROID_PORT__
     // Reading USB drives needs "All files access": asked over the main
     // window, not during the startup
