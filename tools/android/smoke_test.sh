@@ -92,6 +92,15 @@ if [ "$result" != "ok" ]; then
     echo
     echo "FAIL: $result (ready line seen: ${ready_at:-no})"
 fi
+# Sound: the Oboe output must be open and the engine must be running in its
+# callback (an emulator has an audio output too)
+for line in "Sound output open" "First sound callback"; do
+    if ! grep -q "$line" "$OUT/logcat.txt"; then
+        fail=1
+        echo
+        echo "FAIL: no \"$line\" in the log (no sound output)"
+    fi
+done
 if [ -s "$OUT/critical.txt" ]; then
     fail=1
     echo
@@ -112,5 +121,5 @@ elif [ -s "$OUT/main-thread.txt" ]; then
     echo "Main thread while hanging:"
     sed 's/^/    /' "$OUT/main-thread.txt" | head -60
 fi
-[ "$fail" = 0 ] && echo && echo "OK: started, main window ready, alive ${SETTLE}s later, no critical errors"
+[ "$fail" = 0 ] && echo && echo "OK: started, sound output running, main window ready, alive ${SETTLE}s later, no critical errors"
 exit $fail

@@ -355,13 +355,14 @@ void MixxxMainWindow::initialize() {
     // Try to open configured devices. If that fails, display dialogs
     // that allow to either retry, reconfigure devices or exit.
 #ifdef __ANDROID_PORT__
-    // DJ Mantra: no sound output on Android yet (Oboe comes with M4). The
-    // modal sound dialogs below would stop the startup, so only log it.
+    // DJ Mantra: the phone's output (Oboe). The modal sound dialogs below
+    // would stop the startup, so a failure is only logged (and shown in the
+    // sound preferences).
     {
         const SoundDeviceStatus result = m_pCoreServices->getSoundManager()->setupDevices();
         const auto outputs = m_pCoreServices->getSoundManager()->getConfig().getOutputs().count();
         if (result != SoundDeviceStatus::Ok || outputs == 0) {
-            qWarning() << "No sound output yet (status" << static_cast<int>(result)
+            qWarning() << "No sound output (status" << static_cast<int>(result)
                        << "outputs" << outputs << ")";
         }
     }

@@ -15,6 +15,9 @@
 #include "moc_soundmanager.cpp"
 #include "soundio/sounddevice.h"
 #include "soundio/sounddevicenetwork.h"
+#ifdef __OBOE__
+#include "soundio/sounddeviceoboe.h"
+#endif
 #include "soundio/sounddevicenotfound.h"
 #ifdef __PORTAUDIO__
 #include "soundio/sounddeviceportaudio.h"
@@ -85,6 +88,13 @@ SoundManager::SoundManager(UserSettingsPointer pConfig,
     if (!m_config.readFromDisk()) {
         m_config.loadDefaults(this, SoundManagerConfig::ALL);
     }
+#ifdef __OBOE__
+    // Builds without sound output saved a configuration without outputs
+    if (m_config.getOutputs().isEmpty()) {
+        qInfo() << "No sound output configured: using the phone's output";
+        m_config.loadDefaults(this, SoundManagerConfig::ALL);
+    }
+#endif
     checkConfig();
     // Don't write config to disk, yet -- it may be reset to defaults in case
     // previously configured devices were not found.
@@ -143,6 +153,9 @@ QList<SoundDevicePointer> SoundManager::getDeviceList(
 QList<QString> SoundManager::getHostAPIList() const {
     QList<QString> apiList;
 
+#ifdef __OBOE__
+    apiList.push_back(kOboeHostApi);
+#endif
 #ifdef __PORTAUDIO__
     for (PaHostApiIndex i = 0; i < Pa_GetHostApiCount(); i++) {
         const PaHostApiInfo* api = Pa_GetHostApiInfo(i);
@@ -250,6 +263,10 @@ void SoundManager::queryDevices() {
     //qDebug() << "SoundManager::queryDevices()";
 #ifdef __PORTAUDIO__
     queryDevicesPortaudio();
+#endif
+#ifdef __OBOE__
+    // DJ Mantra on Android: the phone's output (Android routes it)
+    m_devices.append(SoundDevicePointer(new SoundDeviceOboe(m_pConfig, this)));
 #endif
     queryDevicesMixxx();
 

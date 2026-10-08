@@ -293,3 +293,44 @@ jobs:
           name: launch-test-x86_64
           path: launch-out
 
+
+  publish:
+    # Every green build of main becomes the download for testers:
+    # https://github.com/<owner>/<repo>/releases/tag/android-latest
+    name: Publish the tested APKs (main only)
+    runs-on: ubuntu-24.04
+    needs: [app, launch]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: djmantra-arm64-v8a-apk
+          path: out
+      - uses: actions/download-artifact@v4
+        with:
+          name: djmantra-x86_64-apk
+          path: out
+      - name: Replace the android-latest pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          VERSION=0.5.0
+          SHORT=${GITHUB_SHA::7}
+          mv out/djmantra-arm64-v8a.apk "out/DJMantra-${VERSION}-${SHORT}-phone-arm64.apk"
+          mv out/djmantra-x86_64.apk "out/DJMantra-${VERSION}-${SHORT}-emulator-x86_64.apk"
+          ls -l out
+          gh release delete android-latest --cleanup-tag --yes || true
+          gh release create android-latest out/*.apk \
+            --prerelease --target "$GITHUB_SHA" \
+            --title "DJ Mantra ${VERSION} (test build ${SHORT})" \
+            --notes "Newest build of main that passed every check: unit tests, the APK library check, and the launch test on an Android emulator (starts, sound output running, main window ready).
+
+          - Phones (Pixel 7 and other 64-bit ARM phones): **DJMantra-${VERSION}-${SHORT}-phone-arm64.apk**
+          - Android emulator: DJMantra-${VERSION}-${SHORT}-emulator-x86_64.apk
+
+          Install: open the file on the phone and allow installing from this source, or \`adb install -r <file>\`. Signed with the public test key, so it updates in place over earlier test builds.
+
+          Commit: ${GITHUB_SHA}"

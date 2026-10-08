@@ -6,6 +6,9 @@
 #include "audio/types.h"
 #include "soundio/sounddevice.h"
 #include "soundio/soundmanager.h"
+#ifdef __OBOE__
+#include "soundio/sounddeviceoboe.h"
+#endif
 #include "soundio/soundmanagerutil.h"
 #include "util/cmdlineargs.h"
 #include "util/math.h"
@@ -497,7 +500,9 @@ void SoundManagerConfig::loadDefaults(SoundManager* soundManager, unsigned int f
                 m_api = MIXXX_PORTAUDIO_DIRECTSOUND_STRING;
             }
 #endif
-#ifdef Q_OS_IOS
+#ifdef __OBOE__
+            m_api = kOboeHostApi;
+#elif defined(Q_OS_IOS)
             m_api = MIXXX_PORTAUDIO_IOSAUDIO_STRING;
 #elif defined(Q_OS_MACOS)
             m_api = MIXXX_PORTAUDIO_COREAUDIO_STRING;
