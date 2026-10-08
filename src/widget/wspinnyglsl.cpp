@@ -5,6 +5,12 @@
 
 #include "moc_wspinnyglsl.cpp"
 
+// OpenGL ES 2 headers (Android) lack GL_RED; the R8 texture used here needs
+// OpenGL ES 3, which all Android 10+ devices provide.
+#ifndef GL_RED
+#define GL_RED 0x1903
+#endif
+
 WSpinnyGLSL::WSpinnyGLSL(
         QWidget* parent,
         const QString& group,

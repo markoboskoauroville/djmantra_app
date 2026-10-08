@@ -1570,7 +1570,6 @@ if(QOPENGL)
     src/waveform/renderers/allshader/waveformrendererlrrgb.cpp
     src/waveform/renderers/allshader/waveformrendererpreroll.cpp
     src/waveform/renderers/allshader/waveformrendererrgb.cpp
-    src/waveform/renderers/allshader/waveformrenderertextured.cpp
     src/waveform/renderers/allshader/waveformrenderersignalbase.cpp
     src/waveform/renderers/allshader/waveformrenderersimple.cpp
     src/waveform/renderers/allshader/waveformrendermark.cpp
@@ -1582,9 +1581,6 @@ if(QOPENGL)
     src/waveform/widgets/allshader/rgbstackedwaveformwidget.cpp
     src/waveform/widgets/allshader/simplewaveformwidget.cpp
     src/waveform/widgets/allshader/waveformwidget.cpp
-    src/waveform/widgets/allshader/waveformwidgettexturedfiltered.cpp
-    src/waveform/widgets/allshader/waveformwidgettexturedrgb.cpp
-    src/waveform/widgets/allshader/waveformwidgettexturedstacked.cpp
     src/widget/openglwindow.cpp
     src/widget/tooltipqopengl.cpp
     src/widget/wglwidgetqopengl.cpp
@@ -1843,6 +1839,16 @@ endif()
 
 set_target_properties(mixxx-lib PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY}")
 target_link_libraries(mixxx PRIVATE mixxx-lib mixxx-gitinfostore)
+
+# Textured waveforms use fixed-function desktop OpenGL, not in OpenGL ES.
+if(QOPENGL AND NOT ANDROID)
+  target_sources(mixxx-lib PRIVATE
+    src/waveform/renderers/allshader/waveformrenderertextured.cpp
+    src/waveform/widgets/allshader/waveformwidgettexturedfiltered.cpp
+    src/waveform/widgets/allshader/waveformwidgettexturedrgb.cpp
+    src/waveform/widgets/allshader/waveformwidgettexturedstacked.cpp
+  )
+endif()
 
 if(ANDROID)
   target_compile_definitions(mixxx-lib PUBLIC __ANDROID_PORT__)

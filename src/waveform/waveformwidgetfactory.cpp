@@ -30,9 +30,12 @@
 #include "waveform/widgets/allshader/rgbstackedwaveformwidget.h"
 #include "waveform/widgets/allshader/rgbwaveformwidget.h"
 #include "waveform/widgets/allshader/simplewaveformwidget.h"
+// The textured waveforms use fixed-function desktop OpenGL (not in OpenGL ES).
+#ifndef QT_OPENGL_ES_2
 #include "waveform/widgets/allshader/waveformwidgettexturedfiltered.h"
 #include "waveform/widgets/allshader/waveformwidgettexturedrgb.h"
 #include "waveform/widgets/allshader/waveformwidgettexturedstacked.h"
+#endif
 #else
 #include "waveform/widgets/qthsvwaveformwidget.h"
 #include "waveform/widgets/qtrgbwaveformwidget.h"
@@ -616,12 +619,14 @@ bool WaveformWidgetFactory::widgetTypeSupportsUntilMark() const {
         return true;
     case WaveformWidgetType::AllShaderRGBStackedWaveform:
         return true;
+#ifndef QT_OPENGL_ES_2
     case WaveformWidgetType::AllShaderTexturedFiltered:
         return true;
     case WaveformWidgetType::AllShaderTexturedRGB:
         return true;
     case WaveformWidgetType::AllShaderTexturedStacked:
         return true;
+#endif
     default:
         break;
     }
@@ -1079,21 +1084,21 @@ void WaveformWidgetFactory::evaluateWidgets() {
             break;
 #endif
         case WaveformWidgetType::AllShaderTexturedFiltered:
-#ifndef MIXXX_USE_QOPENGL
+#if !defined(MIXXX_USE_QOPENGL) || defined(QT_OPENGL_ES_2)
             continue;
 #else
             setWaveformVarsByType.operator()<allshader::WaveformWidgetTexturedFiltered>();
             break;
 #endif
         case WaveformWidgetType::AllShaderTexturedRGB:
-#ifndef MIXXX_USE_QOPENGL
+#if !defined(MIXXX_USE_QOPENGL) || defined(QT_OPENGL_ES_2)
             continue;
 #else
             setWaveformVarsByType.operator()<allshader::WaveformWidgetTexturedRGB>();
             break;
 #endif
         case WaveformWidgetType::AllShaderTexturedStacked:
-#ifndef MIXXX_USE_QOPENGL
+#if !defined(MIXXX_USE_QOPENGL) || defined(QT_OPENGL_ES_2)
             continue;
 #else
             setWaveformVarsByType.operator()<allshader::WaveformWidgetTexturedStacked>();
@@ -1198,6 +1203,7 @@ WaveformWidgetAbstract* WaveformWidgetFactory::createWaveformWidget(
         case WaveformWidgetType::AllShaderHSVWaveform:
             widget = new allshader::HSVWaveformWidget(viewer->getGroup(), viewer);
             break;
+#ifndef QT_OPENGL_ES_2
         case WaveformWidgetType::AllShaderTexturedFiltered:
             widget = new allshader::WaveformWidgetTexturedFiltered(viewer->getGroup(), viewer);
             break;
@@ -1207,6 +1213,7 @@ WaveformWidgetAbstract* WaveformWidgetFactory::createWaveformWidget(
         case WaveformWidgetType::AllShaderTexturedStacked:
             widget = new allshader::WaveformWidgetTexturedStacked(viewer->getGroup(), viewer);
             break;
+#endif
 #else
         case WaveformWidgetType::QtSimpleWaveform:
             widget = new QtSimpleWaveformWidget(viewer->getGroup(), viewer);
