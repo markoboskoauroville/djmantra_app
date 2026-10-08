@@ -432,6 +432,15 @@ SoundSourceProxy::SoundSourceProxy(TrackPointer pTrack)
     findProviderAndInitSoundSource();
 }
 
+SoundSourceProxy::SoundSourceProxy(TrackPointer pTrack, const QString& readFile)
+        : m_pTrack(std::move(pTrack)),
+          m_url(readFile.isEmpty()
+                          ? (m_pTrack ? m_pTrack->getFileInfo().toQUrl() : QUrl())
+                          : QUrl::fromLocalFile(readFile)),
+          m_providerRegistrations(allProviderRegistrationsForUrl(m_url)) {
+    findProviderAndInitSoundSource();
+}
+
 SoundSourceProxy::SoundSourceProxy(const QUrl& url)
         : m_url(url),
           m_providerRegistrations(allProviderRegistrationsForUrl(m_url)) {

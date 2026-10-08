@@ -183,6 +183,11 @@ class TrackDAO : public QObject, public virtual DAO, public virtual GlobalTrackC
     void cleanupTrackLocationsDirectory() const;
     void invalidateTrackLocationsInLibrary() const;
     void markUnverifiedTracksAsDeleted();
+    /// DJ Mantra: directories of the tracks still waiting for verification.
+    QStringList unverifiedTrackDirectories() const;
+    /// DJ Mantra: keep the tracks in these directories as they are, neither
+    /// verified nor missing (their drive is unplugged).
+    void keepTrackLocationsInDirectories(const QStringList& directories);
 
     bool verifyRemainingTracks(
             const QList<mixxx::FileInfo>& libraryRootDirs,

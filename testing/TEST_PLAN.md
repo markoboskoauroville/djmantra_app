@@ -22,6 +22,21 @@ runs the checks for the newest milestone that has an APK.
 - [ ] An MKV or WebM file plays too
 - [ ] Jumping to a cue point inside a video file lands on the beat
 
+## External drives (USB stick, USB disk, SD card)
+Setup: an OTG USB stick or disk with a music folder; the phone connected to adb over Wi-Fi
+(`adb tcpip 5555`, `adb connect <ip>:5555`) so the phone's USB-C port is free for the drive.
+- [ ] First start: the app asks for "All files access" and opens the setting; after allowing it,
+      `/storage/<id>/` is readable (`adb shell ls /storage`)
+- [ ] Plugging in a new drive asks "Add its music to the library?"; "Add" scans it
+- [ ] Loading a song from the drive: logcat shows `LocalTrackCache ... Copied ... KiB`
+      (note how long a 10 MB MP3 and a large video take to load)
+- [ ] **Pull the drive out while the song plays: playback continues to the end, no gap**
+- [ ] The library still lists the drive's songs (not "missing") while it is out, also after a rescan
+- [ ] Plug it back in: no error, a rescan runs by itself ~3 s later, nothing marked missing
+- [ ] Unplug for 1–2 s *while a song is loading*: the load finishes once the drive is back
+- [ ] With the drive out, load a song that was played before: it loads from the copy
+- [ ] Cache size: `adb shell du -sh /data/data/com.djmantra.app/files/track-cache` (as `run-as`)
+
 ## M5 – MIDI
 - [ ] Mix Ultra over Bluetooth appears in `dumpsys midi` and in the app
 - [ ] Button presses show up in logcat

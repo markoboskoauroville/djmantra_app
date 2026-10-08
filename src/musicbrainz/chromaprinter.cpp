@@ -7,6 +7,7 @@
 
 #include "moc_chromaprinter.cpp"
 #include "sources/audiosourcestereoproxy.h"
+#include "sources/localtrackcache.h"
 #include "sources/soundsourceproxy.h"
 #include "track/track.h"
 #include "util/performancetimer.h"
@@ -115,7 +116,9 @@ QString ChromaPrinter::getFingerprint(TrackPointer pTrack) {
     mixxx::AudioSource::OpenParams config;
     // always stereo / 2 channels (see below)
     config.setChannelCount(mixxx::audio::ChannelCount(2));
-    auto pAudioSource = SoundSourceProxy(pTrack).openAudioSource(config);
+    auto pAudioSource = SoundSourceProxy(pTrack,
+            djmantra::LocalTrackCache::readPath(pTrack->getLocation()))
+                                .openAudioSource(config);
     if (!pAudioSource) {
         qDebug()
                 << "Failed to open file for fingerprinting"

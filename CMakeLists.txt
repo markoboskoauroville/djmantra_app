@@ -1002,6 +1002,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/library/missing_hidden/dlghidden.cpp
   src/library/missing_hidden/dlghidden.ui
   src/library/export/missingtracksexport.cpp
+  src/library/externaldrives.cpp
   src/library/missing_hidden/dlgmissing.cpp
   src/library/missing_hidden/dlgmissing.ui
   src/library/missing_hidden/hiddentablemodel.cpp
@@ -1157,6 +1158,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/sources/soundsourceprovider.cpp
   src/sources/soundsourceproviderregistry.cpp
   src/sources/soundsourceproxy.cpp
+  src/sources/localtrackcache.cpp
   src/sources/soundsourcesndfile.cpp
   src/track/albuminfo.cpp
   src/track/beatfactory.cpp
@@ -1224,6 +1226,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/util/imageutils.cpp
   src/util/indexrange.cpp
   src/util/logger.cpp
+  src/util/volumewatcher.cpp
   src/util/logging.cpp
   src/util/mac.cpp
   src/util/moc_included_test.cpp
@@ -1867,6 +1870,18 @@ if(ANDROID)
     QT_ANDROID_MIN_SDK_VERSION 29
     QT_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}"
   )
+  # Music on USB drives and SD cards (/storage/<volume>/...) is read through
+  # plain file paths, which needs "All files access" (MANAGE_EXTERNAL_STORAGE,
+  # requested at startup). The media permissions cover internal storage.
+  if(COMMAND qt_add_android_permission)
+    qt_add_android_permission(mixxx NAME android.permission.MANAGE_EXTERNAL_STORAGE)
+    qt_add_android_permission(mixxx NAME android.permission.READ_EXTERNAL_STORAGE
+      ATTRIBUTES maxSdkVersion 32)
+    qt_add_android_permission(mixxx NAME android.permission.READ_MEDIA_AUDIO)
+    qt_add_android_permission(mixxx NAME android.permission.READ_MEDIA_VIDEO)
+  else()
+    message(WARNING "qt_add_android_permission needs Qt 6.8: storage permissions missing")
+  endif()
 endif()
 
 #
@@ -2255,6 +2270,8 @@ if(BUILD_TESTING)
     src/test/softtakeover_test.cpp
     src/test/soundproxy_test.cpp
     src/test/missingtracksexport_test.cpp
+    src/test/localtrackcache_test.cpp
+    src/test/externaldriveplayback_test.cpp
     src/test/starrating_test.cpp
     src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp

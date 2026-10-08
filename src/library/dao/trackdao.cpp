@@ -1817,6 +1817,34 @@ void TrackDAO::markTracksInDirectoriesAsVerified(const QStringList& directories)
     }
 }
 
+QStringList TrackDAO::unverifiedTrackDirectories() const {
+    QSqlQuery query(m_database);
+    query.prepare(QStringLiteral(
+            "SELECT DISTINCT directory FROM track_locations WHERE needs_verification=1"));
+    QStringList directories;
+    if (!query.exec()) {
+        LOG_FAILED_QUERY(query);
+        return directories;
+    }
+    while (query.next()) {
+        directories.append(query.value(0).toString());
+    }
+    return directories;
+}
+
+void TrackDAO::keepTrackLocationsInDirectories(const QStringList& directories) {
+    QSqlQuery query(m_database);
+    query.prepare(QStringLiteral(
+            "UPDATE track_locations SET needs_verification=0 "
+            "WHERE needs_verification=1 AND directory=:directory"));
+    for (const auto& directory : directories) {
+        query.bindValue(QStringLiteral(":directory"), directory);
+        if (!query.exec()) {
+            LOG_FAILED_QUERY(query);
+        }
+    }
+}
+
 void TrackDAO::markUnverifiedTracksAsDeleted() {
     // kLogger.debug()<< "markUnverifiedTracksAsDeleted" <<
     // QThread::currentThread() << m_database.connectionName();

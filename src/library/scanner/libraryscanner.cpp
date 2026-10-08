@@ -7,6 +7,7 @@
 #include "library/scanner/scannertask.h"
 #include "library/scanner/scannerutil.h"
 #include "moc_libraryscanner.cpp"
+#include "sources/localtrackcache.h"
 #include "sources/soundsourceproxy.h"
 #include "track/track.h"
 #include "util/db/dbconnectionpooled.h"
@@ -330,6 +331,37 @@ void LibraryScanner::cleanUpScan() {
             true);
     m_trackDao.markTracksInDirectoriesAsVerified(
             m_scannerGlobal->verifiedDirectories());
+
+    // DJ Mantra: tracks and directories on a drive that is unplugged right
+    // now (or a library folder that is not mounted) stay as they are. They
+    // are neither "missing" nor relocated, and come back as soon as the drive
+    // does. This also covers a drive pulled out during the scan.
+    {
+        QStringList roots;
+        for (const auto& rootDir : std::as_const(m_libraryRootDirs)) {
+            roots.append(rootDir.location());
+        }
+        QStringList keptTrackDirs;
+        const QStringList trackDirs = m_trackDao.unverifiedTrackDirectories();
+        for (const auto& dir : trackDirs) {
+            if (djmantra::LocalTrackCache::isOnUnreachableDrive(dir, roots)) {
+                keptTrackDirs.append(dir);
+            }
+        }
+        QStringList keptHashDirs;
+        const QStringList hashDirs = m_libraryHashDao.unverifiedDirectories();
+        for (const auto& dir : hashDirs) {
+            if (djmantra::LocalTrackCache::isOnUnreachableDrive(dir, roots)) {
+                keptHashDirs.append(dir);
+            }
+        }
+        if (!keptTrackDirs.isEmpty() || !keptHashDirs.isEmpty()) {
+            kLogger.info() << "Keeping" << keptTrackDirs.size()
+                           << "track directories on unplugged drives:" << keptTrackDirs;
+            m_trackDao.keepTrackLocationsInDirectories(keptTrackDirs);
+            m_libraryHashDao.keepDirectories(keptHashDirs);
+        }
+    }
 
     // After verifying tracks and directories via recursive scanning of the
     // library directories the only unverified tracks will be files that are

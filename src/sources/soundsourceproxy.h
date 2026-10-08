@@ -64,6 +64,11 @@ class SoundSourceProxy {
 
     explicit SoundSourceProxy(TrackPointer pTrack);
 
+    /// DJ Mantra: decode the audio from `readFile` (the local copy of a track
+    /// on an external drive, see LocalTrackCache) instead of the track's own
+    /// file. Only for openAudioSource(): metadata is never written to the copy.
+    SoundSourceProxy(TrackPointer pTrack, const QString& readFile);
+
     // Only needed for testing all available providers explicitly
     SoundSourceProxy(
             TrackPointer pTrack,

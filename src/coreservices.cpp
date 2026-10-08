@@ -17,6 +17,7 @@
 #include "effects/effectsmanager.h"
 #include "engine/enginemixer.h"
 #include "library/coverartcache.h"
+#include "library/externaldrives.h"
 #include "library/library.h"
 #include "library/library_prefs.h"
 #include "library/trackcollection.h"
@@ -565,6 +566,13 @@ void CoreServices::initialize(QApplication* pApp) {
     CoverArtCache::createInstance();
     Clipboard::createInstance();
 
+    // DJ Mantra: before any track is loaded (decks restore their tracks)
+    djmantra::ExternalDrives::configureCache(pConfig);
+#if defined(Q_OS_ANDROID)
+    // Reading USB drives needs "All files access"
+    djmantra::ExternalDrives::requestAllFilesAccess();
+#endif
+
     m_pTrackCollectionManager = std::make_shared<TrackCollectionManager>(
             this,
             pConfig,
@@ -583,6 +591,12 @@ void CoreServices::initialize(QApplication* pApp) {
     // been created. Otherwise Mixxx might hang when accessing
     // the uninitialized singleton instance!
     m_pPlayerManager->bindToLibrary(m_pLibrary.get());
+
+    m_pExternalDrives = std::make_shared<djmantra::ExternalDrives>(
+            nullptr,
+            pConfig,
+            m_pTrackCollectionManager.get(),
+            m_pLibrary.get());
 
     bool musicDirAdded = false;
 
@@ -783,6 +797,8 @@ void CoreServices::finalize() {
 
     Timer t("CoreServices::~CoreServices");
     t.start();
+
+    m_pExternalDrives.reset();
 
     // Stop all pending library operations
     qDebug() << t.elapsed(false).debugMillisWithUnit() << "stopping pending Library tasks";

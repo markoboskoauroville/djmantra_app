@@ -12,6 +12,7 @@
 #include "library/dao/analysisdao.h"
 #include "moc_analyzerthread.cpp"
 #include "sources/audiosourcestereoproxy.h"
+#include "sources/localtrackcache.h"
 #include "sources/soundsourceproxy.h"
 #include "track/track.h"
 #include "util/db/dbconnectionpooled.h"
@@ -129,7 +130,10 @@ void AnalyzerThread::doRun() {
 
         // Get the audio
         const mixxx::AudioSourcePointer audioSource =
-                SoundSourceProxy(m_currentTrack->getTrack()).openAudioSource(openParams);
+                SoundSourceProxy(m_currentTrack->getTrack(),
+                        djmantra::LocalTrackCache::readPath(
+                                m_currentTrack->getTrack()->getLocation()))
+                        .openAudioSource(openParams);
         if (!audioSource) {
             kLogger.warning()
                     << "Failed to open file for analyzing:"

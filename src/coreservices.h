@@ -6,6 +6,9 @@
 #include "util/timer.h"
 
 class QApplication;
+namespace djmantra {
+class ExternalDrives;
+}
 class CmdlineArgs;
 class KeyboardEventFilter;
 class EffectsManager;
@@ -136,6 +139,8 @@ class CoreServices : public QObject {
     std::shared_ptr<DbConnectionPool> m_pDbConnectionPool;
     std::shared_ptr<TrackCollectionManager> m_pTrackCollectionManager;
     std::shared_ptr<Library> m_pLibrary;
+    // DJ Mantra: external drives (USB sticks, disks, SD cards)
+    std::shared_ptr<djmantra::ExternalDrives> m_pExternalDrives;
 
     std::shared_ptr<KeyboardEventFilter> m_pKeyboardEventFilter;
     std::shared_ptr<ConfigObject<ConfigValueKbd>> m_pKbdConfig;

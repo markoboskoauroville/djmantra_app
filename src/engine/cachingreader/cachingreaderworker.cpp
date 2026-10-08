@@ -5,6 +5,7 @@
 
 #include "analyzer/analyzersilence.h"
 #include "moc_cachingreaderworker.cpp"
+#include "sources/localtrackcache.h"
 #include "sources/soundsourceproxy.h"
 #include "track/track.h"
 #include "util/compatibility/qmutex.h"
@@ -175,7 +176,22 @@ void CachingReaderWorker::loadTrack(const TrackPointer& pTrack) {
 
     closeAudioSource();
 
-    if (!pTrack->getFileInfo().checkFileExists()) {
+    // DJ Mantra: tracks on external drives are copied to internal storage
+    // first and played from the copy, so that a drive that is unplugged or
+    // drops out cannot interrupt playback. Waits for a drive that dropped out
+    // for a moment. A newer load request cancels the copy.
+    const djmantra::LocalTrackCache::Result cache = djmantra::LocalTrackCache::ensureCached(
+            pTrack->getLocation(), [this] {
+                return m_newTrackAvailable.loadAcquire() != 0 || m_stop.loadAcquire() != 0;
+            });
+    if (!cache.error.isEmpty()) {
+        kLogger.warning()
+                << m_group
+                << "Not cached:" << cache.error
+                << pTrack->getFileInfo();
+    }
+
+    if (!cache.fromCache && !pTrack->getFileInfo().checkFileExists()) {
         kLogger.warning()
                 << m_group
                 << "File not found"
@@ -190,7 +206,7 @@ void CachingReaderWorker::loadTrack(const TrackPointer& pTrack) {
 
     mixxx::AudioSource::OpenParams config;
     config.setChannelCount(CachingReaderChunk::kChannels);
-    m_pAudioSource = SoundSourceProxy(pTrack).openAudioSource(config);
+    m_pAudioSource = SoundSourceProxy(pTrack, cache.readPath).openAudioSource(config);
     if (!m_pAudioSource) {
         kLogger.warning()
                 << m_group

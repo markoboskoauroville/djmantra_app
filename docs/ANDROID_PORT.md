@@ -91,6 +91,31 @@ Algoriddim's djay artwork or branding.
 - Android: FFmpeg is now enabled (vcpkg `ffmpeg[avcodec,avformat,swresample,swscale]`). It
   also decodes MP4/AAC audio, since FAAD is not used on Android.
 
+### 7. External drives (USB sticks, USB disks, SD cards)
+- **Local copies** (`src/sources/localtrackcache.cpp`): a song on an external drive is copied
+  to internal storage when a deck loads it, and the deck, the analyzer and fingerprinting read
+  only the copy. Pulling the drive out, a loose OTG cable or a sleeping disk cannot interrupt
+  playback. If the drive drops out while the copy is being made, the copy waits up to 30 s
+  for it to come back and continues where it stopped. Copies are reused while the original is
+  unchanged (size + modification time) or unreachable; least recently used copies are deleted
+  above the limit (8 GB, and 300 MB of storage is always left free). Files larger than the
+  limit play from the drive.
+- **Library**: a scan never marks tracks as missing, or relocates them, while their drive (or
+  library folder) is unplugged; they are just kept (`LibraryScanner::cleanUpScan`).
+- **Drive watcher** (`src/util/volumewatcher.cpp`, `src/library/externaldrives.cpp`): polls
+  for drives every 2 s. A returning drive with library folders triggers a rescan 3 s later; a
+  new drive is offered for the library once ("Not this drive" is remembered).
+- **Android**: drives are `/storage/<volume id>/` (stable across replugs). Reading them with
+  file paths needs "All files access" (`MANAGE_EXTERNAL_STORAGE`); the app asks at startup.
+- Settings in `mixxx.cfg`, group `[DJMantra]`: `LocalCacheMode` (0 off, 1 external drives,
+  2 all files), `LocalCacheMaxMB`, `LocalCacheDir`, `AskToAddDrives`, `IgnoredDrives`.
+- Tests: `src/test/localtrackcache_test.cpp` (copy, reuse, stale copies, unplugged drive,
+  waiting for a drive, eviction, decoding from the copy, scanner keeps tracks) and
+  `src/test/externaldriveplayback_test.cpp` (a deck keeps playing when the file becomes
+  unreadable; without the cache the same test goes silent).
+- Not yet: copying ahead (next track in Auto DJ or playlist) in the background, and a
+  progress indicator while a large video is copied.
+
 ## Milestones
 
 - [x] **M0** Import Mixxx 2.5.6 unmodified (one commit, so our changes diff against it)

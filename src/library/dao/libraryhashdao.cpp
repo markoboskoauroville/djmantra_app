@@ -147,6 +147,34 @@ void LibraryHashDAO::invalidateAllDirectories() {
     }
 }
 
+QStringList LibraryHashDAO::unverifiedDirectories() const {
+    QSqlQuery query(m_database);
+    query.prepare(QStringLiteral(
+            "SELECT directory_path FROM LibraryHashes WHERE needs_verification=1"));
+    QStringList directories;
+    if (!query.exec()) {
+        LOG_FAILED_QUERY(query);
+        return directories;
+    }
+    while (query.next()) {
+        directories.append(query.value(0).toString());
+    }
+    return directories;
+}
+
+void LibraryHashDAO::keepDirectories(const QStringList& directories) {
+    QSqlQuery query(m_database);
+    query.prepare(QStringLiteral(
+            "UPDATE LibraryHashes SET needs_verification=0 "
+            "WHERE needs_verification=1 AND directory_path=:directory"));
+    for (const auto& directory : directories) {
+        query.bindValue(QStringLiteral(":directory"), directory);
+        if (!query.exec()) {
+            LOG_FAILED_QUERY(query);
+        }
+    }
+}
+
 void LibraryHashDAO::markUnverifiedDirectoriesAsDeleted() {
     //qDebug() << "LibraryHashDAO::markUnverifiedDirectoriesAsDeleted"
     //<< QThread::currentThread() << m_database.connectionName();
