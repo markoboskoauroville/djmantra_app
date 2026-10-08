@@ -572,8 +572,8 @@ void CoreServices::initialize(QApplication* pApp) {
     // DJ Mantra: before any track is loaded (decks restore their tracks)
     djmantra::ExternalDrives::configureCache(pConfig);
 #if defined(Q_OS_ANDROID)
-    // Reading USB drives needs "All files access"
-    djmantra::ExternalDrives::requestAllFilesAccess();
+    // "All files access" (for USB drives) is asked for once the main window
+    // is up: MixxxMainWindow::initialize()
     // The Mix Ultra over Bluetooth LE: scanning and connecting need permission
     {
         QBluetoothPermission bluetooth;

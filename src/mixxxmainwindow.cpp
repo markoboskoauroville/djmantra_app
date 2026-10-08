@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QOpenGLContext>
+#include <QTimer>
 #include <QUrl>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -33,6 +34,7 @@
 #include "broadcast/broadcastmanager.h"
 #endif
 #include "control/controlindicatortimer.h"
+#include "library/externaldrives.h"
 #include "library/library.h"
 #include "library/library_prefs.h"
 #ifdef __ENGINEPRIME__
@@ -463,6 +465,11 @@ void MixxxMainWindow::initialize() {
     }
     // The Android smoke test in CI waits for this line
     qInfo() << "DJ Mantra main window ready";
+#ifdef __ANDROID_PORT__
+    // Reading USB drives needs "All files access": asked over the main
+    // window, not during the startup
+    QTimer::singleShot(0, this, [] { djmantra::ExternalDrives::requestAllFilesAccess(); });
+#endif
 }
 
 MixxxMainWindow::~MixxxMainWindow() {

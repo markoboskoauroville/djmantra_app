@@ -47,8 +47,14 @@ void OpenGLWindow::resizeGL(int w, int h) {
         m_pWidget->resizeGL(static_cast<int>(static_cast<float>(w) * devicePixelRatio()),
                 static_cast<int>(static_cast<float>(h) * devicePixelRatio()));
         // additional paint and swap to avoid flickering
-        m_pWidget->paintGL();
-        m_pWidget->swapBuffers();
+#ifdef __ANDROID_PORT__
+        // Not without a surface (see event())
+        if (isExposed())
+#endif
+        {
+            m_pWidget->paintGL();
+            m_pWidget->swapBuffers();
+        }
 
         m_pWidget->doneCurrent();
     }
@@ -66,6 +72,17 @@ bool OpenGLWindow::event(QEvent* pEv) {
     // and a stack overflow. The boolean m_handlingEvent protects against
     // this recursion.
     const auto t = pEv->type();
+
+#ifdef __ANDROID_PORT__
+    // Android takes the window's surface away (another window on top, app in
+    // the background), but Qt still paints on an update request and then
+    // uses a context that is not there: a crash at the first start on the
+    // emulator (CI launch test). Nothing can be shown anyway; the next
+    // expose paints again.
+    if ((t == QEvent::UpdateRequest || t == QEvent::Paint) && !isExposed()) {
+        return true;
+    }
+#endif
 
     bool result = QOpenGLWindow::event(pEv);
 
