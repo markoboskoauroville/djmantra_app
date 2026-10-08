@@ -50,6 +50,8 @@ public final class MidiBridge {
     private static MidiBridge sInstance;
 
     private final Context mContext;
+    // For keeping the screen on (the context Qt passes is its activity)
+    private final Activity mActivity;
     private final String mName;
     private final long mNativeHandle;
     private final MidiManager mMidi;
@@ -65,6 +67,7 @@ public final class MidiBridge {
     private native void nativeConnected(long handle, boolean connected, String transport);
 
     private MidiBridge(Context context, String name, long nativeHandle) {
+        mActivity = context instanceof Activity ? (Activity) context : null;
         mContext = context.getApplicationContext();
         mName = name.toLowerCase(Locale.ROOT);
         mNativeHandle = nativeHandle;
@@ -311,7 +314,7 @@ public final class MidiBridge {
 
     /** Keeps the screen on while a controller is connected. */
     private void keepScreenOn(boolean on) {
-        Activity activity = org.qtproject.qt.android.QtNative.activity();
+        final Activity activity = mActivity;
         if (activity == null) {
             return;
         }
