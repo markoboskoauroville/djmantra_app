@@ -43,7 +43,9 @@ jobs:
         with:
           path: vcpkg-cache
           key: vcpkg-${{ matrix.triplet }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-${{ github.sha }}
-          restore-keys: vcpkg-${{ matrix.triplet }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-
+          restore-keys: |
+            vcpkg-${{ matrix.triplet }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-
+            vcpkg-${{ matrix.triplet }}-
 
       - name: Build dependencies
         run: |

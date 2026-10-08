@@ -39,7 +39,7 @@ Q_IMPORT_PLUGIN(QIOSIntegrationPlugin)
 #elif defined(Q_OS_MACOS)
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
 Q_IMPORT_PLUGIN(QMacStylePlugin)
-#elif defined(Q_OS_LINUX)
+#elif (defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID))
 Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
 #else
 #error "Q_IMPORT_PLUGIN() for the current patform is missing"

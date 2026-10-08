@@ -47,11 +47,11 @@
 #include "util/sandbox.h"
 #endif
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 #include <X11/XKBlib.h>
 #endif
 
-#if defined(Q_OS_LINUX) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if (defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <X11/Xlibint.h>
 #include <QtX11Extras/QX11Info>
 
@@ -82,7 +82,7 @@ void clearHelper(std::shared_ptr<T>& ref_ptr, const char* name) {
 
 // hack around https://gitlab.freedesktop.org/xorg/lib/libx11/issues/25
 // https://github.com/mixxxdj/mixxx/issues/9533
-#if defined(Q_OS_LINUX) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if (defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 typedef Bool (*WireToErrorType)(Display*, XErrorEvent*, xError*);
 
 constexpr int NUM_HANDLERS = 256;
@@ -102,7 +102,7 @@ Bool __xErrorHandler(Display* display, XErrorEvent* event, xError* error) {
 
 #endif
 
-#if defined(Q_OS_LINUX)
+#if (defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID))
 QLocale localeFromXkbSymbol(const QString& xkbLayout) {
     // This maps XKB layouts to locales of keyboard mappings that are shipped with Mixxx
     static const QMap<QString, QLocale> xkbToLocaleMap = {
@@ -252,7 +252,7 @@ QString getCurrentXkbLayoutName() {
 // to "ibus engine". QGuiApplication::inputMethod() does not work with GNOME and XFCE
 // https://bugreports.qt.io/browse/QTBUG-137302
 inline QLocale inputLocale() {
-#if defined(Q_OS_LINUX)
+#if (defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID))
     QString layoutName = getCurrentXkbLayoutName();
     if (!layoutName.isEmpty()) {
         qDebug() << "Keyboard Layout from XKB:" << layoutName;
@@ -449,7 +449,7 @@ void CoreServices::initialize(QApplication* pApp) {
 
     VersionStore::logBuildDetails();
 
-#if defined(Q_OS_LINUX) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if (defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     // XESetWireToError will segfault if running as a Wayland client
     if (pApp->platformName() == QLatin1String("xcb")) {
         for (auto i = 0; i < NUM_HANDLERS; ++i) {

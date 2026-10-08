@@ -146,7 +146,7 @@ void ScreenSaverHelper::uninhibitInternal()
     s_enabled = false;
 }
 
-#elif defined(Q_OS_LINUX)
+#elif (defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID))
 const char *SCREENSAVERS[][4] = {
     // org.freedesktop.ScreenSaver is the standard. should work for gnome and kde too, 
     // but I add their specific names too

@@ -6,6 +6,7 @@
   "dependencies": [
     "chromaprint",
     "fftw3",
+    "gtest",
     "libebur128",
     "libflac",
     "libid3tag",
