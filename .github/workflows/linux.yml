@@ -1,0 +1,58 @@
+name: Linux build & tests
+
+# Baseline: the Mixxx engine must keep building and passing its own test
+# suite on desktop Linux while the Android port is developed.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    name: Ubuntu 24.04 (Qt 6)
+    runs-on: ubuntu-24.04
+    env:
+      CCACHE_DIR: /home/runner/.cache/ccache
+      CCACHE_MAXSIZE: 2G
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ninja-build
+          tools/debian_buildenv.sh setup < /dev/null
+
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.cache/ccache
+          key: ccache-linux-${{ github.sha }}
+          restore-keys: ccache-linux-
+
+      - name: Configure
+        run: >-
+          cmake -S . -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          -DQT6=ON -DQML=ON -DBULK=ON -DFFMPEG=ON -DMAD=ON -DMODPLUG=ON
+          -DWAVPACK=ON -DINSTALL_USER_UDEV_RULES=OFF -DWARNINGS_FATAL=OFF
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        working-directory: build
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: ctest --timeout 45 --output-on-failure
+
+      - name: Show ccache stats
+        if: always()
+        run: ccache -s
