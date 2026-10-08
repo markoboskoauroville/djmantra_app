@@ -1218,6 +1218,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/track/trackrecord.cpp
   src/track/trackref.cpp
   src/util/battery/battery.cpp
+  src/util/bundledresources.cpp
   src/util/cache.cpp
   src/util/clipboard.cpp
   src/util/cmdlineargs.cpp
@@ -1877,6 +1878,11 @@ if(QOPENGL AND NOT ANDROID)
   )
 endif()
 
+# DJ Mantra's own version (the engine stays Mixxx ${CMAKE_PROJECT_VERSION})
+set(DJMANTRA_VERSION "0.5.0")
+set(DJMANTRA_VERSION_CODE 5)
+target_compile_definitions(mixxx-lib PUBLIC DJMANTRA_VERSION="${DJMANTRA_VERSION}")
+
 if(ANDROID)
   target_compile_definitions(mixxx-lib PUBLIC __ANDROID_PORT__)
   # mediandk: FFmpeg's MediaCodec (hardware decoder) support
@@ -1914,10 +1920,29 @@ if(ANDROID)
     QT_ANDROID_PACKAGE_NAME com.djmantra.app
     QT_ANDROID_TARGET_SDK_VERSION 35
     QT_ANDROID_MIN_SDK_VERSION 29
-    QT_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}"
-    # Java helpers (Storage Access Framework, MIDI), copied over Qt's template
-    QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/packaging/android/package"
+    QT_ANDROID_VERSION_NAME "${DJMANTRA_VERSION}"
+    QT_ANDROID_VERSION_CODE "${DJMANTRA_VERSION_CODE}"
+    # Manifest (name DJ Mantra, icon), Java helpers (Storage Access Framework,
+    # MIDI) and the resources in assets/res, assembled in the build tree
+    QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/android-package"
   )
+  # Without a resource folder the app finds no skin and crashes at start
+  # (phone test run #31). Re-staged on every build.
+  add_custom_target(djmantra-android-package ALL
+    COMMAND "${CMAKE_COMMAND}"
+      "-DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
+      "-DPACKAGE_DIR=${CMAKE_CURRENT_BINARY_DIR}/android-package"
+      -P "${CMAKE_CURRENT_SOURCE_DIR}/tools/android/stage_android_package.cmake"
+    COMMENT "Staging the Android package (manifest, icon, Java, assets/res)"
+    VERBATIM
+  )
+  add_dependencies(mixxx djmantra-android-package)
+  # Also at configure time, so the directory exists when Qt reads it
+  execute_process(COMMAND "${CMAKE_COMMAND}"
+    "-DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
+    "-DPACKAGE_DIR=${CMAKE_CURRENT_BINARY_DIR}/android-package"
+    -P "${CMAKE_CURRENT_SOURCE_DIR}/tools/android/stage_android_package.cmake"
+    COMMAND_ERROR_IS_FATAL ANY)
   # QtAndroidPrivate::startActivity() for the folder picker's result. In Qt 6.8
   # the CorePrivate target comes with Qt6::Core (a separate package since 6.9).
   if(NOT TARGET Qt6::CorePrivate)
@@ -2337,6 +2362,7 @@ if(BUILD_TESTING)
     src/test/externalcontent_test.cpp
     src/test/phrasecontrol_test.cpp
     src/test/androidmidicontroller_test.cpp
+    src/test/bundledresources_test.cpp
     src/test/starrating_test.cpp
     src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp

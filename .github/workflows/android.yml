@@ -206,8 +206,90 @@ jobs:
           tools/android/check_apk_libs.sh "apk-out/djmantra-${{ matrix.abi }}.apk" \
             "${{ matrix.abi }}" 29 "${DJMANTRA_NDK:?}" | tee -a "$GITHUB_STEP_SUMMARY"
 
+      - name: Check name, icon and resources in the APK
+        run: |
+          set -o pipefail
+          BT=$(ls -d "$ANDROID_SDK_ROOT"/build-tools/* | sort -V | tail -1)
+          APK="apk-out/djmantra-${{ matrix.abi }}.apk"
+          "$BT/aapt" dump badging "$APK" | grep -E "^(package|application-label|application:)" | tee -a "$GITHUB_STEP_SUMMARY"
+          "$BT/aapt" dump badging "$APK" | grep -q "^application-label:'DJ Mantra'" \
+            || { echo "FAIL: the launcher label is not DJ Mantra"; exit 1; }
+          "$BT/aapt" dump badging "$APK" | grep -q "icon='res/" \
+            || { echo "FAIL: no launcher icon"; exit 1; }
+          FILES=$(unzip -l "$APK" | grep -c " assets/res/" || true)
+          echo "assets/res: $FILES files" | tee -a "$GITHUB_STEP_SUMMARY"
+          unzip -l "$APK" | grep -q " assets/res/djmantra-res.stamp" \
+            || { echo "FAIL: assets/res (skins, mappings) missing from the APK"; exit 1; }
+          unzip -l "$APK" | grep -q " assets/res/controllers/Hercules DJControl Mix Ultra.midi.xml" \
+            || { echo "FAIL: the Mix Ultra mapping is missing from the APK"; exit 1; }
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: djmantra-${{ matrix.abi }}-apk
           path: apk-out/djmantra-${{ matrix.abi }}.apk
+
+      - name: Collect the unstripped library (names the functions in a crash)
+        run: |
+          mkdir -p symbols
+          LIB=$(find build-android -maxdepth 2 -name "libmixxx_${{ matrix.abi }}.so" | head -1)
+          [ -n "$LIB" ] || { echo "libmixxx_${{ matrix.abi }}.so not found"; exit 1; }
+          cp "$LIB" symbols/
+          ls -l symbols
+
+      - name: Upload symbols
+        uses: actions/upload-artifact@v4
+        with:
+          name: djmantra-${{ matrix.abi }}-symbols
+          path: symbols
+          retention-days: 14
+
+  launch:
+    # Phone test run #31 crashed 25 s after start; this catches such a crash
+    # (and critical-error dialogs) before an APK reaches the phone.
+    name: Launch test on the emulator (x86_64)
+    runs-on: ubuntu-24.04
+    needs: app
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: djmantra-x86_64-apk
+          path: apk
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: djmantra-x86_64-symbols
+          path: symbols
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Start the app on an emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          emulator-options: -no-window -gpu swiftshader_indirect -no-boot-anim -camera-back none -no-snapshot
+          disable-animations: true
+          script: tools/android/smoke_test.sh apk/djmantra-x86_64.apk launch-out symbols
+
+      - name: Summary
+        if: always()
+        run: |
+          [ -f launch-out/summary.txt ] && cat launch-out/summary.txt >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Upload launch test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: launch-test-x86_64
+          path: launch-out
+

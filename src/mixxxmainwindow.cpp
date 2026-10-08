@@ -162,7 +162,20 @@ void MixxxMainWindow::initializeQOpenGL() {
             SharedGLContext::setWidget(widget);
             // When the widget's QOpenGLWindow has been initialized, we continue
             // with the actual initialization
+#ifdef __ANDROID_PORT__
+            // DJ Mantra: not from inside QOpenGLWindow::resizeEvent(), where
+            // the whole startup (skin, dialogs with their own event loops)
+            // ran before and crashed on the phone (run #31). Queued, it runs
+            // once the GL window has finished initializing.
+            connect(widget,
+                    &WInitialGLWidget::onInitialized,
+                    this,
+                    &MixxxMainWindow::initialize,
+                    static_cast<Qt::ConnectionType>(
+                            Qt::QueuedConnection | Qt::SingleShotConnection));
+#else
             connect(widget, &WInitialGLWidget::onInitialized, this, &MixxxMainWindow::initialize);
+#endif
             widget->show();
             return;
         }
@@ -435,6 +448,8 @@ void MixxxMainWindow::initialize() {
         qDebug("Enabling Auto DJ from CLI flag.");
         ControlObject::set(ConfigKey("[AutoDJ]", "enabled"), 1.0);
     }
+    // The Android smoke test in CI waits for this line
+    qInfo() << "DJ Mantra main window ready";
 }
 
 MixxxMainWindow::~MixxxMainWindow() {

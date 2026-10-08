@@ -3,9 +3,11 @@
 #include <QApplication>
 #include <QDir>
 #include <QIODevice>
+#include <QStandardPaths>
 #include <QTextStream>
 #include <QtDebug>
 
+#include "util/bundledresources.h"
 #include "util/cmdlineargs.h"
 #include "util/color/rgbcolor.h"
 #include "util/xml.h"
@@ -65,7 +67,18 @@ QString computeResourcePathImpl() {
                         "'--resource-path <path>'.");
             }
         }
-#if defined(__UNIX__)
+#if defined(Q_OS_ANDROID)
+        // DJ Mantra: the resources come packaged in the APK and are copied
+        // to app storage once per build (Android also defines __UNIX__)
+        else {
+            static const QString kInstalled = mixxx::BundledResources::install(
+                    QStringLiteral("assets:/res"),
+                    QStandardPaths::writableLocation(
+                            QStandardPaths::AppDataLocation) +
+                            QStringLiteral("/res"));
+            qResourcePath = kInstalled;
+        }
+#elif defined(__UNIX__)
         else if (mixxxDir.cd(QStringLiteral("../share/mixxx"))) {
             qResourcePath = mixxxDir.absolutePath();
         }

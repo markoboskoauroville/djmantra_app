@@ -33,7 +33,14 @@ namespace {
 const QVersionNumber kMixxxVersionNumber = QVersionNumber(
         MIXXX_VERSION_MAJOR, MIXXX_VERSION_MINOR, MIXXX_VERSION_PATCH);
 const QString kMixxxVersionSuffix = QString(MIXXX_VERSION_SUFFIX);
+#ifdef __ANDROID_PORT__
+// DJ Mantra: the name in window and dialog titles and the About box. Only
+// for display: settings stay in .mixxx and version() stays Mixxx's (the
+// settings upgrade compares it).
+const QString kMixxx = QStringLiteral("DJ Mantra");
+#else
 const QString kMixxx = QStringLiteral("Mixxx");
+#endif
 const QString kBuildFlags = QString(MIXXX_BUILD_FLAGS);
 
 } // namespace

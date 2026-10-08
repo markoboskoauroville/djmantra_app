@@ -21,7 +21,12 @@ Q_DECLARE_FLAGS(LogFlags, LogFlag);
 Q_DECLARE_OPERATORS_FOR_FLAGS(LogFlags);
 
 /// Default log level for (console) logs.
+#ifdef Q_OS_ANDROID
+// DJ Mantra: phone tests read the app's info messages in logcat
+constexpr LogLevel kLogLevelDefault = LogLevel::Info;
+#else
 constexpr LogLevel kLogLevelDefault = LogLevel::Warning;
+#endif
 constexpr qint64 kLogMaxFileSizeDefault = 100'000'000; // 100 MB
 
 /// Default log level for flushing the buffered log stream.

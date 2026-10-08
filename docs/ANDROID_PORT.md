@@ -58,6 +58,26 @@ PortMidi has no Android backend.
     protobuf, ms-gsl.
   - Note: AAC/M4A decoding comes later, through FFmpeg or NDK `AMediaCodec`.
 - CI (GitHub Actions): build the APK, then run on an API 34 `pixel_7` emulator.
+- Done (after phone test run #31):
+  - `tools/android/stage_android_package.cmake` assembles the package source dir in the build
+    tree: `packaging/android/package` (own `AndroidManifest.xml` from Qt 6.8.3's template with
+    the label **DJ Mantra** and the icon, Java helpers) plus `assets/res` (skins, controllers,
+    effects, fonts, keyboard, qml, translations `*.qm`; about 45 MB, 2800 files) with an index
+    and a per-build stamp.
+  - At start, `computeResourcePathImpl()` has a `Q_OS_ANDROID` branch (Android also defines
+    `__UNIX__`, so it used to look for `../share/mixxx` and found nothing):
+    `BundledResources::install()` copies `assets:/res` to `files/res` once per build.
+  - The name: `VersionStore::applicationName()` is "DJ Mantra" on Android (titles, About box);
+    `versionName` 0.5.0 (`DJMANTRA_VERSION`), the About box adds "(Mixxx 2.5.6 engine)".
+    `version()` and the `.mixxx` settings folder stay as they are, because the settings upgrade
+    and existing installs depend on them.
+  - Icon: `tools/android/gen_launcher_icon.py` writes an adaptive vector icon (two waveforms
+    colored by section, white playhead); preview `docs/djmantra-icon.png`.
+  - Startup no longer runs inside `QOpenGLWindow::resizeEvent()` on Android (queued), and all
+    Qt messages also go to logcat (tag `DJMantra`).
+  - CI checks the label, icon and `assets/res` in every APK, keeps the unstripped library
+    (artifact `djmantra-<abi>-symbols`) and starts the x86_64 APK on an emulator
+    (`tools/android/smoke_test.sh`): a crash, a critical error or no main window fails the run.
 
 ### 4. Touch UI (`res/qml/djmantra/`)
 This uses the familiar mobile DJ layout, but it is our own design and does not copy

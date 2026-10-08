@@ -16,6 +16,10 @@
 #include <atomic>
 #include <string_view>
 
+#ifdef Q_OS_ANDROID
+#include <android/log.h>
+#endif
+
 #include "util/assert.h"
 #include "util/cmdlineargs.h"
 #include "util/compatibility/qmutex.h"
@@ -197,6 +201,29 @@ inline void writeToStdErr(
     const QByteArray formattedMessage =
             formattedMessageStr.replace(kThreadNamePattern, threadName)
                     .toLocal8Bit();
+
+#ifdef Q_OS_ANDROID
+    // stderr goes nowhere on Android: send every message to logcat as well
+    // (tag DJMantra), so phone tests see what the app reports.
+    int priority = ANDROID_LOG_DEBUG;
+    switch (type) {
+    case QtInfoMsg:
+        priority = ANDROID_LOG_INFO;
+        break;
+    case QtWarningMsg:
+        priority = ANDROID_LOG_WARN;
+        break;
+    case QtCriticalMsg:
+        priority = ANDROID_LOG_ERROR;
+        break;
+    case QtFatalMsg:
+        priority = ANDROID_LOG_FATAL;
+        break;
+    default:
+        break;
+    }
+    __android_log_write(priority, "DJMantra", formattedMessage.constData());
+#endif
 
     const auto locked = lockMutex(&s_mutexStdErr);
     const std::size_t written = fwrite(

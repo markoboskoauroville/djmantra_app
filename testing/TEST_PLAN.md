@@ -57,13 +57,29 @@ Setup: OTG stick or disk with a music folder; adb over Wi-Fi (`adb tcpip 5555`,
       nothing disappears; plug it back in: green again
 - [ ] Restart the app with the stick out: the folders are still there (offline)
 
-## Newest milestone: M5 Android MIDI + Mix Ultra mapping + beat lights (CI run #29 or newer)
-Logcat for all of it: `adb logcat -s DJMantraMIDI:* DJMantraStorage:* AndroidRuntime:E`
-(the controller's every incoming message is logged as `in 91 07 7F` etc.).
+## Newest milestone: M5 Android MIDI + Mix Ultra mapping + beat lights (CI run #33 or newer)
+Logcat for all of it: `adb logcat -s DJMantra:* DJMantraMIDI:* DJMantraStorage:* AndroidRuntime:E`
+(the controller's every incoming message is logged as `in 91 07 7F` etc.). Since run #33 every
+app message goes to logcat with the tag **DJMantra** (Info level and up).
 
-**Start**
-- [ ] The app starts and stays running (no `libomp.so` crash). **Launch time**: tap → first screen,
-      on the Pixel 7 and the emulator (`adb shell am start -W com.djmantra.app/...` gives TotalTime)
+CI now starts every x86_64 APK on an emulator first (job "Launch test on the emulator"): the job
+fails on a crash, a critical error or no main window. Its output (logcat, screenshot, a
+symbolized backtrace after a crash) is the artifact `launch-test-x86_64`. The unstripped
+libraries are in `djmantra-<abi>-symbols`: with them `ndk-stack -sym <dir> -i tombstone.txt`
+names the functions of a phone crash.
+
+**Start (run #31 problems)**
+- [ ] The launcher shows **DJ Mantra** with the new icon (two waveforms in section colors, deck 1
+      above deck 2, white playhead); Settings → Apps shows version **0.5.0**
+- [ ] First start of a new build: logcat shows `Installing resources from "assets:/res"` and
+      `Installed ~2800 resource files, 0 failed`, then `Loading resources from ".../files/res/"`.
+      **No** "qResourcePath is empty" dialog
+- [ ] The main window (skin) appears; logcat `DJ Mantra main window ready`; dialog titles say
+      "DJ Mantra - ...", not "Mixxx - ..."
+- [ ] Second start: no "Installing resources" line (the copy is kept), start is faster
+- [ ] The app starts and stays running (no `libomp.so` crash, no SIGSEGV). **Launch time**: tap →
+      first screen, on the Pixel 7 and the emulator (`adb shell am start -W com.djmantra.app/...`
+      gives TotalTime)
 - [ ] First start asks for **"All files access"** (explanation, then the system screen); after
       allowing it, coming back to the app works
 - [ ] First start asks for **Bluetooth** ("Nearby devices"); allow it
