@@ -121,5 +121,26 @@ elif [ -s "$OUT/main-thread.txt" ]; then
     echo "Main thread while hanging:"
     sed 's/^/    /' "$OUT/main-thread.txt" | head -60
 fi
+# The screenshot, small, in the log too (artifacts may be hard to reach):
+# between the markers, base64 of a PNG
+if [ -s "$OUT/screen.png" ] && command -v python3 > /dev/null; then
+    python3 - "$OUT/screen.png" "$OUT/screen-small.png" <<'PY' || true
+import sys
+try:
+    from PIL import Image
+except ImportError:
+    sys.exit(0)
+img = Image.open(sys.argv[1]).convert("RGB")
+img.thumbnail((800, 800))
+img.save(sys.argv[2], optimize=True)
+PY
+    if [ -s "$OUT/screen-small.png" ]; then
+        echo
+        echo "SCREENSHOT-BASE64-BEGIN"
+        base64 -w 0 "$OUT/screen-small.png"
+        echo
+        echo "SCREENSHOT-BASE64-END"
+    fi
+fi
 [ "$fail" = 0 ] && echo && echo "OK: started, sound output running, main window ready, alive ${SETTLE}s later, no critical errors"
 exit $fail

@@ -81,13 +81,21 @@ names the functions of a phone crash.
       "Access to USB drives" box opens over it (OK → system screen), no folder picker (the phone's
       Music folder becomes the first library folder: logcat `Library folder ... added` or
       `not readable yet`; more folders with "+" in Folders), no menu-bar question, no sound
-      dialog (logcat `No sound output yet` until Oboe, M4)
+      dialog (a failure only logs `No sound output`)
 - [ ] The app starts and stays running (no `libomp.so` crash, no SIGSEGV). **Launch time**: tap →
       first screen, on the Pixel 7 and the emulator (`adb shell am start -W com.djmantra.app/...`
       gives TotalTime)
 - [ ] First start asks for **"All files access"** (explanation, then the system screen); after
       allowing it, coming back to the app works
 - [ ] First start asks for **Bluetooth** ("Nearby devices"); allow it
+
+**Sound (Oboe, new since run #39)**
+- [ ] logcat: `Sound output open: 48000 Hz, 2 channels, ... API AAudio` and `First sound callback`
+- [ ] Load a song on deck 1 and play it: it is heard on the **phone speaker**, without crackles
+      at the default buffer; note the latency setting (Preferences → Sound Hardware)
+- [ ] Plug in USB-C headphones (or connect a Bluetooth speaker) while playing: logcat
+      `Sound output disconnected (ErrorDisconnected), reopening`, then sound continues there
+- [ ] Unplug them again: sound returns to the speaker, the app keeps running
 
 **USB stick through the folder picker (SAF)**: see "External drives" above; the key checks:
 - [ ] Plugging the stick in offers it; "Add to library" opens **Android's folder picker on the stick**

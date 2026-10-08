@@ -18,7 +18,17 @@ build, and an experimental QML UI (`res/qml`, `src/qml`), and the port builds on
 
 ## What has to change
 
-### 1. Audio: `SoundDeviceOboe` (new)
+### 1. Audio: `SoundDeviceOboe` (done, `src/soundio/sounddeviceoboe.*`)
+- Done: host API "Android (Oboe)" with one device, the output Android routes media to
+  (speaker, USB audio, Bluetooth). AAudio (OpenSL ES on old phones), float, low latency,
+  shared mode, the configured sample rate (default 48 kHz, Oboe resamples if the device
+  differs) and fixed buffers (`setFramesPerDataCallback`), as the engine works in fixed
+  buffers. The callback drives the engine like PortAudio's clock-reference device. On a
+  disconnect (headphones or a Bluetooth speaker come or go) the stream is reopened on the
+  new route. The default configuration uses it, also over a saved one without outputs.
+- Next: a list of outputs (`AudioManager.getDevices`) for two outputs at once (M8).
+
+The original plan:
 PortAudio, which Mixxx uses on desktop and iOS, has no Android backend. So we add
 `src/soundio/sounddeviceoboe.{h,cpp}`, a `SoundDevice` subclass built on Oboe, next to
 `SoundDevicePortAudio`.
@@ -184,8 +194,12 @@ Algoriddim's djay artwork or branding.
 - [x] **M1** Desktop Linux baseline: build plus the full test suite (851/851 pass, before and after the M3 changes)
 - [x] **M2** Android dependencies cross-compiled in CI (`arm64-android`, `x64-android`)
 - [x] **M3** Mixxx core compiles and links for Android, with sound and MIDI stubbed (first APKs: run #13, NDK r27)
-- [ ] **M4** `SoundDeviceOboe`: audio plays on the emulator and phone
-- [ ] **M5** `AndroidMidiController`: USB and BLE MIDI input and output
+- [x] **M3b** The APK starts on Android (resources in the APK, no blocking dialogs, no OpenGL
+      widgets, name and icon DJ Mantra); checked on an emulator by every CI run
+- [x] **M4** `SoundDeviceOboe`: the engine runs in Oboe's callback on the emulator (CI launch
+      test); hearing it on the phone is the next phone test
+- [x] **M5** `AndroidMidiController`: USB and BLE MIDI input and output (code and parser tests
+      done; the Mix Ultra on the phone is the next phone test)
 - [ ] **M6** Touch QML UI usable on a Pixel 7 sized screen
 - [ ] **M7** Mix Ultra mapping verified on the real controller; MIDI learn in the UI
 - [ ] **M8** Dual output (Bluetooth + USB) with delay compensation, tested on the user's phone
