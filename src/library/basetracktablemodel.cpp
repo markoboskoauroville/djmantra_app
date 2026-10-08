@@ -3,10 +3,12 @@
 #include <QBuffer>
 #include <QGuiApplication>
 #include <QMimeData>
+#include <QPainter>
 #include <QScreen>
 
 #include "library/coverartcache.h"
 #include "library/dao/trackschema.h"
+#include "library/onlinestatus.h"
 #include "library/starrating.h"
 #include "library/tabledelegates/bpmdelegate.h"
 #include "library/tabledelegates/checkboxdelegate.h"
@@ -22,6 +24,7 @@
 #include "mixer/playerinfo.h"
 #include "mixer/playermanager.h"
 #include "moc_basetracktablemodel.cpp"
+#include "sources/localtrackcache.h"
 #include "track/track.h"
 #include "util/assert.h"
 #include "util/clipboard.h"
@@ -362,11 +365,76 @@ QAbstractItemDelegate* BaseTrackTableModel::delegateForColumn(
     return new DefaultDelegate(pTableView);
 }
 
+namespace {
+
+QIcon onlineStatusIcon(bool online) {
+    static const QIcon kOnline = [] {
+        QPixmap pixmap(10, 10);
+        pixmap.fill(Qt::transparent);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QColor(0x3c, 0xc8, 0x5a));
+        painter.drawEllipse(1, 1, 8, 8);
+        return QIcon(pixmap);
+    }();
+    static const QIcon kOffline = [] {
+        QPixmap pixmap(10, 10);
+        pixmap.fill(Qt::transparent);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(QPen(QColor(0xe0, 0x40, 0x40), 1.5));
+        painter.setBrush(Qt::NoBrush);
+        painter.drawEllipse(QRectF(1.5, 1.5, 7, 7));
+        return QIcon(pixmap);
+    }();
+    return online ? kOnline : kOffline;
+}
+
+} // namespace
+
+bool BaseTrackTableModel::isOffline(const QModelIndex& index) const {
+    const auto missingRaw = rawSiblingValue(
+            index,
+            ColumnCache::COLUMN_TRACKLOCATIONSTABLE_FSDELETED);
+    if (!missingRaw.isNull() && missingRaw.canConvert<bool>() && missingRaw.toBool()) {
+        return true;
+    }
+    return djmantra::OnlineStatus::isDriveOffline(
+            rawSiblingValue(index, ColumnCache::COLUMN_TRACKLOCATIONSTABLE_LOCATION)
+                    .toString());
+}
+
 QVariant BaseTrackTableModel::data(
         const QModelIndex& index,
         int role) const {
     if (!index.isValid()) {
         return QVariant();
+    }
+
+    // DJ Mantra: online/offline marks
+    if (role == Qt::DecorationRole && showsOnlineStatus() &&
+            index.column() == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_TITLE)) {
+        return onlineStatusIcon(!isOffline(index));
+    }
+    if (role == Qt::ToolTipRole &&
+            index.column() != fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_COVERART) &&
+            isOffline(index)) {
+        const auto missingRaw = rawSiblingValue(
+                index, ColumnCache::COLUMN_TRACKLOCATIONSTABLE_FSDELETED);
+        const bool notFound = !missingRaw.isNull() && missingRaw.toBool();
+        QString tip = notFound
+                ? tr("Offline: the file was not found by the last library scan.")
+                : tr("Offline: its drive is not connected. It is online again as soon "
+                     "as the drive is back.");
+        if (djmantra::LocalTrackCache::readPath(
+                    rawSiblingValue(index, ColumnCache::COLUMN_TRACKLOCATIONSTABLE_LOCATION)
+                            .toString()) !=
+                rawSiblingValue(index, ColumnCache::COLUMN_TRACKLOCATIONSTABLE_LOCATION)
+                        .toString()) {
+            tip += QChar('\n') + tr("A copy is on this device: it can still be played.");
+        }
+        return tip;
     }
 
     if (role == Qt::BackgroundRole) {
@@ -391,12 +459,8 @@ QVariant BaseTrackTableModel::data(
         // Note: this is not helpful in Tracks -> Missing, so override it with
         // the regular track color (WTrackTableView { color: #xxx; }) like this:
         // #DlgMissing WTrackTableView { qproperty-trackMissingColor: #xxx; }
-        auto missingRaw = rawSiblingValue(
-                index,
-                ColumnCache::COLUMN_TRACKLOCATIONSTABLE_FSDELETED);
-        if (!missingRaw.isNull() &&
-                missingRaw.canConvert<bool>() &&
-                missingRaw.toBool()) {
+        // DJ Mantra: also tracks on a drive that is not connected
+        if (isOffline(index)) {
             return QVariant::fromValue(m_trackMissingColor);
         }
         if (s_bApplyPlayedTrackColor) {

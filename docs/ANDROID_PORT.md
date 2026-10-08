@@ -116,6 +116,26 @@ Algoriddim's djay artwork or branding.
 - Not yet: copying ahead (next track in Auto DJ or playlist) in the background, and a
   progress indicator while a large video is copied.
 
+### 8. Folders (like djay): folders as playlists, online/offline
+![Folders: add, online, offline, back online](images/folders-online-offline.png)
+- Sidebar **Folders** (`src/library/folders/`): "+ Add folder" (also Library menu → Add Music
+  Folder…, and right-click) adds a folder to the library and scans it. The folder and all its
+  subfolders appear as a tree with song counts; clicking a folder lists the songs in it and
+  all its subfolders, like a playlist that fills itself (any column sortable; default: by file).
+- The tree is built from the library database, not the disk: a folder stays until it is
+  removed explicitly (right-click → Remove from library…). On an unplugged drive its folders
+  get an offline icon and its songs a red hollow dot, the "missing" text color and a tooltip
+  ("Offline: its drive is not connected …", and "A copy is on this device" when the local
+  copy can still be played). Online songs have a green dot. The marks update when a drive is
+  plugged in or out (drive watcher) and after every scan.
+- Scanner race fixed (upstream Mixxx bug): when all scan tasks finished before the scanner
+  released its own task count, the scan was finished before the tasks' queued results were
+  processed, so tracks that were there could be marked missing. `allTasksDone` is now always
+  queued (`LibraryScanner`); found by `LocalTrackCacheTest.scanKeepsTracksOfAnUnpluggedDrive`
+  under load (failed ~1 in 4 runs, 0 of 36 after the fix).
+- Tests: `src/test/folderfeature_test.cpp` (tree, folder SQL incl. `'` in names and `Music2`
+  vs `Music`, folder view with subfolders and offline marks while unplugged).
+
 ## Milestones
 
 - [x] **M0** Import Mixxx 2.5.6 unmodified (one commit, so our changes diff against it)

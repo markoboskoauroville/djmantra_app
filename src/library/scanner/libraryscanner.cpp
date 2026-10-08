@@ -247,10 +247,16 @@ void LibraryScanner::slotStartScan() {
     // are done, TaskWatcher will signal slotFinishHashedScan.
     TaskWatcher* pWatcher = &m_scannerGlobal->getTaskWatcher();
     pWatcher->watchTask();
+    // DJ Mantra: always queued. When the last task is done before this
+    // function releases its own task count, allTasksDone() is emitted in this
+    // thread, and a direct call would finish the scan before the queued
+    // results of the tasks (verified directories and tracks) are processed:
+    // tracks that are there would be marked missing.
     connect(pWatcher,
             &TaskWatcher::allTasksDone,
             this,
-            &LibraryScanner::slotFinishHashedScan);
+            &LibraryScanner::slotFinishHashedScan,
+            Qt::QueuedConnection);
 
     for (const mixxx::FileInfo& rootDir : std::as_const(m_libraryRootDirs)) {
         // Acquire a security bookmark for this directory if we are in a
@@ -294,10 +300,16 @@ void LibraryScanner::slotFinishHashedScan() {
     // in the first stage. When all tasks
     // are done, TaskWatcher will signal slotFinishUnhashedScan.
     pWatcher->watchTask();
+    // DJ Mantra: always queued. When the last task is done before this
+    // function releases its own task count, allTasksDone() is emitted in this
+    // thread, and a direct call would finish the scan before the queued
+    // results of the tasks (verified directories and tracks) are processed:
+    // tracks that are there would be marked missing.
     connect(pWatcher,
             &TaskWatcher::allTasksDone,
             this,
-            &LibraryScanner::slotFinishUnhashedScan);
+            &LibraryScanner::slotFinishUnhashedScan,
+            Qt::QueuedConnection);
 
     for (mixxx::FileAccess dirAccess : m_scannerGlobal->unhashedDirs()) {
         // no testAndMarkDirectoryScanned() here, because all unhashedDirs()

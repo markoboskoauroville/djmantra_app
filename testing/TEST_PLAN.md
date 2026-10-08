@@ -37,6 +37,13 @@ Setup: an OTG USB stick or disk with a music folder; the phone connected to adb 
 - [ ] With the drive out, load a song that was played before: it loads from the copy
 - [ ] Cache size: `adb shell du -sh /data/data/com.djmantra.app/files/track-cache` (as `run-as`)
 
+## Folders (like djay)
+- [ ] Folders → "+ Add folder": pick the USB stick's music folder; the tree shows it and its
+      subfolders with song counts; tapping a folder lists all its songs (incl. subfolders)
+- [ ] Songs have green dots; pull the stick out: within ~3 s the dots turn red, the folders get
+      the offline icon, nothing disappears; plug it back in: green again
+- [ ] Restart the app with the stick out: the folders are still there (offline)
+
 ## M5 – MIDI
 - [ ] Mix Ultra over Bluetooth appears in `dumpsys midi` and in the app
 - [ ] Button presses show up in logcat

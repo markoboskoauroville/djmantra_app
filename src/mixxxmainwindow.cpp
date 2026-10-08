@@ -956,6 +956,11 @@ void MixxxMainWindow::connectMenuBar() {
                 &Library::slotCreatePlaylist,
                 Qt::UniqueConnection);
         connect(m_pMenuBar,
+                &WMainMenuBar::addMusicFolder,
+                m_pCoreServices->getLibrary().get(),
+                &Library::slotAddMusicFolder,
+                Qt::UniqueConnection);
+        connect(m_pMenuBar,
                 &WMainMenuBar::exportMarkedTracks,
                 m_pCoreServices->getLibrary().get(),
                 &Library::slotExportMarkedTracks,

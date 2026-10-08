@@ -169,6 +169,14 @@ void WMainMenuBar::initialize() {
 
     pLibraryMenu->addSeparator();
 
+    QString addFolderTitle = tr("&Add Music Folder...");
+    QString addFolderText = tr("Add a folder and its subfolders to the library (Folders)");
+    auto* pAddFolder = new QAction(addFolderTitle, this);
+    pAddFolder->setStatusTip(addFolderText);
+    pAddFolder->setWhatsThis(buildWhatsThis(addFolderTitle, addFolderText));
+    connect(pAddFolder, &QAction::triggered, this, &WMainMenuBar::addMusicFolder);
+    pLibraryMenu->addAction(pAddFolder);
+
     QString exportMarkedTitle = tr("Export &Marked Tracks...");
     QString exportMarkedText = tr(
             "Save the tracks ticked in the Export column as a text list with links");

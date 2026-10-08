@@ -19,6 +19,7 @@ class AnalysisFeature;
 class BrowseFeature;
 class ControlObject;
 class CrateFeature;
+class FolderFeature;
 class LibraryControl;
 class LibraryFeature;
 class LibraryTableModel;
@@ -123,6 +124,10 @@ class Library: public QObject {
     /// list with links, or clear all marks.
     void slotExportMarkedTracks();
     void slotClearExportMarks();
+    /// DJ Mantra: "+ Add folder" of the Folders sidebar
+    void slotAddMusicFolder();
+    /// DJ Mantra: a drive was plugged in or out: update online/offline marks
+    void slotExternalDrivesChanged();
     void onSkinLoadFinished();
     void slotSaveCurrentViewState() const;
     void slotRestoreCurrentViewState() const;
@@ -175,6 +180,7 @@ class Library: public QObject {
     WLibrary* m_pLibraryWidget;
     MixxxLibraryFeature* m_pMixxxLibraryFeature;
     PlaylistFeature* m_pPlaylistFeature;
+    FolderFeature* m_pFolderFeature;
     CrateFeature* m_pCrateFeature;
     AnalysisFeature* m_pAnalysisFeature;
     BrowseFeature* m_pBrowseFeature;

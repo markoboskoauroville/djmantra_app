@@ -1003,6 +1003,10 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/library/missing_hidden/dlghidden.ui
   src/library/export/missingtracksexport.cpp
   src/library/externaldrives.cpp
+  src/library/folders/folderfeature.cpp
+  src/library/folders/foldertablemodel.cpp
+  src/library/folders/foldertree.cpp
+  src/library/onlinestatus.cpp
   src/library/missing_hidden/dlgmissing.cpp
   src/library/missing_hidden/dlgmissing.ui
   src/library/missing_hidden/hiddentablemodel.cpp
@@ -2272,6 +2276,7 @@ if(BUILD_TESTING)
     src/test/missingtracksexport_test.cpp
     src/test/localtrackcache_test.cpp
     src/test/externaldriveplayback_test.cpp
+    src/test/folderfeature_test.cpp
     src/test/starrating_test.cpp
     src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp

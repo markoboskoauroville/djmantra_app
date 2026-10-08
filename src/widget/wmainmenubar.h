@@ -65,6 +65,7 @@ class WMainMenuBar : public QMenuBar {
     void reloadSkin();
     void rescanLibrary();
     void exportMarkedTracks();
+    void addMusicFolder();
     void clearExportMarks();
 #ifdef __ENGINEPRIME__
     void exportLibrary();

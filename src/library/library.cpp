@@ -16,11 +16,13 @@
 #endif
 #include "library/export/missingtracksexport.h"
 #include "library/externaltrackcollection.h"
+#include "library/folders/folderfeature.h"
 #include "library/itunes/itunesfeature.h"
 #include "library/library_prefs.h"
 #include "library/librarycontrol.h"
 #include "library/libraryfeature.h"
 #include "library/mixxxlibraryfeature.h"
+#include "library/onlinestatus.h"
 #include "library/recording/recordingfeature.h"
 #include "library/rekordbox/rekordboxfeature.h"
 #include "library/rhythmbox/rhythmboxfeature.h"
@@ -76,6 +78,7 @@ Library::Library(
           m_pLibraryWidget(nullptr),
           m_pMixxxLibraryFeature(nullptr),
           m_pPlaylistFeature(nullptr),
+          m_pFolderFeature(nullptr),
           m_pCrateFeature(nullptr),
           m_pAnalysisFeature(nullptr) {
     qRegisterMetaType<LibraryRemovalType>("LibraryRemovalType");
@@ -94,6 +97,10 @@ Library::Library(
             this,
             m_pConfig);
     addFeature(m_pMixxxLibraryFeature);
+
+    // DJ Mantra: folders as playlists, right below "Tracks"
+    m_pFolderFeature = new FolderFeature(this, m_pConfig);
+    addFeature(m_pFolderFeature);
 #ifdef __ENGINEPRIME__
     connect(m_pMixxxLibraryFeature,
             &MixxxLibraryFeature::exportLibrary,
@@ -595,6 +602,16 @@ void saveLoadedTracks(const TrackCollectionManager& trackCollectionManager) {
 }
 
 } // namespace
+
+void Library::slotAddMusicFolder() {
+    m_pFolderFeature->slotAddFolder();
+}
+
+void Library::slotExternalDrivesChanged() {
+    djmantra::OnlineStatus::invalidate();
+    m_pFolderFeature->slotRefresh();
+    m_pMixxxLibraryFeature->refreshLibraryModels();
+}
 
 void Library::slotExportMarkedTracks() {
     QWidget* pParent = QApplication::activeWindow();

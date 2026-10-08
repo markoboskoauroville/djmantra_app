@@ -67,6 +67,16 @@ class BaseTrackTableModel : public QAbstractTableModel, public TrackModel {
     QVariant data(
             const QModelIndex& index,
             int role = Qt::DisplayRole) const final;
+
+    /// DJ Mantra: show a green/red online/offline dot next to the title
+    /// (folder views). Offline tracks get the "missing" text color and an
+    /// explaining tooltip in every view.
+    virtual bool showsOnlineStatus() const {
+        return false;
+    }
+    /// The track file is offline: not found by the last scan, or its drive
+    /// is not connected.
+    bool isOffline(const QModelIndex& index) const;
     bool setData(
             const QModelIndex& index,
             const QVariant& value,

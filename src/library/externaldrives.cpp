@@ -116,6 +116,9 @@ bool ExternalDrives::hasLibraryFolderOn(const QString& driveRoot) const {
 }
 
 void ExternalDrives::slotDriveAttached(const QString& driveRoot) {
+    if (m_pLibrary) {
+        m_pLibrary->slotExternalDrivesChanged(); // online marks
+    }
     if (hasLibraryFolderOn(driveRoot)) {
         // Tracks on it were kept while it was away; check for new files
         m_rescanTimer.start();
@@ -136,6 +139,9 @@ void ExternalDrives::slotDriveDetached(const QString& driveRoot) {
     // Nothing to do: loaded tracks play from their internal copies, and
     // tracks on the drive stay in the library until it comes back.
     kLogger.info() << "Drive removed, tracks on it are kept:" << driveRoot;
+    if (m_pLibrary) {
+        m_pLibrary->slotExternalDrivesChanged(); // offline marks
+    }
 }
 
 void ExternalDrives::offerToAdd(const QString& driveRoot) {
