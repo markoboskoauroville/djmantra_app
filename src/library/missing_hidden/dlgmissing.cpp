@@ -1,10 +1,16 @@
 #include "library/missing_hidden/dlgmissing.h"
 
+#include <QDir>
+#include <QFileDialog>
 #include <QItemSelection>
+#include <QMessageBox>
 
 #include "controllers/keyboard/keyboardeventfilter.h"
+#include "library/export/missingtracksexport.h"
 #include "library/library.h"
 #include "library/missing_hidden/missingtablemodel.h"
+#include "library/trackcollection.h"
+#include "library/trackcollectionmanager.h"
 #include "moc_dlgmissing.cpp"
 #include "util/assert.h"
 #include "widget/wlibrary.h"
@@ -22,7 +28,8 @@ DlgMissing::DlgMissing(
                           this,
                           pConfig,
                           pLibrary,
-                          parent->getTrackTableBackgroundColorOpacity())) {
+                          parent->getTrackTableBackgroundColorOpacity())),
+          m_pLibrary(pLibrary) {
     setupUi(this);
     m_pTrackTableView->installEventFilter(pKeyboard);
 
@@ -40,6 +47,7 @@ DlgMissing::DlgMissing(
 
     connect(btnPurge, &QPushButton::clicked, m_pTrackTableView, &WTrackTableView::slotPurge);
     connect(btnSelect, &QPushButton::clicked, this, &DlgMissing::selectAll);
+    connect(btnExport, &QPushButton::clicked, this, &DlgMissing::exportList);
     connect(m_pTrackTableView->selectionModel(),
             &QItemSelectionModel::selectionChanged,
             this,
@@ -73,6 +81,29 @@ QString DlgMissing::currentSearch() {
 
 void DlgMissing::selectAll() {
     m_pTrackTableView->selectAll();
+}
+
+void DlgMissing::exportList() {
+    const QList<djmantra::MissingTrack> tracks = djmantra::queryLibraryMissingTracks(
+            m_pLibrary->trackCollectionManager()->internalCollection()->database());
+    if (tracks.isEmpty()) {
+        QMessageBox::information(this, tr("Export list"), tr("No tracks are missing."));
+        return;
+    }
+    const QString filePath = QFileDialog::getSaveFileName(this,
+            tr("Export missing tracks"),
+            QDir::home().filePath(QStringLiteral("missing-tracks.txt")),
+            tr("Text files (*.txt)"));
+    if (filePath.isEmpty()) {
+        return;
+    }
+    QString error;
+    if (!djmantra::writeMissingTracksFile(
+                filePath, tracks, tr("Library – tracks with missing files"), &error)) {
+        QMessageBox::warning(this,
+                tr("Export list"),
+                tr("Could not save %1:\n%2").arg(filePath, error));
+    }
 }
 
 void DlgMissing::activateButtons(bool enable) {

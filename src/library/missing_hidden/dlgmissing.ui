@@ -77,6 +77,19 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="btnExport">
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>Save the list of missing tracks to a text file, with store links for each song.</string>
+         </property>
+         <property name="text">
+          <string>Export list…</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>

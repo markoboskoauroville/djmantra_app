@@ -1001,6 +1001,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/library/librarytablemodel.cpp
   src/library/missing_hidden/dlghidden.cpp
   src/library/missing_hidden/dlghidden.ui
+  src/library/export/missingtracksexport.cpp
   src/library/missing_hidden/dlgmissing.cpp
   src/library/missing_hidden/dlgmissing.ui
   src/library/missing_hidden/hiddentablemodel.cpp
@@ -2246,6 +2247,7 @@ if(BUILD_TESTING)
     src/test/skincontext_test.cpp
     src/test/softtakeover_test.cpp
     src/test/soundproxy_test.cpp
+    src/test/missingtracksexport_test.cpp
     src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp
     src/test/sqliteliketest.cpp

@@ -30,6 +30,7 @@ class DlgMissing : public QWidget, public Ui::DlgMissing, public LibraryView {
 
   public slots:
     void selectAll();
+    void exportList();
     void selectionChanged(const QItemSelection&, const QItemSelection&);
 
   signals:
@@ -39,4 +40,5 @@ class DlgMissing : public QWidget, public Ui::DlgMissing, public LibraryView {
     void activateButtons(bool enable);
     WTrackTableView* m_pTrackTableView;
     MissingTableModel* m_pMissingTableModel;
+    Library* m_pLibrary;
 };
