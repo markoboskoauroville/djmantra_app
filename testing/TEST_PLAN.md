@@ -76,6 +76,9 @@ names the functions of a phone crash.
       **No** "qResourcePath is empty" dialog
 - [ ] The main window (skin) appears; logcat `DJ Mantra main window ready`; dialog titles say
       "DJ Mantra - ...", not "Mixxx - ..."
+- [ ] Landscape, full screen (no status bar); logcat `DJ Mantra main window ready, full screen:
+      true size QSize(...)`. Is the LateNight skin readable and usable by touch on the Pixel 7?
+      (Emulator: 914 x 363 dp.) Note what is too small or cut off, for the touch interface (M6)
 - [ ] Second start: no "Installing resources" line (the copy is kept), start is faster
 - [ ] First start shows **no** dialog that has to be answered before the main window: the
       "Access to USB drives" box opens over it (OK → system screen), no folder picker (the phone's

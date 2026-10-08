@@ -35,7 +35,8 @@ mode for lining up phrases.
 1. On the phone, open **[Releases → android-latest](../../releases/tag/android-latest)** and
    download `DJMantra-0.5.0-…-phone-arm64.apk` (Pixel 7 and other 64-bit ARM phones).
 2. Open the file and allow installing apps from this source.
-3. First start (about 10 seconds, once per new version): DJ Mantra installs its skins and
+3. DJ Mantra runs in landscape and full screen. First start (about 10 seconds, once per new
+   version): DJ Mantra installs its skins and
    controller mappings, then asks for **All files access** (to play music from USB drives) and
    **Nearby devices** (to find the Mix Ultra over Bluetooth).
 
