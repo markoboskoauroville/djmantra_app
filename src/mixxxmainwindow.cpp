@@ -145,6 +145,15 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
 
 #ifdef MIXXX_USE_QOPENGL
 void MixxxMainWindow::initializeQOpenGL() {
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: a QOpenGLWindow inside widgets (QWindowContainer) gets no
+    // EGL surface on Android and crashes on its first paint (CI launch
+    // test). The skin uses its software waveforms and widgets instead; the
+    // touch interface (QML, M6) draws with Qt Quick.
+    qInfo() << "Android: starting without OpenGL widgets (software waveforms)";
+    initialize();
+    return;
+#endif
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     // Qt 6 will nno longer crash if no GL is available and
     // QGLFormat::hasOpenGL() has been removed.
@@ -164,20 +173,7 @@ void MixxxMainWindow::initializeQOpenGL() {
             SharedGLContext::setWidget(widget);
             // When the widget's QOpenGLWindow has been initialized, we continue
             // with the actual initialization
-#ifdef __ANDROID_PORT__
-            // DJ Mantra: not from inside QOpenGLWindow::resizeEvent(), where
-            // the whole startup (skin, dialogs with their own event loops)
-            // ran before and crashed on the phone (run #31). Queued, it runs
-            // once the GL window has finished initializing.
-            connect(widget,
-                    &WInitialGLWidget::onInitialized,
-                    this,
-                    &MixxxMainWindow::initialize,
-                    static_cast<Qt::ConnectionType>(
-                            Qt::QueuedConnection | Qt::SingleShotConnection));
-#else
             connect(widget, &WInitialGLWidget::onInitialized, this, &MixxxMainWindow::initialize);
-#endif
             widget->show();
             return;
         }
@@ -1466,6 +1462,11 @@ void MixxxMainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MixxxMainWindow::checkDirectRendering() {
+#ifdef __ANDROID_PORT__
+    // No OpenGL widgets on Android on purpose (initializeQOpenGL()): no
+    // warning about it (a modal box that would stop the startup)
+    return;
+#endif
     // IF
     //  * A waveform viewer exists
     // AND

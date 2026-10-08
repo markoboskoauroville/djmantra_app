@@ -73,8 +73,13 @@ PortMidi has no Android backend.
     and existing installs depend on them.
   - Icon: `tools/android/gen_launcher_icon.py` writes an adaptive vector icon (two waveforms
     colored by section, white playhead); preview `docs/djmantra-icon.png`.
-  - Startup no longer runs inside `QOpenGLWindow::resizeEvent()` on Android (queued), and all
-    Qt messages also go to logcat (tag `DJMantra`).
+  - No OpenGL widgets on Android: Mixxx's `QOpenGLWindow` inside a `QWindowContainer` gets no EGL
+    surface there and crashed on its first paint (found and symbolized by the CI launch test). The
+    legacy skin runs with its software waveforms (the no-GL path Mixxx already has); the touch UI
+    (M6, QML / Qt Quick) draws its own. All Qt messages also go to logcat (tag `DJMantra`).
+  - No modal dialog before the main window on Android: the All files access box opens over the
+    main window, the phone's Music folder is the first library folder (no picker), no menu-bar
+    question, no sound dialogs while there is no sound output (M4).
   - CI checks the label, icon and `assets/res` in every APK, keeps the unstripped library
     (artifact `djmantra-<abi>-symbols`) and starts the x86_64 APK on an emulator
     (`tools/android/smoke_test.sh`): a crash, a critical error or no main window fails the run.
