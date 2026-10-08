@@ -119,6 +119,10 @@ class Library: public QObject {
     void slotRefreshLibraryModels();
     void slotCreatePlaylist();
     void slotCreateCrate();
+    /// DJ Mantra: save the tracks marked in the "Export" column as a text
+    /// list with links, or clear all marks.
+    void slotExportMarkedTracks();
+    void slotClearExportMarks();
     void onSkinLoadFinished();
     void slotSaveCurrentViewState() const;
     void slotRestoreCurrentViewState() const;

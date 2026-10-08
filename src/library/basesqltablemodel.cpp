@@ -117,6 +117,9 @@ void BaseSqlTableModel::initSortColumnMapping() {
             TrackModel::SortColumnId::Rating)] =
             fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_RATING);
     m_columnIndexBySortColumnId[static_cast<int>(
+            TrackModel::SortColumnId::ExportMark)] =
+            fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK);
+    m_columnIndexBySortColumnId[static_cast<int>(
             TrackModel::SortColumnId::Key)] =
             fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_KEY);
     m_columnIndexBySortColumnId[static_cast<int>(
@@ -756,6 +759,8 @@ bool BaseSqlTableModel::setTrackValueForColumn(
                 mixxx::track::io::key::USER);
     } else if (fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_BPM_LOCK) == column) {
         pTrack->setBpmLocked(value.toBool());
+    } else if (fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK) == column) {
+        pTrack->setExportMark(value.toBool());
     } else {
         // We never should get up to this point!
         qWarning() << "Column"

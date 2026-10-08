@@ -117,7 +117,7 @@ constexpr ColumnProperties kColumnPropertiesByEnum[] = {
                 0},
         DI(ColumnCache::COLUMN_LIBRARYTABLE_RATING){&LIBRARYTABLE_RATING,
                 QT_TRANSLATE_NOOP("BaseTrackTableModel", "Rating"),
-                kDefaultColumnWidth * 2},
+                kDefaultColumnWidth},
         DI(ColumnCache::COLUMN_LIBRARYTABLE_KEY){&LIBRARYTABLE_KEY,
                 QT_TRANSLATE_NOOP("BaseTrackTableModel", "Key"),
                 kDefaultColumnWidth},
@@ -157,6 +157,9 @@ constexpr ColumnProperties kColumnPropertiesByEnum[] = {
         DI(ColumnCache::COLUMN_LIBRARYTABLE_LAST_PLAYED_AT){&LIBRARYTABLE_LAST_PLAYED_AT,
                 QT_TRANSLATE_NOOP("BaseTrackTableModel", "Last Played"),
                 kDefaultColumnWidth * 3},
+        DI(ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK){&LIBRARYTABLE_EXPORTMARK,
+                QT_TRANSLATE_NOOP("BaseTrackTableModel", "Export"),
+                kDefaultColumnWidth},
         DI(ColumnCache::COLUMN_TRACKLOCATIONSTABLE_LOCATION){&TRACKLOCATIONSTABLE_LOCATION,
                 QT_TRANSLATE_NOOP("BaseTrackTableModel", "Location"),
                 kDefaultColumnWidth * 6},
@@ -234,6 +237,7 @@ void ColumnCache::setColumns(QStringList columns) {
     insertColumnSortByEnum(COLUMN_LIBRARYTABLE_BITRATE, kSortInt);
     insertColumnSortByEnum(COLUMN_LIBRARYTABLE_SAMPLERATE, kSortInt);
     insertColumnSortByEnum(COLUMN_LIBRARYTABLE_TIMESPLAYED, kSortInt);
+    insertColumnSortByEnum(COLUMN_LIBRARYTABLE_EXPORTMARK, kSortInt);
 
     insertColumnSortByEnum(COLUMN_TRACKLOCATIONSTABLE_LOCATION, kSortNoCase);
 

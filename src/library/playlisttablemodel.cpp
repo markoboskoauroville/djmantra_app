@@ -100,6 +100,9 @@ void PlaylistTableModel::initSortColumnMapping() {
             TrackModel::SortColumnId::Rating)] =
             fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_RATING);
     m_columnIndexBySortColumnId[static_cast<int>(
+            TrackModel::SortColumnId::ExportMark)] =
+            fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK);
+    m_columnIndexBySortColumnId[static_cast<int>(
             TrackModel::SortColumnId::Key)] =
             fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_KEY);
     m_columnIndexBySortColumnId[static_cast<int>(

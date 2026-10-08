@@ -376,6 +376,9 @@ QVariant BaseTrackCache::getTrackValueForColumn(TrackPointer pTrack,
     if (fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_BPM_LOCK) == column) {
         return QVariant{pTrack->isBpmLocked()};
     }
+    if (fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK) == column) {
+        return QVariant{pTrack->getExportMark()};
+    }
     if (fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_COLOR) == column) {
         return mixxx::RgbColor::toQVariant(pTrack->getColor());
     }
@@ -686,6 +689,7 @@ int BaseTrackCache::compareColumnValues(int sortColumn,
             sortColumn == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_CHANNELS) ||
             sortColumn == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_TIMESPLAYED) ||
             sortColumn == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_RATING) ||
+            sortColumn == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK) ||
             sortColumn == fieldIndex(ColumnCache::COLUMN_PLAYLISTTRACKSTABLE_POSITION)
     ) {
         // Sort as floats.

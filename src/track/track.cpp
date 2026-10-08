@@ -1477,6 +1477,18 @@ bool Track::isBpmLocked() const {
     return m_record.getBpmLocked();
 }
 
+void Track::setExportMark(bool exportMark) {
+    auto locked = lockMutex(&m_qMutex);
+    if (compareAndSet(m_record.ptrExportMark(), exportMark)) {
+        markDirtyAndUnlock(&locked);
+    }
+}
+
+bool Track::getExportMark() const {
+    const auto locked = lockMutex(&m_qMutex);
+    return m_record.getExportMark();
+}
+
 void Track::setCoverInfo(const CoverInfoRelative& coverInfo) {
     DEBUG_ASSERT((coverInfo.type != CoverInfo::METADATA) || coverInfo.coverLocation.isEmpty());
     DEBUG_ASSERT((coverInfo.source != CoverInfo::UNKNOWN) || (coverInfo.type == CoverInfo::NONE));

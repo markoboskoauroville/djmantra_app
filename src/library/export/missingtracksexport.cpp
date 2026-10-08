@@ -45,7 +45,28 @@ QString displayName(const MissingTrack& track) {
     if (!duration.isEmpty()) {
         name += QStringLiteral(" [%1]").arg(duration);
     }
+    if (track.rating > 0) {
+        name += QStringLiteral(" ★ %1").arg(track.rating);
+    }
     return name;
+}
+
+bool writeTextFile(const QString& filePath, const QString& text, QString* pErrorMessage) {
+    QSaveFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+        if (pErrorMessage) {
+            *pErrorMessage = file.errorString();
+        }
+        return false;
+    }
+    file.write(text.toUtf8());
+    if (!file.commit()) {
+        if (pErrorMessage) {
+            *pErrorMessage = file.errorString();
+        }
+        return false;
+    }
+    return true;
 }
 
 } // namespace
@@ -88,12 +109,15 @@ QUrl storeSearchUrl(Store store, const MissingTrack& track) {
     return url;
 }
 
-QString formatMissingTracks(const QList<MissingTrack>& tracks,
+namespace {
+
+QString formatTrackList(const QList<MissingTrack>& tracks,
+        const QString& heading,
         const QString& listName,
         const QDateTime& exportedAt) {
     QString text;
     QTextStream out(&text);
-    out << "DJ Mantra – missing songs\n";
+    out << "DJ Mantra – " << heading << '\n';
     out << "List: " << listName << '\n';
     out << "Exported: " << exportedAt.toString(QStringLiteral("yyyy-MM-dd HH:mm")) << '\n';
     out << "Songs: " << tracks.size() << "\n\n";
@@ -102,6 +126,9 @@ QString formatMissingTracks(const QList<MissingTrack>& tracks,
         out << ++number << ". " << displayName(track) << '\n';
         if (!track.isrc.trimmed().isEmpty()) {
             out << "   ISRC: " << track.isrc.trimmed() << '\n';
+        }
+        if (!track.fileLocation.isEmpty()) {
+            out << "   File: " << track.fileLocation << '\n';
         }
         if (!track.lastKnownLocation.isEmpty()) {
             out << "   Was at: " << track.lastKnownLocation << '\n';
@@ -121,25 +148,32 @@ QString formatMissingTracks(const QList<MissingTrack>& tracks,
     return text;
 }
 
+} // namespace
+
+QString formatMissingTracks(const QList<MissingTrack>& tracks,
+        const QString& listName,
+        const QDateTime& exportedAt) {
+    return formatTrackList(tracks, QStringLiteral("missing songs"), listName, exportedAt);
+}
+
+QString formatMarkedTracks(const QList<MissingTrack>& tracks,
+        const QString& listName,
+        const QDateTime& exportedAt) {
+    return formatTrackList(tracks, QStringLiteral("marked songs"), listName, exportedAt);
+}
+
 bool writeMissingTracksFile(const QString& filePath,
         const QList<MissingTrack>& tracks,
         const QString& listName,
         QString* pErrorMessage) {
-    QSaveFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
-        if (pErrorMessage) {
-            *pErrorMessage = file.errorString();
-        }
-        return false;
-    }
-    file.write(formatMissingTracks(tracks, listName).toUtf8());
-    if (!file.commit()) {
-        if (pErrorMessage) {
-            *pErrorMessage = file.errorString();
-        }
-        return false;
-    }
-    return true;
+    return writeTextFile(filePath, formatMissingTracks(tracks, listName), pErrorMessage);
+}
+
+bool writeMarkedTracksFile(const QString& filePath,
+        const QList<MissingTrack>& tracks,
+        const QString& listName,
+        QString* pErrorMessage) {
+    return writeTextFile(filePath, formatMarkedTracks(tracks, listName), pErrorMessage);
 }
 
 QList<MissingTrack> queryLibraryMissingTracks(const QSqlDatabase& database) {
@@ -166,6 +200,52 @@ QList<MissingTrack> queryLibraryMissingTracks(const QSqlDatabase& database) {
         tracks.append(std::move(track));
     }
     return tracks;
+}
+
+QList<MissingTrack> queryLibraryMarkedTracks(const QSqlDatabase& database) {
+    QSqlQuery query(database);
+    query.prepare(QStringLiteral(
+            "SELECT library.artist, library.title, library.album, "
+            "library.duration, library.rating, track_locations.location, "
+            "track_locations.fs_deleted "
+            "FROM library "
+            "INNER JOIN track_locations ON library.location=track_locations.id "
+            "WHERE library.mixxx_deleted=0 AND library.export_mark=1 "
+            "ORDER BY library.artist COLLATE NOCASE, library.title COLLATE NOCASE"));
+    QList<MissingTrack> tracks;
+    if (!query.exec()) {
+        kLogger.warning() << "Failed to query marked tracks:" << query.lastError();
+        return tracks;
+    }
+    while (query.next()) {
+        MissingTrack track;
+        track.artist = query.value(0).toString();
+        track.title = query.value(1).toString();
+        track.album = query.value(2).toString();
+        track.durationSeconds = qRound(query.value(3).toDouble());
+        track.rating = query.value(4).toInt();
+        if (query.value(6).toBool()) {
+            track.lastKnownLocation = query.value(5).toString();
+        } else {
+            track.fileLocation = query.value(5).toString();
+        }
+        tracks.append(std::move(track));
+    }
+    return tracks;
+}
+
+QList<TrackId> queryLibraryMarkedTrackIds(const QSqlDatabase& database) {
+    QSqlQuery query(database);
+    query.prepare(QStringLiteral("SELECT id FROM library WHERE export_mark=1"));
+    QList<TrackId> trackIds;
+    if (!query.exec()) {
+        kLogger.warning() << "Failed to query marked track ids:" << query.lastError();
+        return trackIds;
+    }
+    while (query.next()) {
+        trackIds.append(TrackId(query.value(0)));
+    }
+    return trackIds;
 }
 
 } // namespace djmantra

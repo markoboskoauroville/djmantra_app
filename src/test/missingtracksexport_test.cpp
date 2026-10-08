@@ -1,10 +1,12 @@
 #include "library/export/missingtracksexport.h"
 
 #include <QDir>
+#include <algorithm>
 #include <QFile>
 #include <QSqlQuery>
 #include <QTemporaryDir>
 
+#include "library/trackcollectionmanager.h"
 #include "test/librarytest.h"
 #include "track/track.h"
 
@@ -141,4 +143,66 @@ TEST_F(MissingTracksExportTest, queryReturnsOnlyTracksWithMissingFiles) {
     EXPECT_EQ(125, tracks[0].durationSeconds);
     EXPECT_EQ(QStringLiteral("Bravo"), tracks[1].artist);
     EXPECT_EQ(missingB, tracks[1].lastKnownLocation);
+}
+
+TEST_F(MissingTracksExportTest, formatMarkedListsFileAndRating) {
+    MissingTrack track;
+    track.artist = QStringLiteral("Daft Punk");
+    track.title = QStringLiteral("One More Time");
+    track.durationSeconds = 320;
+    track.rating = 4;
+    track.fileLocation = QStringLiteral("/music/one more time.mp3");
+
+    const QString text = djmantra::formatMarkedTracks({track},
+            QStringLiteral("Library – marked tracks"),
+            QDateTime(QDate(2026, 10, 8), QTime(21, 5)));
+
+    EXPECT_TRUE(text.startsWith(QStringLiteral(
+            "DJ Mantra – marked songs\nList: Library – marked tracks\n")));
+    EXPECT_TRUE(text.contains(QStringLiteral("1. Daft Punk – One More Time [5:20] ★ 4\n")));
+    EXPECT_TRUE(text.contains(QStringLiteral("   File: /music/one more time.mp3\n")));
+    EXPECT_FALSE(text.contains(QStringLiteral("Was at:")));
+    EXPECT_EQ(4, text.count(QStringLiteral(" search: https://")));
+}
+
+TEST_F(MissingTracksExportTest, exportMarkIsSavedAndQueried) {
+    QTemporaryDir dir;
+    ASSERT_TRUE(dir.isValid());
+    const QString sourceFile = getTestDir().filePath(QStringLiteral("id3-test-data/empty.mp3"));
+    auto addTrack = [&](const QString& fileName, const QString& artist, bool marked) {
+        const QString location = QDir(dir.path()).filePath(fileName);
+        EXPECT_TRUE(QFile::copy(sourceFile, location));
+        const TrackPointer pTrack = getOrAddTrackByLocation(location);
+        EXPECT_TRUE(pTrack);
+        pTrack->setArtist(artist);
+        pTrack->setTitle(QStringLiteral("Song"));
+        pTrack->setRating(3);
+        pTrack->setExportMark(marked);
+        EXPECT_TRUE(pTrack->getExportMark() == marked);
+        EXPECT_EQ(TrackCollectionManager::SaveTrackResult::Saved,
+                trackCollectionManager()->saveTrack(pTrack));
+        return pTrack->getId();
+    };
+    const TrackId markedB = addTrack(QStringLiteral("b.mp3"), QStringLiteral("Bravo"), true);
+    addTrack(QStringLiteral("unmarked.mp3"), QStringLiteral("Unmarked"), false);
+    const TrackId markedA = addTrack(QStringLiteral("a.mp3"), QStringLiteral("alpha"), true);
+
+    const QList<MissingTrack> tracks = djmantra::queryLibraryMarkedTracks(dbConnection());
+    ASSERT_EQ(2, tracks.size());
+    EXPECT_EQ(QStringLiteral("alpha"), tracks[0].artist);
+    EXPECT_EQ(3, tracks[0].rating);
+    EXPECT_TRUE(tracks[0].fileLocation.endsWith(QStringLiteral("a.mp3")));
+    EXPECT_TRUE(tracks[0].lastKnownLocation.isEmpty());
+    EXPECT_EQ(QStringLiteral("Bravo"), tracks[1].artist);
+
+    QList<TrackId> ids = djmantra::queryLibraryMarkedTrackIds(dbConnection());
+    std::sort(ids.begin(), ids.end());
+    QList<TrackId> expected{markedA, markedB};
+    std::sort(expected.begin(), expected.end());
+    EXPECT_EQ(expected, ids);
+
+    // The mark is loaded back from the database
+    const TrackPointer pLoaded = trackCollectionManager()->getTrackById(markedA);
+    ASSERT_TRUE(pLoaded);
+    EXPECT_TRUE(pLoaded->getExportMark());
 }

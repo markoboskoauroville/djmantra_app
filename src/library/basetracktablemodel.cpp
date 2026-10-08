@@ -332,6 +332,9 @@ QAbstractItemDelegate* BaseTrackTableModel::delegateForColumn(
         return new BPMDelegate(pTableView);
     } else if (index == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_TIMESPLAYED)) {
         return new CheckboxDelegate(pTableView, QStringLiteral("LibraryPlayedCheckbox"));
+    } else if (index == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK)) {
+        // Styled like the "played" checkbox
+        return new CheckboxDelegate(pTableView, QStringLiteral("LibraryPlayedCheckbox"));
     } else if (PlayerInfo::instance().numPreviewDecks() > 0 &&
             index == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_PREVIEW)) {
         return new PreviewButtonDelegate(pTableView, index);
@@ -478,6 +481,8 @@ bool BaseTrackTableModel::setData(
                     fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_BPM_LOCK));
             return setData(bpmLockedIndex, checked, Qt::EditRole);
         }
+        case ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK:
+            return setData(index, checked, Qt::EditRole);
         default:
             return false;
         }
@@ -556,6 +561,7 @@ QVariant BaseTrackTableModel::roleValue(
             return QVariant();
         case ColumnCache::COLUMN_LIBRARYTABLE_RATING:
         case ColumnCache::COLUMN_LIBRARYTABLE_TIMESPLAYED:
+        case ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK:
             return std::move(rawValue);
         default:
             // Same value as for Qt::DisplayRole (see below)
@@ -620,6 +626,9 @@ QVariant BaseTrackTableModel::roleValue(
             }
             return QString::number(timesPlayed);
         }
+        case ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK:
+            // Shown as a checkbox only
+            return QVariant();
         case ColumnCache::COLUMN_LIBRARYTABLE_DATETIMEADDED:
         case ColumnCache::COLUMN_PLAYLISTTRACKSTABLE_DATETIMEADDED: {
             VERIFY_OR_DEBUG_ASSERT(rawValue.canConvert<QDateTime>()) {
@@ -797,6 +806,7 @@ QVariant BaseTrackTableModel::roleValue(
         QVariant boolValue;
         switch (field) {
         case ColumnCache::COLUMN_LIBRARYTABLE_PREVIEW:
+        case ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK:
             boolValue = rawValue;
             break;
         case ColumnCache::COLUMN_LIBRARYTABLE_TIMESPLAYED:
@@ -896,7 +906,8 @@ Qt::ItemFlags BaseTrackTableModel::readWriteFlags(
     Qt::ItemFlags itemFlags = defaultItemFlags(index);
     if (column == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_PLAYED) ||
             column == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_TIMESPLAYED) ||
-            column == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_BPM_LOCK)) {
+            column == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_BPM_LOCK) ||
+            column == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_EXPORTMARK)) {
         // Checkable cells
         itemFlags |= Qt::ItemIsUserCheckable;
     } else if (column == fieldIndex(ColumnCache::COLUMN_LIBRARYTABLE_BPM)) {

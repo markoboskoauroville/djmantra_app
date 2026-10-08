@@ -955,6 +955,16 @@ void MixxxMainWindow::connectMenuBar() {
                 m_pCoreServices->getLibrary().get(),
                 &Library::slotCreatePlaylist,
                 Qt::UniqueConnection);
+        connect(m_pMenuBar,
+                &WMainMenuBar::exportMarkedTracks,
+                m_pCoreServices->getLibrary().get(),
+                &Library::slotExportMarkedTracks,
+                Qt::UniqueConnection);
+        connect(m_pMenuBar,
+                &WMainMenuBar::clearExportMarks,
+                m_pCoreServices->getLibrary().get(),
+                &Library::slotClearExportMarks,
+                Qt::UniqueConnection);
     }
 
 #ifdef __ENGINEPRIME__

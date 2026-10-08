@@ -169,6 +169,25 @@ void WMainMenuBar::initialize() {
 
     pLibraryMenu->addSeparator();
 
+    QString exportMarkedTitle = tr("Export &Marked Tracks...");
+    QString exportMarkedText = tr(
+            "Save the tracks ticked in the Export column as a text list with links");
+    auto* pExportMarked = new QAction(exportMarkedTitle, this);
+    pExportMarked->setStatusTip(exportMarkedText);
+    pExportMarked->setWhatsThis(buildWhatsThis(exportMarkedTitle, exportMarkedText));
+    connect(pExportMarked, &QAction::triggered, this, &WMainMenuBar::exportMarkedTracks);
+    pLibraryMenu->addAction(pExportMarked);
+
+    QString clearMarksTitle = tr("Clear Export Marks");
+    QString clearMarksText = tr("Untick the Export column of all tracks");
+    auto* pClearMarks = new QAction(clearMarksTitle, this);
+    pClearMarks->setStatusTip(clearMarksText);
+    pClearMarks->setWhatsThis(buildWhatsThis(clearMarksTitle, clearMarksText));
+    connect(pClearMarks, &QAction::triggered, this, &WMainMenuBar::clearExportMarks);
+    pLibraryMenu->addAction(pClearMarks);
+
+    pLibraryMenu->addSeparator();
+
     QString createPlaylistTitle = tr("Create &New Playlist");
     QString createPlaylistText = tr("Create a new playlist");
     auto* pLibraryCreatePlaylist = new QAction(createPlaylistTitle, this);

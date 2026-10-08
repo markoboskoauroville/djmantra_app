@@ -150,6 +150,10 @@ class Track : public QObject {
     void setBpmLocked(bool bpmLocked);
     bool isBpmLocked() const;
 
+    // Marked for export as a track list with links
+    void setExportMark(bool exportMark);
+    bool getExportMark() const;
+
     void setReplayGain(const mixxx::ReplayGain&);
     // Adjust ReplayGain by multiplying the given gain amount.
     void adjustReplayGainFromPregain(double gain, const QString& requestingPlayerGroup);

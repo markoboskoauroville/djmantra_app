@@ -57,6 +57,8 @@ class TrackRecord final {
     MIXXX_DECL_PROPERTY(mixxx::audio::FramePos, mainCuePosition, MainCuePosition)
     MIXXX_DECL_PROPERTY(int, rating, Rating)
     MIXXX_DECL_PROPERTY(bool, bpmLocked, BpmLocked)
+    // DJ Mantra: marked for export (track list with links)
+    MIXXX_DECL_PROPERTY(bool, exportMark, ExportMark)
 
   public:
     // Data migration: Reload track total from file tags if not initialized

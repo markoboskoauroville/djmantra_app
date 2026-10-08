@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QFileDialog>
 #include <QMessageBox>
 
 #include "control/controlobject.h"
@@ -13,6 +14,7 @@
 #ifdef __ENGINEPRIME__
 #include "library/export/libraryexporter.h"
 #endif
+#include "library/export/missingtracksexport.h"
 #include "library/externaltrackcollection.h"
 #include "library/itunes/itunesfeature.h"
 #include "library/library_prefs.h"
@@ -31,7 +33,9 @@
 #include "library/trackset/playlistfeature.h"
 #include "library/trackset/setlogfeature.h"
 #include "library/traktor/traktorfeature.h"
+#include "mixer/playerinfo.h"
 #include "mixer/playermanager.h"
+#include "track/track.h"
 #include "moc_library.cpp"
 #include "util/assert.h"
 #include "util/logger.h"
@@ -575,6 +579,72 @@ void Library::slotCreatePlaylist() {
 
 void Library::slotCreateCrate() {
     m_pCrateFeature->slotCreateCrate();
+}
+
+namespace {
+
+/// Tracks in decks stay in memory, so their changed export mark may not be in
+/// the database yet.
+void saveLoadedTracks(const TrackCollectionManager& trackCollectionManager) {
+    const auto loadedTracks = PlayerInfo::instance().getLoadedTracks();
+    for (const auto& pTrack : loadedTracks) {
+        if (pTrack) {
+            trackCollectionManager.saveTrack(pTrack);
+        }
+    }
+}
+
+} // namespace
+
+void Library::slotExportMarkedTracks() {
+    QWidget* pParent = QApplication::activeWindow();
+    saveLoadedTracks(*m_pTrackCollectionManager);
+    const QList<djmantra::MissingTrack> tracks = djmantra::queryLibraryMarkedTracks(
+            m_pTrackCollectionManager->internalCollection()->database());
+    if (tracks.isEmpty()) {
+        QMessageBox::information(pParent,
+                tr("Export marked tracks"),
+                tr("No tracks are marked. Tick the \"Export\" column of the tracks "
+                   "you want in the list."));
+        return;
+    }
+    const QString filePath = QFileDialog::getSaveFileName(pParent,
+            tr("Export marked tracks"),
+            QDir::home().filePath(QStringLiteral("marked-tracks.txt")),
+            tr("Text files (*.txt)"));
+    if (filePath.isEmpty()) {
+        return;
+    }
+    QString error;
+    if (!djmantra::writeMarkedTracksFile(
+                filePath, tracks, tr("Library – marked tracks"), &error)) {
+        QMessageBox::warning(pParent,
+                tr("Export marked tracks"),
+                tr("Could not save %1:\n%2").arg(filePath, error));
+    }
+}
+
+void Library::slotClearExportMarks() {
+    saveLoadedTracks(*m_pTrackCollectionManager);
+    const QList<TrackId> trackIds = djmantra::queryLibraryMarkedTrackIds(
+            m_pTrackCollectionManager->internalCollection()->database());
+    if (trackIds.isEmpty()) {
+        return;
+    }
+    if (QMessageBox::question(QApplication::activeWindow(),
+                tr("Clear export marks"),
+                tr("Remove the export mark from %n track(s)?", "", trackIds.size())) !=
+            QMessageBox::Yes) {
+        return;
+    }
+    // Change the tracks, not the database, so that tracks in memory stay in
+    // sync. They are saved when they are released.
+    for (const auto& trackId : trackIds) {
+        const TrackPointer pTrack = m_pTrackCollectionManager->getTrackById(trackId);
+        if (pTrack) {
+            pTrack->setExportMark(false);
+        }
+    }
 }
 
 void Library::onSkinLoadFinished() {
