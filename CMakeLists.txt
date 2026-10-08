@@ -1858,6 +1858,9 @@ if(ANDROID)
   target_link_libraries(mixxx-lib PRIVATE android log mediandk z)
   # Report every undefined symbol at once instead of the first 20.
   target_link_options(mixxx PRIVATE "LINKER:--error-limit=0")
+  # OpenMP (pulled in by Sleef for Rubber Band) is otherwise linked as
+  # libomp.so, which the APK does not ship: "library libomp.so not found".
+  target_link_options(mixxx PRIVATE "-static-openmp")
   set_target_properties(mixxx PROPERTIES
     QT_ANDROID_PACKAGE_NAME com.djmantra.app
     QT_ANDROID_TARGET_SDK_VERSION 35

@@ -60,7 +60,7 @@ if [ -z "$APK" ]; then
         x86_64) ARTIFACT="djmantra-x86_64-apk" ;;
         *) echo "Unsupported phone ABI: $ABI" >&2; exit 1 ;;
     esac
-    RUN_JSON="$(gh run list -R "$REPO" -w Android -b "$BRANCH" -s success -L 1 --json databaseId,headSha)"
+    RUN_JSON="$(gh run list -R "$REPO" -w android.yml -b "$BRANCH" -s success -L 1 --json databaseId,headSha)"
     RUN_ID="$(echo "$RUN_JSON" | python3 -c 'import sys,json;r=json.load(sys.stdin);print(r[0]["databaseId"] if r else "")')"
     COMMIT="$(echo "$RUN_JSON" | python3 -c 'import sys,json;r=json.load(sys.stdin);print(r[0]["headSha"][:7] if r else "")')"
     if [ -z "$RUN_ID" ]; then
