@@ -1,0 +1,80 @@
+--------- beginning of crash
+10-08 16:58:39.738 18021 18060 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0 in tid 18060 (qtMainLoopThrea), pid 18021 (om.djmantra.app)
+10-08 16:58:41.167 18241 18241 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-08 16:58:41.167 18241 18241 F DEBUG   : Build fingerprint: 'google/panther/panther:16/CP1A.260405.005/15001963:user/release-keys'
+10-08 16:58:41.167 18241 18241 F DEBUG   : Kernel Release: '6.1.145-android14-11-gfa1d6308d1fe-ab14691759'
+10-08 16:58:41.167 18241 18241 F DEBUG   : Revision: 'MP1.0'
+10-08 16:58:41.167 18241 18241 F DEBUG   : ABI: 'arm64'
+10-08 16:58:41.167 18241 18241 F DEBUG   : Timestamp: 2026-10-08 16:58:39.888997540+0200
+10-08 16:58:41.167 18241 18241 F DEBUG   : Process uptime: 25s
+10-08 16:58:41.167 18241 18241 F DEBUG   : Executable: /system/bin/app_process64
+10-08 16:58:41.167 18241 18241 F DEBUG   : Cmdline: com.djmantra.app
+10-08 16:58:41.167 18241 18241 F DEBUG   : pid: 18021, tid: 18060, name: qtMainLoopThrea  >>> com.djmantra.app <<<
+10-08 16:58:41.167 18241 18241 F DEBUG   : uid: 10358
+10-08 16:58:41.167 18241 18241 F DEBUG   : tagged_addr_ctrl: 0000000000000001 (PR_TAGGED_ADDR_ENABLE)
+10-08 16:58:41.167 18241 18241 F DEBUG   : esr: 0000000092000006 (Data Abort Exception 0x24)
+10-08 16:58:41.167 18241 18241 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0000000000000000 (read)
+10-08 16:58:41.167 18241 18241 F DEBUG   : Cause: null pointer dereference
+10-08 16:58:41.167 18241 18241 F DEBUG   :     x0  0000000000000000  x1  0000007437695440  x2  0000000000000000  x3  00000074376954c0
+10-08 16:58:41.167 18241 18241 F DEBUG   :     x4  0000000000000020  x5  0000000000000020  x6  b4000075d2cf8ad0  x7  0078007800780069
+10-08 16:58:41.167 18241 18241 F DEBUG   :     x8  b400007632ca95c0  x9  93c36db84c05675f  x10 0000000000000030  x11 0000000000020002
+10-08 16:58:41.168 18241 18241 F DEBUG   :     x12 0000000000000001  x13 0000000000000000  x14 0000000000000000  x15 0000000000000027
+10-08 16:58:41.168 18241 18241 F DEBUG   :     x16 00000073cf1cd300  x17 00000073d750b808  x18 00000073dcc68000  x19 b400007672d45250
+10-08 16:58:41.168 18241 18241 F DEBUG   :     x20 0000000000000000  x21 b400007662cc2c10  x22 b400007582d2f220  x23 0000007437698200
+10-08 16:58:41.168 18241 18241 F DEBUG   :     x24 000000000000004c  x25 0000000000000060  x26 00000073d716028c  x27 00000073342267ce
+10-08 16:58:41.168 18241 18241 F DEBUG   :     x28 b400007492f6a228  x29 0000007437695644
+10-08 16:58:41.168 18241 18241 F DEBUG   :     lr  0000007334ecbaa4  sp  0000007437695430  pc  0000007334ecaaf0  pst 0000000060001000
+10-08 16:58:41.168 18241 18241 F DEBUG   :     esr 0000000092000006  vg  0000000000000000
+10-08 16:58:41.168 18241 18241 F DEBUG   : 51 total frames
+10-08 16:58:41.168 18241 18241 F DEBUG   : backtrace:
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #00 pc 00000000010acaf0  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #01 pc 00000000010adaa0  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #02 pc 000000000102d1ac  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #03 pc 0000000000ffe138  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #04 pc 00000000003a18bc  libQt6Core_arm64-v8a.so (BuildId: d2d8373fe5de2616608cb55f26f19fedefc7add9)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #05 pc 0000000000071a2c  libQt6OpenGL_arm64-v8a.so (BuildId: 3c138a38137114be9f964c3f6ee90acfdeebfe5c)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #06 pc 0000000000072668  libQt6OpenGL_arm64-v8a.so (QOpenGLWindow::resizeEvent(QResizeEvent*)+20) (BuildId: 3c138a38137114be9f964c3f6ee90acfdeebfe5c)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #07 pc 00000000003b2c4c  libQt6Gui_arm64-v8a.so (QWindow::event(QEvent*)+716) (BuildId: 323f110bfe8c2c0f1c49857c7c66e291a03c84e5)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #08 pc 0000000001353dfc  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #09 pc 000000000034e89c  libQt6Widgets_arm64-v8a.so (QApplicationPrivate::notify_helper(QObject*, QEvent*)+236) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #10 pc 000000000034f518  libQt6Widgets_arm64-v8a.so (QApplication::notify(QObject*, QEvent*)+520) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #11 pc 0000000000fefc80  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #12 pc 0000000000368e64  libQt6Core_arm64-v8a.so (QCoreApplication::notifyInternal2(QObject*, QEvent*)+164) (BuildId: d2d8373fe5de2616608cb55f26f19fedefc7add9)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #13 pc 000000000036c168  libQt6Gui_arm64-v8a.so (QGuiApplicationPrivate::processGeometryChangeEvent(QWindowSystemInterfacePrivate::GeometryChangeEvent*)+288) (BuildId: 323f110bfe8c2c0f1c49857c7c66e291a03c84e5)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #14 pc 00000000003b7f70  libQt6Gui_arm64-v8a.so (QWindowSystemInterface::sendWindowSystemEvents(QFlags<QEventLoop::ProcessEventsFlag>)+120) (BuildId: 323f110bfe8c2c0f1c49857c7c66e291a03c84e5)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #15 pc 00000000003b7dc4  libQt6Gui_arm64-v8a.so (QWindowSystemInterface::flushWindowSystemEvents(QFlags<QEventLoop::ProcessEventsFlag>)+172) (BuildId: 323f110bfe8c2c0f1c49857c7c66e291a03c84e5)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #16 pc 00000000003a1130  libQt6Gui_arm64-v8a.so (QPlatformWindow::setVisible(bool)+124) (BuildId: 323f110bfe8c2c0f1c49857c7c66e291a03c84e5)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #17 pc 000000000008ac28  libplugins_platforms_qtforandroid_arm64-v8a.so (BuildId: 71f91a0cdcb3d7f2dbf82fb9a6ff7dae50321f09)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #18 pc 00000000003af9f4  libQt6Gui_arm64-v8a.so (QWindowPrivate::setVisible(bool)+472) (BuildId: 323f110bfe8c2c0f1c49857c7c66e291a03c84e5)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #19 pc 00000000003a5350  libQt6Widgets_arm64-v8a.so (QWindowContainer::event(QEvent*)+572) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #20 pc 000000000034e89c  libQt6Widgets_arm64-v8a.so (QApplicationPrivate::notify_helper(QObject*, QEvent*)+236) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #21 pc 000000000034ffdc  libQt6Widgets_arm64-v8a.so (QApplication::notify(QObject*, QEvent*)+3276) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #22 pc 0000000000fefc80  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #23 pc 0000000000368e64  libQt6Core_arm64-v8a.so (QCoreApplication::notifyInternal2(QObject*, QEvent*)+164) (BuildId: d2d8373fe5de2616608cb55f26f19fedefc7add9)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #24 pc 000000000038c6bc  libQt6Widgets_arm64-v8a.so (QWidgetPrivate::show_helper()+288) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #25 pc 000000000038d554  libQt6Widgets_arm64-v8a.so (QWidgetPrivate::setVisible(bool)+708) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #26 pc 000000000038d168  libQt6Widgets_arm64-v8a.so (QWidget::setVisible(bool)+252) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #27 pc 000000000135399c  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #28 pc 000000000038e224  libQt6Widgets_arm64-v8a.so (QWidget::event(QEvent*)+2464) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #29 pc 000000000034e89c  libQt6Widgets_arm64-v8a.so (QApplicationPrivate::notify_helper(QObject*, QEvent*)+236) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #30 pc 000000000034ffdc  libQt6Widgets_arm64-v8a.so (QApplication::notify(QObject*, QEvent*)+3276) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #31 pc 0000000000fefc80  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #32 pc 0000000000368e64  libQt6Core_arm64-v8a.so (QCoreApplication::notifyInternal2(QObject*, QEvent*)+164) (BuildId: d2d8373fe5de2616608cb55f26f19fedefc7add9)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #33 pc 000000000038c6bc  libQt6Widgets_arm64-v8a.so (QWidgetPrivate::show_helper()+288) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #34 pc 000000000038d554  libQt6Widgets_arm64-v8a.so (QWidgetPrivate::setVisible(bool)+708) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #35 pc 000000000038d168  libQt6Widgets_arm64-v8a.so (QWidget::setVisible(bool)+252) (BuildId: 933ab5177901b8bb2a5b57882db1f46d5b2df236)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #36 pc 0000000000ffd750  libmixxx_arm64-v8a.so (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.168 18241 18241 F DEBUG   :       #37 pc 0000000000c82cd4  libmixxx_arm64-v8a.so (main+3136) (BuildId: 3adef6503d393361388ea961f0834a4b1bec5616)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #38 pc 000000000005c2d4  libplugins_platforms_qtforandroid_arm64-v8a.so (BuildId: 71f91a0cdcb3d7f2dbf82fb9a6ff7dae50321f09)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #39 pc 0000000000cb5cb4  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (art_jni_trampoline+100)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #40 pc 00000000006bf164  /apex/com.android.art/lib64/libart.so (nterp_helper+116) (BuildId: a47994c420371ffbd05d16fc9a15ac9f)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #41 pc 00000000001eb5b2  base.apk (org.qtproject.qt.android.QtNative$$ExternalSyntheticLambda4.run+6)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #42 pc 00000000006bf8e4  /apex/com.android.art/lib64/libart.so (nterp_helper+2036) (BuildId: a47994c420371ffbd05d16fc9a15ac9f)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #43 pc 00000000001ed2d6  base.apk (org.qtproject.qt.android.QtThread$1.run+146)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #44 pc 00000000003119d0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (java.lang.Thread.run+64)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #45 pc 0000000000270cf4  /apex/com.android.art/lib64/libart.so (art_quick_invoke_stub+612) (BuildId: a47994c420371ffbd05d16fc9a15ac9f)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #46 pc 000000000023ba68  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+224) (BuildId: a47994c420371ffbd05d16fc9a15ac9f)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #47 pc 000000000055c204  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallback(void*)+1400) (BuildId: a47994c420371ffbd05d16fc9a15ac9f)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #48 pc 000000000055bc78  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallbackWithUffdGc(void*)+12) (BuildId: a47994c420371ffbd05d16fc9a15ac9f)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #49 pc 0000000000087d9c  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*) (.__uniq.67847048707805468364044055584648682506)+236) (BuildId: c472e218ac90e8dc08384b3b62c55961)
+10-08 16:58:41.169 18241 18241 F DEBUG   :       #50 pc 0000000000078950  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64) (BuildId: c472e218ac90e8dc08384b3b62c55961)

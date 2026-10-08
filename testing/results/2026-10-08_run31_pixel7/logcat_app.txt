@@ -1,0 +1,103 @@
+--------- beginning of main
+10-08 16:58:15.092 18021 18021 I Zygote  : Process 18021 created for com.djmantra.app
+10-08 16:58:15.092 18021 18021 I om.djmantra.app: Using generational CollectorTypeCMC GC.
+10-08 16:58:15.097 18021 18021 D nativeloader: Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-08 16:58:15.112 18021 18021 D nativeloader: Configuring clns-9 for other apk base.apk. target_sdk_version=35, uses_libraries=, library_path=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/lib/arm64:/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.djmantra.app
+10-08 16:58:15.115 18021 18021 V GraphicsEnvironment: Currently set values for:
+10-08 16:58:15.115 18021 18021 V GraphicsEnvironment:   angle_gl_driver_selection_pkgs=[com.android.angle]
+10-08 16:58:15.115 18021 18021 V GraphicsEnvironment:   angle_gl_driver_selection_values=[angle]
+10-08 16:58:15.115 18021 18021 V GraphicsEnvironment: com.djmantra.app is not listed in per-application setting
+10-08 16:58:15.115 18021 18021 V GraphicsEnvironment: No special selections for ANGLE, returning default driver choice
+10-08 16:58:15.115 18021 18021 V GraphicsEnvironment: Neither updatable production driver nor prerelease driver is supported.
+--------- beginning of system
+10-08 16:58:15.123 18021 18049 I DisplayManager: Choreographer implicitly registered for the refresh rate.
+10-08 16:58:15.123 18021 18049 D vulkan  : searching for layers in 'arm64'
+10-08 16:58:15.123 18021 18049 D vulkan  : searching for layers in 'arm64-v8a'
+10-08 16:58:15.132 18021 18021 W om.djmantra.app: ClassLoaderContext parent mismatch.  (PCL[] | PCL[];PCL[base.apk*1389782474])
+10-08 16:58:15.135 18021 18021 D Qt JAVA : Not in debug mode! It is not allowed to use extra arguments in non-debug mode.
+10-08 16:58:15.137 18021 18060 D nativeloader: Load libc++_shared.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.138 18021 18060 D nativeloader: Load libQt6Core_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.138 18021 18060 I QtCore  : Start
+10-08 16:58:15.139 18021 18060 D nativeloader: Load libQt6Concurrent_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.139 18021 18060 D nativeloader: Load libQt6Core5Compat_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.141 18021 18060 D nativeloader: Load libQt6Gui_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.142 18021 18060 D nativeloader: Load libQt6Network_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.144 18021 18060 D nativeloader: Load libQt6Qml_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.145 18021 18060 D nativeloader: Load libQt6QmlModels_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.145 18021 18060 D nativeloader: Load libQt6LabsQmlModels_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.146 18021 18060 D nativeloader: Load libQt6OpenGL_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.148 18021 18060 D nativeloader: Load libQt6Widgets_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.150 18021 18060 D nativeloader: Load libQt6PrintSupport_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.150 18021 18060 D nativeloader: Load libQt6QmlWorkerScript_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.151 18021 18060 D nativeloader: Load libQt6QmlMeta_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.155 18021 18060 D nativeloader: Load libQt6Quick_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.158 18021 18060 D nativeloader: Load libQt6QuickTemplates2_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.159 18021 18060 D nativeloader: Load libQt6QuickControls2Impl_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.159 18021 18060 D nativeloader: Load libQt6QuickControls2BasicStyleImpl_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.159 18021 18060 D nativeloader: Load libQt6QuickControls2_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.160 18021 18060 D nativeloader: Load libQt6QuickControls2Basic_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.160 18021 18060 D nativeloader: Load libQt6QuickControls2FusionStyleImpl_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.161 18021 18060 D nativeloader: Load libQt6QuickControls2Fusion_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.161 18021 18060 D nativeloader: Load libQt6QuickLayouts_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.162 18021 18060 D nativeloader: Load libQt6QuickShapes_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.162 18021 18060 D nativeloader: Load libQt6QuickWidgets_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.167 18021 18060 D nativeloader: Load libQt6ShaderTools_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.168 18021 18060 D nativeloader: Load libQt6Sql_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.169 18021 18060 D nativeloader: Load libQt6Svg_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.169 18021 18060 D nativeloader: Load libQt6SvgWidgets_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.170 18021 18060 D nativeloader: Load libQt6Test_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.170 18021 18060 D nativeloader: Load libQt6Xml_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.171 18021 18060 D nativeloader: Load libQt6QuickControls2MaterialStyleImpl_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.171 18021 18060 D nativeloader: Load libQt6QuickControls2Material_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.173 18021 18060 D nativeloader: Load libQt6QuickControls2ImagineStyleImpl_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.173 18021 18060 D nativeloader: Load libQt6QuickControls2Imagine_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.174 18021 18060 D nativeloader: Load libQt6QuickControls2UniversalStyleImpl_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.174 18021 18060 D nativeloader: Load libQt6QuickControls2Universal_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.175 18021 18060 D nativeloader: Load libQt6QuickControls2FluentWinUI3StyleImpl_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.175 18021 18060 D nativeloader: Load libQt6QuickEffects_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.176 18021 18060 D nativeloader: Load libQt6QuickTest_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.176 18021 18060 D nativeloader: Load libQt6QuickDialogs2Utils_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.177 18021 18060 D nativeloader: Load libQt6QuickDialogs2QuickImpl_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.178 18021 18060 D nativeloader: Load libQt6QuickDialogs2_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.178 18021 18060 D nativeloader: Load libQt6LabsFolderListModel_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.179 18021 18060 D nativeloader: Load libplugins_platforms_qtforandroid_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.180 18021 18060 I Qt      : qt started
+10-08 16:58:15.181 18021 18060 D nativeloader: Load libomp.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.221 18021 18060 D CompatChangeReporter: Compat change id reported: 312399441; UID 10358; state: ENABLED
+10-08 16:58:15.245 18021 18060 D nativeloader: Load libmixxx_arm64-v8a.so using class loader ns clns-9 (caller=/data/app/~~XGn86WWxVvy-oqFVb48TiA==/com.djmantra.app-VjokTaKV-aH5px3o-0przg==/base.apk): ok
+10-08 16:58:15.248 18021 18021 D CompatChangeReporter: Compat change id reported: 309578419; UID 10358; state: ENABLED
+10-08 16:58:15.248 18021 18021 D DesktopExperienceFlags: Toggle override initialized to: false
+10-08 16:58:15.248 18021 18021 D DesktopModeFlags: Toggle override initialized to: OVERRIDE_UNSET
+10-08 16:58:15.257 18021 18021 I ContentCaptureHelper: Setting logging level to OFF
+10-08 16:58:15.266 18021 18021 D CompatChangeReporter: Compat change id reported: 349153669; UID 10358; state: ENABLED
+10-08 16:58:15.274 18021 18021 D VRI[QtActivity]: WindowInsets changed: 1080x2400 statusBars:[0,136,0,0] navigationBars:[0,0,0,126] mandatorySystemGestures:[0,168,0,126] 
+10-08 16:58:15.275 18021 18021 D WindowOnBackDispatcher: setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda25@a1caf3e
+10-08 16:58:15.275 18021 18021 I HWUI    : Using FreeType backend (prop=Auto)
+10-08 16:58:15.283 18021 18060 D default : ConfigObject: Could not read "/data/user/0/com.djmantra.app/files/.mixxx/mixxx.cfg"
+10-08 16:58:15.312 18021 18060 I default : Selected Qt style: "fusion"
+10-08 16:58:15.312 18021 18060 D default : ConfigObject: Could not read "/data/user/0/com.djmantra.app/files/.mixxx/mixxx.cfg"
+10-08 16:58:15.313 18021 18060 E default : "qResourcePath is empty, this should not happen -- did our developers forget to define __UNIX__, __WINDOWS__ or __APPLE__??"
+10-08 16:58:15.324 18021 18021 D InsetsController: hide(ime())
+10-08 16:58:15.324 18021 18021 I ImeTracker: com.djmantra.app:f8e017d0: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+10-08 16:58:15.370 18021 18021 D WindowOnBackDispatcher: setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda25@5d87b7c
+10-08 16:58:20.664 18021 18117 D ProfileInstaller: Installing profile for com.djmantra.app
+10-08 16:58:38.935 18021 18060 D default : Loading resources from  "/"
+10-08 16:58:38.935 18021 18060 D default : ConfigObject: Could not read "/data/user/0/com.djmantra.app/files/.mixxx/mixxx.cfg"
+10-08 16:58:38.935 18021 18060 D default : ConfigObject: Could not read "/data/user/0/com.djmantra.app/files/.mixxx/mixxx.cfg"
+10-08 16:58:38.935 18021 18060 D default : No version number in configuration file. Setting to "2.5.6"
+10-08 16:58:38.998 18021 18021 D WindowOnBackDispatcher: setTopOnBackInvokedCallback (unwrapped): null
+10-08 16:58:39.001 18021 18049 D HWUI    : endAllActiveAnimators on 0xb4000075b2cf6e30 (RippleDrawable) with handle 0xb400007482d2d6c0
+10-08 16:58:39.041 18021 18021 D WindowOnBackDispatcher: setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda25@ae60f79
+10-08 16:58:39.050 18021 18021 D WindowOnBackDispatcher: setTopOnBackInvokedCallback (unwrapped): null
+10-08 16:58:39.065 18021 18021 D InsetsController: hide(ime())
+10-08 16:58:39.065 18021 18021 I ImeTracker: com.djmantra.app:80a0b995: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+10-08 16:58:39.099 18021 18021 D InsetsController: hide(ime())
+10-08 16:58:39.099 18021 18021 I ImeTracker: com.djmantra.app:5c1300db: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+10-08 16:58:39.122 18021 18021 I ImeTracker: com.djmantra.app:dd09a754: onRequestHide at ORIGIN_CLIENT reason HIDE_SOFT_INPUT fromUser false userId 0 displayId 0
+10-08 16:58:39.123 18021 18021 D InsetsController: hide(ime())
+10-08 16:58:39.123 18021 18021 I ImeTracker: com.djmantra.app:dd09a754: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+10-08 16:58:39.510 18021 18021 V Activity: No requestable permission in the request.
+10-08 16:58:39.733 18021 18021 W qtMainLoopThrea: type=1400 audit(0.0:16379): avc:  denied  { read } for  name="/" dev="dm-12" ino=2 scontext=u:r:untrusted_app:s0:c102,c257,c512,c768 tcontext=u:object_r:rootfs:s0 tclass=dir permissive=0 app=com.djmantra.app
+--------- beginning of crash
+10-08 16:58:39.738 18021 18060 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0 in tid 18060 (qtMainLoopThrea), pid 18021 (om.djmantra.app)
+10-08 16:58:40.068 18021 18021 D VRI[QtActivity]: visibilityChanged oldVisibility=true newVisibility=false
