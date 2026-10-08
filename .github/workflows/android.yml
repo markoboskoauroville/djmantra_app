@@ -32,6 +32,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends ninja-build autoconf autoconf-archive automake libtool pkg-config nasm
 
+      - name: Select Android NDK r27 (supported by Qt 6.8)
+        run: |
+          NDK=$(ls -d "$ANDROID_SDK_ROOT"/ndk/27.* 2>/dev/null | sort -V | tail -1)
+          if [ -z "$NDK" ]; then
+            yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" > /dev/null
+            NDK="$ANDROID_SDK_ROOT/ndk/27.2.12479018"
+          fi
+          echo "Using NDK $NDK"
+          echo "DJMANTRA_NDK=$NDK" >> "$GITHUB_ENV"
+          echo "DJMANTRA_NDK_VERSION=$(basename "$NDK")" >> "$GITHUB_ENV"
+
       - name: Set up vcpkg
         run: |
           git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
@@ -42,15 +53,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vcpkg-cache
-          key: vcpkg-${{ matrix.triplet }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-${{ github.sha }}
+          key: vcpkg-${{ matrix.triplet }}-${{ env.DJMANTRA_NDK_VERSION }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-${{ github.sha }}
           restore-keys: |
-            vcpkg-${{ matrix.triplet }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-
-            vcpkg-${{ matrix.triplet }}-
+            vcpkg-${{ matrix.triplet }}-${{ env.DJMANTRA_NDK_VERSION }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-
+            vcpkg-${{ matrix.triplet }}-${{ env.DJMANTRA_NDK_VERSION }}-
 
       - name: Build dependencies
         run: |
-          # Runner-provided shell variable; not visible in the workflow env context.
-          export ANDROID_NDK_HOME="${ANDROID_NDK_LATEST_HOME:?NDK not found on runner}"
+          export ANDROID_NDK_HOME="${DJMANTRA_NDK:?}"
           mkdir -p vcpkg-cache
           echo "NDK: $ANDROID_NDK_HOME"
           "$VCPKG_ROOT/vcpkg" install \
@@ -110,6 +120,17 @@ jobs:
         # Artifacts don't keep file permissions (protoc etc. come back non-executable).
         run: find android-deps/x64-linux/tools -type f -exec chmod +x {} +
 
+      - name: Select Android NDK r27 (supported by Qt 6.8)
+        run: |
+          NDK=$(ls -d "$ANDROID_SDK_ROOT"/ndk/27.* 2>/dev/null | sort -V | tail -1)
+          if [ -z "$NDK" ]; then
+            yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" > /dev/null
+            NDK="$ANDROID_SDK_ROOT/ndk/27.2.12479018"
+          fi
+          echo "Using NDK $NDK"
+          echo "DJMANTRA_NDK=$NDK" >> "$GITHUB_ENV"
+          echo "DJMANTRA_NDK_VERSION=$(basename "$NDK")" >> "$GITHUB_ENV"
+
       - name: Install Qt for Android (and the matching desktop host tools)
         run: |
           pip install aqtinstall
@@ -119,7 +140,7 @@ jobs:
 
       - name: Configure
         run: |
-          export ANDROID_NDK_ROOT="${ANDROID_NDK_LATEST_HOME:?}"
+          export ANDROID_NDK_ROOT="${DJMANTRA_NDK:?}"
           export JAVA_HOME="${JAVA_HOME_17_X64:?}"
           DEPS="$GITHUB_WORKSPACE/android-deps/${{ matrix.triplet }}"
           HOSTDEPS="$GITHUB_WORKSPACE/android-deps/x64-linux"
