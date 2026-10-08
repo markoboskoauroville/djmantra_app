@@ -242,6 +242,21 @@ if(ANDROID)
   endforeach()
 endif()
 enable_language(C CXX)
+if(ANDROID)
+  # OpenMP (used by Sleef, which Rubber Band uses) must be linked statically:
+  # the APK ships no libomp.so ("dlopen failed: library libomp.so not
+  # found"). CMake's FindOpenMP links the NDK's libomp.so by its path, which
+  # -static-openmp cannot override. So define OpenMP::OpenMP_CXX here, before
+  # any find_package(), with flags only: FindOpenMP keeps an existing target.
+  add_library(OpenMP::OpenMP_CXX INTERFACE IMPORTED)
+  set_target_properties(OpenMP::OpenMP_CXX PROPERTIES
+    INTERFACE_COMPILE_OPTIONS "-fopenmp"
+    INTERFACE_LINK_OPTIONS "-fopenmp;-static-openmp")
+  add_library(OpenMP::OpenMP_C INTERFACE IMPORTED)
+  set_target_properties(OpenMP::OpenMP_C PROPERTIES
+    INTERFACE_COMPILE_OPTIONS "-fopenmp"
+    INTERFACE_LINK_OPTIONS "-fopenmp;-static-openmp")
+endif()
 # Work around missing version suffixes support https://gitlab.kitware.com/cmake/cmake/-/issues/16716
 set(MIXXX_VERSION_PRERELEASE "") # set to "alpha" "beta" or ""
 
@@ -1867,7 +1882,9 @@ if(ANDROID)
   target_link_options(mixxx PRIVATE "LINKER:--error-limit=0")
   # OpenMP (pulled in by Sleef for Rubber Band) is otherwise linked as
   # libomp.so, which the APK does not ship: "library libomp.so not found".
-  target_link_options(mixxx PRIVATE "-static-openmp")
+  # See OpenMP::OpenMP_CXX above; this also covers dependencies that pass
+  # -fopenmp themselves. CI checks the result (tools/android/check_apk_libs.sh).
+  target_link_options(mixxx PRIVATE "-fopenmp" "-static-openmp")
   set_target_properties(mixxx PROPERTIES
     QT_ANDROID_PACKAGE_NAME com.djmantra.app
     QT_ANDROID_TARGET_SDK_VERSION 35

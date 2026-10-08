@@ -198,6 +198,12 @@ jobs:
           rm apk-out/aligned.apk
           "$BT/apksigner" verify --print-certs "apk-out/djmantra-${{ matrix.abi }}.apk" | head -3
 
+      - name: Check native libraries (no "library ... not found" at launch)
+        run: |
+          # Every NEEDED library must be in the APK or an Android system library.
+          tools/android/check_apk_libs.sh "apk-out/djmantra-${{ matrix.abi }}.apk" \
+            "${{ matrix.abi }}" 29 "${DJMANTRA_NDK:?}" | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
