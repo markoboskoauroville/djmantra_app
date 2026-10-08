@@ -76,8 +76,8 @@ Algoriddim's djay artwork or branding.
 ## Milestones
 
 - [x] **M0** Import Mixxx 2.5.6 unmodified (one commit, so our changes diff against it)
-- [ ] **M1** Desktop Linux baseline: build plus the full test suite, locally and in CI
-- [ ] **M2** Android dependencies cross-compiled in CI (`arm64-android`, `x86_64-android`)
+- [x] **M1** Desktop Linux baseline: build plus the full test suite (851/851 pass, before and after the M3 changes)
+- [x] **M2** Android dependencies cross-compiled in CI (`arm64-android`, `x64-android`)
 - [ ] **M3** Mixxx core compiles and links for Android, with sound and MIDI stubbed
 - [ ] **M4** `SoundDeviceOboe`: audio plays on the emulator and phone
 - [ ] **M5** `AndroidMidiController`: USB and BLE MIDI input and output
