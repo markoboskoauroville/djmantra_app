@@ -21,6 +21,14 @@ Tool: `tools/controller/midi_capture.py` (non-interactive; each call appends to
   `lsusb -v -d 06f8:` (Hercules vendor id). Save VID/PID, product name and firmware/bcdDevice.
 
 ## 1b. Camera (so you can check LEDs yourself)
+**If the camera is the user's Pixel 7** (connected with adb): `brew install scrcpy` (2.x), then grab a
+frame with
+`scrcpy -s <serial> --video-source=camera --camera-facing=back --camera-size=1280x720 --no-playback --no-audio --record=/tmp/cam.mp4 --time-limit=2 && ffmpeg -loglevel error -sseof -0.3 -i /tmp/cam.mp4 -frames:v 1 -y /tmp/mixultra.jpg`
+(`scrcpy --list-cameras` if the back camera is not the right one). If scrcpy camera mode fails,
+open the phone's camera app and take the photo with `adb -s <serial> shell input keyevent KEYCODE_CAMERA`,
+then `adb pull` the newest file from `/sdcard/DCIM/Camera/`. When the phone is needed for
+something else (app test), ask the user to turn it back to the controller afterwards.
+Otherwise a Mac/USB camera:
 The user has a camera pointed at the controller. Find it and take a test photo:
 - macOS: `ffmpeg -f avfoundation -list_devices true -i ""`, then
   `ffmpeg -loglevel error -f avfoundation -framerate 30 -video_size 1280x720 -i "<index>" -frames:v 1 -y /tmp/mixultra.jpg`
