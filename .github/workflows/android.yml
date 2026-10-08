@@ -95,7 +95,9 @@ jobs:
       - name: Host tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends ninja-build
+          # Runtime libraries for Qt's desktop host tools (qsb, qmlcachegen, rcc, ...).
+          sudo apt-get install -y --no-install-recommends ninja-build \
+            libegl1 libgl1 libopengl0 libxkbcommon0 libfontconfig1 libdbus-1-3
 
       - uses: actions/download-artifact@v4
         with:
