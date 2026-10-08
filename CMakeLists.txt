@@ -1853,7 +1853,10 @@ endif()
 
 if(ANDROID)
   target_compile_definitions(mixxx-lib PUBLIC __ANDROID_PORT__)
-  target_link_libraries(mixxx-lib PRIVATE android log)
+  # mediandk: FFmpeg's MediaCodec (hardware decoder) support
+  target_link_libraries(mixxx-lib PRIVATE android log mediandk)
+  # Report every undefined symbol at once instead of the first 20.
+  target_link_options(mixxx PRIVATE "LINKER:--error-limit=0")
   set_target_properties(mixxx PROPERTIES
     QT_ANDROID_PACKAGE_NAME com.djmantra.app
     QT_ANDROID_TARGET_SDK_VERSION 35
