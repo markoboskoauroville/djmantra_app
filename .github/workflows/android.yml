@@ -46,9 +46,9 @@ jobs:
           restore-keys: vcpkg-${{ matrix.triplet }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-
 
       - name: Build dependencies
-        env:
-          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_LATEST_HOME }}
         run: |
+          # Runner-provided shell variable; not visible in the workflow env context.
+          export ANDROID_NDK_HOME="${ANDROID_NDK_LATEST_HOME:?NDK not found on runner}"
           mkdir -p vcpkg-cache
           echo "NDK: $ANDROID_NDK_HOME"
           "$VCPKG_ROOT/vcpkg" install \
