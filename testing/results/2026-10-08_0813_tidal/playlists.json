@@ -1,0 +1,891 @@
+{
+ "data": [
+  {
+   "id": "3373c444-763a-43c8-befd-7b39bd4e1990",
+   "type": "playlists",
+   "attributes": {
+    "name": "DJ Mislav",
+    "description": "",
+    "bounded": true,
+    "duration": "PT14M43S",
+    "numberOfItems": 3,
+    "numberOfTrackItems": 3,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/3373c444-763a-43c8-befd-7b39bd4e1990",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/3373c444-763a-43c8-befd-7b39bd4e1990?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/3373c444-763a-43c8-befd-7b39bd4e1990?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/3373c444-763a-43c8-befd-7b39bd4e1990?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-15T14:01:10.960253Z",
+    "lastModifiedAt": "2026-08-15T16:51:59.177942Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "4896a6a2-b5a0-48b6-987b-3540c4bb06f9",
+   "type": "playlists",
+   "attributes": {
+    "name": "Healing",
+    "description": "",
+    "bounded": true,
+    "duration": "PT45M39S",
+    "numberOfItems": 9,
+    "numberOfTrackItems": 9,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/4896a6a2-b5a0-48b6-987b-3540c4bb06f9",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/4896a6a2-b5a0-48b6-987b-3540c4bb06f9?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/4896a6a2-b5a0-48b6-987b-3540c4bb06f9?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/4896a6a2-b5a0-48b6-987b-3540c4bb06f9?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-09T04:56:14.286230Z",
+    "lastModifiedAt": "2026-08-09T06:01:58.851Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "496b787b-5938-4268-9f3c-68150e734108",
+   "type": "playlists",
+   "attributes": {
+    "name": "croatia",
+    "description": "",
+    "bounded": true,
+    "duration": "PT5M20S",
+    "numberOfItems": 1,
+    "numberOfTrackItems": 1,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/496b787b-5938-4268-9f3c-68150e734108",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/496b787b-5938-4268-9f3c-68150e734108?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/496b787b-5938-4268-9f3c-68150e734108?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/496b787b-5938-4268-9f3c-68150e734108?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-07T10:59:23.030888Z",
+    "lastModifiedAt": "2026-08-07T10:59:23.781957Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "acab066b-518b-4b21-97ac-4bca91c0c4d8",
+   "type": "playlists",
+   "attributes": {
+    "name": "DJ Mantra - The Beginings",
+    "description": "",
+    "bounded": true,
+    "duration": "PT58M25S",
+    "numberOfItems": 12,
+    "numberOfTrackItems": 12,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/acab066b-518b-4b21-97ac-4bca91c0c4d8",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/acab066b-518b-4b21-97ac-4bca91c0c4d8?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/acab066b-518b-4b21-97ac-4bca91c0c4d8?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/acab066b-518b-4b21-97ac-4bca91c0c4d8?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-04T02:54:36.552266Z",
+    "lastModifiedAt": "2026-08-04T02:59:12.052461Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "da076179-be56-4f61-a009-20a4b34636e9",
+   "type": "playlists",
+   "attributes": {
+    "name": "Lauren Garnier (Brain Pick) (11-07-26 12:30)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 11-07-26 12:30.",
+    "bounded": true,
+    "duration": "PT47H45M29S",
+    "numberOfItems": 416,
+    "numberOfTrackItems": 416,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/da076179-be56-4f61-a009-20a4b34636e9",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/da076179-be56-4f61-a009-20a4b34636e9?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/da076179-be56-4f61-a009-20a4b34636e9?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/da076179-be56-4f61-a009-20a4b34636e9?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T16:25:26.775372Z",
+    "lastModifiedAt": "2026-08-02T16:25:30.596653Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "44bbf3a6-eec6-4252-abd5-a22aa5341ba8",
+   "type": "playlists",
+   "attributes": {
+    "name": "4 hero heritage (brain pick) (10-07-26 10:21)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 10-07-26 10:21.",
+    "bounded": true,
+    "duration": "PT15H53M23S",
+    "numberOfItems": 153,
+    "numberOfTrackItems": 153,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/44bbf3a6-eec6-4252-abd5-a22aa5341ba8",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/44bbf3a6-eec6-4252-abd5-a22aa5341ba8?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/44bbf3a6-eec6-4252-abd5-a22aa5341ba8?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/44bbf3a6-eec6-4252-abd5-a22aa5341ba8?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T16:24:56.899571Z",
+    "lastModifiedAt": "2026-08-02T16:24:58.737880Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "833d227c-4989-478c-9dbe-1bcc8c6b9f6f",
+   "type": "playlists",
+   "attributes": {
+    "name": "1 Deep House 108 Garnier Inspired",
+    "description": "",
+    "bounded": true,
+    "duration": "PT9H43M39S",
+    "numberOfItems": 90,
+    "numberOfTrackItems": 90,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/833d227c-4989-478c-9dbe-1bcc8c6b9f6f",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/833d227c-4989-478c-9dbe-1bcc8c6b9f6f?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/833d227c-4989-478c-9dbe-1bcc8c6b9f6f?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/833d227c-4989-478c-9dbe-1bcc8c6b9f6f?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T16:24:39.110779Z",
+    "lastModifiedAt": "2026-08-02T16:24:40.659337Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 1
+   }
+  },
+  {
+   "id": "e208235c-4c77-4ee0-a71f-f41cb6df4bde",
+   "type": "playlists",
+   "attributes": {
+    "name": "THE BEST OF NILS FRAHM",
+    "description": "Moved from Spotify with Soundiiz — Soundiiz.com",
+    "bounded": true,
+    "duration": "PT2H8M55S",
+    "numberOfItems": 16,
+    "numberOfTrackItems": 16,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/e208235c-4c77-4ee0-a71f-f41cb6df4bde",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/e208235c-4c77-4ee0-a71f-f41cb6df4bde?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/e208235c-4c77-4ee0-a71f-f41cb6df4bde?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/e208235c-4c77-4ee0-a71f-f41cb6df4bde?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T15:46:10.904250Z",
+    "lastModifiedAt": "2026-08-02T15:46:11.014504Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "279c0d78-c495-45d0-9f0c-eef647229aeb",
+   "type": "playlists",
+   "attributes": {
+    "name": "Says – Nils Frahm",
+    "description": "Moved from Spotify with Soundiiz — Soundiiz.com",
+    "bounded": true,
+    "duration": "PT1H46M53S",
+    "numberOfItems": 20,
+    "numberOfTrackItems": 20,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/279c0d78-c495-45d0-9f0c-eef647229aeb",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/279c0d78-c495-45d0-9f0c-eef647229aeb?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/279c0d78-c495-45d0-9f0c-eef647229aeb?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/279c0d78-c495-45d0-9f0c-eef647229aeb?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T15:45:41.582152Z",
+    "lastModifiedAt": "2026-08-02T15:45:41.691249Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "d11be164-7923-4d98-89ac-4a46ac01929c",
+   "type": "playlists",
+   "attributes": {
+    "name": "St Germain (brain pick) (12-07-26 12:54)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 12-07-26 12:54.",
+    "bounded": true,
+    "duration": "PT21H25M11S",
+    "numberOfItems": 200,
+    "numberOfTrackItems": 200,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/d11be164-7923-4d98-89ac-4a46ac01929c",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/d11be164-7923-4d98-89ac-4a46ac01929c?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/d11be164-7923-4d98-89ac-4a46ac01929c?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/d11be164-7923-4d98-89ac-4a46ac01929c?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T15:45:09.877345Z",
+    "lastModifiedAt": "2026-08-02T15:45:11.770801Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "bc01b888-1019-4816-9f17-3381751e375b",
+   "type": "playlists",
+   "attributes": {
+    "name": "Dennis Ferrer (brain pick) (13-07-26 13:02)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 13-07-26 13:02.",
+    "bounded": true,
+    "duration": "PT20H22M19S",
+    "numberOfItems": 191,
+    "numberOfTrackItems": 191,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/bc01b888-1019-4816-9f17-3381751e375b",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/bc01b888-1019-4816-9f17-3381751e375b?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/bc01b888-1019-4816-9f17-3381751e375b?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/bc01b888-1019-4816-9f17-3381751e375b?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T15:37:22.939394Z",
+    "lastModifiedAt": "2026-08-02T15:37:24.833546Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "e3b3d2fa-88fc-436f-9dfd-ad9c005ffcc7",
+   "type": "playlists",
+   "attributes": {
+    "name": "Jaydee (brain pick) (14-07-26 20:31)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 14-07-26 20:31.",
+    "bounded": true,
+    "duration": "PT20H29M43S",
+    "numberOfItems": 190,
+    "numberOfTrackItems": 190,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/e3b3d2fa-88fc-436f-9dfd-ad9c005ffcc7",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/e3b3d2fa-88fc-436f-9dfd-ad9c005ffcc7?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/e3b3d2fa-88fc-436f-9dfd-ad9c005ffcc7?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/e3b3d2fa-88fc-436f-9dfd-ad9c005ffcc7?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T15:36:39.128566Z",
+    "lastModifiedAt": "2026-08-02T15:36:41.429962Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "14747ff5-7bf4-4204-bcaa-7f8972fe8169",
+   "type": "playlists",
+   "attributes": {
+    "name": "Âme (Brain pick) (16-07-26 05:11)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 16-07-26 05:11.",
+    "bounded": true,
+    "duration": "PT23H7M19S",
+    "numberOfItems": 192,
+    "numberOfTrackItems": 192,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/14747ff5-7bf4-4204-bcaa-7f8972fe8169",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/14747ff5-7bf4-4204-bcaa-7f8972fe8169?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/14747ff5-7bf4-4204-bcaa-7f8972fe8169?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/14747ff5-7bf4-4204-bcaa-7f8972fe8169?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T15:35:16.540172Z",
+    "lastModifiedAt": "2026-08-02T15:35:19.067773Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "f76accad-8a0f-42e1-88a6-3acfe87f68fb",
+   "type": "playlists",
+   "attributes": {
+    "name": "Ganesha 2 (26-07-26 10:55)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 26-07-26 10:55.",
+    "bounded": true,
+    "duration": "PT49M13S",
+    "numberOfItems": 7,
+    "numberOfTrackItems": 7,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/f76accad-8a0f-42e1-88a6-3acfe87f68fb",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/f76accad-8a0f-42e1-88a6-3acfe87f68fb?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/f76accad-8a0f-42e1-88a6-3acfe87f68fb?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/f76accad-8a0f-42e1-88a6-3acfe87f68fb?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T15:34:04.684610Z",
+    "lastModifiedAt": "2026-08-02T15:34:04.802017Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "931c95e6-1c97-4a7a-bf0c-61276ceb33f1",
+   "type": "playlists",
+   "attributes": {
+    "name": "Sweet Songs Sunrise",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 27-07-26 10:17.",
+    "bounded": true,
+    "duration": "PT8H30M20S",
+    "numberOfItems": 100,
+    "numberOfTrackItems": 100,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/931c95e6-1c97-4a7a-bf0c-61276ceb33f1",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/931c95e6-1c97-4a7a-bf0c-61276ceb33f1?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/931c95e6-1c97-4a7a-bf0c-61276ceb33f1?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/931c95e6-1c97-4a7a-bf0c-61276ceb33f1?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-08-02T15:31:30.127030Z",
+    "lastModifiedAt": "2026-08-02T15:31:31.666708Z",
+    "accessType": "PUBLIC",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "8f16f9bc-62f8-4845-9df2-e85b1975948c",
+   "type": "playlists",
+   "attributes": {
+    "name": "Ganesha",
+    "description": "Moved from YouTube Music with Soundiiz — Soundiiz.com",
+    "bounded": true,
+    "duration": "PT27M57S",
+    "numberOfItems": 3,
+    "numberOfTrackItems": 3,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/8f16f9bc-62f8-4845-9df2-e85b1975948c",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/8f16f9bc-62f8-4845-9df2-e85b1975948c?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/8f16f9bc-62f8-4845-9df2-e85b1975948c?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/8f16f9bc-62f8-4845-9df2-e85b1975948c?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-07-26T08:51:02.946060Z",
+    "lastModifiedAt": "2026-07-26T08:53:34.103384Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "0d57d48d-3c6c-4467-8601-9b026cc0e70d",
+   "type": "playlists",
+   "attributes": {
+    "name": "MEUTE - COVERS (09-07-26 00:20)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 09-07-26 00:20.",
+    "bounded": true,
+    "duration": "PT2H27M32S",
+    "numberOfItems": 24,
+    "numberOfTrackItems": 24,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/0d57d48d-3c6c-4467-8601-9b026cc0e70d",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/0d57d48d-3c6c-4467-8601-9b026cc0e70d?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/0d57d48d-3c6c-4467-8601-9b026cc0e70d?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/0d57d48d-3c6c-4467-8601-9b026cc0e70d?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-07-09T06:47:21.491804Z",
+    "lastModifiedAt": "2026-07-10T06:27:11.711Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "c1b207e9-c597-4d8c-8ead-18782f937f55",
+   "type": "playlists",
+   "attributes": {
+    "name": "Jazzy (brain pick)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 07-07-26 11:25.",
+    "bounded": true,
+    "duration": "PT1H11M57S",
+    "numberOfItems": 22,
+    "numberOfTrackItems": 22,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/c1b207e9-c597-4d8c-8ead-18782f937f55",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/c1b207e9-c597-4d8c-8ead-18782f937f55?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/c1b207e9-c597-4d8c-8ead-18782f937f55?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/c1b207e9-c597-4d8c-8ead-18782f937f55?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-07-07T15:02:40.125358Z",
+    "lastModifiedAt": "2026-07-07T15:02:42.110756Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "5697978b-2eaa-45d8-8394-27f2ad8830ca",
+   "type": "playlists",
+   "attributes": {
+    "name": "Adam Port (brain pick)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 07-07-26 11:24.",
+    "bounded": true,
+    "duration": "PT4H10M16S",
+    "numberOfItems": 49,
+    "numberOfTrackItems": 49,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/5697978b-2eaa-45d8-8394-27f2ad8830ca",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/5697978b-2eaa-45d8-8394-27f2ad8830ca?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/5697978b-2eaa-45d8-8394-27f2ad8830ca?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/5697978b-2eaa-45d8-8394-27f2ad8830ca?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-07-07T15:02:15.200058Z",
+    "lastModifiedAt": "2026-07-07T15:02:16.943457Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  },
+  {
+   "id": "b494046c-67de-43da-8599-490a41c0296a",
+   "type": "playlists",
+   "attributes": {
+    "name": "Alex Wann (brain pick)",
+    "description": "Built with MA Spotify (Gemini   Spotify) on 06-07-26 09:42.",
+    "bounded": true,
+    "duration": "PT43M12S",
+    "numberOfItems": 10,
+    "numberOfTrackItems": 10,
+    "numberOfVideoItems": 0,
+    "externalLinks": [
+     {
+      "href": "https://listen.tidal.com/playlist/b494046c-67de-43da-8599-490a41c0296a",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/b494046c-67de-43da-8599-490a41c0296a?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_ANDROID"
+      }
+     },
+     {
+      "href": "https://tidal.com/playlist/b494046c-67de-43da-8599-490a41c0296a?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_IOS"
+      }
+     },
+     {
+      "href": "https://listen.tidal.com/playlist/b494046c-67de-43da-8599-490a41c0296a?play=true",
+      "meta": {
+       "type": "TIDAL_AUTOPLAY_WEB"
+      }
+     }
+    ],
+    "createdAt": "2026-07-07T15:01:30.326308Z",
+    "lastModifiedAt": "2026-07-07T15:01:30.450704Z",
+    "accessType": "UNLISTED",
+    "playlistType": "USER",
+    "numberOfFollowers": 0
+   }
+  }
+ ],
+ "links": {
+  "self": "/playlists?filter%5Bowners.id%5D=me&countryCode=HR",
+  "next": "/playlists?filter%5Bowners.id%5D=me&countryCode=HR&page%5Bcursor%5D=eyJ2ZXJzaW9uIjoxLCJvd25lclVzZXJJZCI6MjA3OTYyMTE0LCJzb3J0IjoiQ1JFQVRFRF9BVCIsInNvcnREaXJlY3Rpb24iOiJERVNDIiwicGxheWxpc3RJZCI6ImI0OTQwNDZjLTY3ZGUtNDNkYS04NTk5LTQ5MGE0MWMwMjk2YSIsInRpbWVzdGFtcCI6IjIwMjYtMDctMDdUMTU6MDE6MzAuMzI2MzA4Iiwic2VsZWN0b3IiOiJPV05FUiJ9",
+  "meta": {
+   "nextCursor": "eyJ2ZXJzaW9uIjoxLCJvd25lclVzZXJJZCI6MjA3OTYyMTE0LCJzb3J0IjoiQ1JFQVRFRF9BVCIsInNvcnREaXJlY3Rpb24iOiJERVNDIiwicGxheWxpc3RJZCI6ImI0OTQwNDZjLTY3ZGUtNDNkYS04NTk5LTQ5MGE0MWMwMjk2YSIsInRpbWVzdGFtcCI6IjIwMjYtMDctMDdUMTU6MDE6MzAuMzI2MzA4Iiwic2VsZWN0b3IiOiJPV05FUiJ9"
+  }
+ }
+}

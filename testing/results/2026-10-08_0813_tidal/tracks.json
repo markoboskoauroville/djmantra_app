@@ -1,0 +1,369 @@
+{
+ "data": [
+  {
+   "id": "199536344",
+   "type": "tracks",
+   "attributes": {
+    "title": "Sky and Sand",
+    "version": null,
+    "isrc": "DENZ71000005",
+    "duration": "PT3M54S",
+    "copyright": {
+     "text": "Paul Kalkbrenner Musik"
+    },
+    "explicit": false,
+    "popularity": 0.6088873943079375,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/199536344",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2021-09-30T20:31:19Z"
+   },
+   "relationships": {
+    "artists": {
+     "data": [
+      {
+       "id": "3580646",
+       "type": "artists"
+      }
+     ],
+     "links": {
+      "self": "/tracks/199536344/relationships/artists?countryCode=HR"
+     }
+    },
+    "albums": {
+     "data": [
+      {
+       "id": "199536340",
+       "type": "albums"
+      }
+     ],
+     "links": {
+      "self": "/tracks/199536344/relationships/albums?countryCode=HR"
+     }
+    },
+    "genres": {
+     "data": [],
+     "links": {
+      "self": "/tracks/199536344/relationships/genres?countryCode=HR"
+     }
+    }
+   }
+  },
+  {
+   "id": "22729115",
+   "type": "tracks",
+   "attributes": {
+    "title": "Chrome Country",
+    "version": null,
+    "isrc": "GBBPW1300079",
+    "duration": "PT5M5S",
+    "copyright": {
+     "text": "Warp Records"
+    },
+    "explicit": false,
+    "popularity": 0.32187200688170364,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/22729115",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2013-09-25T11:55:58Z"
+   },
+   "relationships": {
+    "artists": {
+     "data": [
+      {
+       "id": "3715530",
+       "type": "artists"
+      }
+     ],
+     "links": {
+      "self": "/tracks/22729115/relationships/artists?countryCode=HR"
+     }
+    },
+    "albums": {
+     "data": [
+      {
+       "id": "22729105",
+       "type": "albums"
+      }
+     ],
+     "links": {
+      "self": "/tracks/22729115/relationships/albums?countryCode=HR"
+     }
+    },
+    "genres": {
+     "data": [],
+     "links": {
+      "self": "/tracks/22729115/relationships/genres?countryCode=HR"
+     }
+    }
+   }
+  },
+  {
+   "id": "265227326",
+   "type": "tracks",
+   "attributes": {
+    "title": "So U Kno",
+    "version": null,
+    "isrc": "UKLTE2100202",
+    "duration": "PT5M44S",
+    "copyright": {
+     "text": "Poly Kicks under exclusive licence to XL Recordings Ltd"
+    },
+    "explicit": false,
+    "popularity": 0.4212315656517565,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/265227326",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2022-12-08T12:58:03Z"
+   },
+   "relationships": {
+    "artists": {
+     "data": [
+      {
+       "id": "7984290",
+       "type": "artists"
+      }
+     ],
+     "links": {
+      "self": "/tracks/265227326/relationships/artists?countryCode=HR"
+     }
+    },
+    "albums": {
+     "data": [
+      {
+       "id": "265227325",
+       "type": "albums"
+      }
+     ],
+     "links": {
+      "self": "/tracks/265227326/relationships/albums?countryCode=HR"
+     }
+    },
+    "genres": {
+     "data": [],
+     "links": {
+      "self": "/tracks/265227326/relationships/genres?countryCode=HR"
+     }
+    }
+   }
+  }
+ ],
+ "links": {
+  "self": "/tracks?filter%5Bid%5D=199536344%2C22729115%2C265227326&include=albums%2Cartists%2Cgenres&countryCode=HR"
+ },
+ "included": [
+  {
+   "id": "199536340",
+   "type": "albums",
+   "attributes": {
+    "title": "Sky and Sand (Robag Wruhme Remix)",
+    "barcodeId": "0673799321436",
+    "numberOfVolumes": 1,
+    "numberOfItems": 2,
+    "duration": "PT14M7S",
+    "explicit": false,
+    "releaseDate": "2014-05-23",
+    "copyright": {
+     "text": "Paul Kalkbrenner Musik"
+    },
+    "popularity": 0.41120297209756557,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/album/199536340",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "type": "EP",
+    "albumType": "EP"
+   }
+  },
+  {
+   "id": "22729105",
+   "type": "albums",
+   "attributes": {
+    "title": "R Plus Seven",
+    "barcodeId": "0801061024031",
+    "numberOfVolumes": 1,
+    "numberOfItems": 10,
+    "duration": "PT43M1S",
+    "explicit": false,
+    "releaseDate": "2013-10-01",
+    "copyright": {
+     "text": "Warp Records"
+    },
+    "popularity": 0.3660452163592772,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/album/22729105",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "type": "ALBUM",
+    "albumType": "ALBUM"
+   }
+  },
+  {
+   "id": "265227325",
+   "type": "albums",
+   "attributes": {
+    "title": "So U Kno",
+    "barcodeId": "191404131855",
+    "numberOfVolumes": 1,
+    "numberOfItems": 1,
+    "duration": "PT5M44S",
+    "explicit": false,
+    "releaseDate": "2021-06-16",
+    "copyright": {
+     "text": "Poly Kicks under exclusive licence to XL Recordings Ltd"
+    },
+    "popularity": 0.1724131066511898,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/album/265227325",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "type": "SINGLE",
+    "albumType": "SINGLE"
+   }
+  },
+  {
+   "id": "3580646",
+   "type": "artists",
+   "attributes": {
+    "name": "Paul Kalkbrenner",
+    "popularity": 0.7359015941619873,
+    "numberOfFollowers": 44084,
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/artist/3580646",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "ownerType": "LABEL"
+   }
+  },
+  {
+   "id": "3715530",
+   "type": "artists",
+   "attributes": {
+    "name": "Oneohtrix Point Never",
+    "popularity": 0.7402288381170089,
+    "numberOfFollowers": 23623,
+    "externalLinks": [
+     {
+      "href": "https://instagram.com/eccopn",
+      "meta": {
+       "type": "INSTAGRAM"
+      }
+     },
+     {
+      "href": "https://tiktok.com/@electronic_music_company",
+      "meta": {
+       "type": "TIKTOK"
+      }
+     },
+     {
+      "href": "https://tidal.com/browse/artist/3715530",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "ownerType": "MIXED"
+   }
+  },
+  {
+   "id": "7984290",
+   "type": "artists",
+   "attributes": {
+    "name": "Overmono",
+    "popularity": 0.7310199760565336,
+    "numberOfFollowers": 12296,
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/artist/7984290",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "ownerType": "LABEL"
+   }
+  }
+ ]
+}

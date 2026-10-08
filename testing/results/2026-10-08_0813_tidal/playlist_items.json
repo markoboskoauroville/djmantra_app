@@ -1,0 +1,31 @@
+{
+ "data": [
+  {
+   "id": "265227326",
+   "type": "tracks",
+   "meta": {
+    "itemId": "63113b7e-546f-4d0f-bed6-0368d4c69042",
+    "addedAt": "2026-08-15T14:01:11.700640Z"
+   }
+  },
+  {
+   "id": "22729115",
+   "type": "tracks",
+   "meta": {
+    "itemId": "d09f685e-a0fb-4033-a9b1-ee5c990d898d",
+    "addedAt": "2026-08-15T15:45:57.611124Z"
+   }
+  },
+  {
+   "id": "199536344",
+   "type": "tracks",
+   "meta": {
+    "itemId": "93fdf647-316a-4d57-905d-b83926727f66",
+    "addedAt": "2026-08-15T16:51:59.177942Z"
+   }
+  }
+ ],
+ "links": {
+  "self": "/playlists/3373c444-763a-43c8-befd-7b39bd4e1990/relationships/items?countryCode=HR"
+ }
+}

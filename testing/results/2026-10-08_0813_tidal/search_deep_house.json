@@ -1,0 +1,771 @@
+{
+ "data": [
+  {
+   "id": "1PduRqK6HvefsvoDZIAhTWd95y2MD9SeckZID",
+   "type": "searchResults",
+   "attributes": {
+    "query": "deep house",
+    "trackingId": "b952c391-167b-4cec-b50b-79d65cfa0ba4"
+   },
+   "relationships": {
+    "tracks": {
+     "data": [
+      {
+       "id": "48554316",
+       "type": "tracks"
+      },
+      {
+       "id": "417200054",
+       "type": "tracks"
+      },
+      {
+       "id": "2314239",
+       "type": "tracks"
+      },
+      {
+       "id": "199852012",
+       "type": "tracks"
+      },
+      {
+       "id": "17339685",
+       "type": "tracks"
+      },
+      {
+       "id": "419456207",
+       "type": "tracks"
+      },
+      {
+       "id": "87363244",
+       "type": "tracks"
+      },
+      {
+       "id": "304989876",
+       "type": "tracks"
+      },
+      {
+       "id": "99130676",
+       "type": "tracks"
+      },
+      {
+       "id": "174154022",
+       "type": "tracks"
+      },
+      {
+       "id": "170732963",
+       "type": "tracks"
+      },
+      {
+       "id": "237377582",
+       "type": "tracks"
+      },
+      {
+       "id": "191312926",
+       "type": "tracks"
+      },
+      {
+       "id": "399323585",
+       "type": "tracks"
+      },
+      {
+       "id": "345715170",
+       "type": "tracks"
+      },
+      {
+       "id": "322901318",
+       "type": "tracks"
+      },
+      {
+       "id": "457048682",
+       "type": "tracks"
+      },
+      {
+       "id": "57889370",
+       "type": "tracks"
+      },
+      {
+       "id": "419648301",
+       "type": "tracks"
+      },
+      {
+       "id": "66638376",
+       "type": "tracks"
+      }
+     ],
+     "links": {
+      "self": "/searchResults/1PduRqK6HvefsvoDZIAhTWd95y2MD9SeckZID/relationships/tracks?countryCode=HR",
+      "next": "/searchResults/1PduRqK6HvefsvoDZIAhTWd95y2MD9SeckZID/relationships/tracks?countryCode=HR&page%5Bcursor%5D=3nI1Esi",
+      "meta": {
+       "nextCursor": "3nI1Esi"
+      }
+     }
+    }
+   }
+  }
+ ],
+ "links": {
+  "self": "/searchResults?filter%5Bquery%5D=deep+house&include=tracks&countryCode=HR"
+ },
+ "included": [
+  {
+   "id": "170732963",
+   "type": "tracks",
+   "attributes": {
+    "title": "Oldtown Dub",
+    "version": null,
+    "isrc": "UKN6K2001778",
+    "duration": "PT6M8S",
+    "copyright": {
+     "text": "2021 Lobster Theremin"
+    },
+    "explicit": false,
+    "popularity": 0.4311680793762207,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/170732963",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2021-01-23T04:30:26Z"
+   }
+  },
+  {
+   "id": "17339685",
+   "type": "tracks",
+   "attributes": {
+    "title": "Deep House",
+    "version": null,
+    "isrc": "ITO101125148",
+    "duration": "PT4M46S",
+    "copyright": {
+     "text": "2011 Tobacco Music Edition (Gema)"
+    },
+    "explicit": false,
+    "popularity": 0.24963646045894874,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/17339685",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2012-09-25T12:56:45Z"
+   }
+  },
+  {
+   "id": "174154022",
+   "type": "tracks",
+   "attributes": {
+    "title": "Friday Evening",
+    "version": null,
+    "isrc": "AUBXF2100005",
+    "duration": "PT4M18S",
+    "copyright": {
+     "text": "Heard and Felt"
+    },
+    "explicit": false,
+    "popularity": 0.43517494201660156,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/174154022",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2021-02-18T23:31:23Z"
+   }
+  },
+  {
+   "id": "191312926",
+   "type": "tracks",
+   "attributes": {
+    "title": "Strings, Beats & Life",
+    "version": "Original Mix",
+    "isrc": "DEY472174561",
+    "duration": "PT6M2S",
+    "copyright": {
+     "text": "2021 Lazy Days Recordings"
+    },
+    "explicit": false,
+    "popularity": 0.4033534526824951,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/191312926",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2021-07-17T01:55:42Z"
+   }
+  },
+  {
+   "id": "199852012",
+   "type": "tracks",
+   "attributes": {
+    "title": "61 Grad (Deep House RMX)",
+    "version": null,
+    "isrc": "DEQ022150505",
+    "duration": "PT1M53S",
+    "copyright": {
+     "text": "2 Live Entertainment under exclusive license to Groove Attack"
+    },
+    "explicit": true,
+    "popularity": 0.28455507882093406,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/199852012",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2021-10-03T11:35:55Z"
+   }
+  },
+  {
+   "id": "2314239",
+   "type": "tracks",
+   "attributes": {
+    "title": "That's the Way Love Is (Deep House Mix-Extended Version)",
+    "version": null,
+    "isrc": "USEE10250220",
+    "duration": "PT6M47S",
+    "copyright": {
+     "text": "℗ 1989 East West Records for the US and WEA International for the world outside of the US"
+    },
+    "explicit": false,
+    "popularity": 0.20880193812522038,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/2314239",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2009-02-12T17:28:00Z"
+   }
+  },
+  {
+   "id": "237377582",
+   "type": "tracks",
+   "attributes": {
+    "title": "All Blues",
+    "version": null,
+    "isrc": "QZK6G2275916",
+    "duration": "PT1M22S",
+    "copyright": {
+     "text": "Nostalgia Recordings"
+    },
+    "explicit": false,
+    "popularity": 0.42843005888741487,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/237377582",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2022-07-11T15:13:02Z"
+   }
+  },
+  {
+   "id": "304989876",
+   "type": "tracks",
+   "attributes": {
+    "title": "smooth operator deep house",
+    "version": null,
+    "isrc": "GX3HH2345499",
+    "duration": "PT3M15S",
+    "copyright": {
+     "text": "Sade"
+    },
+    "explicit": false,
+    "popularity": 0.21649126506761618,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/304989876",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2023-07-14T21:06:48Z"
+   }
+  },
+  {
+   "id": "322901318",
+   "type": "tracks",
+   "attributes": {
+    "title": "Deep House a2",
+    "version": null,
+    "isrc": "BK4DA2319813",
+    "duration": "PT2M12S",
+    "copyright": {
+     "text": "2023 MAGICKK MUSIC"
+    },
+    "explicit": false,
+    "popularity": 0.5504742596910372,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/322901318",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2023-10-20T01:37:40Z"
+   }
+  },
+  {
+   "id": "345715170",
+   "type": "tracks",
+   "attributes": {
+    "title": "Patadas de Ahogado (Deep House Mix)",
+    "version": null,
+    "isrc": "QZDA42406874",
+    "duration": "PT2M4S",
+    "copyright": {
+     "text": "Bajo"
+    },
+    "explicit": false,
+    "popularity": 0.16432977152102485,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "HIRES_LOSSLESS",
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/345715170",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2024-02-15T21:50:14Z"
+   }
+  },
+  {
+   "id": "399323585",
+   "type": "tracks",
+   "attributes": {
+    "title": "The Back Gate",
+    "version": null,
+    "isrc": "DETB32400994",
+    "duration": "PT6M43S",
+    "copyright": {
+     "text": "Ibadan Sound"
+    },
+    "explicit": false,
+    "popularity": 0.40776219964027405,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/399323585",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2024-11-13T17:17:53Z"
+   }
+  },
+  {
+   "id": "417200054",
+   "type": "tracks",
+   "attributes": {
+    "title": "Deep House 2025",
+    "version": null,
+    "isrc": "DEAR42579814",
+    "duration": "PT2M",
+    "copyright": {
+     "text": "Deep Groove Tracks"
+    },
+    "explicit": false,
+    "popularity": 0.18693489837616045,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/417200054",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2025-02-11T05:53:37Z"
+   }
+  },
+  {
+   "id": "419456207",
+   "type": "tracks",
+   "attributes": {
+    "title": "Fluorescent",
+    "version": null,
+    "isrc": "SE69N2505284",
+    "duration": "PT2M14S",
+    "copyright": {
+     "text": "Peqasus"
+    },
+    "explicit": false,
+    "popularity": 0.4519149890951806,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "HIRES_LOSSLESS",
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/419456207",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2025-02-21T15:54:17Z"
+   }
+  },
+  {
+   "id": "419648301",
+   "type": "tracks",
+   "attributes": {
+    "title": "I'll Be Around",
+    "version": null,
+    "isrc": "FR2X42564249",
+    "duration": "PT2M47S",
+    "copyright": {
+     "text": "Neon Sound"
+    },
+    "explicit": false,
+    "popularity": 0.17258744366458464,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/419648301",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2025-02-22T11:30:58Z"
+   }
+  },
+  {
+   "id": "457048682",
+   "type": "tracks",
+   "attributes": {
+    "title": "Grand Senshuraku",
+    "version": null,
+    "isrc": "USNRS2544289",
+    "duration": "PT3M38S",
+    "copyright": {
+     "text": "2025 Nervous Records"
+    },
+    "explicit": false,
+    "popularity": 0.40766213843008453,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/457048682",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2025-08-29T03:07:08Z"
+   }
+  },
+  {
+   "id": "48554316",
+   "type": "tracks",
+   "attributes": {
+    "title": "Deep House Mykonos",
+    "version": null,
+    "isrc": "SE37J1503959",
+    "duration": "PT3M47S",
+    "copyright": {
+     "text": "Vault Records Ibiza"
+    },
+    "explicit": false,
+    "popularity": 0.3738461314029026,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/48554316",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2015-07-04T22:01:08Z"
+   }
+  },
+  {
+   "id": "57889370",
+   "type": "tracks",
+   "attributes": {
+    "title": "Shut Up and Listen to Deep House",
+    "version": null,
+    "isrc": "FR9W11520137",
+    "duration": "PT5M43S",
+    "copyright": {
+     "text": "Art Feast Records"
+    },
+    "explicit": false,
+    "popularity": 0.13391733993519978,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/57889370",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2016-03-02T05:48:44Z"
+   }
+  },
+  {
+   "id": "66638376",
+   "type": "tracks",
+   "attributes": {
+    "title": "Clouds",
+    "version": null,
+    "isrc": "GBLV61606502",
+    "duration": "PT7M23S",
+    "copyright": {
+     "text": "Closer To Truth"
+    },
+    "explicit": false,
+    "popularity": 0.39970526099205017,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/66638376",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2016-10-31T18:28:06Z"
+   }
+  },
+  {
+   "id": "87363244",
+   "type": "tracks",
+   "attributes": {
+    "title": "Somewhere",
+    "version": null,
+    "isrc": "GBZVM1600021",
+    "duration": "PT6M50S",
+    "copyright": {
+     "text": "(P) 2016 Atjazz Record Company"
+    },
+    "explicit": false,
+    "popularity": 0.44937095046043396,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "HIRES_LOSSLESS",
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/87363244",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2018-04-13T10:10:43Z"
+   }
+  },
+  {
+   "id": "99130676",
+   "type": "tracks",
+   "attributes": {
+    "title": "Deep House & Tech-House Top 100 Best Selling Chart Hits V2 (2 Hr DJ Mix)",
+    "version": null,
+    "isrc": "TCADY1883009",
+    "duration": "PT1H59M47S",
+    "copyright": {
+     "text": "2018 101 Dance Hits"
+    },
+    "explicit": false,
+    "popularity": 0.20596304920546327,
+    "accessType": "PUBLIC",
+    "availability": [
+     "STREAM",
+     "DJ"
+    ],
+    "mediaTags": [
+     "LOSSLESS"
+    ],
+    "externalLinks": [
+     {
+      "href": "https://tidal.com/browse/track/99130676",
+      "meta": {
+       "type": "TIDAL_SHARING"
+      }
+     }
+    ],
+    "spotlighted": false,
+    "createdAt": "2018-11-20T18:41:42Z"
+   }
+  }
+ ]
+}
