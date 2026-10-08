@@ -1848,6 +1848,7 @@ if(ANDROID)
   target_compile_definitions(mixxx-lib PUBLIC __ANDROID_PORT__)
   target_link_libraries(mixxx-lib PRIVATE android log)
   set_target_properties(mixxx PROPERTIES
+    QT_ANDROID_PACKAGE_NAME com.djmantra.app
     QT_ANDROID_TARGET_SDK_VERSION 35
     QT_ANDROID_MIN_SDK_VERSION 29
     QT_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}"
