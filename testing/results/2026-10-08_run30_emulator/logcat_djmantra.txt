@@ -1,0 +1,13 @@
+--------- beginning of crash
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: FATAL EXCEPTION: qtMainLoopThread
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: Process: com.djmantra.app, PID: 22826
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: java.lang.UnsatisfiedLinkError: dlopen failed: library "libomp.so" not found: needed by /data/app/~~LX-a2GfQea2uRzBd5byLow==/com.djmantra.app-7zZi4OExJkwxHHnzlPZTYQ==/lib/arm64/libmixxx_arm64-v8a.so in namespace clns-7
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at java.lang.Runtime.load0(Runtime.java:933)
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at java.lang.System.load(System.java:1729)
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at org.qtproject.qt.android.QtLoader.loadLibraryHelper(QtLoader.java:497)
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at org.qtproject.qt.android.QtLoader.lambda$loadMainLibrary$0$org-qtproject-qt-android-QtLoader(QtLoader.java:545)
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at org.qtproject.qt.android.QtLoader$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at org.qtproject.qt.android.QtThread.lambda$run$0(QtThread.java:57)
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at org.qtproject.qt.android.QtThread$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at org.qtproject.qt.android.QtThread$1.run(QtThread.java:25)
+10-08 15:38:47.537 22826 22844 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1012)
