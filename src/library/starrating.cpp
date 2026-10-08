@@ -60,6 +60,42 @@ void StarRating::paint(QPainter* painter, const QRect& rect) const {
     }
 }
 
+QSize StarRating::compactSizeHint() const {
+    // One star plus a digit and some spacing
+    return QSize(PaintingScaleFactor * 2 + 8, PaintingScaleFactor);
+}
+
+int StarRating::nextStarCountOnClick(int starCount, int maxStarCount) {
+    if (starCount < kMinStarCount || starCount >= maxStarCount) {
+        return kMinStarCount;
+    }
+    return starCount + 1;
+}
+
+void StarRating::paintCompact(QPainter* painter, const QRect& rect) const {
+    PainterScope painterScope(painter);
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    const QColor color = painter->brush().color();
+    const QSize size = compactSizeHint();
+    const int xOffset = std::max((rect.width() - size.width()) / 2, 0);
+    const int yOffset = (rect.height() - PaintingScaleFactor) / 2;
+    {
+        PainterScope polygonScope(painter);
+        painter->setPen(Qt::NoPen);
+        painter->translate(rect.x() + xOffset, rect.y() + yOffset);
+        painter->scale(PaintingScaleFactor, PaintingScaleFactor);
+        painter->drawPolygon(m_starCount > 0 ? m_starPolygon : m_diamondPolygon, Qt::WindingFill);
+    }
+    if (m_starCount > 0) {
+        painter->setPen(color);
+        const QRect textRect(rect.x() + xOffset + PaintingScaleFactor + 4,
+                rect.y(),
+                size.width() - PaintingScaleFactor - 4,
+                rect.height());
+        painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, QString::number(m_starCount));
+    }
+}
+
 int StarRating::starAtPosition(int x, const QRect& rect) const {
     // The star rating is drawn centered in the parent (WStarrating or
     // cell of StarDelegate, so we need to shift the x input as well.

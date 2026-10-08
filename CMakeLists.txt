@@ -2255,6 +2255,7 @@ if(BUILD_TESTING)
     src/test/softtakeover_test.cpp
     src/test/soundproxy_test.cpp
     src/test/missingtracksexport_test.cpp
+    src/test/starrating_test.cpp
     src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp
     src/test/sqliteliketest.cpp

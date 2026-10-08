@@ -27,6 +27,15 @@ class StarRating {
     void paint(QPainter* painter, const QRect& rect) const;
     QSize sizeHint() const;
 
+    /// DJ Mantra: compact form for track tables, one star and the number
+    /// ("★ 3"), or a small diamond when unrated. Text uses the brush color.
+    void paintCompact(QPainter* painter, const QRect& rect) const;
+    QSize compactSizeHint() const;
+
+    /// DJ Mantra: rating after one click in the compact form:
+    /// none -> 1 -> 2 -> ... -> max -> none.
+    static int nextStarCountOnClick(int starCount, int maxStarCount);
+
     int starCount() const {
         return m_starCount;
     }

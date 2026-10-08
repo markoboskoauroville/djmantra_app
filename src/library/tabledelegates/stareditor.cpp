@@ -1,5 +1,6 @@
 #include "library/tabledelegates/stareditor.h"
 
+#include <QApplication>
 #include <QItemSelectionModel>
 #include <QMouseEvent>
 #include <QPainter>
@@ -36,7 +37,7 @@ StarEditor::StarEditor(QWidget* parent,
 }
 
 QSize StarEditor::sizeHint() const {
-    return m_starRating.sizeHint();
+    return m_starRating.compactSizeHint();
 }
 
 void StarEditor::paintEvent(QPaintEvent*) {
@@ -79,7 +80,7 @@ void StarEditor::paintEvent(QPaintEvent*) {
         painter.setBrush(m_styleOption.palette.text().color());
     }
 
-    m_starRating.paint(&painter, m_styleOption.rect);
+    m_starRating.paintCompact(&painter, m_styleOption.rect);
 
     // Draw a border if the color cell is selected
     if (m_styleOption.state & QStyle::State_HasFocus) {
@@ -97,30 +98,37 @@ bool StarEditor::eventFilter(QObject* obj, QEvent* event) {
         resetRating();
         break;
     }
-    case QEvent::MouseButtonRelease: {
-        emit editingFinished();
+    // DJ Mantra: compact rating. Each click raises the rating by one star
+    // (none -> 1 ... 5 -> none). Hovering does not change it, and a press that
+    // turns into a drag (dragging the row by this cell) leaves it unchanged.
+    case QEvent::MouseButtonPress: {
+        QMouseEvent* me = static_cast<QMouseEvent*>(event);
+        if (me->button() == Qt::LeftButton) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            m_pressPosition = me->position().toPoint();
+#else
+            m_pressPosition = me->pos();
+#endif
+            m_pressed = true;
+        }
         break;
     }
-    case QEvent::MouseMove: {
-        // Change rating only if no button is pressed.
-        // This allows dragging the row also by grabbing the star cell
+    case QEvent::MouseButtonRelease: {
         QMouseEvent* me = static_cast<QMouseEvent*>(event);
-        if (me->buttons().testFlag(Qt::NoButton)) {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-            const int eventPosition = static_cast<int>(me->position().x());
+        const QPoint releasePosition = me->position().toPoint();
 #else
-            const int eventPosition = me->x();
+        const QPoint releasePosition = me->pos();
 #endif
-            int star = m_starRating.starAtPosition(eventPosition, m_styleOption.rect);
-
-            if (star <= StarRating::kInvalidStarCount) {
-                resetRating();
-            } else if (star != m_starRating.starCount()) {
-                // Apply star rating if it changed
-                m_starRating.setStarCount(star);
-                update();
-            }
+        if (m_pressed && me->button() == Qt::LeftButton &&
+                (releasePosition - m_pressPosition).manhattanLength() <
+                        QApplication::startDragDistance()) {
+            m_starRating.setStarCount(StarRating::nextStarCountOnClick(
+                    m_starRating.starCount(), m_starRating.maxStarCount()));
+            update();
         }
+        m_pressed = false;
+        emit editingFinished();
         break;
     }
     default:

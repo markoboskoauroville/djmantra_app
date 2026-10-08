@@ -26,14 +26,14 @@ void StarDelegate::paintItem(
     paintItemBackground(painter, option, index);
 
     StarRating starRating = index.data().value<StarRating>();
-    starRating.paint(painter, option.rect);
+    starRating.paintCompact(painter, option.rect);
 }
 
 QSize StarDelegate::sizeHint(const QStyleOptionViewItem& option,
                              const QModelIndex& index) const {
     Q_UNUSED(option);
     StarRating starRating = index.data().value<StarRating>();
-    return starRating.sizeHint();
+    return starRating.compactSizeHint();
 }
 
 QWidget* StarDelegate::createEditor(QWidget* parent,
