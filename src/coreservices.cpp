@@ -18,6 +18,9 @@
 #include "engine/enginemixer.h"
 #include "library/coverartcache.h"
 #include "library/externaldrives.h"
+#if defined(Q_OS_ANDROID)
+#include <QPermissions>
+#endif
 #include "library/library.h"
 #include "library/library_prefs.h"
 #include "library/trackcollection.h"
@@ -571,6 +574,16 @@ void CoreServices::initialize(QApplication* pApp) {
 #if defined(Q_OS_ANDROID)
     // Reading USB drives needs "All files access"
     djmantra::ExternalDrives::requestAllFilesAccess();
+    // The Mix Ultra over Bluetooth LE: scanning and connecting need permission
+    {
+        QBluetoothPermission bluetooth;
+        bluetooth.setCommunicationModes(QBluetoothPermission::Access);
+        qApp->requestPermission(bluetooth, [](const QPermission& permission) {
+            qInfo() << "DJMantraMIDI: Bluetooth permission"
+                    << (permission.status() == Qt::PermissionStatus::Granted ? "granted"
+                                                                             : "not granted");
+        });
+    }
 #endif
 
     m_pTrackCollectionManager = std::make_shared<TrackCollectionManager>(

@@ -816,6 +816,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/controllers/midi/legacymidicontrollermapping.cpp
   src/controllers/midi/legacymidicontrollermappingfilehandler.cpp
   src/controllers/midi/midicontroller.cpp
+  src/controllers/midi/androidmidicontroller.cpp
   src/controllers/midi/midienumerator.cpp
   src/controllers/midi/midimessage.cpp
   src/controllers/midi/midioutputhandler.cpp
@@ -1911,6 +1912,13 @@ if(ANDROID)
       ATTRIBUTES maxSdkVersion 32)
     qt_add_android_permission(mixxx NAME android.permission.READ_MEDIA_AUDIO)
     qt_add_android_permission(mixxx NAME android.permission.READ_MEDIA_VIDEO)
+    # Bluetooth LE MIDI (Hercules DJControl Mix Ultra): scan and connect, no location
+    qt_add_android_permission(mixxx NAME android.permission.BLUETOOTH_SCAN
+      ATTRIBUTES usesPermissionFlags neverForLocation)
+    qt_add_android_permission(mixxx NAME android.permission.BLUETOOTH_CONNECT)
+    qt_add_android_permission(mixxx NAME android.permission.BLUETOOTH ATTRIBUTES maxSdkVersion 30)
+    qt_add_android_permission(mixxx NAME android.permission.BLUETOOTH_ADMIN ATTRIBUTES maxSdkVersion 30)
+    qt_add_android_permission(mixxx NAME android.permission.ACCESS_FINE_LOCATION ATTRIBUTES maxSdkVersion 30)
   else()
     message(WARNING "qt_add_android_permission needs Qt 6.8: storage permissions missing")
   endif()
@@ -2307,6 +2315,7 @@ if(BUILD_TESTING)
     src/test/folderfeature_test.cpp
     src/test/externalcontent_test.cpp
     src/test/phrasecontrol_test.cpp
+    src/test/androidmidicontroller_test.cpp
     src/test/starrating_test.cpp
     src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp

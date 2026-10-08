@@ -5,6 +5,7 @@
 
 #include "controllers/controller.h"
 #include "controllers/controllerlearningeventfilter.h"
+#include "controllers/midi/androidmidicontroller.h"
 #include "controllers/controllermappinginfoenumerator.h"
 #include "controllers/defs_controllers.h"
 #include "moc_controllermanager.cpp"
@@ -165,6 +166,10 @@ void ControllerManager::slotInitialize() {
 #ifdef __HID__
     m_enumerators.append(new HidEnumerator());
 #endif
+#ifdef Q_OS_ANDROID
+    // DJ Mantra: USB and Bluetooth LE MIDI through Android's MidiManager
+    m_enumerators.append(new AndroidMidiEnumerator());
+#endif
 }
 
 void ControllerManager::slotShutdown() {
@@ -256,6 +261,16 @@ void ControllerManager::slotSetUpDevices() {
 
         // The filename for this device name.
         QString deviceName = sanitizeDeviceName(name);
+
+#ifdef Q_OS_ANDROID
+        // DJ Mantra: the Mix Ultra works out of the box (enabled, its mapping)
+        if (name == QStringLiteral("DJControl Mix Ultra") &&
+                !m_pConfig->exists(ConfigKey("[Controller]", deviceName))) {
+            m_pConfig->setValue(ConfigKey("[Controller]", deviceName), 1);
+            m_pConfig->setValue(ConfigKey(kSettingsGroup, deviceName),
+                    QStringLiteral("Hercules DJControl Mix Ultra.midi.xml"));
+        }
+#endif
 
         // Check if device is enabled
         if (!m_pConfig->getValue(ConfigKey("[Controller]", deviceName), 0)) {
