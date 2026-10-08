@@ -1895,8 +1895,11 @@ if(ANDROID)
     # Java helpers (Storage Access Framework, MIDI), copied over Qt's template
     QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/packaging/android/package"
   )
-  # QtAndroidPrivate::startActivity() for the folder picker's result
-  find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
+  # QtAndroidPrivate::startActivity() for the folder picker's result. In Qt 6.8
+  # the CorePrivate target comes with Qt6::Core (a separate package since 6.9).
+  if(NOT TARGET Qt6::CorePrivate)
+    find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
+  endif()
   target_link_libraries(mixxx-lib PRIVATE Qt6::CorePrivate)
   # Music on USB drives and SD cards (/storage/<volume>/...) is read through
   # plain file paths, which needs "All files access" (MANAGE_EXTERNAL_STORAGE,
