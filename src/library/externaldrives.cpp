@@ -1,6 +1,7 @@
 #include "library/externaldrives.h"
 
 #include <QDir>
+#include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QPushButton>
@@ -16,7 +17,10 @@
 #include "library/trackcollection.h"
 #include "library/trackcollectionmanager.h"
 #include "moc_externaldrives.cpp"
+#include "sources/androidstorage.h"
+#include "sources/externalcontent.h"
 #include "sources/localtrackcache.h"
+#include "sources/soundsourceproxy.h"
 #include "util/logger.h"
 #include "util/volumewatcher.h"
 
@@ -42,12 +46,46 @@ bool isOnDrive(const QString& path, const QString& driveRoot) {
 }
 
 QString driveName(const QString& driveRoot) {
+    if (!ExternalContent::volumeIdOfDirectory(driveRoot).isEmpty()) {
+        return ExternalContent::displayPath(driveRoot);
+    }
     const QStorageInfo storage(driveRoot);
     if (storage.isValid() && !storage.displayName().isEmpty() &&
             storage.rootPath() == driveRoot) {
         return storage.displayName();
     }
     return QFileInfo(driveRoot).fileName();
+}
+
+/// Drives read through the Storage Access Framework (Android): every mounted
+/// removable volume, as its placeholder directory.
+QStringList listContentDrives() {
+    QStringList drives;
+    const auto volumes = ExternalContent::volumes();
+    for (const auto& volume : volumes) {
+        if (volume.mounted) {
+            drives.append(ExternalContent::volumeDirectory(volume.id));
+        }
+    }
+    drives.sort();
+    return drives;
+}
+
+bool isGranted(const QString& volumeId) {
+    const auto volumes = ExternalContent::volumes();
+    for (const auto& volume : volumes) {
+        if (volume.id == volumeId) {
+            return volume.granted;
+        }
+    }
+    return false;
+}
+
+/// Bring the placeholders of a drive up to date; true if anything changed.
+bool syncDrive(const QString& volumeId) {
+    const auto result = ExternalContent::syncVolume(
+            volumeId, SoundSourceProxy::getSupportedFileSuffixes());
+    return result.ok && (result.added + result.updated + result.removed) > 0;
 }
 
 } // namespace
@@ -60,7 +98,9 @@ ExternalDrives::ExternalDrives(QObject* pParent,
           m_pConfig(std::move(pConfig)),
           m_pTrackCollectionManager(pTrackCollectionManager),
           m_pLibrary(pLibrary),
-          m_pWatcher(new VolumeWatcher(this)) {
+          m_pWatcher(ExternalContent::isEnabled()
+                          ? new VolumeWatcher(this, &listContentDrives)
+                          : new VolumeWatcher(this)) {
     configureCache(m_pConfig);
 
     m_rescanTimer.setSingleShot(true);
@@ -74,6 +114,19 @@ ExternalDrives::ExternalDrives(QObject* pParent,
     connect(m_pWatcher, &VolumeWatcher::driveAttached, this, &ExternalDrives::slotDriveAttached);
     connect(m_pWatcher, &VolumeWatcher::driveDetached, this, &ExternalDrives::slotDriveDetached);
     m_pWatcher->start();
+
+    // Drives granted earlier: files may have changed while the app was closed
+    bool changed = false;
+    const QStringList drives = m_pWatcher->drives();
+    for (const auto& drive : drives) {
+        const QString volumeId = ExternalContent::volumeIdOfDirectory(drive);
+        if (!volumeId.isEmpty() && isGranted(volumeId)) {
+            changed = syncDrive(volumeId) || changed;
+        }
+    }
+    if (changed) {
+        m_rescanTimer.start();
+    }
 }
 
 ExternalDrives::~ExternalDrives() = default;
@@ -98,6 +151,36 @@ void ExternalDrives::configureCache(const UserSettingsPointer& pConfig) {
     }
     settings.directory = dir;
     LocalTrackCache::configure(settings);
+
+#if defined(Q_OS_ANDROID)
+    // USB sticks are read through the Storage Access Framework
+    if (!ExternalContent::isEnabled()) {
+        ExternalContent::setProvider(AndroidStorage::createProvider(),
+                QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+                        .filePath(QStringLiteral("drives")));
+    }
+#endif
+}
+
+// static
+void ExternalDrives::chooseMusicFolder(const QString& volumeId,
+        std::function<void(const QString&)> callback) {
+    if (!ExternalContent::isEnabled()) {
+        const QString folder = QFileDialog::getExistingDirectory(nullptr,
+                tr("Add music folder"),
+                QStandardPaths::writableLocation(QStandardPaths::MusicLocation));
+        callback(folder);
+        return;
+    }
+    AndroidStorage::pickFolder(volumeId, [callback](const QString& folder) {
+        const QString volume = ExternalContent::volumeIdOfDirectory(folder);
+        if (!volume.isEmpty()) {
+            // Placeholders first: the library folder must exist to be added
+            syncDrive(volume);
+            QDir().mkpath(folder);
+        }
+        callback(folder);
+    });
 }
 
 bool ExternalDrives::hasLibraryFolderOn(const QString& driveRoot) const {
@@ -118,6 +201,10 @@ bool ExternalDrives::hasLibraryFolderOn(const QString& driveRoot) const {
 void ExternalDrives::slotDriveAttached(const QString& driveRoot) {
     if (m_pLibrary) {
         m_pLibrary->slotExternalDrivesChanged(); // online marks
+    }
+    const QString volumeId = ExternalContent::volumeIdOfDirectory(driveRoot);
+    if (!volumeId.isEmpty() && isGranted(volumeId)) {
+        syncDrive(volumeId);
     }
     if (hasLibraryFolderOn(driveRoot)) {
         // Tracks on it were kept while it was away; check for new files
@@ -157,6 +244,17 @@ void ExternalDrives::offerToAdd(const QString& driveRoot) {
     pBox->addButton(tr("Not now"), QMessageBox::DestructiveRole);
     connect(pBox, &QMessageBox::finished, this, [this, pBox, pAdd, pNever, driveRoot] {
         if (pBox->clickedButton() == pAdd) {
+            const QString volumeId = ExternalContent::volumeIdOfDirectory(driveRoot);
+            if (!volumeId.isEmpty()) {
+                // Android: the user grants the drive in the system picker
+                chooseMusicFolder(volumeId, [this](const QString& folder) {
+                    if (!folder.isEmpty() && m_pLibrary && m_pLibrary->requestAddDir(folder) &&
+                            m_pTrackCollectionManager) {
+                        m_pTrackCollectionManager->startLibraryScan();
+                    }
+                });
+                return;
+            }
             if (m_pLibrary && m_pLibrary->requestAddDir(driveRoot) && m_pTrackCollectionManager) {
                 m_pTrackCollectionManager->startLibraryScan();
             }

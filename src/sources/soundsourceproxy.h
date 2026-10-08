@@ -4,6 +4,7 @@
 
 #include <QMimeType>
 
+#include "sources/externalcontent.h"
 #include "sources/soundsourceproviderregistry.h"
 #include "track/track_decl.h"
 
@@ -221,6 +222,11 @@ class SoundSourceProxy {
             const mixxx::AudioSource::OpenParams& params = mixxx::AudioSource::OpenParams());
 
     const TrackPointer m_pTrack;
+
+    // DJ Mantra: keeps the content of a placeholder (a file on a drive that
+    // is read through the Storage Access Framework) open while the proxy
+    // reads it. Declared before m_url, which points to it.
+    const std::shared_ptr<djmantra::ExternalContent::Reader> m_pContentReader;
 
     const QUrl m_url;
 

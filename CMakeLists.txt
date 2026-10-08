@@ -1178,6 +1178,8 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/sources/soundsourceproviderregistry.cpp
   src/sources/soundsourceproxy.cpp
   src/sources/localtrackcache.cpp
+  src/sources/externalcontent.cpp
+  src/sources/androidstorage.cpp
   src/sources/soundsourcesndfile.cpp
   src/track/albuminfo.cpp
   src/track/beatfactory.cpp
@@ -1890,7 +1892,12 @@ if(ANDROID)
     QT_ANDROID_TARGET_SDK_VERSION 35
     QT_ANDROID_MIN_SDK_VERSION 29
     QT_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}"
+    # Java helpers (Storage Access Framework, MIDI), copied over Qt's template
+    QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/packaging/android/package"
   )
+  # QtAndroidPrivate::startActivity() for the folder picker's result
+  find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
+  target_link_libraries(mixxx-lib PRIVATE Qt6::CorePrivate)
   # Music on USB drives and SD cards (/storage/<volume>/...) is read through
   # plain file paths, which needs "All files access" (MANAGE_EXTERNAL_STORAGE,
   # requested at startup). The media permissions cover internal storage.
@@ -2294,6 +2301,7 @@ if(BUILD_TESTING)
     src/test/localtrackcache_test.cpp
     src/test/externaldriveplayback_test.cpp
     src/test/folderfeature_test.cpp
+    src/test/externalcontent_test.cpp
     src/test/starrating_test.cpp
     src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp

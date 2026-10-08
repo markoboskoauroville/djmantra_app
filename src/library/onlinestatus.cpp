@@ -47,7 +47,7 @@ bool OnlineStatus::isDriveOffline(const QString& location) {
     DriveState& state = s_drives[drive];
     const qint64 now = s_clock.elapsed();
     if (state.checkedAt < 0 || now - state.checkedAt > kDriveCheckMillis) {
-        state.reachable = QFileInfo(drive).isDir();
+        state.reachable = LocalTrackCache::isDriveReachable(drive);
         state.checkedAt = now;
     }
     return !state.reachable;

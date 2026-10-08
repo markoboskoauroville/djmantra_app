@@ -70,6 +70,10 @@ class LocalTrackCache {
     /// /storage/1A2B-3C4D for /storage/1A2B-3C4D/Music/a.mp3; empty otherwise.
     static QString driveRoot(const QString& path);
 
+    /// The drive is there: its directory exists, or for placeholders (see
+    /// ExternalContent) the volume is mounted.
+    static bool isDriveReachable(const QString& driveRoot);
+
     /// True if `path` is on a drive (or below a library root directory) that
     /// is not reachable right now: unplugged, or not mounted yet.
     static bool isOnUnreachableDrive(const QString& path, const QStringList& libraryRoots);

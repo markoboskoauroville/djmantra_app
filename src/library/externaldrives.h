@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QPointer>
 #include <QTimer>
+#include <functional>
 
 #include "preferences/usersettings.h"
 
@@ -42,6 +43,13 @@ class ExternalDrives : public QObject {
     /// Android: make sure the app may read files on USB drives. Shows an
     /// explanation and opens the system setting if that is not allowed yet.
     static void requestAllFilesAccess();
+
+    /// "+ Add folder": a folder dialog on desktop systems, the system folder
+    /// picker on Android (on the drive `volumeId` if given), where a folder
+    /// on a USB stick becomes its placeholder directory. The callback gets
+    /// the folder, or an empty string if cancelled.
+    static void chooseMusicFolder(const QString& volumeId,
+            std::function<void(const QString&)> callback);
 
   private slots:
     void slotDriveAttached(const QString& driveRoot);

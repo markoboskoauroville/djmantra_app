@@ -380,6 +380,11 @@ SoundSourceProxy::exportTrackMetadataBeforeSaving(
         const SyncTrackMetadataParams& syncParams) {
     DEBUG_ASSERT(pTrack);
     const auto fileInfo = pTrack->getFileInfo();
+    if (djmantra::ExternalContent::isPlaceholder(fileInfo.location())) {
+        // DJ Mantra: the drive is read-only for the app (Storage Access
+        // Framework); never write tags into a placeholder.
+        return ExportTrackMetadataResult::Skipped;
+    }
     mixxx::SoundSourcePointer pSoundSource;
     {
         auto proxy = SoundSourceProxy(fileInfo.toQUrl());
@@ -415,6 +420,27 @@ SoundSourceProxy::exportTrackMetadataBeforeSaving(
     return pTrack->exportMetadata(*pSoundSource, syncParams);
 }
 
+namespace {
+
+/// DJ Mantra: placeholders are read through their content reader
+std::shared_ptr<djmantra::ExternalContent::Reader> contentReaderFor(const QString& path) {
+    if (path.isEmpty() || !djmantra::ExternalContent::isPlaceholder(path)) {
+        return nullptr;
+    }
+    return std::make_shared<djmantra::ExternalContent::Reader>(path);
+}
+
+QUrl readableUrl(const std::shared_ptr<djmantra::ExternalContent::Reader>& pReader,
+        const QUrl& url) {
+    if (!pReader) {
+        return url;
+    }
+    // Empty when the drive cannot be read: no provider will open it
+    return pReader->path().isEmpty() ? QUrl() : QUrl::fromLocalFile(pReader->path());
+}
+
+} // namespace
+
 // Used during tests only
 SoundSourceProxy::SoundSourceProxy(
         TrackPointer pTrack,
@@ -427,22 +453,29 @@ SoundSourceProxy::SoundSourceProxy(
 
 SoundSourceProxy::SoundSourceProxy(TrackPointer pTrack)
         : m_pTrack(std::move(pTrack)),
-          m_url(m_pTrack ? m_pTrack->getFileInfo().toQUrl() : QUrl()),
+          m_pContentReader(contentReaderFor(m_pTrack ? m_pTrack->getLocation() : QString())),
+          m_url(readableUrl(m_pContentReader,
+                  m_pTrack ? m_pTrack->getFileInfo().toQUrl() : QUrl())),
           m_providerRegistrations(allProviderRegistrationsForUrl(m_url)) {
     findProviderAndInitSoundSource();
 }
 
 SoundSourceProxy::SoundSourceProxy(TrackPointer pTrack, const QString& readFile)
         : m_pTrack(std::move(pTrack)),
-          m_url(readFile.isEmpty()
+          m_pContentReader(contentReaderFor(readFile.isEmpty()
+                          ? (m_pTrack ? m_pTrack->getLocation() : QString())
+                          : readFile)),
+          m_url(readableUrl(m_pContentReader,
+                  readFile.isEmpty()
                           ? (m_pTrack ? m_pTrack->getFileInfo().toQUrl() : QUrl())
-                          : QUrl::fromLocalFile(readFile)),
+                          : QUrl::fromLocalFile(readFile))),
           m_providerRegistrations(allProviderRegistrationsForUrl(m_url)) {
     findProviderAndInitSoundSource();
 }
 
 SoundSourceProxy::SoundSourceProxy(const QUrl& url)
-        : m_url(url),
+        : m_pContentReader(contentReaderFor(url.toLocalFile())),
+          m_url(readableUrl(m_pContentReader, url)),
           m_providerRegistrations(allProviderRegistrationsForUrl(m_url)) {
     findProviderAndInitSoundSource();
 }

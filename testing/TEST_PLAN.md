@@ -22,26 +22,39 @@ runs the checks for the newest milestone that has an APK.
 - [ ] An MKV or WebM file plays too
 - [ ] Jumping to a cue point inside a video file lands on the beat
 
-## External drives (USB stick, USB disk, SD card)
-Setup: an OTG USB stick or disk with a music folder; the phone connected to adb over Wi-Fi
-(`adb tcpip 5555`, `adb connect <ip>:5555`) so the phone's USB-C port is free for the drive.
-- [ ] First start: the app asks for "All files access" and opens the setting; after allowing it,
-      `/storage/<id>/` is readable (`adb shell ls /storage`)
-- [ ] Plugging in a new drive asks "Add its music to the library?"; "Add" scans it
-- [ ] Loading a song from the drive: logcat shows `LocalTrackCache ... Copied ... KiB`
-      (note how long a 10 MB MP3 and a large video take to load)
-- [ ] **Pull the drive out while the song plays: playback continues to the end, no gap**
-- [ ] The library still lists the drive's songs (not "missing") while it is out, also after a rescan
-- [ ] Plug it back in: no error, a rescan runs by itself ~3 s later, nothing marked missing
-- [ ] Unplug for 1–2 s *while a song is loading*: the load finishes once the drive is back
-- [ ] With the drive out, load a song that was played before: it loads from the copy
-- [ ] Cache size: `adb shell du -sh /data/data/com.djmantra.app/files/track-cache` (as `run-as`)
+## External drives (USB stick, USB disk, SD card): Storage Access Framework
+On a Pixel a USB stick is mounted where apps cannot read it by path (`/mnt/media_rw/<id>` only,
+no `/storage/<id>`). The app reads it through the Storage Access Framework: the user grants the
+stick once in Android's folder picker; the app keeps the permission and mirrors the files as
+placeholders (same name, size, date, no content) in its own storage, reading the content
+through the ContentResolver when needed.
+Setup: OTG stick or disk with a music folder; adb over Wi-Fi (`adb tcpip 5555`,
+`adb connect <ip>:5555`) so the USB-C port is free.
+- [ ] Plug the stick in with the app running: within ~2 s it asks "A drive was connected: <name>.
+      Add its music to the library?"; "Add to library" opens **Android's folder picker on the stick**
+- [ ] Pick the stick's root or a music folder → "Allow": the Folders tree shows it (named after the
+      stick) with song counts after the scan; logcat `ExternalContent ... placeholders: +N`
+- [ ] Restart the app: no picker again (the permission is kept); `adb shell dumpsys activity
+      providers | grep -i persisted` or Settings → Apps → DJ Mantra shows the access
+- [ ] Load a song from the stick: logcat `LocalTrackCache ... Copied ... KiB` (note the load time
+      for a 10 MB MP3 and for a large video)
+- [ ] **Pull the stick out while the song plays: the deck keeps going to the end** (until M4 there is
+      no sound: the position keeps moving, no "Failed to read" in logcat)
+- [ ] With the stick out: songs red/offline, folders with the offline icon, nothing disappears, also
+      after a rescan; a song played before still loads (from its copy)
+- [ ] Plug it back in: green again within ~3 s, a rescan runs by itself, nothing marked missing
+- [ ] Unplug for 1–2 s while a song is loading: the load finishes once the stick is back
+- [ ] Files changed on the stick while away (add/delete one on the Mac): after replugging the
+      library shows the new one and the deleted one is missing
+- [ ] Internal storage still works: "+ Add folder" → pick a folder on the phone (Music) → it is added
+      by its real path `/storage/emulated/0/...`; "All files access" must be allowed for that
 
 ## Folders (like djay)
-- [ ] Folders → "+ Add folder": pick the USB stick's music folder; the tree shows it and its
-      subfolders with song counts; tapping a folder lists all its songs (incl. subfolders)
-- [ ] Songs have green dots; pull the stick out: within ~3 s the dots turn red, the folders get
-      the offline icon, nothing disappears; plug it back in: green again
+- [ ] Folders → "+ Add folder" opens Android's folder picker (on the phone) or a folder dialog
+      (desktop); the tree shows the folder and its subfolders with song counts; tapping a folder
+      lists all its songs (incl. subfolders)
+- [ ] Songs have green dots; pull the stick out: within ~3 s red, the folders get the offline icon,
+      nothing disappears; plug it back in: green again
 - [ ] Restart the app with the stick out: the folders are still there (offline)
 
 ## M5 – MIDI

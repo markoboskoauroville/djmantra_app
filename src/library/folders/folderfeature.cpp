@@ -8,6 +8,7 @@
 #include <QSqlQuery>
 #include <QStandardPaths>
 
+#include "library/externaldrives.h"
 #include "library/folders/foldertree.h"
 #include "library/library.h"
 #include "library/onlinestatus.h"
@@ -17,6 +18,7 @@
 #include "library/treeitem.h"
 #include "library/treeitemmodel.h"
 #include "moc_folderfeature.cpp"
+#include "sources/externalcontent.h"
 #include "sources/localtrackcache.h"
 #include "widget/wlibrary.h"
 #include "widget/wlibrarysidebar.h"
@@ -54,7 +56,12 @@ bool isFolderOffline(const QString& folder) {
 void appendNodes(TreeItem* pParent, const QList<djmantra::FolderNode>& nodes, bool parentOffline) {
     for (const auto& node : nodes) {
         const bool offline = parentOffline || isFolderOffline(node.path);
-        QString label = QStringLiteral("%1 (%2)").arg(node.label).arg(node.trackCount);
+        // A whole drive read through the Storage Access Framework shows its name
+        const QString name = pParent->isRoot()
+                ? QFileInfo(djmantra::ExternalContent::displayPath(node.path)).fileName()
+                : node.label;
+        QString label = QStringLiteral("%1 (%2)").arg(name.isEmpty() ? node.label : name)
+                                .arg(node.trackCount);
         TreeItem* pItem = pParent->appendChild(label, node.path);
         if (offline) {
             pItem->setIcon(QIcon(kOfflineIcon));
@@ -117,7 +124,8 @@ QString FolderFeature::formatRootViewHtml() const {
             html.append(QStringLiteral("<ul>"));
             for (const auto& root : roots) {
                 html.append(QStringLiteral("<li>%1%2</li>")
-                                    .arg(root.toHtmlEscaped(),
+                                    .arg(djmantra::ExternalContent::displayPath(root)
+                                                    .toHtmlEscaped(),
                                             isFolderOffline(root)
                                                     ? QStringLiteral(" – <i>%1</i>")
                                                               .arg(tr("offline"))
@@ -264,17 +272,14 @@ void FolderFeature::slotAddFolder() {
     if (!m_pLibrary) {
         return;
     }
-    const QString folder = QFileDialog::getExistingDirectory(nullptr,
-            tr("Add music folder"),
-            QStandardPaths::writableLocation(QStandardPaths::MusicLocation));
-    if (folder.isEmpty()) {
-        return;
-    }
-    if (!m_pLibrary->requestAddDir(folder)) {
-        return;
-    }
-    slotRefresh(); // shows the folder at once; its songs after the scan
-    m_pLibrary->trackCollectionManager()->startLibraryScan();
+    // A folder dialog on desktop systems, the system folder picker on Android
+    djmantra::ExternalDrives::chooseMusicFolder(QString(), [this](const QString& folder) {
+        if (folder.isEmpty() || !m_pLibrary || !m_pLibrary->requestAddDir(folder)) {
+            return;
+        }
+        slotRefresh(); // shows the folder at once; its songs after the scan
+        m_pLibrary->trackCollectionManager()->startLibraryScan();
+    });
 }
 
 void FolderFeature::removeFolder(const QString& folder) {

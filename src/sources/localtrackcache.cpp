@@ -16,6 +16,7 @@
 #include <map>
 #include <memory>
 
+#include "sources/externalcontent.h"
 #include "util/logger.h"
 
 namespace djmantra {
@@ -260,9 +261,25 @@ bool LocalTrackCache::isEnabled() {
     return current.mode != Mode::Off && !current.directory.isEmpty();
 }
 
+bool LocalTrackCache::isDriveReachable(const QString& driveRoot) {
+    const QString volumeId = ExternalContent::volumeIdOfDirectory(driveRoot);
+    if (!volumeId.isEmpty()) {
+        // Placeholders of a drive read through the Storage Access Framework
+        return ExternalContent::isVolumeMounted(volumeId);
+    }
+    return QFileInfo(driveRoot).isDir();
+}
+
 QString LocalTrackCache::driveRoot(const QString& path) {
     const Settings current = settings();
     const QString clean = normalizedPath(path);
+    {
+        // Placeholders: the drive is <mirror>/<volume id>
+        QString volumeId;
+        if (ExternalContent::splitPlaceholder(clean, &volumeId, nullptr)) {
+            return ExternalContent::volumeDirectory(volumeId);
+        }
+    }
     for (const auto& excluded : std::as_const(current.excludedPrefixes)) {
         if (startsWithPrefix(clean, excluded)) {
             return {};
@@ -309,7 +326,7 @@ bool LocalTrackCache::isOnUnreachableDrive(
         }
     }
     const QString drive = driveRoot(clean);
-    return !drive.isEmpty() && !QFileInfo(drive).isDir();
+    return !drive.isEmpty() && !isDriveReachable(drive);
 }
 
 bool LocalTrackCache::shouldCache(const QString& path) {
@@ -374,8 +391,14 @@ LocalTrackCache::Result LocalTrackCache::ensureCached(
     SourceInfo cached;
     const bool haveCopy = QFileInfo::exists(copy) && readSourceInfo(copy, &cached);
 
+    const QString drive = driveRoot(path);
+    // The file can be read: it exists and its drive is there (a placeholder
+    // always exists, its drive is there when the volume is mounted).
+    const auto available = [&] {
+        return QFileInfo::exists(path) && (drive.isEmpty() || isDriveReachable(drive));
+    };
     QFileInfo source(path);
-    if (!source.exists()) {
+    if (!available()) {
         if (haveCopy) {
             kLogger.info() << "Drive not reachable, using the local copy of" << path;
             touch(copy);
@@ -383,10 +406,8 @@ LocalTrackCache::Result LocalTrackCache::ensureCached(
         }
         // A drive that dropped out for a moment: wait for it. A missing file
         // on a drive that is there fails at once.
-        const QString drive = driveRoot(path);
-        const bool driveMissing = !drive.isEmpty() && !QFileInfo(drive).isDir();
-        if (!driveMissing ||
-                !waitFor([&] { return QFileInfo::exists(path); }, current, isCancelled)) {
+        const bool driveMissing = !drive.isEmpty() && !isDriveReachable(drive);
+        if (!driveMissing || !waitFor(available, current, isCancelled)) {
             return Result{path, false, QStringLiteral("File not found")};
         }
         source = QFileInfo(path);
@@ -413,7 +434,9 @@ LocalTrackCache::Result LocalTrackCache::ensureCached(
     if (!target.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         return Result{path, false, target.errorString()};
     }
-    QFile input(path);
+    // Placeholders are read through their content reader
+    std::unique_ptr<ExternalContent::Reader> pReader;
+    QFile input;
     qint64 copied = 0;
     QByteArray buffer;
     buffer.resize(kCopyBlockSize);
@@ -425,14 +448,17 @@ LocalTrackCache::Result LocalTrackCache::ensureCached(
             return Result{path, false, QStringLiteral("Cancelled")};
         }
         if (!input.isOpen()) {
-            if (!input.open(QIODevice::ReadOnly) || !input.seek(copied)) {
+            pReader = std::make_unique<ExternalContent::Reader>(path);
+            input.setFileName(pReader->path());
+            if (pReader->path().isEmpty() || !input.open(QIODevice::ReadOnly) ||
+                    !input.seek(copied)) {
                 input.close();
+                pReader.reset();
                 // The drive dropped out: wait until the same file is back
                 const bool back = waitFor(
                         [&] {
-                            const QFileInfo again(path);
-                            return again.exists() &&
-                                    sameSource(sourceInfoOf(again), sourceInfo);
+                            return available() &&
+                                    sameSource(sourceInfoOf(QFileInfo(path)), sourceInfo);
                         },
                         current,
                         isCancelled);
@@ -453,7 +479,8 @@ LocalTrackCache::Result LocalTrackCache::ensureCached(
         if (read <= 0) {
             // Read error or unexpected end: reopen (after the drive is back)
             input.close();
-            if (!QFileInfo::exists(path)) {
+            pReader.reset();
+            if (!available()) {
                 continue; // the wait happens when reopening
             }
             const QFileInfo again(path);
@@ -479,6 +506,7 @@ LocalTrackCache::Result LocalTrackCache::ensureCached(
         copied += read;
     }
     input.close();
+    pReader.reset();
     if (!target.flush()) {
         target.close();
         QFile::remove(part);
