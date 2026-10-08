@@ -12,6 +12,7 @@
 #include "engine/channels/enginechannel.h"
 #include "engine/controls/bpmcontrol.h"
 #include "engine/controls/clockcontrol.h"
+#include "engine/controls/phrasecontrol.h"
 #include "engine/controls/cuecontrol.h"
 #include "engine/controls/enginecontrol.h"
 #include "engine/controls/keycontrol.h"
@@ -228,6 +229,10 @@ EngineBuffer::EngineBuffer(const QString& group,
     // Create the clock controller
     m_pClockControl = new ClockControl(group, pConfig);
     addControl(m_pClockControl);
+
+    // DJ Mantra: beat in the phrase, for the beat lights
+    m_pPhraseControl = new PhraseControl(group, pConfig);
+    addControl(m_pPhraseControl);
 
     // Create the cue controller
     m_pCueControl = new CueControl(group, pConfig);
@@ -1504,6 +1509,7 @@ void EngineBuffer::updateIndicators(double speed, int iBufferSize) {
     // Via the visual play position it's possible to access to the sample that is currently played,
     // and not the one that have been processed as in the current solution.
     m_pClockControl->updateIndicators(speed * m_baserate_old, m_playPos, m_sampleRate);
+    m_pPhraseControl->updatePosition(m_playPos);
 }
 
 void EngineBuffer::hintReader(const double dRate) {

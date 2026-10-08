@@ -913,6 +913,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/engine/channels/enginemicrophone.cpp
   src/engine/controls/bpmcontrol.cpp
   src/engine/controls/clockcontrol.cpp
+  src/engine/controls/phrasecontrol.cpp
   src/engine/controls/cuecontrol.cpp
   src/engine/controls/enginecontrol.cpp
   src/engine/controls/keycontrol.cpp
@@ -2305,6 +2306,7 @@ if(BUILD_TESTING)
     src/test/externaldriveplayback_test.cpp
     src/test/folderfeature_test.cpp
     src/test/externalcontent_test.cpp
+    src/test/phrasecontrol_test.cpp
     src/test/starrating_test.cpp
     src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp
