@@ -90,6 +90,18 @@ class SoundSourceProxyTest : public MixxxTest, SoundSourceProviderRegistration {
                     QStringLiteral("id3-test-data/cover-test") +
                     fileNameSuffix));
         }
+        // DJ Mantra: video files, played by their audio track.
+        // video-cover-test.mkv (AAC in Matroska) is not included: Matroska
+        // timestamps have 1 ms resolution, so after seeking decoding resumes
+        // a few samples (< 1 ms) off, which fails the sample-exact checks.
+        for (const auto& videoFile : {"video-cover-test.mp4",
+                     "video-fade-test.webm"}) {
+            const QString fileName = QString::fromLatin1(videoFile);
+            if (SoundSourceProxy::isFileNameSupported(fileName)) {
+                filePaths.append(getTestDir().filePath(
+                        QStringLiteral("id3-test-data/") + fileName));
+            }
+        }
         return filePaths;
     }
 
@@ -1097,8 +1109,12 @@ TEST_F(SoundSourceProxyTest, taglibStringToEnumFileType) {
     const QStringList fileTypes = SoundSourceProxy::getSupportedFileTypes();
     for (const auto& fileType : fileTypes) {
         qDebug() << fileType;
+        // DJ Mantra: video containers (audio track only) have no TagLib
+        // reader; their title/artist come from the file name.
+        static const QStringList kNoTagLibReader = {"avi", "flv", "mka", "mkv", "webm"};
         if (fileType != "okt" &&     // Oktalyzer
-                fileType != "stm") { // "Scream Tracker";
+                fileType != "stm" && // "Scream Tracker";
+                !kNoTagLibReader.contains(fileType)) {
             ASSERT_NE(mixxx::taglib::stringToEnumFileType(fileType),
                     mixxx::taglib::FileType::Unknown);
         }

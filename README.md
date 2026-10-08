@@ -14,6 +14,10 @@ designed for phones and the **Hercules DJControl Mix Ultra** controller.
 - **MIDI learn**: map any controller button or knob to any function
 - Two audio outputs at once (for example, master on Bluetooth and cue on USB headphones),
   with per-output delay so cueing stays in sync with the speaker
+- **Video files as tracks**: MP4, MOV, M4V, MKV, WebM, AVI, FLV and 3GP play their audio
+  track. Cover art comes from the file's embedded cover if it has one, otherwise from the
+  first frame of the video. If the video fades in from black, the first non-black frame is
+  used instead.
 
 ## Building (desktop, current baseline)
 

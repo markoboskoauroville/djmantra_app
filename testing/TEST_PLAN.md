@@ -16,6 +16,12 @@ runs the checks for the newest milestone that has an APK.
 - [ ] Plays on the Bluetooth speaker
 - [ ] Charging through the USB-C splitter while playing on the DAC
 
+## Video files (from M4)
+- [ ] An MP4 music video appears in the library and plays its audio
+- [ ] Its cover art is a frame from the video (or the embedded cover)
+- [ ] An MKV or WebM file plays too
+- [ ] Jumping to a cue point inside a video file lands on the beat
+
 ## M5 – MIDI
 - [ ] Mix Ultra over Bluetooth appears in `dumpsys midi` and in the app
 - [ ] Button presses show up in logcat

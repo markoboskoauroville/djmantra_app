@@ -73,6 +73,24 @@ Algoriddim's djay artwork or branding.
   `Hercules DJControl Mix Ultra.midi.xml` and its script.
 - Expose Mixxx's existing MIDI learn in the QML UI, so any control can be remapped.
 
+### 6. Video files (audio track + video frame as cover art)
+- Playback uses Mixxx's FFmpeg decoder (`SoundSourceFFmpeg`), which picks the best audio
+  stream of any container. Added MKV/MKA/WebM/AVI/FLV to its formats; MP4/MOV/M4V/3GP were
+  already there. Matroska often lacks per-stream durations, so the container duration is
+  used as a fallback.
+- Cover art: `src/sources/videocoverimage.cpp` (FFmpeg + swscale). It uses an attached cover
+  picture if there is one. Otherwise it uses the first video frame that isn't black, scaled
+  to at most 1024 px. It is hooked into `SoundSourceProxy::importTrackMetadataAndCoverImage`,
+  so it works whichever decoder plays the file, and only runs when the file has no cover tag.
+- Title/artist come from tags if TagLib can read them (MP4/MOV), otherwise from the file name
+  ("Artist - Title.mkv").
+- Known limit: after seeking in **MKV** files, playback may resume up to about 1 ms off
+  because Matroska timestamps have millisecond resolution. That is inaudible. MP4 and WebM
+  seek sample-exactly (covered by the seek tests).
+- Tests: `src/test/videocoverimage_test.cpp`, and MP4/WebM added to `SoundSourceProxyTest`.
+- Android: FFmpeg is now enabled (vcpkg `ffmpeg[avcodec,avformat,swresample,swscale]`). It
+  also decodes MP4/AAC audio, since FAAD is not used on Android.
+
 ## Milestones
 
 - [x] **M0** Import Mixxx 2.5.6 unmodified (one commit, so our changes diff against it)

@@ -94,6 +94,7 @@ case "$1" in
             g++ \
             lcov \
             libavformat-dev \
+            libswscale-dev \
             libbenchmark-dev \
             libchromaprint-dev \
             libdistro-info-perl \

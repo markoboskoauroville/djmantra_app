@@ -236,7 +236,7 @@ project(mixxx VERSION 2.5.6)
 if(ANDROID)
   foreach(_android_off
       PORTAUDIO PORTMIDI HID BULK BROADCAST QTKEYCHAIN LILV BATTERY
-      ENGINEPRIME FFMPEG FAAD MODPLUG WAVPACK LOCALECOMPARE
+      ENGINEPRIME FAAD MODPLUG WAVPACK LOCALECOMPARE
       BUILD_TESTING BUILD_BENCH INSTALL_USER_UDEV_RULES)
     set(${_android_off} OFF CACHE BOOL "Disabled by default on Android")
   endforeach()
@@ -2240,6 +2240,7 @@ if(BUILD_TESTING)
     src/test/skincontext_test.cpp
     src/test/softtakeover_test.cpp
     src/test/soundproxy_test.cpp
+    src/test/videocoverimage_test.cpp
     src/test/soundsourceproviderregistrytest.cpp
     src/test/sqliteliketest.cpp
     src/test/synccontroltest.cpp
@@ -3669,6 +3670,26 @@ if(FFMPEG)
   )
   target_link_libraries(mixxx-lib PRIVATE "${FFMPEG_LIBRARIES}")
   target_include_directories(mixxx-lib PUBLIC "${FFMPEG_INCLUDE_DIRS}")
+
+  # DJ Mantra: video files play their audio track and use a frame of the
+  # video track as cover art when the file has no cover tag.
+  default_option(VIDEO_COVER_ART "Cover art from the video track of video files (needs libswscale)" "FFMPEG_libswscale_FOUND")
+  if(VIDEO_COVER_ART)
+    if(NOT FFMPEG_libswscale_FOUND)
+      message(FATAL_ERROR "VIDEO_COVER_ART requires libswscale")
+    endif()
+    target_sources(mixxx-lib PRIVATE src/sources/videocoverimage.cpp)
+    target_link_libraries(mixxx-lib PRIVATE "${FFMPEG_libswscale_LIBRARIES}")
+    # Defined only where it is used, so toggling it doesn't rebuild everything.
+    set_source_files_properties(
+      src/sources/videocoverimage.cpp
+      src/sources/soundsourceproxy.cpp
+      src/test/videocoverimage_test.cpp
+      PROPERTIES
+        COMPILE_DEFINITIONS __VIDEO_COVER_ART__
+        INCLUDE_DIRECTORIES "${FFMPEG_libswscale_INCLUDE_DIRS}"
+    )
+  endif()
 endif()
 
 # Google PerfTools

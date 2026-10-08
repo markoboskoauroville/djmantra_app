@@ -17,3 +17,12 @@ cover-test.mp3
 cover-test.ogg
 cover-test.wav
     this is a exception because id3v2 can't set a cover. This was created using easytag
+
+video-cover-test.mkv
+video-cover-test.mp4
+video-fade-test.webm
+    Video files for playing the audio track and using a video frame as cover
+    art (src/test/videocoverimage_test.cpp). Generated with ffmpeg:
+    ffmpeg -f lavfi -i "color=c=red:s=160x90:d=2:r=10" -f lavfi -i "sine=frequency=440:sample_rate=44100:duration=2" -ac 2 -c:v libx264 -preset veryslow -crf 30 -pix_fmt yuv420p -c:a aac -b:a 64k -shortest video-cover-test.mkv
+    ffmpeg -i video-cover-test.mkv -c copy -movflags +faststart video-cover-test.mp4
+    ffmpeg -f lavfi -i "color=c=black:s=160x90:d=1:r=10[b];color=c=green:s=160x90:d=1:r=10[g];[b][g]concat=n=2:v=1:a=0" -f lavfi -i "sine=frequency=440:sample_rate=48000:duration=2" -ac 2 -c:v libvpx-vp9 -b:v 50k -c:a libopus -b:a 48k -shortest video-fade-test.webm

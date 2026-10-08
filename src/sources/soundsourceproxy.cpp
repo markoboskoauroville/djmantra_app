@@ -37,6 +37,12 @@
 #include "sources/soundsourcemediafoundation.h"
 #endif
 
+#ifdef __VIDEO_COVER_ART__
+#include "sources/videocoverimage.h"
+#endif
+
+#include <QFileInfo>
+
 #include "library/coverartutils.h"
 #include "track/globaltrackcache.h"
 #include "track/track.h"
@@ -584,10 +590,26 @@ SoundSourceProxy::importTrackMetadataAndCoverImage(
         // is not supported.
         return importTrackMetadataAndCoverImageUnavailable();
     }
-    return m_pSoundSource->importTrackMetadataAndCoverImage(
+    auto result = m_pSoundSource->importTrackMetadataAndCoverImage(
             pTrackMetadata,
             pCoverImage,
             resetMissingTagMetadata);
+#ifdef __VIDEO_COVER_ART__
+    // Video files: if the container has no cover tag, use a frame of the
+    // video track as cover art. Only the audio track is played.
+    if (pCoverImage && pCoverImage->isNull()) {
+        const QString localFile = getUrl().toLocalFile();
+        if (mixxx::isVideoFileSuffix(QFileInfo(localFile).suffix())) {
+            *pCoverImage = mixxx::extractVideoCoverImage(localFile);
+            if (!pCoverImage->isNull() && !pTrackMetadata &&
+                    result.first == mixxx::MetadataSource::ImportResult::Unavailable) {
+                // Only the cover was requested and it has been found.
+                result.first = mixxx::MetadataSource::ImportResult::Succeeded;
+            }
+        }
+    }
+#endif
+    return result;
 }
 
 namespace {

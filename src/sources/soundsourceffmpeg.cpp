@@ -399,6 +399,18 @@ QStringList SoundSourceProviderFFmpeg::getSupportedFileTypes() const {
                 list.append("3g2"); // 3GPP2 file format audio/3gpp2
                 list.append("mj2"); // Motion JPEG 2000 video/mj2
                 continue;
+            } else if (!strcmp(pavInputFormat->name, "matroska,webm")) {
+                // DJ Mantra: video containers, only the audio track is played
+                list.append("mkv");  // Matroska video/x-matroska
+                list.append("mka");  // Matroska audio/x-matroska
+                list.append("webm"); // WebM video/webm
+                continue;
+            } else if (!strcmp(pavInputFormat->name, "avi")) {
+                list.append("avi"); // video/x-msvideo
+                continue;
+            } else if (!strcmp(pavInputFormat->name, "flv")) {
+                list.append("flv"); // video/x-flv
+                continue;
             } else if (!strcmp(pavInputFormat->name, "opus") ||
                     !strcmp(pavInputFormat->name, "libopus")) {
                 list.append("opus");
@@ -689,6 +701,18 @@ SoundSource::OpenResult SoundSourceFFmpeg::tryOpen(
         return OpenResult::Failed;
     }
 
+    if (m_pavStream->duration == AV_NOPTS_VALUE &&
+            m_pavInputFormatContext->duration != AV_NOPTS_VALUE &&
+            m_pavInputFormatContext->duration > 0) {
+        // DJ Mantra: Matroska/WebM (common for video files) often only
+        // store the duration of the whole file, not of each stream.
+        m_pavStream->duration = av_rescale_q(m_pavInputFormatContext->duration,
+                AV_TIME_BASE_Q,
+                m_pavStream->time_base);
+        kLogger.debug()
+                << "Using container duration for stream:"
+                << m_pavStream->duration;
+    }
     if (m_pavStream->duration == AV_NOPTS_VALUE) {
         // Streams with unknown or unlimited duration are
         // not (yet) supported.
