@@ -102,6 +102,10 @@ jobs:
           name: android-deps-${{ matrix.triplet }}
           path: android-deps
 
+      - name: Restore executable bits on host tools
+        # Artifacts don't keep file permissions (protoc etc. come back non-executable).
+        run: find android-deps/x64-linux/tools -type f -exec chmod +x {} +
+
       - name: Install Qt for Android (and the matching desktop host tools)
         run: |
           pip install aqtinstall
