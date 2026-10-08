@@ -1,0 +1,27 @@
+{
+  "name": "djmantra-android-deps",
+  "version-string": "0.1.0",
+  "description": "Native dependencies of the Mixxx engine for the DJ Mantra Android build",
+  "builtin-baseline": "2750401336fb7c95f6619657a46a7e798661341c",
+  "dependencies": [
+    "chromaprint",
+    "fftw3",
+    "libebur128",
+    "libflac",
+    "libid3tag",
+    "libkeyfinder",
+    "libmad",
+    "libogg",
+    "libsndfile",
+    "libvorbis",
+    "mp3lame",
+    "ms-gsl",
+    "oboe",
+    "opus",
+    "opusfile",
+    "protobuf",
+    "rubberband",
+    "soundtouch",
+    "taglib"
+  ]
+}

@@ -1,0 +1,72 @@
+name: Android
+
+# Port milestone M2: cross-compile the Mixxx engine's native dependencies
+# for Android. Later milestones add the Qt build, APK and emulator tests.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deps:
+    name: Dependencies (${{ matrix.triplet }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        triplet: [arm64-android, x64-android]
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}/vcpkg-cache,readwrite
+      VCPKG_COMMIT: 2750401336fb7c95f6619657a46a7e798661341c
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Host tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ninja-build autoconf autoconf-archive automake libtool pkg-config nasm
+
+      - name: Set up vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
+          git -C "$VCPKG_ROOT" checkout "$VCPKG_COMMIT"
+          "$VCPKG_ROOT/bootstrap-vcpkg.sh" -disableMetrics
+
+      - name: Restore vcpkg binary cache
+        uses: actions/cache@v4
+        with:
+          path: vcpkg-cache
+          key: vcpkg-${{ matrix.triplet }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-${{ github.sha }}
+          restore-keys: vcpkg-${{ matrix.triplet }}-${{ hashFiles('packaging/android/vcpkg.json', 'packaging/android/triplets/*') }}-
+
+      - name: Build dependencies
+        env:
+          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_LATEST_HOME }}
+        run: |
+          mkdir -p vcpkg-cache
+          echo "NDK: $ANDROID_NDK_HOME"
+          "$VCPKG_ROOT/vcpkg" install \
+            --x-manifest-root=packaging/android \
+            --overlay-triplets=packaging/android/triplets \
+            --triplet=${{ matrix.triplet }} \
+            --x-install-root=${{ github.workspace }}/android-deps
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcpkg-logs-${{ matrix.triplet }}
+          path: vcpkg/buildtrees/**/*.log
+
+      - name: Upload dependencies
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-deps-${{ matrix.triplet }}
+          path: android-deps/${{ matrix.triplet }}
+          retention-days: 7
