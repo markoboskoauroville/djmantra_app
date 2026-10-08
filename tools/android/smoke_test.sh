@@ -54,20 +54,38 @@ done
 sleep 2
 adb logcat -d > "$OUT/logcat.txt"
 adb exec-out screencap -p > "$OUT/screen.png" 2>/dev/null || true
+focus=$(adb shell dumpsys window 2>/dev/null | grep -m1 -E "mCurrentFocus" | tr -d '\r')
+
+# A hang: the stacks of all threads (emulator images allow adb root)
+if [ "$result" = "timeout" ]; then
+    pid=$(adb shell pidof "$PACKAGE" | tr -d '\r')
+    adb root > /dev/null 2>&1 && sleep 3 && adb wait-for-device
+    adb shell debuggerd -b "$pid" > "$OUT/stacks.txt" 2>&1 || true
+fi
 
 # Critical errors the app reported (before and after its own logging starts)
 grep -E " E default *:|critical \[" "$OUT/logcat.txt" > "$OUT/critical.txt" || true
 
-if [ "$result" = "crashed" ] && [ -n "$SYMBOLS" ]; then
-    NDK=${ANDROID_NDK_HOME:-$(ls -d "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/ndk/* 2>/dev/null | sort -V | tail -1)}
-    if [ -x "$NDK/ndk-stack" ]; then
+NDK=${ANDROID_NDK_HOME:-$(ls -d "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/ndk/* 2>/dev/null | sort -V | tail -1)}
+if [ -n "$SYMBOLS" ] && [ -x "$NDK/ndk-stack" ]; then
+    if [ "$result" = "crashed" ]; then
         "$NDK/ndk-stack" -sym "$SYMBOLS" -i "$OUT/logcat.txt" > "$OUT/crash.txt" 2>&1 || true
+    fi
+    if [ -s "$OUT/stacks.txt" ]; then
+        # ndk-stack reads one backtrace at a time: the main Qt thread's
+        awk '/^"qtMainLoopThrea"/,/^$/' "$OUT/stacks.txt" > "$OUT/main-thread.txt"
+        { echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
+          echo "backtrace:"
+          grep -E "^ +#[0-9]+ pc" "$OUT/main-thread.txt"; } > "$OUT/main-thread-bt.txt"
+        "$NDK/ndk-stack" -sym "$SYMBOLS" -i "$OUT/main-thread-bt.txt" > "$OUT/hang.txt" 2>&1 || true
     fi
 fi
 
 echo "### Launch test: $result"
 echo
-grep -E "DJMantra|default *:" "$OUT/logcat.txt" | tail -40 | sed 's/^/    /'
+echo "focused window: ${focus:-?}"
+echo
+grep -E "DJMantra|default *:" "$OUT/logcat.txt" | grep -v SchemaManager | tail -80 | sed 's/^/    /'
 fail=0
 if [ "$result" != "ok" ]; then
     fail=1
@@ -84,6 +102,15 @@ if [ -s "$OUT/crash.txt" ]; then
     echo
     echo "Symbolized crash:"
     sed 's/^/    /' "$OUT/crash.txt" | head -80
+fi
+if [ -s "$OUT/hang.txt" ]; then
+    echo
+    echo "Main thread while hanging (symbolized):"
+    sed 's/^/    /' "$OUT/hang.txt" | head -80
+elif [ -s "$OUT/main-thread.txt" ]; then
+    echo
+    echo "Main thread while hanging:"
+    sed 's/^/    /' "$OUT/main-thread.txt" | head -60
 fi
 [ "$fail" = 0 ] && echo && echo "OK: started, main window ready, alive ${SETTLE}s later, no critical errors"
 exit $fail

@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QStandardPaths>
 #include <QStorageInfo>
+#include <QtDebug>
 
 #if defined(Q_OS_ANDROID)
 #include <QCoreApplication>
@@ -276,25 +277,35 @@ void ExternalDrives::requestAllFilesAccess() {
     if (granted) {
         return;
     }
-    QMessageBox::information(nullptr,
+    // Not modal: this runs during startup, which must go on to the main
+    // window (a modal box here stopped the app at its first start)
+    auto* pBox = new QMessageBox(QMessageBox::Information,
             tr("Access to USB drives"),
             tr("To play music from USB sticks, USB disks and SD cards, DJ Mantra "
                "needs \"All files access\".\n\nOn the next screen, turn on "
                "\"Allow access to manage all files\", then come back."));
-    const QJniObject action = QJniObject::fromString(
-            QStringLiteral("android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION"));
-    QJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", action.object<jstring>());
-    const QJniObject packageUri = QJniObject::callStaticObjectMethod("android/net/Uri",
-            "parse",
-            "(Ljava/lang/String;)Landroid/net/Uri;",
-            QJniObject::fromString(QStringLiteral("package:com.djmantra.app")).object<jstring>());
-    intent.callObjectMethod("setData",
-            "(Landroid/net/Uri;)Landroid/content/Intent;",
-            packageUri.object());
-    constexpr jint kFlagActivityNewTask = 0x10000000;
-    intent.callObjectMethod("addFlags", "(I)Landroid/content/Intent;", kFlagActivityNewTask);
-    QJniObject context = QNativeInterface::QAndroidApplication::context();
-    context.callMethod<void>("startActivity", "(Landroid/content/Intent;)V", intent.object());
+    pBox->setAttribute(Qt::WA_DeleteOnClose);
+    QObject::connect(pBox, &QMessageBox::finished, pBox, [] {
+        const QJniObject action = QJniObject::fromString(
+                QStringLiteral("android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION"));
+        QJniObject intent("android/content/Intent",
+                "(Ljava/lang/String;)V",
+                action.object<jstring>());
+        const QJniObject packageUri = QJniObject::callStaticObjectMethod("android/net/Uri",
+                "parse",
+                "(Ljava/lang/String;)Landroid/net/Uri;",
+                QJniObject::fromString(QStringLiteral("package:com.djmantra.app"))
+                        .object<jstring>());
+        intent.callObjectMethod("setData",
+                "(Landroid/net/Uri;)Landroid/content/Intent;",
+                packageUri.object());
+        constexpr jint kFlagActivityNewTask = 0x10000000;
+        intent.callObjectMethod("addFlags", "(I)Landroid/content/Intent;", kFlagActivityNewTask);
+        QJniObject context = QNativeInterface::QAndroidApplication::context();
+        context.callMethod<void>("startActivity", "(Landroid/content/Intent;)V", intent.object());
+    });
+    qInfo() << "Asking for All files access";
+    pBox->open();
 #endif
 }
 
