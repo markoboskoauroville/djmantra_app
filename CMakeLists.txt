@@ -1918,6 +1918,9 @@ install(
     mixxx
   RUNTIME DESTINATION
     "${MIXXX_INSTALL_BINDIR}"
+  # On Android the app is a shared library loaded by the APK.
+  LIBRARY DESTINATION
+    "${CMAKE_INSTALL_LIBDIR}"
   BUNDLE DESTINATION
     .
 )
