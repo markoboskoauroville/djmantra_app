@@ -17,8 +17,22 @@ Tool: `tools/controller/midi_capture.py` (non-interactive; each call appends to
 - Connect the controller, then `python3 tools/controller/midi_capture.py ports`. Note the exact
   port names (they are part of the result). If the name does not contain "hercules", pass
   `--port <substring>` on every call.
-- Linux only, extra facts: `lsusb -v -d 06f8:` (Hercules vendor id) → save VID/PID and the USB
-  descriptors to the report; `aconnect -l`.
+- USB facts: macOS `system_profiler SPUSBDataType | grep -A12 -i hercules`; Linux
+  `lsusb -v -d 06f8:` (Hercules vendor id). Save VID/PID, product name and firmware/bcdDevice.
+
+## 1b. Camera (so you can check LEDs yourself)
+The user has a camera pointed at the controller. Find it and take a test photo:
+- macOS: `ffmpeg -f avfoundation -list_devices true -i ""`, then
+  `ffmpeg -loglevel error -f avfoundation -framerate 30 -video_size 1280x720 -i "<index>" -frames:v 1 -y /tmp/mixultra.jpg`
+  (or `brew install imagesnap` → `imagesnap -w 1 /tmp/mixultra.jpg`). The first run asks for
+  camera permission for the terminal app: tell the user to allow it.
+- Linux: `ffmpeg -f v4l2 -i /dev/video0 -frames:v 1 -y /tmp/mixultra.jpg`.
+Read the photo. Ask the user to adjust the camera until the whole top panel is sharp and
+readable, then take a **baseline photo with all LEDs off** (`send B0 7F 00`) and save it as
+`testing/results/<stamp>_mix-ultra/baseline.jpg`. In section 4, after every LED `send`, take a
+photo, compare it with the baseline and write what lit (control, colour, brightness) into
+`--note` yourself. Ask the user only when the photo is unclear. Keep the photos that show a
+lit LED (small JPEGs, max ~40) next to the report; never photos of anything but the controller.
 - Community mapping (Mixxx 2.5.2) from https://mixxx.discourse.group/t/hercules-djcontrol-mix-ultra/32257 :
   open the thread, download `Hercules_DJControl-Mix-Ultra.midi.xml` and `…-script.js` into
   `testing/results/mix-ultra-community/` together with a `SOURCE.md` (URL, author, date, the
@@ -62,6 +76,13 @@ and ask the user what lit up (which LED, colour). Then `send <status> <note> 00`
   brightness: are pads RGB? single colour? dim/bright levels?
 - Ask if there are VU meters, beat/BPM LEDs, battery or Bluetooth LEDs, jog-ring LEDs; find
   their messages with sweeps on note **and** CC (`sweep B1 00 7F`, values 7F and 40).
+
+## 4b. Cross-check with the community mapping in desktop Mixxx (optional, ~10 min)
+If desktop Mixxx 2.5.x is installed (`brew install --cask mixxx`), copy the community files to
+`~/Library/Containers/org.mixxx.mixxx/Data/Library/Application Support/Mixxx/controllers/`
+(or `~/.mixxx/controllers/` on Linux), enable it in Preferences → Controllers, and note for each
+section (transport, mixer, jog, each pad mode, LEDs) what works and what doesn't. Only a
+cross-check: our mapping is written from the capture, not copied.
 
 ## 5. Bluetooth (if possible)
 Pair it over BLE (Linux: `bluetoothctl`, then the ALSA BLE-MIDI port; macOS: Audio MIDI Setup
