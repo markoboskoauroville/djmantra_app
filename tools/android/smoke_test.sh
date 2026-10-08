@@ -24,6 +24,11 @@ exec > >(tee "$OUT/summary.txt") 2>&1
 adb wait-for-device
 adb install -r -g "$APK" || { echo "FAIL: install"; exit 1; }
 adb shell dumpsys package "$PACKAGE" | grep -m1 versionName | sed 's/^ */installed: /'
+# "All files access" as a user who allowed it: the screenshot then shows the
+# app, not the first-start box (SMOKE_FIRST_START=1 keeps the box)
+if [ -z "${SMOKE_FIRST_START:-}" ]; then
+    adb shell appops set --uid "$PACKAGE" MANAGE_EXTERNAL_STORAGE allow || true
+fi
 adb logcat -c
 adb shell am start -W -n "$PACKAGE/$ACTIVITY"
 

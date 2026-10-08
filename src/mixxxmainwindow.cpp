@@ -110,6 +110,16 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
           m_pPrefDlg(nullptr),
           m_toolTipsCfg(mixxx::preferences::Tooltips::On) {
     DEBUG_ASSERT(pCoreServices);
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: full screen by default on the phone (no status bar); can be
+    // turned off in Preferences -> Interface
+    {
+        const ConfigKey fullscreenKey("[Config]", "StartInFullscreen");
+        if (!pCoreServices->getSettings()->exists(fullscreenKey)) {
+            pCoreServices->getSettings()->setValue(fullscreenKey, true);
+        }
+    }
+#endif
     // These depend on the settings
 #ifdef __LINUX__
     // If the desktop features a global menubar and we'll go fullscreen during
