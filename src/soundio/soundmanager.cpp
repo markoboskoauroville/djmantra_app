@@ -1,6 +1,8 @@
 #include "soundio/soundmanager.h"
 
+#ifdef __PORTAUDIO__
 #include <portaudio.h>
+#endif
 
 #include <QLibrary>
 #include <QThread>
@@ -14,7 +16,9 @@
 #include "soundio/sounddevice.h"
 #include "soundio/sounddevicenetwork.h"
 #include "soundio/sounddevicenotfound.h"
+#ifdef __PORTAUDIO__
 #include "soundio/sounddeviceportaudio.h"
+#endif
 #include "soundio/soundmanagerutil.h"
 #include "util/cmdlineargs.h"
 #include "util/compatibility/qatomic.h"
@@ -27,7 +31,9 @@
 #include "soundio/soundmanagerios.h"
 #endif
 
+#ifdef __PORTAUDIO__
 typedef PaError (*SetJackClientName)(const char *name);
+#endif
 
 namespace {
 
@@ -91,10 +97,12 @@ SoundManager::~SoundManager() {
     const bool sleepAfterClosing = false;
     clearDeviceList(sleepAfterClosing);
 
+#ifdef __PORTAUDIO__
     if (m_paInitialized) {
         Pa_Terminate();
         m_paInitialized = false;
     }
+#endif
     // vinyl control proxies and input buffers are freed in closeDevices, called
     // by clearDeviceList -- bkgood
 
@@ -135,12 +143,14 @@ QList<SoundDevicePointer> SoundManager::getDeviceList(
 QList<QString> SoundManager::getHostAPIList() const {
     QList<QString> apiList;
 
+#ifdef __PORTAUDIO__
     for (PaHostApiIndex i = 0; i < Pa_GetHostApiCount(); i++) {
         const PaHostApiInfo* api = Pa_GetHostApiInfo(i);
         if (api && QString(api->name) != "skeleton implementation") {
             apiList.push_back(api->name);
         }
     }
+#endif
 
     return apiList;
 }
@@ -211,10 +221,12 @@ void SoundManager::clearDeviceList(bool sleepAfterClosing) {
     m_devices.clear();
     m_pErrorDevice.clear();
 
+#ifdef __PORTAUDIO__
     if (m_paInitialized) {
         Pa_Terminate();
         m_paInitialized = false;
     }
+#endif
 }
 
 QList<mixxx::audio::SampleRate> SoundManager::getSampleRates(const QString& api) const {
@@ -236,7 +248,9 @@ QList<mixxx::audio::SampleRate> SoundManager::getSampleRates() const {
 
 void SoundManager::queryDevices() {
     //qDebug() << "SoundManager::queryDevices()";
+#ifdef __PORTAUDIO__
     queryDevicesPortaudio();
+#endif
     queryDevicesMixxx();
 
     // now tell the prefs that we updated the device list -- bkgood
@@ -249,6 +263,7 @@ void SoundManager::clearAndQueryDevices() {
     queryDevices();
 }
 
+#ifdef __PORTAUDIO__
 void SoundManager::queryDevicesPortaudio() {
     PaError err = paNoError;
     if (!m_paInitialized) {
@@ -314,6 +329,7 @@ void SoundManager::queryDevicesPortaudio() {
         }
     }
 }
+#endif // __PORTAUDIO__
 
 void SoundManager::queryDevicesMixxx() {
     auto currentDevice = SoundDevicePointer(new SoundDeviceNetwork(
@@ -654,7 +670,7 @@ QList<AudioInput> SoundManager::registeredInputs() const {
 }
 
 void SoundManager::setJACKName() const {
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && defined(__PORTAUDIO__)
     typedef PaError (*SetJackClientName)(const char *name);
     QLibrary portaudio("libportaudio.so.2");
     if (portaudio.load()) {

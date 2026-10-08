@@ -229,6 +229,18 @@ elseif(APPLE)
 endif()
 
 project(mixxx VERSION 2.5.6)
+
+# DJ Mantra: Android defaults. Desktop-only features are off unless explicitly
+# enabled with -D<OPTION>=ON. Audio uses Oboe and MIDI uses the Android MIDI
+# API instead of PortAudio/PortMidi.
+if(ANDROID)
+  foreach(_android_off
+      PORTAUDIO PORTMIDI HID BULK BROADCAST QTKEYCHAIN LILV BATTERY
+      ENGINEPRIME FFMPEG FAAD MODPLUG WAVPACK LOCALECOMPARE
+      BUILD_TESTING BUILD_BENCH INSTALL_USER_UDEV_RULES)
+    set(${_android_off} OFF CACHE BOOL "Disabled by default on Android")
+  endforeach()
+endif()
 enable_language(C CXX)
 # Work around missing version suffixes support https://gitlab.kitware.com/cmake/cmake/-/issues/16716
 set(MIXXX_VERSION_PRERELEASE "") # set to "alpha" "beta" or ""
@@ -1130,7 +1142,6 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/skin/skinloader.cpp
   src/soundio/sounddevice.cpp
   src/soundio/sounddevicenetwork.cpp
-  src/soundio/sounddeviceportaudio.cpp
   src/soundio/soundmanager.cpp
   src/soundio/soundmanagerconfig.cpp
   src/soundio/soundmanagerutil.cpp
@@ -1832,6 +1843,16 @@ endif()
 
 set_target_properties(mixxx-lib PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY}")
 target_link_libraries(mixxx PRIVATE mixxx-lib mixxx-gitinfostore)
+
+if(ANDROID)
+  target_compile_definitions(mixxx-lib PUBLIC __ANDROID_PORT__)
+  target_link_libraries(mixxx-lib PRIVATE android log)
+  set_target_properties(mixxx PROPERTIES
+    QT_ANDROID_TARGET_SDK_VERSION 35
+    QT_ANDROID_MIN_SDK_VERSION 29
+    QT_ANDROID_VERSION_NAME "${CMAKE_PROJECT_VERSION}"
+  )
+endif()
 
 #
 # Installation and Packaging
@@ -2722,6 +2743,9 @@ target_link_libraries(mixxx-lib PRIVATE MP3GuessEnc)
 if(IOS)
   target_link_libraries(mixxx-lib PRIVATE "-framework OpenGLES")
   target_compile_definitions(mixxx-lib PUBLIC QT_OPENGL_ES_2)
+elseif(ANDROID)
+  target_link_libraries(mixxx-lib PRIVATE GLESv2 EGL)
+  target_compile_definitions(mixxx-lib PUBLIC QT_OPENGL_ES_2)
 else()
   if(APPLE)
     # Prefer the system-provided OpenGL framework on macOS to avoid accidentally
@@ -2759,8 +2783,13 @@ find_package(Vorbis REQUIRED)
 target_link_libraries(mixxx-lib PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
 
 # PortAudio
-find_package(PortAudio REQUIRED)
-target_link_libraries(mixxx-lib PUBLIC PortAudio::PortAudio)
+option(PORTAUDIO "Enable the PortAudio sound backend" ON)
+if(PORTAUDIO)
+  find_package(PortAudio REQUIRED)
+  target_link_libraries(mixxx-lib PUBLIC PortAudio::PortAudio)
+  target_compile_definitions(mixxx-lib PUBLIC __PORTAUDIO__)
+  target_sources(mixxx-lib PRIVATE src/soundio/sounddeviceportaudio.cpp)
+endif()
 
 # PortAudio Ring Buffer
 add_library(PortAudioRingBuffer STATIC EXCLUDE_FROM_ALL
@@ -3251,7 +3280,7 @@ if(APPLE)
         "-weak_framework IOKit"
     )
   endif()
-elseif(UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
+elseif(UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND NOT ANDROID)
   if(QT6)
     find_package(X11)
   else()

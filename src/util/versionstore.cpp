@@ -17,7 +17,9 @@
 #include <chromaprint.h>
 #include <ebur128.h>
 #include <lame/lame.h>
+#ifdef __PORTAUDIO__
 #include <portaudio.h>
+#endif
 #include <sndfile.h>
 #include <soundtouch/SoundTouch.h>
 #include <taglib.h>
@@ -173,9 +175,11 @@ QStringList VersionStore::dependencyVersions() {
             << QString("libshout: %1")
                        .arg(shout_version(nullptr, nullptr, nullptr))
 #endif
+#ifdef __PORTAUDIO__
             << QString("PortAudio: %1 %2")
                        .arg(Pa_GetVersion())
                        .arg(Pa_GetVersionText())
+#endif
 #ifdef __RUBBERBAND__
             // The version of the RubberBand headers Mixxx was compiled with.
             << QString("RubberBand: %1").arg(RUBBERBAND_VERSION)
