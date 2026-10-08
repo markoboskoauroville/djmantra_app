@@ -54,6 +54,16 @@
 #include "widget/wvumeterlegacy.h"
 #include "widget/wwaveformviewer.h"
 
+// OpenGL ES 2 headers (Android) lack these OpenGL 3.0 / ES 3.0 enums. On
+// contexts that don't support them the query fails and the GL_VERSION
+// string is parsed instead (see below).
+#ifndef GL_MAJOR_VERSION
+#define GL_MAJOR_VERSION 0x821B
+#endif
+#ifndef GL_MINOR_VERSION
+#define GL_MINOR_VERSION 0x821C
+#endif
+
 namespace {
 bool isDeprecated(WaveformWidgetType::Type t) {
     switch (t) {
@@ -93,7 +103,9 @@ bool shouldRenderWaveform(WaveformWidgetAbstract* pWaveformWidget) {
     return glw->shouldRender();
 }
 
-const QRegularExpression openGLVersionRegex(QStringLiteral("^(\\d+)\\.(\\d+).*$"));
+// Desktop: "4.6 Mesa ...", OpenGL ES: "OpenGL ES 3.2 ..." (DJ Mantra: Android)
+const QRegularExpression openGLVersionRegex(
+        QStringLiteral("^(?:OpenGL ES(?:-[A-Z]+)? )?(\\d+)\\.(\\d+).*$"));
 }  // anonymous namespace
 
 ///////////////////////////////////////////
@@ -174,7 +186,8 @@ WaveformWidgetFactory::WaveformWidgetFactory()
                     "renderer \"%3\"")
                                           .arg(versionString, vendorString, rendererString);
 
-            GLint majorVersion, minorVersion = GL_INVALID_ENUM;
+            GLint majorVersion = GL_INVALID_ENUM;
+            GLint minorVersion = GL_INVALID_ENUM;
             glFunctions->glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
             glFunctions->glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
             if (majorVersion == GL_INVALID_ENUM || minorVersion == GL_INVALID_ENUM) {

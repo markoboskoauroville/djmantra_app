@@ -139,8 +139,18 @@ jobs:
 
       - name: Build APK
         run: |
+          set -o pipefail
           export JAVA_HOME="${JAVA_HOME_17_X64:?}"
-          cmake --build build-android --target apk
+          # -k 0: keep going after errors so one run reports all of them.
+          cmake --build build-android --target apk -- -k 0 2>&1 | tee build-android.log
+
+      - name: Summarize build errors
+        if: failure()
+        run: |
+          echo "### Distinct compiler errors" >> "$GITHUB_STEP_SUMMARY"
+          grep -E '(error|fatal error):' build-android.log \
+            | sed -E 's/^[^ ]+Z //; s#^.*/djmantra_app/##' \
+            | sort | uniq -c | sort -rn | head -150 | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Upload configure/build logs
         if: failure()
