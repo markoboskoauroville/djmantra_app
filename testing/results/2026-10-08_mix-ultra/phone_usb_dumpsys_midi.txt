@@ -1,0 +1,12 @@
+MIDI Manager State:
+  Devices:
+    Device Info: MidiDeviceInfo[mType=1,mInputPortCount=1,mOutputPortCount=1,mProperties=Bundle[{manufacturer=Guillemot Corporation, alsa_device=0, product=DJControl Mix Ultra, name=Guillemot Corporation DJControl Mix Ultra, serial_number=null, version=2.00, usb_device=UsbDevice[mName=/dev/bus/usb/001/002,mVendorId=1784,mProductId=45361,mClass=0,mSubclass=0,mProtocol=0,mManufacturerName=Guillemot Corporation,mProductName=DJControl Mix Ultra,mVersion=2.00,mSerialNumberReader=com.android.server.usb.UsbSerialReader@895828d, mHasAudioPlayback=false, mHasAudioCapture=false, mHasMidi=true, mHasVideoCapture=false, mHasVideoPlayback=false, mConfigurations=[
+    UsbConfiguration[mId=1,mName=null,mAttributes=128,mMaxPower=25,mInterfaces=[
+    UsbInterface[mId=0,mAlternateSetting=0,mName=null,mClass=1,mSubclass=1,mProtocol=0,mEndpoints=[]
+    UsbInterface[mId=1,mAlternateSetting=0,mName=DJControl Mix Ultra,mClass=1,mSubclass=3,mProtocol=0,mEndpoints=[
+    UsbEndpoint[mAddress=1,mAttributes=2,mMaxPacketSize=64,mInterval=0]
+    UsbEndpoint[mAddress=129,mAttributes=2,mMaxPacketSize=64,mInterval=0]]
+    UsbInterface[mId=2,mAlternateSetting=0,mName=null,mClass=255,mSubclass=0,mProtocol=0,mEndpoints=[
+    UsbEndpoint[mAddress=2,mAttributes=2,mMaxPacketSize=64,mInterval=0]
+    UsbEndpoint[mAddress=130,mAttributes=2,mMaxPacketSize=64,mInterval=0]]]], alsa_card=1}],mIsPrivate=false,mDefaultProtocol=-1 Status: null UID: 1000 DeviceConnection count: 0 mServiceConnection: null
+  Clients:

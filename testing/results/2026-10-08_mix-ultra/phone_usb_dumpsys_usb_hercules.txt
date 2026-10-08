@@ -1,0 +1,26 @@
+      vendor_id=1784
+      product_id=45361
+      class=0
+      subclass=0
+      protocol=0
+      manufacturer_name=Guillemot Corporation
+      product_name=DJControl Mix Ultra
+      version=2.00
+      serial_number=null
+      configurations={
+        id=1
+        name=null
+--
+            name=DJControl Mix Ultra
+            class=1
+            subclass=3
+            protocol=0
+            endpoints=[
+              {
+--
+        manufacturer=1784
+        product=45361
+        is_headset={
+          in=false
+          out=false
+        }

@@ -1,0 +1,3 @@
+MIDI Manager State:
+  Devices:
+  Clients:

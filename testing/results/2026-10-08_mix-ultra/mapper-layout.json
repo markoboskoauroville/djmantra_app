@@ -1,0 +1,1315 @@
+{
+ "name": "Hercules DJControl Mix Ultra",
+ "port": "mix ultra",
+ "w": 34.2,
+ "h": 19.4,
+ "shift": [
+  [
+   145,
+   4
+  ],
+  [
+   146,
+   4
+  ]
+ ],
+ "pad_channels": [
+  150,
+  151
+ ],
+ "init": [
+  [
+   176,
+   127,
+   127
+  ]
+ ],
+ "controls": [
+  {
+   "id": "body",
+   "label": "",
+   "shape": "body",
+   "x": 2.8,
+   "y": 1.9,
+   "w": 28.6,
+   "h": 15.7
+  },
+  {
+   "id": "battery",
+   "label": "battery",
+   "shape": "led",
+   "x": 11.55,
+   "y": 2.9,
+   "w": 0.35,
+   "h": 0.35
+  },
+  {
+   "id": "button 1",
+   "label": "1",
+   "shape": "round",
+   "x": 16.0,
+   "y": 2.9,
+   "w": 0.75,
+   "h": 0.75
+  },
+  {
+   "id": "button 2",
+   "label": "2",
+   "shape": "round",
+   "x": 18.0,
+   "y": 2.9,
+   "w": 0.75,
+   "h": 0.75
+  },
+  {
+   "id": "browser",
+   "label": "browser",
+   "shape": "encoder",
+   "x": 17.1,
+   "y": 3.9,
+   "w": 1.45,
+   "h": 1.45
+  },
+  {
+   "id": "neural logo",
+   "label": "N",
+   "shape": "round",
+   "x": 17.0,
+   "y": 6.15,
+   "w": 1.05,
+   "h": 1.05,
+   "led": [
+    144,
+    1
+   ]
+  },
+  {
+   "id": "master",
+   "label": "master",
+   "shape": "knob",
+   "x": 17.0,
+   "y": 7.8,
+   "w": 1.15,
+   "h": 1.15
+  },
+  {
+   "id": "crossfader",
+   "label": "",
+   "shape": "fader-h",
+   "x": 17.0,
+   "y": 16.3,
+   "w": 3.2,
+   "h": 0.5
+  },
+  {
+   "id": "phones 1",
+   "label": "1",
+   "shape": "round",
+   "x": 16.05,
+   "y": 10.1,
+   "w": 0.75,
+   "h": 0.75,
+   "led": [
+    145,
+    12
+   ]
+  },
+  {
+   "id": "phones 2",
+   "label": "2",
+   "shape": "round",
+   "x": 18.0,
+   "y": 10.1,
+   "w": 0.75,
+   "h": 0.75,
+   "led": [
+    146,
+    12
+   ]
+  },
+  {
+   "id": "A high",
+   "label": "high/gain",
+   "shape": "knob",
+   "x": 14.25,
+   "y": 3.0,
+   "w": 1.1,
+   "h": 1.1
+  },
+  {
+   "id": "A mid",
+   "label": "mid",
+   "shape": "knob",
+   "x": 14.25,
+   "y": 5.3,
+   "w": 1.1,
+   "h": 1.1
+  },
+  {
+   "id": "A low",
+   "label": "low",
+   "shape": "knob",
+   "x": 14.25,
+   "y": 7.7,
+   "w": 1.1,
+   "h": 1.1
+  },
+  {
+   "id": "A filter",
+   "label": "filter",
+   "shape": "knob",
+   "x": 14.25,
+   "y": 10.1,
+   "w": 1.4,
+   "h": 1.4
+  },
+  {
+   "id": "A volume",
+   "label": "",
+   "shape": "fader-v",
+   "x": 14.3,
+   "y": 13.5,
+   "w": 0.5,
+   "h": 3.4
+  },
+  {
+   "id": "A tempo",
+   "label": "tempo",
+   "shape": "fader-v",
+   "x": 3.9,
+   "y": 6.75,
+   "w": 0.5,
+   "h": 5.6
+  },
+  {
+   "id": "A jog",
+   "label": "",
+   "shape": "jog",
+   "x": 8.6,
+   "y": 6.75,
+   "w": 7.2,
+   "h": 7.2
+  },
+  {
+   "id": "A deck",
+   "label": "deck 1",
+   "shape": "text",
+   "x": 4.4,
+   "y": 11.65,
+   "w": 2.0,
+   "h": 0.5
+  },
+  {
+   "id": "A shift",
+   "label": "shift",
+   "shape": "button",
+   "x": 4.3,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.55
+  },
+  {
+   "id": "A sync",
+   "label": "sync",
+   "shape": "button",
+   "x": 4.25,
+   "y": 13.9,
+   "w": 1.5,
+   "h": 0.55,
+   "led": [
+    145,
+    5
+   ]
+  },
+  {
+   "id": "A cue",
+   "label": "cue",
+   "shape": "button",
+   "x": 4.3,
+   "y": 15.0,
+   "w": 1.6,
+   "h": 1.1,
+   "led": [
+    145,
+    6
+   ]
+  },
+  {
+   "id": "A play",
+   "label": "\u25b6/II",
+   "shape": "button",
+   "x": 4.3,
+   "y": 16.45,
+   "w": 1.6,
+   "h": 1.1,
+   "led": [
+    145,
+    7
+   ]
+  },
+  {
+   "id": "A hot cue",
+   "label": "hot cue",
+   "shape": "button",
+   "x": 6.25,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.5,
+   "led": [
+    145,
+    15
+   ]
+  },
+  {
+   "id": "A loop",
+   "label": "loop",
+   "shape": "button",
+   "x": 8.07,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.5,
+   "led": [
+    145,
+    16
+   ]
+  },
+  {
+   "id": "A fx",
+   "label": "fx",
+   "shape": "button",
+   "x": 9.89,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.5,
+   "led": [
+    145,
+    17
+   ]
+  },
+  {
+   "id": "A neural mix",
+   "label": "neural mix",
+   "shape": "button",
+   "x": 11.71,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.5,
+   "led": [
+    145,
+    18
+   ]
+  },
+  {
+   "id": "A pad1",
+   "label": "1",
+   "shape": "pad",
+   "x": 6.3,
+   "y": 14.45,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    150,
+    48
+   ]
+  },
+  {
+   "id": "A pad2",
+   "label": "2",
+   "shape": "pad",
+   "x": 8.1,
+   "y": 14.45,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    150,
+    49
+   ]
+  },
+  {
+   "id": "A pad3",
+   "label": "3",
+   "shape": "pad",
+   "x": 9.9,
+   "y": 14.45,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    150,
+    50
+   ]
+  },
+  {
+   "id": "A pad4",
+   "label": "4",
+   "shape": "pad",
+   "x": 11.7,
+   "y": 14.45,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    150,
+    51
+   ]
+  },
+  {
+   "id": "A pad5",
+   "label": "5",
+   "shape": "pad",
+   "x": 6.3,
+   "y": 16.25,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    150,
+    52
+   ]
+  },
+  {
+   "id": "A pad6",
+   "label": "6",
+   "shape": "pad",
+   "x": 8.1,
+   "y": 16.25,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    150,
+    53
+   ]
+  },
+  {
+   "id": "A pad7",
+   "label": "7",
+   "shape": "pad",
+   "x": 9.9,
+   "y": 16.25,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    150,
+    54
+   ]
+  },
+  {
+   "id": "A pad8",
+   "label": "8",
+   "shape": "pad",
+   "x": 11.7,
+   "y": 16.25,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    150,
+    55
+   ]
+  },
+  {
+   "id": "B high",
+   "label": "high/gain",
+   "shape": "knob",
+   "x": 19.9,
+   "y": 3.0,
+   "w": 1.1,
+   "h": 1.1
+  },
+  {
+   "id": "B mid",
+   "label": "mid",
+   "shape": "knob",
+   "x": 19.8,
+   "y": 5.3,
+   "w": 1.1,
+   "h": 1.1
+  },
+  {
+   "id": "B low",
+   "label": "low",
+   "shape": "knob",
+   "x": 19.75,
+   "y": 7.7,
+   "w": 1.1,
+   "h": 1.1
+  },
+  {
+   "id": "B filter",
+   "label": "filter",
+   "shape": "knob",
+   "x": 19.9,
+   "y": 10.1,
+   "w": 1.4,
+   "h": 1.4
+  },
+  {
+   "id": "B volume",
+   "label": "",
+   "shape": "fader-v",
+   "x": 19.75,
+   "y": 13.5,
+   "w": 0.5,
+   "h": 3.4
+  },
+  {
+   "id": "B tempo",
+   "label": "tempo",
+   "shape": "fader-v",
+   "x": 30.25,
+   "y": 6.75,
+   "w": 0.5,
+   "h": 5.6
+  },
+  {
+   "id": "B jog",
+   "label": "",
+   "shape": "jog",
+   "x": 25.2,
+   "y": 6.75,
+   "w": 7.2,
+   "h": 7.2
+  },
+  {
+   "id": "B deck",
+   "label": "deck 2",
+   "shape": "text",
+   "x": 22.5,
+   "y": 11.65,
+   "w": 2.0,
+   "h": 0.5
+  },
+  {
+   "id": "B shift",
+   "label": "shift",
+   "shape": "button",
+   "x": 22.4,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.55
+  },
+  {
+   "id": "B sync",
+   "label": "sync",
+   "shape": "button",
+   "x": 22.3,
+   "y": 13.9,
+   "w": 1.5,
+   "h": 0.55,
+   "led": [
+    146,
+    5
+   ]
+  },
+  {
+   "id": "B cue",
+   "label": "cue",
+   "shape": "button",
+   "x": 22.3,
+   "y": 15.0,
+   "w": 1.6,
+   "h": 1.1,
+   "led": [
+    146,
+    6
+   ]
+  },
+  {
+   "id": "B play",
+   "label": "\u25b6/II",
+   "shape": "button",
+   "x": 22.3,
+   "y": 16.45,
+   "w": 1.6,
+   "h": 1.1,
+   "led": [
+    146,
+    7
+   ]
+  },
+  {
+   "id": "B hot cue",
+   "label": "hot cue",
+   "shape": "button",
+   "x": 24.4,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.5,
+   "led": [
+    146,
+    15
+   ]
+  },
+  {
+   "id": "B loop",
+   "label": "loop",
+   "shape": "button",
+   "x": 26.22,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.5,
+   "led": [
+    146,
+    16
+   ]
+  },
+  {
+   "id": "B fx",
+   "label": "fx",
+   "shape": "button",
+   "x": 28.04,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.5,
+   "led": [
+    146,
+    17
+   ]
+  },
+  {
+   "id": "B neural mix",
+   "label": "neural mix",
+   "shape": "button",
+   "x": 29.86,
+   "y": 12.95,
+   "w": 1.6,
+   "h": 0.5,
+   "led": [
+    146,
+    18
+   ]
+  },
+  {
+   "id": "B pad1",
+   "label": "1",
+   "shape": "pad",
+   "x": 24.4,
+   "y": 14.45,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    151,
+    48
+   ]
+  },
+  {
+   "id": "B pad2",
+   "label": "2",
+   "shape": "pad",
+   "x": 26.2,
+   "y": 14.45,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    151,
+    49
+   ]
+  },
+  {
+   "id": "B pad3",
+   "label": "3",
+   "shape": "pad",
+   "x": 28.0,
+   "y": 14.45,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    151,
+    50
+   ]
+  },
+  {
+   "id": "B pad4",
+   "label": "4",
+   "shape": "pad",
+   "x": 29.799999999999997,
+   "y": 14.45,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    151,
+    51
+   ]
+  },
+  {
+   "id": "B pad5",
+   "label": "5",
+   "shape": "pad",
+   "x": 24.4,
+   "y": 16.25,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    151,
+    52
+   ]
+  },
+  {
+   "id": "B pad6",
+   "label": "6",
+   "shape": "pad",
+   "x": 26.2,
+   "y": 16.25,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    151,
+    53
+   ]
+  },
+  {
+   "id": "B pad7",
+   "label": "7",
+   "shape": "pad",
+   "x": 28.0,
+   "y": 16.25,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    151,
+    54
+   ]
+  },
+  {
+   "id": "B pad8",
+   "label": "8",
+   "shape": "pad",
+   "x": 29.799999999999997,
+   "y": 16.25,
+   "w": 1.6,
+   "h": 1.6,
+   "led": [
+    151,
+    55
+   ]
+  }
+ ],
+ "steps": [
+  {
+   "label": "browser turn right",
+   "say": "Turn the BROWSER knob slowly to the RIGHT, about 5 clicks",
+   "control": "browser",
+   "kind": "continuous"
+  },
+  {
+   "label": "browser turn left",
+   "say": "Turn the BROWSER knob slowly to the LEFT, about 5 clicks",
+   "control": "browser",
+   "kind": "continuous"
+  },
+  {
+   "label": "browser press",
+   "say": "PRESS the BROWSER knob once",
+   "control": "browser",
+   "kind": "button"
+  },
+  {
+   "label": "browser turn right + SHIFT",
+   "say": "Hold deck 1 SHIFT and turn the BROWSER right, 5 clicks",
+   "control": "browser",
+   "kind": "continuous"
+  },
+  {
+   "label": "browser press + SHIFT",
+   "say": "Hold deck 1 SHIFT and PRESS the BROWSER knob",
+   "control": "browser",
+   "kind": "button"
+  },
+  {
+   "label": "STEMS / Neural Mix centre button",
+   "say": "Press the round N (Neural Mix) logo in the centre",
+   "control": "neural logo",
+   "kind": "button"
+  },
+  {
+   "label": "STEMS centre button + SHIFT",
+   "say": "Hold deck 1 SHIFT and press the N logo",
+   "control": "neural logo",
+   "kind": "button"
+  },
+  {
+   "label": "master min->max",
+   "say": "Turn MASTER all the way LEFT, then all the way RIGHT",
+   "control": "master",
+   "kind": "continuous"
+  },
+  {
+   "label": "crossfader left->right",
+   "say": "Move the CROSSFADER fully LEFT, then fully RIGHT",
+   "control": "crossfader",
+   "kind": "continuous"
+  },
+  {
+   "label": "A LOAD (button 1)",
+   "say": "Press the small round button 1 (LOAD deck 1)",
+   "control": "button 1",
+   "kind": "button"
+  },
+  {
+   "label": "A LOAD + SHIFT",
+   "say": "Hold deck 1 SHIFT and press button 1",
+   "control": "button 1",
+   "kind": "button"
+  },
+  {
+   "label": "A SYNC",
+   "say": "Press SYNC on deck 1",
+   "control": "A sync",
+   "kind": "button"
+  },
+  {
+   "label": "A SYNC + SHIFT",
+   "say": "Hold deck 1 SHIFT and press SYNC",
+   "control": "A sync",
+   "kind": "button"
+  },
+  {
+   "label": "A CUE",
+   "say": "Press CUE on deck 1",
+   "control": "A cue",
+   "kind": "button"
+  },
+  {
+   "label": "A CUE + SHIFT",
+   "say": "Hold deck 1 SHIFT and press CUE",
+   "control": "A cue",
+   "kind": "button"
+  },
+  {
+   "label": "A PLAY",
+   "say": "Press PLAY on deck 1",
+   "control": "A play",
+   "kind": "button"
+  },
+  {
+   "label": "A PLAY + SHIFT",
+   "say": "Hold deck 1 SHIFT and press PLAY",
+   "control": "A play",
+   "kind": "button"
+  },
+  {
+   "label": "A PFL / headphones",
+   "say": "Press HEADPHONES button 1",
+   "control": "phones 1",
+   "kind": "button"
+  },
+  {
+   "label": "A PFL + SHIFT",
+   "say": "Hold deck 1 SHIFT and press HEADPHONES 1",
+   "control": "phones 1",
+   "kind": "button"
+  },
+  {
+   "label": "A mode HOT CUE",
+   "say": "Press the HOT CUE mode button on deck 1",
+   "control": "A hot cue",
+   "kind": "button"
+  },
+  {
+   "label": "A mode HOT CUE + SHIFT",
+   "say": "Hold deck 1 SHIFT and press HOT CUE (PITCH PLAY)",
+   "control": "A hot cue",
+   "kind": "button"
+  },
+  {
+   "label": "A mode LOOP",
+   "say": "Press the LOOP mode button on deck 1",
+   "control": "A loop",
+   "kind": "button"
+  },
+  {
+   "label": "A mode LOOP + SHIFT",
+   "say": "Hold deck 1 SHIFT and press LOOP (BOUNCE LOOP)",
+   "control": "A loop",
+   "kind": "button"
+  },
+  {
+   "label": "A mode FX",
+   "say": "Press the FX mode button on deck 1",
+   "control": "A fx",
+   "kind": "button"
+  },
+  {
+   "label": "A mode FX + SHIFT",
+   "say": "Hold deck 1 SHIFT and press FX (SLICER)",
+   "control": "A fx",
+   "kind": "button"
+  },
+  {
+   "label": "A mode NEURAL MIX",
+   "say": "Press the NEURAL MIX mode button on deck 1",
+   "control": "A neural mix",
+   "kind": "button"
+  },
+  {
+   "label": "A mode NEURAL MIX + SHIFT",
+   "say": "Hold deck 1 SHIFT and press NEURAL MIX (SAMPLER)",
+   "control": "A neural mix",
+   "kind": "button"
+  },
+  {
+   "label": "A EQ HIGH min->max",
+   "say": "Turn HIGH/GAIN (deck 1) fully LEFT, then fully RIGHT",
+   "control": "A high",
+   "kind": "continuous"
+  },
+  {
+   "label": "A GAIN (SHIFT + HIGH) min->max",
+   "say": "Hold deck 1 SHIFT, turn HIGH/GAIN fully LEFT, then RIGHT",
+   "control": "A high",
+   "kind": "continuous"
+  },
+  {
+   "label": "A EQ MID min->max",
+   "say": "Turn MID (deck 1) fully LEFT, then fully RIGHT",
+   "control": "A mid",
+   "kind": "continuous"
+  },
+  {
+   "label": "A EQ LOW min->max",
+   "say": "Turn LOW (deck 1) fully LEFT, then fully RIGHT",
+   "control": "A low",
+   "kind": "continuous"
+  },
+  {
+   "label": "A FILTER left->centre->right",
+   "say": "Turn FILTER (deck 1) fully LEFT, back to the CENTRE, then fully RIGHT",
+   "control": "A filter",
+   "kind": "continuous"
+  },
+  {
+   "label": "A volume fader down->up",
+   "say": "Move the VOLUME fader (deck 1) fully DOWN, then fully UP",
+   "control": "A volume",
+   "kind": "continuous"
+  },
+  {
+   "label": "A tempo fader top->bottom",
+   "say": "Move the TEMPO fader (deck 1) to the TOP, then to the BOTTOM",
+   "control": "A tempo",
+   "kind": "continuous"
+  },
+  {
+   "label": "A jog touch (hold 2 s)",
+   "say": "TOUCH the top of the JOG (deck 1), hold 2 seconds, let go. Don't turn it",
+   "control": "A jog",
+   "kind": "button",
+   "part": "top"
+  },
+  {
+   "label": "A jog top 1 turn clockwise",
+   "say": "Hand ON TOP of the JOG (deck 1): exactly ONE full turn CLOCKWISE",
+   "control": "A jog",
+   "kind": "jog",
+   "part": "top"
+  },
+  {
+   "label": "A jog top 1 turn counter-clockwise",
+   "say": "Hand ON TOP: ONE full turn COUNTER-clockwise",
+   "control": "A jog",
+   "kind": "jog",
+   "part": "top"
+  },
+  {
+   "label": "A jog ring 1 turn clockwise",
+   "say": "Only the OUTER EDGE of the JOG (deck 1): ONE full turn CLOCKWISE",
+   "control": "A jog",
+   "kind": "jog",
+   "part": "ring"
+  },
+  {
+   "label": "A jog ring 1 turn counter-clockwise",
+   "say": "OUTER EDGE only: ONE full turn COUNTER-clockwise",
+   "control": "A jog",
+   "kind": "jog",
+   "part": "ring"
+  },
+  {
+   "label": "A jog top 1 turn clockwise + SHIFT",
+   "say": "Hold deck 1 SHIFT, hand ON TOP: ONE full turn CLOCKWISE",
+   "control": "A jog",
+   "kind": "jog",
+   "part": "top"
+  },
+  {
+   "label": "A pads 1-8 in HOT CUE",
+   "say": "Press HOT CUE, then pads 1\u21928 (top row, then bottom row)",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A SHIFT + pads 1-8 in HOT CUE",
+   "say": "Still HOT CUE: hold deck 1 SHIFT and press pads 1\u21928",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A pads 1-8 in LOOP",
+   "say": "Press LOOP, then pads 1\u21928 (top row, then bottom row)",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A SHIFT + pads 1-8 in LOOP",
+   "say": "Still LOOP: hold deck 1 SHIFT and press pads 1\u21928",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A pads 1-8 in FX",
+   "say": "Press FX, then pads 1\u21928 (top row, then bottom row)",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A SHIFT + pads 1-8 in FX",
+   "say": "Still FX: hold deck 1 SHIFT and press pads 1\u21928",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A pads 1-8 in NEURAL MIX",
+   "say": "Press NEURAL MIX, then pads 1\u21928 (top row, then bottom row)",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A SHIFT + pads 1-8 in NEURAL MIX",
+   "say": "Still NEURAL MIX: hold deck 1 SHIFT and press pads 1\u21928",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A pads 1-8 in PITCH PLAY",
+   "say": "Hold SHIFT + press HOT CUE (= PITCH PLAY), let go, then pads 1\u21928 (top row, then bottom row)",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A SHIFT + pads 1-8 in PITCH PLAY",
+   "say": "Still PITCH PLAY: hold deck 1 SHIFT and press pads 1\u21928",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A pads 1-8 in BOUNCE LOOP",
+   "say": "Hold SHIFT + press LOOP (= BOUNCE LOOP), let go, then pads 1\u21928 (top row, then bottom row)",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A SHIFT + pads 1-8 in BOUNCE LOOP",
+   "say": "Still BOUNCE LOOP: hold deck 1 SHIFT and press pads 1\u21928",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A pads 1-8 in SLICER",
+   "say": "Hold SHIFT + press FX (= SLICER), let go, then pads 1\u21928 (top row, then bottom row)",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A SHIFT + pads 1-8 in SLICER",
+   "say": "Still SLICER: hold deck 1 SHIFT and press pads 1\u21928",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A pads 1-8 in SAMPLER",
+   "say": "Hold SHIFT + press NEURAL MIX (= SAMPLER), let go, then pads 1\u21928 (top row, then bottom row)",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "A SHIFT + pads 1-8 in SAMPLER",
+   "say": "Still SAMPLER: hold deck 1 SHIFT and press pads 1\u21928",
+   "control": "A pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B LOAD (button 2)",
+   "say": "Press the small round button 2 (LOAD deck 2)",
+   "control": "button 2",
+   "kind": "button"
+  },
+  {
+   "label": "B LOAD + SHIFT",
+   "say": "Hold deck 2 SHIFT and press button 2",
+   "control": "button 2",
+   "kind": "button"
+  },
+  {
+   "label": "B SYNC",
+   "say": "Press SYNC on deck 2",
+   "control": "B sync",
+   "kind": "button"
+  },
+  {
+   "label": "B SYNC + SHIFT",
+   "say": "Hold deck 2 SHIFT and press SYNC",
+   "control": "B sync",
+   "kind": "button"
+  },
+  {
+   "label": "B CUE",
+   "say": "Press CUE on deck 2",
+   "control": "B cue",
+   "kind": "button"
+  },
+  {
+   "label": "B CUE + SHIFT",
+   "say": "Hold deck 2 SHIFT and press CUE",
+   "control": "B cue",
+   "kind": "button"
+  },
+  {
+   "label": "B PLAY",
+   "say": "Press PLAY on deck 2",
+   "control": "B play",
+   "kind": "button"
+  },
+  {
+   "label": "B PLAY + SHIFT",
+   "say": "Hold deck 2 SHIFT and press PLAY",
+   "control": "B play",
+   "kind": "button"
+  },
+  {
+   "label": "B PFL / headphones",
+   "say": "Press HEADPHONES button 2",
+   "control": "phones 2",
+   "kind": "button"
+  },
+  {
+   "label": "B PFL + SHIFT",
+   "say": "Hold deck 2 SHIFT and press HEADPHONES 2",
+   "control": "phones 2",
+   "kind": "button"
+  },
+  {
+   "label": "B mode HOT CUE",
+   "say": "Press the HOT CUE mode button on deck 2",
+   "control": "B hot cue",
+   "kind": "button"
+  },
+  {
+   "label": "B mode HOT CUE + SHIFT",
+   "say": "Hold deck 2 SHIFT and press HOT CUE (PITCH PLAY)",
+   "control": "B hot cue",
+   "kind": "button"
+  },
+  {
+   "label": "B mode LOOP",
+   "say": "Press the LOOP mode button on deck 2",
+   "control": "B loop",
+   "kind": "button"
+  },
+  {
+   "label": "B mode LOOP + SHIFT",
+   "say": "Hold deck 2 SHIFT and press LOOP (BOUNCE LOOP)",
+   "control": "B loop",
+   "kind": "button"
+  },
+  {
+   "label": "B mode FX",
+   "say": "Press the FX mode button on deck 2",
+   "control": "B fx",
+   "kind": "button"
+  },
+  {
+   "label": "B mode FX + SHIFT",
+   "say": "Hold deck 2 SHIFT and press FX (SLICER)",
+   "control": "B fx",
+   "kind": "button"
+  },
+  {
+   "label": "B mode NEURAL MIX",
+   "say": "Press the NEURAL MIX mode button on deck 2",
+   "control": "B neural mix",
+   "kind": "button"
+  },
+  {
+   "label": "B mode NEURAL MIX + SHIFT",
+   "say": "Hold deck 2 SHIFT and press NEURAL MIX (SAMPLER)",
+   "control": "B neural mix",
+   "kind": "button"
+  },
+  {
+   "label": "B EQ HIGH min->max",
+   "say": "Turn HIGH/GAIN (deck 2) fully LEFT, then fully RIGHT",
+   "control": "B high",
+   "kind": "continuous"
+  },
+  {
+   "label": "B GAIN (SHIFT + HIGH) min->max",
+   "say": "Hold deck 2 SHIFT, turn HIGH/GAIN fully LEFT, then RIGHT",
+   "control": "B high",
+   "kind": "continuous"
+  },
+  {
+   "label": "B EQ MID min->max",
+   "say": "Turn MID (deck 2) fully LEFT, then fully RIGHT",
+   "control": "B mid",
+   "kind": "continuous"
+  },
+  {
+   "label": "B EQ LOW min->max",
+   "say": "Turn LOW (deck 2) fully LEFT, then fully RIGHT",
+   "control": "B low",
+   "kind": "continuous"
+  },
+  {
+   "label": "B FILTER left->centre->right",
+   "say": "Turn FILTER (deck 2) fully LEFT, back to the CENTRE, then fully RIGHT",
+   "control": "B filter",
+   "kind": "continuous"
+  },
+  {
+   "label": "B volume fader down->up",
+   "say": "Move the VOLUME fader (deck 2) fully DOWN, then fully UP",
+   "control": "B volume",
+   "kind": "continuous"
+  },
+  {
+   "label": "B tempo fader top->bottom",
+   "say": "Move the TEMPO fader (deck 2) to the TOP, then to the BOTTOM",
+   "control": "B tempo",
+   "kind": "continuous"
+  },
+  {
+   "label": "B jog touch (hold 2 s)",
+   "say": "TOUCH the top of the JOG (deck 2), hold 2 seconds, let go. Don't turn it",
+   "control": "B jog",
+   "kind": "button",
+   "part": "top"
+  },
+  {
+   "label": "B jog top 1 turn clockwise",
+   "say": "Hand ON TOP of the JOG (deck 2): exactly ONE full turn CLOCKWISE",
+   "control": "B jog",
+   "kind": "jog",
+   "part": "top"
+  },
+  {
+   "label": "B jog top 1 turn counter-clockwise",
+   "say": "Hand ON TOP: ONE full turn COUNTER-clockwise",
+   "control": "B jog",
+   "kind": "jog",
+   "part": "top"
+  },
+  {
+   "label": "B jog ring 1 turn clockwise",
+   "say": "Only the OUTER EDGE of the JOG (deck 2): ONE full turn CLOCKWISE",
+   "control": "B jog",
+   "kind": "jog",
+   "part": "ring"
+  },
+  {
+   "label": "B jog ring 1 turn counter-clockwise",
+   "say": "OUTER EDGE only: ONE full turn COUNTER-clockwise",
+   "control": "B jog",
+   "kind": "jog",
+   "part": "ring"
+  },
+  {
+   "label": "B jog top 1 turn clockwise + SHIFT",
+   "say": "Hold deck 2 SHIFT, hand ON TOP: ONE full turn CLOCKWISE",
+   "control": "B jog",
+   "kind": "jog",
+   "part": "top"
+  },
+  {
+   "label": "B pads 1-8 in HOT CUE",
+   "say": "Press HOT CUE, then pads 1\u21928 (top row, then bottom row)",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B SHIFT + pads 1-8 in HOT CUE",
+   "say": "Still HOT CUE: hold deck 2 SHIFT and press pads 1\u21928",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B pads 1-8 in LOOP",
+   "say": "Press LOOP, then pads 1\u21928 (top row, then bottom row)",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B SHIFT + pads 1-8 in LOOP",
+   "say": "Still LOOP: hold deck 2 SHIFT and press pads 1\u21928",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B pads 1-8 in FX",
+   "say": "Press FX, then pads 1\u21928 (top row, then bottom row)",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B SHIFT + pads 1-8 in FX",
+   "say": "Still FX: hold deck 2 SHIFT and press pads 1\u21928",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B pads 1-8 in NEURAL MIX",
+   "say": "Press NEURAL MIX, then pads 1\u21928 (top row, then bottom row)",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B SHIFT + pads 1-8 in NEURAL MIX",
+   "say": "Still NEURAL MIX: hold deck 2 SHIFT and press pads 1\u21928",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B pads 1-8 in PITCH PLAY",
+   "say": "Hold SHIFT + press HOT CUE (= PITCH PLAY), let go, then pads 1\u21928 (top row, then bottom row)",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B SHIFT + pads 1-8 in PITCH PLAY",
+   "say": "Still PITCH PLAY: hold deck 2 SHIFT and press pads 1\u21928",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B pads 1-8 in BOUNCE LOOP",
+   "say": "Hold SHIFT + press LOOP (= BOUNCE LOOP), let go, then pads 1\u21928 (top row, then bottom row)",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B SHIFT + pads 1-8 in BOUNCE LOOP",
+   "say": "Still BOUNCE LOOP: hold deck 2 SHIFT and press pads 1\u21928",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B pads 1-8 in SLICER",
+   "say": "Hold SHIFT + press FX (= SLICER), let go, then pads 1\u21928 (top row, then bottom row)",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B SHIFT + pads 1-8 in SLICER",
+   "say": "Still SLICER: hold deck 2 SHIFT and press pads 1\u21928",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B pads 1-8 in SAMPLER",
+   "say": "Hold SHIFT + press NEURAL MIX (= SAMPLER), let go, then pads 1\u21928 (top row, then bottom row)",
+   "control": "B pads",
+   "kind": "pads"
+  },
+  {
+   "label": "B SHIFT + pads 1-8 in SAMPLER",
+   "say": "Still SAMPLER: hold deck 2 SHIFT and press pads 1\u21928",
+   "control": "B pads",
+   "kind": "pads"
+  }
+ ]
+}

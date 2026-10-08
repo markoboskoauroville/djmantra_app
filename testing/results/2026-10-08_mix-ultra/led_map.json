@@ -1,0 +1,568 @@
+[
+ {
+  "message": "90 01 7F",
+  "lit": "neural logo",
+  "rgb_on_camera": [
+   167,
+   167,
+   170
+  ],
+  "glow_on_neighbours": [],
+  "photo": "leds/9001.jpg"
+ },
+ {
+  "message": "91 05 7F",
+  "lit": "A sync",
+  "rgb_on_camera": [
+   225,
+   147,
+   134
+  ],
+  "glow_on_neighbours": [
+   "A cue",
+   "A pad1"
+  ],
+  "photo": "leds/9105.jpg"
+ },
+ {
+  "message": "91 06 7F",
+  "lit": "A cue",
+  "rgb_on_camera": [
+   187,
+   151,
+   59
+  ],
+  "glow_on_neighbours": [
+   "A sync",
+   "A play",
+   "A pad1"
+  ],
+  "photo": "leds/9106.jpg"
+ },
+ {
+  "message": "91 07 7F",
+  "lit": "A play",
+  "rgb_on_camera": [
+   131,
+   206,
+   172
+  ],
+  "glow_on_neighbours": [
+   "A cue",
+   "A pad5"
+  ],
+  "photo": "leds/9107.jpg"
+ },
+ {
+  "message": "91 0C 7F",
+  "lit": "phones 1",
+  "rgb_on_camera": [
+   90,
+   146,
+   238
+  ],
+  "glow_on_neighbours": [
+   "phones 2"
+  ],
+  "photo": "leds/910C.jpg"
+ },
+ {
+  "message": "91 0F 7F",
+  "lit": "A hotcue",
+  "rgb_on_camera": [
+   194,
+   202,
+   212
+  ],
+  "glow_on_neighbours": [
+   "A pad1",
+   "A pad2",
+   "A loop"
+  ],
+  "photo": "leds/910F.jpg"
+ },
+ {
+  "message": "91 10 7F",
+  "lit": "A pad2",
+  "rgb_on_camera": [
+   182,
+   216,
+   235
+  ],
+  "glow_on_neighbours": [
+   "A loop",
+   "A pad3",
+   "A fx"
+  ],
+  "photo": "leds/9110.jpg"
+ },
+ {
+  "message": "91 11 7F",
+  "lit": "A pad3",
+  "rgb_on_camera": [
+   183,
+   217,
+   238
+  ],
+  "glow_on_neighbours": [
+   "A fx",
+   "A pad4",
+   "A neural"
+  ],
+  "photo": "leds/9111.jpg"
+ },
+ {
+  "message": "91 12 7F",
+  "lit": "A pad4",
+  "rgb_on_camera": [
+   184,
+   219,
+   242
+  ],
+  "glow_on_neighbours": [
+   "A neural"
+  ],
+  "photo": "leds/9112.jpg"
+ },
+ {
+  "message": "92 05 7F",
+  "lit": "B sync",
+  "rgb_on_camera": [
+   217,
+   132,
+   117
+  ],
+  "glow_on_neighbours": [
+   "B cue"
+  ],
+  "photo": "leds/9205.jpg"
+ },
+ {
+  "message": "92 06 7F",
+  "lit": "B cue",
+  "rgb_on_camera": [
+   184,
+   141,
+   42
+  ],
+  "glow_on_neighbours": [
+   "B sync",
+   "B play"
+  ],
+  "photo": "leds/9206.jpg"
+ },
+ {
+  "message": "92 07 7F",
+  "lit": "B play",
+  "rgb_on_camera": [
+   128,
+   200,
+   167
+  ],
+  "glow_on_neighbours": [
+   "B cue",
+   "B pad5",
+   "B sync"
+  ],
+  "photo": "leds/9207.jpg"
+ },
+ {
+  "message": "92 0C 7F",
+  "lit": "phones 2",
+  "rgb_on_camera": [
+   87,
+   145,
+   237
+  ],
+  "glow_on_neighbours": [
+   "phones 1"
+  ],
+  "photo": "leds/920C.jpg"
+ },
+ {
+  "message": "92 10 7F",
+  "lit": "B pad2",
+  "rgb_on_camera": [
+   161,
+   183,
+   203
+  ],
+  "glow_on_neighbours": [
+   "B loop",
+   "B fx",
+   "B pad3"
+  ],
+  "photo": "leds/9210.jpg"
+ },
+ {
+  "message": "92 11 7F",
+  "lit": "B pad3",
+  "rgb_on_camera": [
+   158,
+   178,
+   210
+  ],
+  "glow_on_neighbours": [
+   "B fx",
+   "B pad4",
+   "B neural"
+  ],
+  "photo": "leds/9211.jpg"
+ },
+ {
+  "message": "92 12 7F",
+  "lit": "B pad4",
+  "rgb_on_camera": [
+   160,
+   180,
+   204
+  ],
+  "glow_on_neighbours": [
+   "B neural"
+  ],
+  "photo": "leds/9212.jpg"
+ },
+ {
+  "message": "94 0F 7F",
+  "lit": "A hotcue",
+  "rgb_on_camera": [
+   186,
+   195,
+   207
+  ],
+  "glow_on_neighbours": [
+   "A pad1",
+   "A loop"
+  ],
+  "photo": "leds/940F.jpg"
+ },
+ {
+  "message": "94 10 7F",
+  "lit": "A loop",
+  "rgb_on_camera": [
+   182,
+   190,
+   201
+  ],
+  "glow_on_neighbours": [
+   "A pad2",
+   "A pad3",
+   "A fx"
+  ],
+  "photo": "leds/9410.jpg"
+ },
+ {
+  "message": "94 11 7F",
+  "lit": "A pad3",
+  "rgb_on_camera": [
+   171,
+   203,
+   230
+  ],
+  "glow_on_neighbours": [
+   "A fx",
+   "A pad4",
+   "A neural"
+  ],
+  "photo": "leds/9411.jpg"
+ },
+ {
+  "message": "94 12 7F",
+  "lit": "A pad4",
+  "rgb_on_camera": [
+   172,
+   205,
+   235
+  ],
+  "glow_on_neighbours": [
+   "A neural"
+  ],
+  "photo": "leds/9412.jpg"
+ },
+ {
+  "message": "95 0F 7F",
+  "lit": "B pad1",
+  "rgb_on_camera": [
+   153,
+   170,
+   194
+  ],
+  "glow_on_neighbours": [
+   "B hotcue"
+  ],
+  "photo": "leds/950F.jpg"
+ },
+ {
+  "message": "95 10 7F",
+  "lit": "B loop",
+  "rgb_on_camera": [
+   192,
+   195,
+   203
+  ],
+  "glow_on_neighbours": [
+   "B pad2"
+  ],
+  "photo": "leds/9510.jpg"
+ },
+ {
+  "message": "95 11 7F",
+  "lit": "B pad3",
+  "rgb_on_camera": [
+   157,
+   170,
+   198
+  ],
+  "glow_on_neighbours": [
+   "B fx"
+  ],
+  "photo": "leds/9511.jpg"
+ },
+ {
+  "message": "95 12 7F",
+  "lit": "B neural",
+  "rgb_on_camera": [
+   193,
+   193,
+   200
+  ],
+  "glow_on_neighbours": [
+   "B pad4"
+  ],
+  "photo": "leds/9512.jpg"
+ },
+ {
+  "message": "96 30 7F",
+  "lit": "A pad2",
+  "rgb_on_camera": [
+   109,
+   132,
+   246
+  ],
+  "glow_on_neighbours": [
+   "A pad1",
+   "A pad5",
+   "A hotcue"
+  ],
+  "photo": "leds/9630.jpg"
+ },
+ {
+  "message": "96 31 7F",
+  "lit": "A pad3",
+  "rgb_on_camera": [
+   105,
+   127,
+   244
+  ],
+  "glow_on_neighbours": [
+   "A pad2",
+   "A pad6",
+   "A loop"
+  ],
+  "photo": "leds/9631.jpg"
+ },
+ {
+  "message": "96 32 7F",
+  "lit": "A pad3",
+  "rgb_on_camera": [
+   5,
+   248,
+   222
+  ],
+  "glow_on_neighbours": [
+   "A pad7",
+   "A fx",
+   "A pad4",
+   "A pad2"
+  ],
+  "photo": "leds/9632.jpg"
+ },
+ {
+  "message": "96 33 7F",
+  "lit": "A pad8",
+  "rgb_on_camera": [
+   133,
+   148,
+   231
+  ],
+  "glow_on_neighbours": [
+   "A pad4",
+   "A pad3"
+  ],
+  "photo": "leds/9633.jpg"
+ },
+ {
+  "message": "96 34 7F",
+  "lit": "A pad5",
+  "rgb_on_camera": [
+   4,
+   242,
+   223
+  ],
+  "glow_on_neighbours": [
+   "A pad6",
+   "A pad1"
+  ],
+  "photo": "leds/9634.jpg"
+ },
+ {
+  "message": "96 35 7F",
+  "lit": "A pad6",
+  "rgb_on_camera": [
+   4,
+   243,
+   223
+  ],
+  "glow_on_neighbours": [
+   "A pad7",
+   "A pad2"
+  ],
+  "photo": "leds/9635.jpg"
+ },
+ {
+  "message": "96 36 7F",
+  "lit": "A pad8",
+  "rgb_on_camera": [
+   120,
+   139,
+   246
+  ],
+  "glow_on_neighbours": [
+   "A pad7",
+   "A pad3"
+  ],
+  "photo": "leds/9636.jpg"
+ },
+ {
+  "message": "96 37 7F",
+  "lit": "A pad8",
+  "rgb_on_camera": [
+   5,
+   249,
+   223
+  ],
+  "glow_on_neighbours": [
+   "A pad4"
+  ],
+  "photo": "leds/9637.jpg"
+ },
+ {
+  "message": "97 30 7F",
+  "lit": "B pad1",
+  "rgb_on_camera": [
+   8,
+   232,
+   221
+  ],
+  "glow_on_neighbours": [
+   "B pad2",
+   "B pad5",
+   "B hotcue"
+  ],
+  "photo": "leds/9730.jpg"
+ },
+ {
+  "message": "97 31 7F",
+  "lit": "B pad2",
+  "rgb_on_camera": [
+   7,
+   226,
+   222
+  ],
+  "glow_on_neighbours": [
+   "B pad3",
+   "B pad6",
+   "B loop",
+   "B pad1"
+  ],
+  "photo": "leds/9731.jpg"
+ },
+ {
+  "message": "97 32 7F",
+  "lit": "B pad3",
+  "rgb_on_camera": [
+   5,
+   216,
+   223
+  ],
+  "glow_on_neighbours": [
+   "B pad7",
+   "B pad4",
+   "B fx",
+   "B pad2"
+  ],
+  "photo": "leds/9732.jpg"
+ },
+ {
+  "message": "97 33 7F",
+  "lit": "B pad8",
+  "rgb_on_camera": [
+   111,
+   111,
+   203
+  ],
+  "glow_on_neighbours": [
+   "B pad4",
+   "B pad3"
+  ],
+  "photo": "leds/9733.jpg"
+ },
+ {
+  "message": "97 34 7F",
+  "lit": "B pad5",
+  "rgb_on_camera": [
+   5,
+   227,
+   222
+  ],
+  "glow_on_neighbours": [
+   "B pad6",
+   "B pad1"
+  ],
+  "photo": "leds/9734.jpg"
+ },
+ {
+  "message": "97 35 7F",
+  "lit": "B pad6",
+  "rgb_on_camera": [
+   5,
+   218,
+   222
+  ],
+  "glow_on_neighbours": [
+   "B pad7",
+   "B pad2",
+   "B pad5"
+  ],
+  "photo": "leds/9735.jpg"
+ },
+ {
+  "message": "97 36 7F",
+  "lit": "B pad7",
+  "rgb_on_camera": [
+   5,
+   216,
+   222
+  ],
+  "glow_on_neighbours": [
+   "B pad8",
+   "B pad3",
+   "B pad6"
+  ],
+  "photo": "leds/9736.jpg"
+ },
+ {
+  "message": "97 37 7F",
+  "lit": "B pad8",
+  "rgb_on_camera": [
+   5,
+   190,
+   222
+  ],
+  "glow_on_neighbours": [
+   "B pad4",
+   "B pad7"
+  ],
+  "photo": "leds/9737.jpg"
+ }
+]
