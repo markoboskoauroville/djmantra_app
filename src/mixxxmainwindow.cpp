@@ -356,6 +356,18 @@ void MixxxMainWindow::initialize() {
     // Sound hardware setup
     // Try to open configured devices. If that fails, display dialogs
     // that allow to either retry, reconfigure devices or exit.
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: no sound output on Android yet (Oboe comes with M4). The
+    // modal sound dialogs below would stop the startup, so only log it.
+    {
+        const SoundDeviceStatus result = m_pCoreServices->getSoundManager()->setupDevices();
+        const auto outputs = m_pCoreServices->getSoundManager()->getConfig().getOutputs().count();
+        if (result != SoundDeviceStatus::Ok || outputs == 0) {
+            qWarning() << "No sound output yet (status" << static_cast<int>(result)
+                       << "outputs" << outputs << ")";
+        }
+    }
+#else
     bool retryClicked;
     do {
         retryClicked = false;
@@ -388,6 +400,7 @@ void MixxxMainWindow::initialize() {
             break;
         }
     }
+#endif
 
     // The user has either reconfigured devices or accepted no outputs,
     // so it's now safe to write the new config to disk.
@@ -574,6 +587,11 @@ void MixxxMainWindow::initializeWindow() {
 
 #ifndef __APPLE__
 void MixxxMainWindow::alwaysHideMenuBarDlg() {
+#ifdef __ANDROID_PORT__
+    // No Alt key on a phone: the menu bar stays (and this modal question
+    // would stop the startup until someone taps it)
+    return;
+#endif
     // Don't show the dialog if the user unchecked "Ask me again"
     if (!m_pCoreServices->getSettings()->getValue<bool>(
                 kMenuBarHintConfigKey, true)) {

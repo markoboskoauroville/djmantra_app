@@ -77,6 +77,11 @@ names the functions of a phone crash.
 - [ ] The main window (skin) appears; logcat `DJ Mantra main window ready`; dialog titles say
       "DJ Mantra - ...", not "Mixxx - ..."
 - [ ] Second start: no "Installing resources" line (the copy is kept), start is faster
+- [ ] First start shows **no** dialog that has to be answered before the main window: the
+      "Access to USB drives" box opens over it (OK → system screen), no folder picker (the phone's
+      Music folder becomes the first library folder: logcat `Library folder ... added` or
+      `not readable yet`; more folders with "+" in Folders), no menu-bar question, no sound
+      dialog (logcat `No sound output yet` until Oboe, M4)
 - [ ] The app starts and stays running (no `libomp.so` crash, no SIGSEGV). **Launch time**: tap →
       first screen, on the Pixel 7 and the emulator (`adb shell am start -W com.djmantra.app/...`
       gives TotalTime)

@@ -621,6 +621,19 @@ void CoreServices::initialize(QApplication* pApp) {
         // resolves to) and a user hitting 'cancel'. If we get a blank return
         // but the user didn't hit cancel, we need to know this and let the
         // user take some course of action -- bkgood
+#if defined(Q_OS_ANDROID)
+        // DJ Mantra: no folder picker that the startup waits for (the CI
+        // launch test found the app stuck behind it). The phone's Music
+        // folder is the first library folder; more come with "+" in Folders.
+        // Not requestAddDir(): it shows a modal box when the folder cannot be
+        // read yet (no "All files access" at the first start). Until it can,
+        // every start tries again.
+        const QString fd = QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+        const auto added = m_pTrackCollectionManager->addDirectory(mixxx::FileInfo(fd));
+        qInfo() << "Library folder" << fd
+                << (added == DirectoryDAO::AddResult::Ok ? "added" : "not readable yet");
+        musicDirAdded = added == DirectoryDAO::AddResult::Ok;
+#else
         QString fd = QFileDialog::getExistingDirectory(nullptr,
                 tr("Choose music library directory"),
                 QStandardPaths::writableLocation(
@@ -629,6 +642,7 @@ void CoreServices::initialize(QApplication* pApp) {
         if (!fd.isEmpty() && m_pLibrary->requestAddDir(fd)) {
             musicDirAdded = true;
         }
+#endif
     }
 
     emit initializationProgressUpdate(60, tr("controllers"));
