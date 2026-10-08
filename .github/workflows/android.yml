@@ -200,7 +200,9 @@ jobs:
 
       - name: Check native libraries (no "library ... not found" at launch)
         run: |
+          set -o pipefail
           # Every NEEDED library must be in the APK or an Android system library.
+          # pipefail: a MISSING library fails the job (tee alone would hide it).
           tools/android/check_apk_libs.sh "apk-out/djmantra-${{ matrix.abi }}.apk" \
             "${{ matrix.abi }}" 29 "${DJMANTRA_NDK:?}" | tee -a "$GITHUB_STEP_SUMMARY"
 

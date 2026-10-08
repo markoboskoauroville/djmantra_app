@@ -1889,6 +1889,27 @@ if(ANDROID)
   # See OpenMP::OpenMP_CXX above; this also covers dependencies that pass
   # -fopenmp themselves. CI checks the result (tools/android/check_apk_libs.sh).
   target_link_options(mixxx PRIVATE "-fopenmp" "-static-openmp")
+  # A prebuilt dependency (Sleef's DFT, built by vcpkg with -fopenmp) still
+  # needs the shared libomp.so (omp_get_thread_num), which static linking
+  # cannot remove. Ship the NDK's libomp.so for this ABI in the APK.
+  if(ANDROID_ABI STREQUAL "arm64-v8a")
+    set(_omp_arch aarch64)
+  elseif(ANDROID_ABI STREQUAL "x86_64")
+    set(_omp_arch x86_64)
+  elseif(ANDROID_ABI STREQUAL "armeabi-v7a")
+    set(_omp_arch arm)
+  else()
+    set(_omp_arch i386)
+  endif()
+  file(GLOB _djmantra_libomp
+    "${ANDROID_NDK}/toolchains/llvm/prebuilt/*/lib/clang/*/lib/linux/${_omp_arch}/libomp.so")
+  if(_djmantra_libomp)
+    list(GET _djmantra_libomp 0 _djmantra_libomp)
+    message(STATUS "Packaging OpenMP runtime: ${_djmantra_libomp}")
+    set_property(TARGET mixxx APPEND PROPERTY QT_ANDROID_EXTRA_LIBS "${_djmantra_libomp}")
+  else()
+    message(WARNING "libomp.so for ${ANDROID_ABI} not found in the NDK")
+  endif()
   set_target_properties(mixxx PROPERTIES
     QT_ANDROID_PACKAGE_NAME com.djmantra.app
     QT_ANDROID_TARGET_SDK_VERSION 35
