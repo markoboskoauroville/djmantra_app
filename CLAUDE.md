@@ -5,9 +5,11 @@ Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/result
 
 ## Standing rules
 
-- **Asking Marko for something: one action at a time.** Write it on its own line as
-  `!!!!! MARKO: <the one action> !!!!!MARKO!!!!!>` (five exclamation marks in front, and that ending), then wait for him to confirm "done" before giving the next one.
-  Never a list of steps for him (owner's rule 9.10.2026).
+- **Asking Marko for something: one action at a time, only what needs a person.** Only for
+  what cannot be done automatically (move a slider, unlock a phone, plug a cable, approve a
+  prompt): one action per message, on its own line starting with `!!!!!MARKO!!!!!>`, e.g.
+  `!!!!!MARKO!!!!!> Unlock the Nothing Phone.` Then wait for him to confirm "done" before the
+  next one. Never a list of steps for him (owner's rule 9.10.2026).
 
 - **Keep the public progress page current.** After every app milestone, update
   `assets/app/progress.json` in the website repo `markoboskoauroville/djmantra-ecstatic-dance`
