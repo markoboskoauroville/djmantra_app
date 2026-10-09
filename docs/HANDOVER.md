@@ -102,8 +102,10 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   connection changed nothing: the tick already runs on the GUI thread; reverted).
   Fix: `update()` instead of `repaint()` on Android in `WaveformWidgetAbstract::render()` and
   `WVuMeterLegacy::maybeUpdate()`.
-- Bars: the window now stays in Qt's full screen state (`AndroidWindow::keepFullScreen`), so
-  Qt itself hides the bars after every rotation.
+- Bars: first tried Qt's full screen window state (a4aa481): the app then hung at start on the
+  CI emulator (black screen, round 7 build failed), reverted. Now `WindowBridge.java` watches
+  every layout pass and hides the bars again when they are shown for good (swipe-revealed
+  transient bars don't count).
 - The "UI press" lines only show containers because controls take touch events (not mouse
   presses); the deck 2 SYNC tap worked by hand (1 then 0). Re-check deck 2 in round 7 once the
   lag is gone.
