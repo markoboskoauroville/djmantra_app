@@ -42,7 +42,7 @@ PAGE_OBJECTS = {"TabButton", "LibraryButton", "SelectorButton", "Chevron", "Back
 # Two-state buttons: tapped twice to leave the deck as it was
 TOGGLES = ("play", "keylock", "sync_enabled", "pfl", "beatloop_activate")
 # Controls that are skipped (they would leave the app or load the library)
-SKIP_KEYS = {"[DJMantra],show_preferences"}
+SKIP_KEYS = {"[DJMantra],show_preferences", "[DJMantra],show_controller_map"}
 
 MAP_BEGIN = re.compile(r"UI map begin (\d+) (\d+) (\d+)")
 MAP_END = re.compile(r"UI map end (\d+)")

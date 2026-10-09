@@ -638,6 +638,8 @@ def library_view():
         button("[Channel1],LoadSelectedTrack", "LoadButton", "LOAD 1", "84f,38f", states=1),
         button("[Channel2],LoadSelectedTrack", "LoadButton", "LOAD 2", "84f,38f", states=1),
         hspace(6),
+        button("[DJMantra],show_controller_map", "LoadButton", "CONTROLLER", "110f,38f", states=1),
+        hspace(6),
         button("[DJMantra],show_preferences", "GearButton", "", "38f,38f", states=1,
                pixmaps=[("gear.svg", "gear.svg")]),
         name="LibraryTop", policy="me,min")

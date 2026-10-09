@@ -3696,6 +3696,17 @@
 </PushButton>
 <WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
 <PushButton>
+<ObjectName>LoadButton</ObjectName>
+<Size>110f,38f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>CONTROLLER</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[DJMantra],show_controller_map</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
+<PushButton>
 <ObjectName>GearButton</ObjectName>
 <Size>38f,38f</Size>
 <NumberStates>1</NumberStates>

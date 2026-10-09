@@ -29,6 +29,7 @@
 #include "dialog/dlgdevelopertools.h"
 #include "dialog/dlgkeywheel.h"
 #include "control/controlpushbutton.h"
+#include "controllers/djmantra/dlgcontrollerremap.h"
 #include "moc_mixxxmainwindow.cpp"
 #include "preferences/dialog/dlgpreferences.h"
 #ifdef __BROADCAST__
@@ -136,6 +137,22 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
                 [this](double value) {
                     if (value > 0) {
                         slotOptionsPreferences();
+                    }
+                });
+    }
+    // DJ Mantra: the virtual controller, to choose what each controller
+    // button, fader and knob does
+    {
+        auto* pShowControllerMap = new ControlPushButton(
+                ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("show_controller_map")));
+        pShowControllerMap->setParent(this);
+        connect(pShowControllerMap,
+                &ControlObject::valueChanged,
+                this,
+                [this](double value) {
+                    if (value > 0) {
+                        auto* pDialog = new djmantra::DlgControllerRemap(this);
+                        pDialog->open();
                     }
                 });
     }
