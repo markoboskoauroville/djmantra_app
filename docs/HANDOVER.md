@@ -110,6 +110,23 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   presses); the deck 2 SYNC tap worked by hand (1 then 0). Re-check deck 2 in round 7 once the
   lag is gone.
 
+## New requests from Marko (9.10.2026 afternoon, screenshots in `docs/ui-reference/`)
+
+- **Note icons = file pickers per deck** (`djmantra-portrait-mixer-note-icons.png`): the
+  album-art note icon top left loads a song into deck 1, top right into deck 2. The picker
+  looks like `file-picker-folders.png` (dark, close X top left, folder source dropdown,
+  "Folders" title, + and ⋮; folder rows; bottom tabs Files | Queue | History).
+- **Settings and the library: Android style, rewritten from scratch.** The current library
+  (`djmantra-library-now.png`: DECKS/LOAD 1/LOAD 2/CONTROLLER buttons, table with
+  Prev/Cov/Last Played/Album columns) and Mixxx's Preferences are "a desktop UI moved to the
+  phone". Model: `djay-settings-top.png` / `djay-settings-bottom.png` (back arrow + title; blue
+  section headers; icon + label rows; Main Volume slider; switch with a grey description;
+  version at the bottom) and Android's own `android-settings.png` (rounded grouped cards,
+  search field). `djay-menu.png`: djay's top menu (REC, Settings, MIDI, brightness). The whole
+  app is to feel like an Android app.
+- **The real Pixel 7 is back in the loop** (wireless debugging), shared with Marko's NDI camera
+  project through a lock on the Mac: `docs/PIXEL7_SHARING.md`, `tools/android/pixel7_lock.sh`.
+
 ## Next, in order
 
 1. **Round 4 on the emulator** with android-latest (6155c56): `device_test.sh --sound`,

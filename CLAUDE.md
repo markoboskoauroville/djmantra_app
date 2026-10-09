@@ -29,8 +29,11 @@ Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/result
 - No unofficial or reverse-engineered service APIs (Shazam wrappers, StreamRip-style downloaders).
 - **All device tests run through the local session "Claude Code local"** (Marko's Mac, Remote
   Control, session `session_01NtxDMqMEkD435RBFuqFs1s`; owner's rule 9.10.2026). It has the
-  Pixel 7 emulator (`emulator-5554`). **For now all tests run on the emulator only**; the real
-  Pixel 7 comes later, the Nothing Phone (2a) is out of the loop (owner, 9.10.2026). Protocol in `testing/README.md`:
+  Pixel 7 emulator (`emulator-5554`) and, from 9.10.2026 afternoon, the **real Pixel 7 over
+  wireless debugging**, which is shared with Marko's NDI camera project: **take the phone with
+  `~/pixel7/pixel7-lock.sh` before any adb command to it and give it back after**
+  (`docs/PIXEL7_SHARING.md`). The emulator needs no lock. The Nothing Phone (2a) is out of the
+  loop (owner, 9.10.2026). Protocol in `testing/README.md`:
   1. Check the session first (`get_session`: `connection_status` connected). If it is not
      connected, ask Marko to start Remote Control on the Mac; do not run device tests anywhere else.
   2. Send it the exact commands (`send_message`); it runs them, commits the results to
