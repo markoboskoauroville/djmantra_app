@@ -1,0 +1,2 @@
+10-09 12:08:04.232 25938 25955 I DJMantra: info [Main] UI control [Channel2],sync_enabled = 1
+10-09 12:08:04.255 25938 25955 I DJMantra: info [Main] UI control [Channel2],sync_enabled = 0
