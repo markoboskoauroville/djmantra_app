@@ -294,7 +294,9 @@ class UiTest:
         self.dev.shell("am force-stop %s" % PACKAGE)
         self.dev.clear_log()
         args = "--ui-test --play %s %s" % (TONES[0], TONES[1])
-        self.dev.shell("am start -W -n %s --es applicationArguments \"'%s'\"" % (ACTIVITY, args))
+        # one quoting only: adb joins the words, the device's shell takes off the single quotes (as smoke_test.sh);
+        # inside a single string the double quotes went too and the app got "'--ui-test" (round 3, 9.10.2026)
+        self.dev.adb("shell", "am", "start", "-W", "-n", ACTIVITY, "--es", "applicationArguments", "'%s'" % args)
         time.sleep(12)
         self.wait_map(0, timeout=40)
         for orientation in ("portrait", "landscape"):
