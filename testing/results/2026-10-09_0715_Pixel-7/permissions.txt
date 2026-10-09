@@ -1,0 +1,13 @@
+    requested permissions:
+      android.permission.MANAGE_EXTERNAL_STORAGE
+      android.permission.READ_MEDIA_VISUAL_USER_SELECTED
+      android.permission.BLUETOOTH_CONNECT
+      com.djmantra.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+      android.permission.INTERNET
+      android.permission.READ_EXTERNAL_STORAGE
+      android.permission.ACCESS_NETWORK_STATE
+      android.permission.READ_MEDIA_AUDIO
+      android.permission.READ_MEDIA_VIDEO
+      android.permission.WRITE_EXTERNAL_STORAGE
+      android.permission.BLUETOOTH_SCAN
+    install permissions:
