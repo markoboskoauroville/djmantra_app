@@ -32,7 +32,8 @@ export DISPLAY=:$((90 + RANDOM % 9))
 Xvfb "$DISPLAY" -screen 0 "${W}x${H}x24" > /dev/null 2>&1 &
 XP=$!
 sleep 1
-"$BIN" --resource-path "$ROOT/res/" --settings-path "$TMP" "$TMP/track_a.wav" "$TMP/track_b.wav" \
+# RENDER_ARGS: more options, e.g. "--play"; QT_SCALE_FACTOR=2.625 renders like a Pixel 7
+"$BIN" --resource-path "$ROOT/res/" --settings-path "$TMP" ${RENDER_ARGS:-} "$TMP/track_a.wav" "$TMP/track_b.wav" \
     > "$TMP/run.log" 2>&1 &
 MP=$!
 sleep 12
@@ -54,4 +55,5 @@ sleep 3
 import -window root "$OUT"
 kill $MP; sleep 1; kill -9 $MP 2> /dev/null; kill $XP
 grep -E "Loaded skin|critical" "$TMP/run.log"
+[ -n "${KEEP_LOG:-}" ] && cp "$TMP/run.log" "$KEEP_LOG"
 rm -rf "$TMP"

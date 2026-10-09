@@ -247,8 +247,16 @@ void Paintable::drawInternal(const QRectF& targetRect, QPainter* pPainter,
             // it to a pixmap which will then get tiled.
             pPainter->drawTiledPixmap(targetRect, *m_pPixmap);
         } else {
+            // Nothing to draw (a VU meter at level 0): an empty pixmap can't
+            // be painted on, and every SVG element would log "QPainter:
+            // Painter not active" (tens of thousands of lines per minute on
+            // Android, round 6)
+            if (targetRect.size().toSize().isEmpty() || sourceRect.size().isEmpty()) {
+                return;
+            }
             if (!m_pPixmap ||
-                    m_pPixmap->size() != targetRect.size().toSize() ||
+                    m_pPixmap->deviceIndependentSize().toSize() !=
+                            targetRect.size().toSize() ||
                     m_lastSourceRect != sourceRect) {
                 // qDebug() << "Paintable cache miss";
                 qreal devicePixelRatio = pPainter->device()->devicePixelRatio();
@@ -258,13 +266,15 @@ void Paintable::drawInternal(const QRectF& targetRect, QPainter* pPainter,
                 m_pPixmap->fill(Qt::transparent);
                 { // QPainter Scope
                     auto pixmapPainter = QPainter(m_pPixmap.get());
-                    QRectF deviceSourceRect = QRectF(
-                            sourceRect.x() * devicePixelRatio,
-                            sourceRect.y() * devicePixelRatio,
-                            sourceRect.width() * devicePixelRatio,
-                            sourceRect.height() * devicePixelRatio);
-                    m_pSvg->setViewBox(deviceSourceRect);
-                    m_pSvg->render(&pixmapPainter);
+                    // DJ Mantra: the view box in the SVG's own units (the source
+                    // rect's) and the target given explicitly. The view box
+                    // multiplied by the pixel ratio worked for a whole SVG but
+                    // moved a part of one (a VU meter's lit part) past the SVG
+                    // at 2.625 (Pixel 7): nothing was drawn and the meters
+                    // stayed grey. Checked with a test program: whole and part,
+                    // ratio 1 and 2.625, all drawn right this way.
+                    m_pSvg->setViewBox(sourceRect);
+                    m_pSvg->render(&pixmapPainter, QRectF(QPointF(0, 0), targetRect.size()));
                 }
                 mayCorrectColors();
                 m_lastSourceRect = sourceRect;

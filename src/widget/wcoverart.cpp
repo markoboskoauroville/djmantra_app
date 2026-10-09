@@ -1,8 +1,10 @@
 #include "widget/wcoverart.h"
 
+#include <QRegularExpression>
 #include <QStyleOption>
 #include <QStylePainter>
 
+#include "control/controlobject.h"
 #include "library/coverartcache.h"
 #include "library/coverartutils.h"
 #include "library/dlgcoverartfullsize.h"
@@ -57,6 +59,7 @@ WCoverArt::~WCoverArt() {
 void WCoverArt::setup(const QDomNode& node, const SkinContext& context) {
     Q_UNUSED(node);
     setMouseTracking(true);
+    context.hasNodeSelectBool(node, QStringLiteral("OpensTrackPicker"), &m_opensTrackPicker);
 
     // Background color
     QColor bgc(255,255,255);
@@ -259,6 +262,14 @@ void WCoverArt::mouseReleaseEvent(QMouseEvent* pEvent) {
         return;
     }
 
+    if (m_opensTrackPicker && pEvent->button() == Qt::LeftButton && m_clickTimer.isActive()) {
+        // DJ Mantra: the deck's song picker ([DJMantra],pick_track = deck number)
+        QString number = m_group;
+        number.remove(QRegularExpression(QStringLiteral("[^0-9]")));
+        ControlObject::set(ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("pick_track")),
+                number.toInt());
+        return;
+    }
     if (pEvent->button() == Qt::LeftButton &&
             m_loadedTrack &&
             m_clickTimer.isActive()) { // init/close fullsize cover

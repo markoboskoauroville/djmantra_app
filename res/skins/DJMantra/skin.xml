@@ -103,6 +103,7 @@
   <MinimumSize>58,58</MinimumSize>
   <Group>[Channel1]</Group>
   <DefaultCover>skins:DJMantra/svg/cover_default.svg</DefaultCover>
+  <OpensTrackPicker>true</OpensTrackPicker>
 </CoverArt>
 <WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
 <WidgetGroup>
@@ -245,6 +246,7 @@
   <MinimumSize>58,58</MinimumSize>
   <Group>[Channel2]</Group>
   <DefaultCover>skins:DJMantra/svg/cover_default.svg</DefaultCover>
+  <OpensTrackPicker>true</OpensTrackPicker>
 </CoverArt>
 </Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><Size>0min,4f</Size></WidgetGroup>
@@ -1923,6 +1925,7 @@
   <MinimumSize>58,58</MinimumSize>
   <Group>[Channel1]</Group>
   <DefaultCover>skins:DJMantra/svg/cover_default.svg</DefaultCover>
+  <OpensTrackPicker>true</OpensTrackPicker>
 </CoverArt>
 <WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <WidgetGroup>
@@ -2125,6 +2128,7 @@
   <MinimumSize>58,58</MinimumSize>
   <Group>[Channel2]</Group>
   <DefaultCover>skins:DJMantra/svg/cover_default.svg</DefaultCover>
+  <OpensTrackPicker>true</OpensTrackPicker>
 </CoverArt>
 </Children></WidgetGroup>
 </Children></WidgetGroup>

@@ -216,8 +216,10 @@ def cover(n, size="-1me,-1me", minsize="40,40", name="Cover"):
   <Size>%s</Size>
   <MinimumSize>%s</MinimumSize>
   <Group>%s</Group>
-  <DefaultCover>%scover_default.svg</DefaultCover>
-</CoverArt>""" % (name, size, minsize, grp(n), P)
+  <DefaultCover>%scover_default.svg</DefaultCover>%s
+</CoverArt>""" % (name, size, minsize, grp(n), P,
+                  # the header's note icons open the deck's song picker
+                  "\n  <OpensTrackPicker>true</OpensTrackPicker>" if name == "HeaderCover" else "")
 
 
 def track_prop(n, prop, name, align="left"):

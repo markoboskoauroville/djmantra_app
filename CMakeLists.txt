@@ -1220,6 +1220,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/util/battery/battery.cpp
   src/controllers/djmantra/controlleroverrides.cpp
   src/controllers/djmantra/dlgcontrollerremap.cpp
+  src/library/djmantra/trackpicker.cpp
   src/util/androidwindow.cpp
   src/util/bundledresources.cpp
   src/util/uitestprobe.cpp

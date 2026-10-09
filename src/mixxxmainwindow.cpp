@@ -30,6 +30,7 @@
 #include "dialog/dlgkeywheel.h"
 #include "control/controlpushbutton.h"
 #include "controllers/djmantra/dlgcontrollerremap.h"
+#include "library/djmantra/trackpicker.h"
 #include "moc_mixxxmainwindow.cpp"
 #include "preferences/dialog/dlgpreferences.h"
 #ifdef __BROADCAST__
@@ -126,6 +127,34 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
         }
     }
 #endif
+    // DJ Mantra: the song picker of a deck (a tap on the deck's cover in the
+    // header sets the deck number)
+    {
+        auto* pPickTrack = new ControlObject(
+                ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("pick_track")));
+        pPickTrack->setParent(this);
+        connect(pPickTrack,
+                &ControlObject::valueChanged,
+                this,
+                [this, pPickTrack](double value) {
+                    const int deck = static_cast<int>(value);
+                    if (deck < 1) {
+                        return;
+                    }
+                    pPickTrack->set(0);
+                    auto* pPicker = new djmantra::TrackPicker(
+                            m_pCoreServices->getSettings(),
+                            this,
+                            QStringLiteral("[Channel%1]").arg(deck));
+                    connect(pPicker,
+                            &djmantra::TrackPicker::loadRequested,
+                            this,
+                            [this](const QString& location, const QString& group) {
+                                m_pCoreServices->getPlayerManager()->slotLoadLocationToPlayer(
+                                        location, group, false);
+                            });
+                });
+    }
     // DJ Mantra: Preferences from a skin button (the phone has no menu bar)
     {
         auto* pShowPreferences = new ControlPushButton(
