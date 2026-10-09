@@ -50,6 +50,7 @@ bool calcUseColorsAuto() {
 CmdlineArgs::CmdlineArgs()
         : m_startInFullscreen(false), // Initialize vars
           m_startAutoDJ(false),
+          m_play(false),
           m_controllerDebug(false),
           m_controllerAbortOnWarning(false),
           m_developer(false),
@@ -188,6 +189,13 @@ bool CmdlineArgs::parse(const QStringList& arguments, CmdlineArgs::ParseMode mod
                                       "Starts Auto DJ when Mixxx is launched.")
                             : QString());
     parser.addOption(startAutoDJ);
+
+    const QCommandLineOption play(QStringLiteral("play"),
+            forUserFeedback ? QCoreApplication::translate("CmdlineArgs",
+                                      "Starts playing deck 1 once the track given "
+                                      "on the command line is loaded.")
+                            : QString());
+    parser.addOption(play);
 
     // An option with a value
     const QCommandLineOption settingsPath(QStringLiteral("settings-path"),
@@ -404,6 +412,9 @@ bool CmdlineArgs::parse(const QStringList& arguments, CmdlineArgs::ParseMode mod
         m_locale = parser.value(locale);
     }
 
+    if (parser.isSet(play)) {
+        m_play = true;
+    }
     if (parser.isSet(startAutoDJ)) {
         m_startAutoDJ = true;
     }

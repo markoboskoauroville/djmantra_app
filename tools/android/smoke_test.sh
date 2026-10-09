@@ -5,6 +5,12 @@
 #
 #   tools/android/smoke_test.sh <apk> <out-dir> [<dir with unstripped .so>]
 #
+# SMOKE_ARGS: command line for the app (Qt's applicationArguments extra),
+#   e.g. "--play /sdcard/Music/tone.wav" loads the file into deck 1 and plays it
+# SMOKE_EXPECT_PLAY=1: also fail unless deck 1 played and the output level
+#   in the log shows sound, not only silence
+# SMOKE_NO_SCREENSHOT_TEXT=1: no base64 screenshot in the output
+#
 # Writes logcat.txt, screen.png and, after a crash, a symbolized backtrace
 # (crash.txt, via the NDK's ndk-stack) to <out-dir>.
 set -u
@@ -31,7 +37,11 @@ if [ -z "${SMOKE_FIRST_START:-}" ]; then
     echo "All files access: $(adb shell appops get "$PACKAGE" MANAGE_EXTERNAL_STORAGE | tr -d '\r')"
 fi
 adb logcat -c
-adb shell am start -W -n "$PACKAGE/$ACTIVITY"
+if [ -n "${SMOKE_ARGS:-}" ]; then
+    adb shell am start -W -n "$PACKAGE/$ACTIVITY" --es applicationArguments "'$SMOKE_ARGS'"
+else
+    adb shell am start -W -n "$PACKAGE/$ACTIVITY"
+fi
 
 result=""
 ready_at=""
@@ -107,6 +117,20 @@ for line in "Sound output open" "First sound callback"; do
         echo "FAIL: no \"$line\" in the log (no sound output)"
     fi
 done
+if [ -n "${SMOKE_EXPECT_PLAY:-}" ]; then
+    if ! grep -q "Deck 1 playing" "$OUT/logcat.txt"; then
+        fail=1
+        echo
+        echo "FAIL: deck 1 did not start playing"
+    elif ! grep -q "Output level: peak" "$OUT/logcat.txt"; then
+        fail=1
+        echo
+        echo "FAIL: deck 1 plays, but only silence reaches the sound output"
+    else
+        echo
+        echo "Sound: $(grep "Output level: peak" "$OUT/logcat.txt" | tail -1 | sed 's/.*Output level/output level/')"
+    fi
+fi
 if [ -s "$OUT/critical.txt" ]; then
     fail=1
     echo
@@ -129,7 +153,8 @@ elif [ -s "$OUT/main-thread.txt" ]; then
 fi
 # The screenshot, small, in the log too (artifacts may be hard to reach):
 # between the markers, base64 of a PNG
-if [ -s "$OUT/screen.png" ] && command -v python3 > /dev/null; then
+if [ -z "${SMOKE_NO_SCREENSHOT_TEXT:-}" ] && [ -s "$OUT/screen.png" ] &&
+        command -v python3 > /dev/null; then
     python3 - "$OUT/screen.png" "$OUT/screen-small.png" <<'PY' || true
 import sys
 try:
@@ -148,5 +173,5 @@ PY
         echo "SCREENSHOT-BASE64-END"
     fi
 fi
-[ "$fail" = 0 ] && echo && echo "OK: started, sound output running, main window ready, alive ${SETTLE}s later, no critical errors"
+[ "$fail" = 0 ] && echo && echo "OK${SMOKE_EXPECT_PLAY:+ (with sound)}: started, sound output running, main window ready, alive ${SETTLE}s later, no critical errors"
 exit $fail

@@ -11,6 +11,7 @@
 #include "broadcast/broadcastmanager.h"
 #endif
 #include "control/controlindicatortimer.h"
+#include "control/controlobject.h"
 #include "controllers/controllermanager.h"
 #include "controllers/keyboard/keyboardeventfilter.h"
 #include "database/mixxxdb.h"
@@ -26,6 +27,7 @@
 #include "library/trackcollection.h"
 #include "library/trackcollectionmanager.h"
 #include "mixer/playerinfo.h"
+#include "mixer/deck.h"
 #include "mixer/playermanager.h"
 #include "moc_coreservices.cpp"
 #include "preferences/dialog/dlgpreferences.h"
@@ -36,6 +38,7 @@
 #include "skin/skincontrols.h"
 #include "soundio/soundmanager.h"
 #include "sources/soundsourceproxy.h"
+#include "track/track.h"
 #include "util/clipboard.h"
 #include "util/db/dbconnectionpooled.h"
 #include "util/font.h"
@@ -713,6 +716,20 @@ void CoreServices::initialize(QApplication* pApp) {
             static_cast<int>(musicFiles.count()));
     for (int i = 0; i < numTracks; ++i) {
         if (SoundSourceProxy::isFileNameSupported(musicFiles.at(i))) {
+            if (i == 0 && m_cmdlineArgs.getPlay()) {
+                Deck* pDeck = m_pPlayerManager->getDeck(1);
+                auto pConnection = std::make_shared<QMetaObject::Connection>();
+                *pConnection = connect(pDeck,
+                        &BaseTrackPlayer::newTrackLoaded,
+                        this,
+                        [pConnection](TrackPointer pTrack) {
+                            QObject::disconnect(*pConnection);
+                            ControlObject::set(ConfigKey(QStringLiteral("[Channel1]"),
+                                                       QStringLiteral("play")),
+                                    1.0);
+                            qInfo() << "Deck 1 playing" << pTrack->getLocation();
+                        });
+            }
             m_pPlayerManager->slotLoadToDeck(musicFiles.at(i), i + 1);
         }
     }

@@ -33,6 +33,11 @@ class CmdlineArgs final {
     bool getStartAutoDJ() const {
         return m_startAutoDJ;
     }
+    // DJ Mantra: play deck 1 as soon as the track from the command line is
+    // loaded (used by the device tests to check the sound output)
+    bool getPlay() const {
+        return m_play;
+    }
     bool getControllerDebug() const {
         return m_controllerDebug;
     }
@@ -93,6 +98,7 @@ class CmdlineArgs final {
     QList<QString> m_musicFiles;    // List of files to load into players at startup
     bool m_startInFullscreen;       // Start in fullscreen mode
     bool m_startAutoDJ;
+    bool m_play;
     bool m_controllerDebug;
     bool m_controllerAbortOnWarning; // Controller Engine will be stricter
     bool m_developer; // Developer Mode

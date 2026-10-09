@@ -4,6 +4,7 @@
 #include <QtDebug>
 #include <algorithm>
 #include <cfloat>
+#include <cmath>
 
 #if defined(__SSE__)
 #include <xmmintrin.h>
@@ -31,7 +32,10 @@ SoundDeviceOboe::SoundDeviceOboe(UserSettingsPointer config, SoundManager* sm)
         : SoundDevice(config, sm),
           m_outputChannels(2),
           m_closing(false),
-          m_callbackThreadPrepared(false) {
+          m_callbackThreadPrepared(false),
+          m_levelPeak(0),
+          m_levelSamples(0),
+          m_levelWasAudible(false) {
     m_deviceId.name = QStringLiteral("android-default-output");
     m_strDisplayName = QObject::tr("Phone audio output (speaker, USB or Bluetooth)");
     m_hostAPI = kOboeHostApi;
@@ -177,7 +181,26 @@ oboe::DataCallbackResult SoundDeviceOboe::onAudioReady(
     m_pSoundManager->onDeviceOutputCallback(frames);
     composeOutputBuffer(pOutput, frames, 0, channels);
     m_pSoundManager->writeProcess(frames);
+    logOutputLevel(pOutput, frames * channels, pStream->getSampleRate());
     return oboe::DataCallbackResult::Continue;
+}
+
+void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput, SINT samples, int sampleRate) {
+    // The loudest sample in about 5 s of output, in the log (the device
+    // tests read it to see that sound reaches the output, not only silence)
+    for (SINT i = 0; i < samples; ++i) {
+        m_levelPeak = std::max(m_levelPeak, std::abs(pOutput[i]));
+    }
+    m_levelSamples += samples;
+    if (m_levelSamples < static_cast<SINT>(sampleRate) * 2 * 5) {
+        return;
+    }
+    if (m_levelPeak > 0.001f || m_levelWasAudible) {
+        kLogger.info() << "Output level: peak" << m_levelPeak;
+    }
+    m_levelWasAudible = m_levelPeak > 0.001f;
+    m_levelPeak = 0;
+    m_levelSamples = 0;
 }
 
 void SoundDeviceOboe::onErrorAfterClose(oboe::AudioStream* pStream, oboe::Result error) {
