@@ -448,7 +448,8 @@ def header_deck_portrait(n):
 
 
 def library_button(size=40):
-    return button("[DJMantra],show_library", "LibraryButton", "", "%df,%df" % (size, size),
+    # the menu sheet (djay's): Library, Controller, REC, Settings
+    return button("[DJMantra],show_menu", "LibraryButton", "", "%df,%df" % (size, size),
                   pixmaps=[("record.svg", "record.svg"), ("record.svg", "record.svg")])
 
 

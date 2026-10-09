@@ -124,6 +124,26 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   renders `docs/skin/picker-*.png`. Build 9353a98 on main = round 7 (sent to Claude Code
   local: emulator + Pixel 7 under the lock).
 
+## Round 7 results (emulator, 9353a98, `testing/results/2026-10-09_1636_ui_emulator/`)
+
+- VU meters GREEN, "Painter not active" 0, no bars in portrait, deck 2 works by hand (HIGH,
+  SYNC, volume). ui_test still marks 19 rows (deck 2 drags/turns, waveform 2x taps) where hand
+  input works: fix ui_test.py's drag/turn (speed/length) and double-tap timing next.
+- Picker on Android: bars over it, and opening a folder left the old rows half drawn (no
+  songs visible). Fixed in the next build: screens hide the bars when they open, the Java
+  watcher also checks every 1.5 s, the list lays out and repaints after each folder change
+  (logs "TrackPicker <title> rows N").
+
+## Android-style menu and settings (14:50 UTC, `docs/skin/menu-sheet.png`, `settings.png`)
+
+- The header's round button opens djay's menu sheet (`[DJMantra],show_menu`): LIBRARY (the
+  picker without a deck: a tapped song asks for deck 1 or 2), CONTROLLER, REC, Settings.
+- Settings (`src/widget/djmantra/settingsscreen.*` on `mantraui.*`): Main Volume
+  ([Master],gain), Split Output ([Master],headSplit), rows Sound / Library / Virtual
+  controller / MIDI Devices / Advanced, Online Help, About, version. Sound, MIDI and Advanced
+  still open Mixxx's preferences dialog: rewrite those pages natively next (output device,
+  buffer size; MIDI devices list; the rest).
+
 ## New requests from Marko (9.10.2026 afternoon, screenshots in `docs/ui-reference/`)
 
 - (done 9db7422) **Note icons = file pickers per deck** (`djmantra-portrait-mixer-note-icons.png`): the

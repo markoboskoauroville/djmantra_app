@@ -78,7 +78,7 @@
 <Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/record.svg</Unpressed>
 <Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/record.svg</Pressed>
 </State>
-<Connection><ConfigKey>[DJMantra],show_library</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+<Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
@@ -2030,7 +2030,7 @@
 <Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/record.svg</Unpressed>
 <Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/record.svg</Pressed>
 </State>
-<Connection><ConfigKey>[DJMantra],show_library</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+<Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>min,me</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>

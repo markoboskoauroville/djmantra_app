@@ -31,6 +31,7 @@
 #include "control/controlpushbutton.h"
 #include "controllers/djmantra/dlgcontrollerremap.h"
 #include "library/djmantra/trackpicker.h"
+#include "widget/djmantra/settingsscreen.h"
 #include "moc_mixxxmainwindow.cpp"
 #include "preferences/dialog/dlgpreferences.h"
 #ifdef __BROADCAST__
@@ -127,63 +128,73 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
         }
     }
 #endif
-    // DJ Mantra: the song picker of a deck (a tap on the deck's cover in the
-    // header sets the deck number)
+    // DJ Mantra: the phone screens (the phone has no menu bar). The skin's
+    // buttons set these controls; the screens are drawn over the window.
     {
+        const auto pickTrack = [this](const QString& group) {
+            auto* pPicker = new djmantra::TrackPicker(m_pCoreServices->getSettings(), this, group);
+            connect(pPicker,
+                    &djmantra::TrackPicker::loadRequested,
+                    this,
+                    [this](const QString& location, const QString& group) {
+                        m_pCoreServices->getPlayerManager()->slotLoadLocationToPlayer(
+                                location, group, false);
+                    });
+        };
+        const auto showControllerMap = [this] {
+            auto* pDialog = new djmantra::DlgControllerRemap(this);
+            pDialog->open();
+        };
+        const auto showSettings = [this, pickTrack, showControllerMap] {
+            djmantra::SettingsActions actions;
+            actions.library = [pickTrack] { pickTrack(QString()); };
+            actions.controller = showControllerMap;
+            actions.sound = [this] {
+                m_pPrefDlg->showSoundHardwarePage();
+                slotOptionsPreferences();
+            };
+            actions.midi = [this] { slotOptionsPreferences(); };
+            actions.advanced = [this] { slotOptionsPreferences(); };
+            new djmantra::SettingsScreen(this, actions);
+        };
+        // A deck's song picker: a tap on the deck's cover in the header sets
+        // the deck number
         auto* pPickTrack = new ControlObject(
                 ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("pick_track")));
         pPickTrack->setParent(this);
         connect(pPickTrack,
                 &ControlObject::valueChanged,
                 this,
-                [this, pPickTrack](double value) {
+                [pPickTrack, pickTrack](double value) {
                     const int deck = static_cast<int>(value);
                     if (deck < 1) {
                         return;
                     }
                     pPickTrack->set(0);
-                    auto* pPicker = new djmantra::TrackPicker(
-                            m_pCoreServices->getSettings(),
-                            this,
-                            QStringLiteral("[Channel%1]").arg(deck));
-                    connect(pPicker,
-                            &djmantra::TrackPicker::loadRequested,
-                            this,
-                            [this](const QString& location, const QString& group) {
-                                m_pCoreServices->getPlayerManager()->slotLoadLocationToPlayer(
-                                        location, group, false);
-                            });
+                    pickTrack(QStringLiteral("[Channel%1]").arg(deck));
                 });
-    }
-    // DJ Mantra: Preferences from a skin button (the phone has no menu bar)
-    {
-        auto* pShowPreferences = new ControlPushButton(
-                ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("show_preferences")));
-        pShowPreferences->setParent(this);
-        connect(pShowPreferences,
-                &ControlObject::valueChanged,
-                this,
-                [this](double value) {
-                    if (value > 0) {
-                        slotOptionsPreferences();
-                    }
-                });
-    }
-    // DJ Mantra: the virtual controller, to choose what each controller
-    // button, fader and knob does
-    {
-        auto* pShowControllerMap = new ControlPushButton(
-                ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("show_controller_map")));
-        pShowControllerMap->setParent(this);
-        connect(pShowControllerMap,
-                &ControlObject::valueChanged,
-                this,
-                [this](double value) {
-                    if (value > 0) {
-                        auto* pDialog = new djmantra::DlgControllerRemap(this);
-                        pDialog->open();
-                    }
-                });
+        const auto pushButton = [this](const char* item, const std::function<void()>& action) {
+            auto* pButton = new ControlPushButton(
+                    ConfigKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(item)));
+            pButton->setParent(this);
+            connect(pButton, &ControlObject::valueChanged, this, [action](double value) {
+                if (value > 0) {
+                    action();
+                }
+            });
+        };
+        // The menu sheet (the round button in the middle of the header)
+        pushButton("show_menu", [this, pickTrack, showControllerMap, showSettings] {
+            djmantra::MainMenu::Actions actions;
+            actions.library = [pickTrack] { pickTrack(QString()); };
+            actions.controller = showControllerMap;
+            actions.settings = showSettings;
+            new djmantra::MainMenu(this, actions);
+        });
+        pushButton("show_preferences", showSettings);
+        // The virtual controller, to choose what each controller button,
+        // fader and knob does
+        pushButton("show_controller_map", showControllerMap);
     }
     // These depend on the settings
 #ifdef __LINUX__

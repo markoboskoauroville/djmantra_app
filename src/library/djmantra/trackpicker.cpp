@@ -21,11 +21,14 @@
 #include <QStandardPaths>
 #include <QStyledItemDelegate>
 #include <QSvgRenderer>
+#include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <QtDebug>
 
 #include "moc_trackpicker.cpp"
 #include "sources/soundsourceproxy.h"
+#include "util/androidwindow.h"
 
 namespace djmantra {
 
@@ -355,6 +358,8 @@ TrackPicker::TrackPicker(UserSettingsPointer pConfig, QWidget* pWindow, const QS
     if (!lastFolder.isEmpty() && QFileInfo(lastFolder).isDir()) {
         m_path = lastFolder;
     }
+    // Android shows the system bars again over a new screen (round 7)
+    AndroidWindow::hideSystemBars();
     showTab(Tab::Files);
     show();
     raise();
@@ -513,11 +518,22 @@ void TrackPicker::refresh() {
         }
     }
 
+    // For the phone tests: what the list holds
+    qInfo().noquote() << "TrackPicker" << m_pTitle->text() << "rows" << m_pList->count();
     const bool showEmpty = !empty.isEmpty();
     m_pEmpty->setText(empty);
     placeEmptyText();
     m_pEmpty->setVisible(showEmpty);
     m_pList->scrollToTop();
+    // Android drew the new folder's rows only partly (round 7: the old rows
+    // stayed half on screen): lay out and repaint the whole list now and
+    // once more when the rows are in place
+    m_pList->doItemsLayout();
+    m_pList->viewport()->update();
+    QTimer::singleShot(150, m_pList->viewport(), [this] {
+        m_pList->viewport()->update();
+        update();
+    });
 }
 
 void TrackPicker::placeEmptyText() {
@@ -535,6 +551,11 @@ void TrackPicker::itemTapped(QListWidgetItem* pItem) {
         showFolder(path);
         break;
     case KindSong:
+        if (m_group.isEmpty()) {
+            // The library (no deck chosen yet): ask which deck
+            itemMenu(pItem);
+            break;
+        }
         if (m_tab == Tab::Queue) {
             QStringList queue = list(kQueueKey);
             queue.removeOne(path);
@@ -569,12 +590,18 @@ void TrackPicker::itemMenu(QListWidgetItem* pItem) {
             setList(kRootsKey, folders);
         });
     } else if (kind == KindSong) {
-        menu.addAction(tr("Load to %1").arg(deckName(m_group)), this, [this, path] {
-            load(path, m_group);
-        });
-        menu.addAction(tr("Load to %1").arg(deckName(otherGroup())), this, [this, path] {
-            load(path, otherGroup());
-        });
+        const QString first = m_group.isEmpty() ? QStringLiteral("[Channel1]") : m_group;
+        const QString second = m_group.isEmpty() ? QStringLiteral("[Channel2]") : otherGroup();
+        for (const QString& group : {first, second}) {
+            menu.addAction(tr("Load to %1").arg(deckName(group)), this, [this, path, group] {
+                if (m_tab == Tab::Queue) {
+                    QStringList queue = list(kQueueKey);
+                    queue.removeOne(path);
+                    setList(kQueueKey, queue);
+                }
+                load(path, group);
+            });
+        }
         if (m_tab == Tab::Queue) {
             menu.addAction(tr("Remove from queue"), this, [this, path] {
                 QStringList queue = list(kQueueKey);

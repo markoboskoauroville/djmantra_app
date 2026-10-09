@@ -56,17 +56,30 @@ public final class WindowBridge {
         }
         sWatching = true;
         final View decor = window.getDecorView();
+        // Also every 1.5 s: showing the bars doesn't always lay the window
+        // out again (round 7: bars over the song picker)
+        decor.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideIfShown(window, decor);
+                decor.postDelayed(this, 1500);
+            }
+        }, 1500);
         decor.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        WindowInsets insets = decor.getRootWindowInsets();
-                        WindowInsetsController controller = window.getInsetsController();
-                        if (insets != null && controller != null
-                                && insets.isVisible(WindowInsets.Type.systemBars())) {
-                            controller.hide(WindowInsets.Type.systemBars());
-                        }
+                        hideIfShown(window, decor);
                     }
                 });
+    }
+
+    private static void hideIfShown(Window window, View decor) {
+        WindowInsets insets = decor.getRootWindowInsets();
+        WindowInsetsController controller = window.getInsetsController();
+        if (insets != null && controller != null
+                && insets.isVisible(WindowInsets.Type.systemBars())) {
+            controller.hide(WindowInsets.Type.systemBars());
+        }
     }
 }

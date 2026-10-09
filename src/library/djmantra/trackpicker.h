@@ -24,7 +24,8 @@ namespace djmantra {
 class TrackPicker : public QWidget {
     Q_OBJECT
   public:
-    /// pWindow: the main window it covers; group: "[Channel1]", "[Channel2]"
+    /// pWindow: the main window it covers; group: "[Channel1]", "[Channel2]",
+    /// or empty for the library (a tapped song asks for the deck)
     TrackPicker(UserSettingsPointer pConfig, QWidget* pWindow, const QString& group);
 
   signals:
