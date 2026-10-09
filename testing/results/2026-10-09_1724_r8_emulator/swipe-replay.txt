@@ -1,0 +1,58 @@
+KnobComposed Knob [EqualizerRack1_[Channel1]_Effect1],parameter3 320 830 110 110 full
+KnobComposed Knob [EqualizerRack1_[Channel2]_Effect1],parameter3 651 830 110 110 full
+
+## 1. deck 1 HIGH, passing case: adb shell cmd input swipe 375 885 375 775 400
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.61322
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.72984
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.85168
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.91462
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 3.0447
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 3.18058
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 3.32253
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 3.39587
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 3.54742
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 3.70575
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 3.87113
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 3.95657
+UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 4
+
+## 2. deck 2 HIGH, failing case: adb shell cmd input swipe 706 885 706 775 400
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.06769
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.09125
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.13995
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.19083
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.24398
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.27143
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.32818
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.38745
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.44938
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.48137
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.54748
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.61654
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.65222
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.72596
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.80299
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.88346
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 1.96752
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.01095
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.10069
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.19445
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.29239
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.34298
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.44755
+
+## 3. deck 2 HIGH, 150 px: adb shell cmd input swipe 706 885 706 735 400
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.61322
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.7901
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 2.91462
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 3.0447
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 3.25078
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 3.39587
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 3.54742
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 3.78754
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 3.95657
+UI control [EqualizerRack1_[Channel2]_Effect1],parameter3 = 4
+
+## 4. deck 2 HIGH, slow: adb shell cmd input swipe 706 885 706 775 1000
+
+## 5. deck 2 HIGH, plain input: adb shell input swipe 706 885 706 775 400
