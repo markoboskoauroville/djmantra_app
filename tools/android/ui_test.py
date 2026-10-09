@@ -35,6 +35,7 @@ TONES = ["/sdcard/Music/djmantra-test-tone.wav", "/sdcard/Music/djmantra-test-to
 
 # Widgets that only show something
 DISPLAY_TYPES = {"Number", "NumberPos", "Key", "Overview", "TrackProperty", "Label",
+                 "VuMeterLegacy",
                  "VuMeter", "VuMeterGL", "VuMeterGLSL", "CoverArt", "StatusLight"}
 # Buttons that switch the page: tested by the page walk, not one by one
 PAGE_OBJECTS = {"TabButton", "LibraryButton", "SelectorButton", "Chevron", "BackButton",
@@ -52,6 +53,7 @@ WIDGET = re.compile(r"UI widget (\S+) (\S+) (\S+) (-?\d+) (-?\d+) (\d+) (\d+) (\
 class Device:
     def __init__(self, serial):
         self.serial = serial
+        self.history = []  # every log read, in order (the phones' log buffer is small)
 
     def adb(self, *args, check=False, text=True):
         cmd = ["adb", "-s", self.serial] + list(args)
@@ -68,6 +70,18 @@ class Device:
 
     def clear_log(self):
         self.adb("logcat", "-c")
+
+    def fresh(self):
+        """The log lines since the last call; the log is cleared, the lines are
+        kept in history (round 3: the phones' buffer rolled over during the
+        run, and the test lost the lines of deck 2's controls)."""
+        text = self.log()
+        self.clear_log()
+        self.history.append(text)
+        return text
+
+    def all_log(self):
+        return "".join(self.history)
 
     def screenshot(self, path):
         data = subprocess.run(["adb", "-s", self.serial, "exec-out", "screencap", "-p"],
@@ -135,16 +149,16 @@ class UiTest:
         """Waits for a widget map newer than `after`."""
         end = time.time() + timeout
         while time.time() < end:
-            m = parse_last_map(self.dev.log())
+            self.dev.fresh()
+            m = parse_last_map(self.dev.all_log())
             if m and m[0] > after:
                 self.map = m
                 return m
             time.sleep(0.7)
         return self.map
 
-    def control_changed(self, key, since_log):
-        log = self.dev.log()
-        new = log[len(since_log):] if log.startswith(since_log) else log
+    def control_changed(self, key, since_log=None):
+        new = self.dev.fresh()
         pattern = "UI control %s = " % key
         values = [line.split(" = ")[-1].strip() for line in new.splitlines() if pattern in line]
         return values
@@ -163,13 +177,14 @@ class UiTest:
     # -- actions ---------------------------------------------------------------
 
     def tap(self, x, y):
-        self.dev.shell("input tap %d %d" % (x, y))
+        # cmd input: no app_process start per event (fast enough for a double tap)
+        self.dev.shell("cmd input tap %d %d" % (x, y))
 
     def double_tap(self, x, y):
-        self.dev.shell("input tap %d %d; input tap %d %d" % (x, y, x, y))
+        self.dev.shell("cmd input tap %d %d; cmd input tap %d %d" % (x, y, x, y))
 
     def swipe(self, x1, y1, x2, y2, ms=400):
-        self.dev.shell("input swipe %d %d %d %d %d" % (x1, y1, x2, y2, ms))
+        self.dev.shell("cmd input swipe %d %d %d %d %d" % (x1, y1, x2, y2, ms))
 
     def test_widget(self, orientation, page, w):
         key = w["key"]
@@ -188,7 +203,7 @@ class UiTest:
             return
         self.tested.add((orientation, key, w["name"]))
         x, y = self.center(w)
-        before = self.dev.log()
+        before = self.dev.fresh()
         if w["type"] == "WaveformViewer":
             self.double_tap(x, y)
             time.sleep(1.5)
@@ -252,7 +267,7 @@ class UiTest:
             return False
         w = cands[0]
         x, y = self.center(w)
-        before = self.dev.log()
+        before = self.dev.fresh()
         number = self.map[0]
         self.tap(x, y)
         time.sleep(1.5)
@@ -292,6 +307,7 @@ class UiTest:
             self.dev.adb("push", local, path)
         self.dev.shell("input keyevent KEYCODE_WAKEUP")
         self.dev.shell("am force-stop %s" % PACKAGE)
+        self.dev.adb("logcat", "-G", "16M")
         self.dev.clear_log()
         args = "--ui-test --play %s %s" % (TONES[0], TONES[1])
         # one quoting only: adb joins the words, the device's shell takes off the single quotes (as smoke_test.sh);
@@ -302,7 +318,8 @@ class UiTest:
         for orientation in ("portrait", "landscape"):
             self.run_orientation(orientation)
         self.dev.shell("settings put system accelerometer_rotation 1")
-        log = self.dev.log()
+        self.dev.fresh()
+        log = self.dev.all_log()
         with open(os.path.join(self.out, "log.txt"), "w") as f:
             f.write(log)
         sound = [l for l in log.splitlines() if "Output level" in l]
