@@ -57,7 +57,11 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   this build and the log shows output peaks ~0.3: check that `WVuMeterLegacy::maybeUpdate`
   gets `waveformUpdateTick` on Android and that `[ChannelN],vu_meter` changes (watch it with
   the --ui-test probe), fix, re-test.
-- **19 UI test failures that now look real** (the log-reading fix is in): in landscape almost
+- Update 09:15: the deck 2 "failures" were the test (the emulator logs the changes late; the
+  test now waits up to 4 s, `d36dd61`). Desktop: deck 2 works, the software VU meters move.
+  The probe now logs "UI levels deck1 deck2 main" every second to see whether vu_meter moves
+  on Android (`a5a97b8`). Round 5 is scheduled (send_later 09:42 UTC).
+- (old) **19 UI test failures that now look real** (the log-reading fix is in): in landscape almost
   every **deck 2 control on the right half** (pregain, volume, EQ, bend, sync, pitch) and in
   portrait deck 2's EQ/filter and both volume faders; the **waveform double tap** in both
   orientations. Deck 1's same controls pass. Look for an invisible widget over the right half
