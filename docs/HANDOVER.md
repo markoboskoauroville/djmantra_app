@@ -1,7 +1,7 @@
 # DJ Mantra handover
 
 Read this first in any new session (any account). It is kept current by every session before it
-stops; the newest state wins over older notes. Last update: **2026-10-09 10:20 UTC**, by the
+stops; the newest state wins over older notes. Last update: **2026-10-09 14:20 UTC**, by the
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
@@ -110,9 +110,23 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   presses); the deck 2 SYNC tap worked by hand (1 then 0). Re-check deck 2 in round 7 once the
   lag is gone.
 
+## Round 7 so far (14:20 UTC)
+
+- a4aa481 (Qt full-screen state) ran fine on the Mac's arm64 emulator (bars gone, no hang);
+  the CI x86_64 hang had no DJMantra log line at all: probably the CI emulator. The Java
+  re-hide (1673838) replaced it anyway; if bars show again, go back to a4aa481's way.
+- VU grey found: `Paintable::drawInternal` drew part of an SVG with the view box × pixel
+  ratio (past the SVG at 2.625). Fixed in 9db7422 (test program in the commit message); the
+  "Painter not active" flood was the same code with a 0-high target, now skipped.
+- Deck 2 by hand on the emulator: pitch and volume drags work; HIGH knob drag and SYNC tap
+  did nothing. ui_test's drags fail where hand drags work: check ui_test.py's drag speed.
+- **Song picker done** (9db7422): note icons → `src/library/djmantra/trackpicker.*`;
+  renders `docs/skin/picker-*.png`. Build 9353a98 on main = round 7 (sent to Claude Code
+  local: emulator + Pixel 7 under the lock).
+
 ## New requests from Marko (9.10.2026 afternoon, screenshots in `docs/ui-reference/`)
 
-- **Note icons = file pickers per deck** (`djmantra-portrait-mixer-note-icons.png`): the
+- (done 9db7422) **Note icons = file pickers per deck** (`djmantra-portrait-mixer-note-icons.png`): the
   album-art note icon top left loads a song into deck 1, top right into deck 2. The picker
   looks like `file-picker-folders.png` (dark, close X top left, folder source dropdown,
   "Folders" title, + and ⋮; folder rows; bottom tabs Files | Queue | History).
