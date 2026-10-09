@@ -6,7 +6,7 @@ Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/result
 ## Standing rules
 
 - **Asking Marko for something: one action at a time.** Write it on its own line as
-  `MARKO: <the one action>`, then wait for him to confirm "done" before giving the next one.
+  `5 MARKO: <the one action>` (with the 5 in front), then wait for him to confirm "done" before giving the next one.
   Never a list of steps for him (owner's rule 9.10.2026).
 
 - **Keep the public progress page current.** After every app milestone, update
