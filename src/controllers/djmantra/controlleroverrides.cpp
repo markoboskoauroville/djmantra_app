@@ -73,6 +73,14 @@ void ControllerOverrides::loadLayout(const QString& path) {
     m_imagePath = QFileInfo(path).dir().filePath(image.value(QStringLiteral("file")).toString());
     m_imageWidth = image.value(QStringLiteral("w")).toDouble();
     m_imageHeight = image.value(QStringLiteral("h")).toDouble();
+    const QJsonObject canvas = root.value(QStringLiteral("canvas")).toObject();
+    m_canvas = QSizeF(canvas.value(QStringLiteral("w")).toDouble(34.2),
+            canvas.value(QStringLiteral("h")).toDouble(19.4));
+    const QJsonObject outline = root.value(QStringLiteral("outline")).toObject();
+    m_outline = QRectF(outline.value(QStringLiteral("x")).toDouble(2.8),
+            outline.value(QStringLiteral("y")).toDouble(1.9),
+            outline.value(QStringLiteral("w")).toDouble(28.6),
+            outline.value(QStringLiteral("h")).toDouble(15.7));
     m_controls.clear();
     const QJsonArray controls = root.value(QStringLiteral("controls")).toArray();
     for (const auto& value : controls) {
@@ -259,11 +267,42 @@ void ControllerOverrides::rebuildRoutes() {
     }
 }
 
+void ControllerOverrides::setMidiObserver(std::function<void(int, int)> observer) {
+    const auto locker = QMutexLocker(&m_mutex);
+    m_observer = std::move(observer);
+}
+
+bool ControllerOverrides::findInput(int status, int data1, int* pControl, int* pInput) const {
+    // A note off (0x8n) belongs to the note on (0x9n)
+    const int noteOn = (status & 0xF0) == 0x80 ? (status & 0x0F) | 0x90 : status;
+    for (int c = 0; c < m_controls.size(); ++c) {
+        const auto& inputs = m_controls[c].inputs;
+        for (int i = 0; i < inputs.size(); ++i) {
+            const auto& input = inputs[i];
+            for (const auto* pList : {&input.midi, &input.midiShift}) {
+                for (const auto& midi : *pList) {
+                    if (midi.first == noteOn &&
+                            (midi.second == data1 || input.lsbData1 == data1)) {
+                        *pControl = c;
+                        *pInput = i;
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
 bool ControllerOverrides::handleMidi(
         unsigned char status, unsigned char data1, unsigned char value) {
     Route route;
     {
         const auto locker = QMutexLocker(&m_mutex);
+        if (m_observer && !((status & 0xF0) == 0x80 || ((status & 0xF0) == 0x90 && value == 0))) {
+            // presses and moves select the control in the virtual controller
+            m_observer(status, data1);
+        }
         if (m_routes.isEmpty()) {
             return false;
         }

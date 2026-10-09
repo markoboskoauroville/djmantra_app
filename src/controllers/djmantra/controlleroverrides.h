@@ -4,7 +4,10 @@
 #include <QList>
 #include <QMutex>
 #include <QPair>
+#include <QRectF>
+#include <QSizeF>
 #include <QString>
+#include <functional>
 
 #include "preferences/usersettings.h"
 
@@ -63,6 +66,14 @@ class ControllerOverrides {
     QString imagePath() const {
         return m_imagePath;
     }
+    /// The drawing area and the controller's body, in layout units
+    QSizeF canvas() const {
+        return m_canvas;
+    }
+    QRectF outline() const {
+        return m_outline;
+    }
+
     /// The image's size in layout units
     double imageWidth() const {
         return m_imageWidth;
@@ -77,6 +88,15 @@ class ControllerOverrides {
     void clear(const QString& inputKey, bool shift);
     void clearAll();
     int count() const;
+
+    /// Called (on the controller thread) with every incoming MIDI message
+    /// while the virtual controller is open: it selects the control that
+    /// was pressed. An empty function turns it off.
+    void setMidiObserver(std::function<void(int status, int data1)> observer);
+
+    /// The control and input index for a MIDI message (status, data1), or
+    /// false if the layout has none.
+    bool findInput(int status, int data1, int* pControl, int* pInput) const;
 
     /// Called for every incoming MIDI message, before the mapping. Returns
     /// true when an override handled it (the mapping is then skipped).
@@ -103,8 +123,11 @@ class ControllerOverrides {
     QString m_imagePath;
     double m_imageWidth = 0;
     double m_imageHeight = 0;
+    QSizeF m_canvas;
+    QRectF m_outline;
 
     mutable QMutex m_mutex;
+    std::function<void(int, int)> m_observer;
     QHash<QString, QString> m_targets; // "<input key>[@shift]" -> "[Group],item"
     QHash<int, Route> m_routes;        // (status << 8 | data1) -> route
     QHash<QString, int> m_msb;         // last MSB of a 14-bit input

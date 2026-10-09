@@ -1,7 +1,7 @@
 # DJ Mantra handover
 
 Read this first in any new session (any account). It is kept current by every session before it
-stops; the newest state wins over older notes. Last update: **2026-10-09 08:55 UTC**, by the
+stops; the newest state wins over older notes. Last update: **2026-10-09 09:30 UTC**, by the
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
@@ -65,6 +65,16 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   coordinates in `log.txt` with the widget map, and check the double-tap timing with
   `cmd input`.
 - The report's "Sound: peak 0" is the report's parsing (the app logs "Output level: peak").
+
+## Virtual controller (9.10.2026, after Marko's Controller Mapper screenshot)
+
+- Drawn like Marko's Mac app "Controller Mapper (Mantra)" (repo
+  `markoboskoauroville/mix-ultra-mapper`, `MixUltraMapper.swift`): body, caps, grooves, jogs,
+  monospaced labels; colours swapped as Marko asked: **orange = a control, green = the
+  selected one**, white text = a chosen function.
+- A press or move on the real Mix Ultra selects that control (MIDI observer in
+  `ControllerOverrides`); CHANGE (or a tap) opens the function list. Not yet tested with the
+  real controller (needs Marko or a MIDI test sender on the emulator).
 
 ## Next, in order
 
