@@ -2,6 +2,7 @@
 
 Android DJ app built on the Mixxx 2.5.6 engine. Plan and status: `docs/ANDROID_PORT.md`.
 Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/results/`).
+**Start every session with `docs/HANDOVER.md`** (current state and next steps).
 
 ## Standing rules
 
@@ -11,6 +12,10 @@ Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/result
   `!!!!!MARKO!!!!!> Unlock the Nothing Phone.` Then wait for him to confirm "done" before the
   next one. Never a list of steps for him (owner's rule 9.10.2026).
 
+- **Usage limits: hand over before the stop.** When the session's rate limit shows
+  `allowed_warning` (get_session → rate_limit_info) or the work is near a limit, update
+  `docs/HANDOVER.md` (state, next steps, open questions), commit and push everything, and stop
+  cleanly, so any session on any account can continue from the files alone.
 - **Keep the public progress page current.** After every app milestone, update
   `assets/app/progress.json` in the website repo `markoboskoauroville/djmantra-ecstatic-dance`
   (djmantra.pages.dev): step `status` (done / doing / todo), `hr` and `en` text, and the `updated`
@@ -24,8 +29,8 @@ Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/result
 - No unofficial or reverse-engineered service APIs (Shazam wrappers, StreamRip-style downloaders).
 - **All device tests run through the local session "Claude Code local"** (Marko's Mac, Remote
   Control, session `session_01NtxDMqMEkD435RBFuqFs1s`; owner's rule 9.10.2026). It has the
-  phones on USB: Nothing Phone 2, Pixel 7 and a Pixel 7 emulator. The app must work on all
-  three; where a feature cannot, make it work where it can. Protocol in `testing/README.md`:
+  Pixel 7 emulator (`emulator-5554`). **For now all tests run on the emulator only**; the real
+  Pixel 7 comes later, the Nothing Phone (2a) is out of the loop (owner, 9.10.2026). Protocol in `testing/README.md`:
   1. Check the session first (`get_session`: `connection_status` connected). If it is not
      connected, ask Marko to start Remote Control on the Mac; do not run device tests anywhere else.
   2. Send it the exact commands (`send_message`); it runs them, commits the results to
