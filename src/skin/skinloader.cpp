@@ -89,6 +89,17 @@ SkinPointer SkinLoader::getSkin(const QString& skinName) const {
 
 SkinPointer SkinLoader::getConfiguredSkin() const {
     QString configSkin = m_pConfig->getValueString(ConfigKey("[Config]", "ResizableSkin"));
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: phones that ran a build before the DJ Mantra skin move to it
+    // once; a skin picked later in the preferences stays
+    const ConfigKey kMigrated(QStringLiteral("[DJMantra]"), QStringLiteral("skin_migrated"));
+    if (m_pConfig->getValue(kMigrated, 0) < 1) {
+        m_pConfig->setValue(kMigrated, 1);
+        configSkin = getDefaultSkinName();
+        m_pConfig->set(ConfigKey(QStringLiteral("[Config]"), QStringLiteral("ResizableSkin")),
+                ConfigValue(configSkin));
+    }
+#endif
 
     // If we don't have a skin defined, we might be migrating from 1.11 and
     // should pick the closest-possible skin.
@@ -125,7 +136,11 @@ SkinPointer SkinLoader::getConfiguredSkin() const {
 }
 
 QString SkinLoader::getDefaultSkinName() const {
+#ifdef __ANDROID_PORT__
+    return QStringLiteral("DJMantra");
+#else
     return "LateNight";
+#endif
 }
 
 QWidget* SkinLoader::loadConfiguredSkin(QWidget* pParent,
@@ -155,7 +170,13 @@ QWidget* SkinLoader::loadConfiguredSkin(QWidget* pParent,
 
     // If the skin exists but failed to load, try to fall back to the default skin.
     if (pLoadedSkin == nullptr) {
-        const QString defaultSkinName = getDefaultSkinName();
+        QString defaultSkinName = getDefaultSkinName();
+#ifdef __ANDROID_PORT__
+        // DJ Mantra: the Mixxx skin is the fallback for the DJ Mantra skin
+        if (defaultSkinName == pSkin->name()) {
+            defaultSkinName = QStringLiteral("LateNight");
+        }
+#endif
         if (defaultSkinName == pSkin->name()) {
             qCritical() << "Configured skin " << pSkin->name()
                         << " failed to load, no fallback available (it already "

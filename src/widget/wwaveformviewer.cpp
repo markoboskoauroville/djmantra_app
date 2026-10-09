@@ -177,6 +177,21 @@ void WWaveformViewer::mouseMoveEvent(QMouseEvent* event) {
     }
 }
 
+void WWaveformViewer::mouseDoubleClickEvent(QMouseEvent* pEvent) {
+    // DJ Mantra: a double tap shows the waveforms full screen and back, in
+    // skins that have [DJMantra],waveform_fullscreen
+    if (pEvent->button() != Qt::LeftButton) {
+        return;
+    }
+    ControlProxy fullscreen(ConfigKey(QStringLiteral("[DJMantra]"),
+                                    QStringLiteral("waveform_fullscreen")),
+            nullptr,
+            ControlFlag::NoWarnIfMissing);
+    if (fullscreen.valid()) {
+        fullscreen.set(fullscreen.toBool() ? 0.0 : 1.0);
+    }
+}
+
 void WWaveformViewer::mouseReleaseEvent(QMouseEvent* /*event*/) {
     if (m_bScratching) {
         m_pScratchPositionEnable->set(0.0);

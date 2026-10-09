@@ -77,6 +77,14 @@ void WWidgetStack::hideIndex(int index) {
     if (currentIndex() == index) {
         auto it = m_hideMap.constFind(index);
         if (it != m_hideMap.constEnd()) {
+            if (*it == index) {
+                // The page stays (a tab tapped again): keep its trigger set
+                auto pListener = m_listeners.constFind(index);
+                if (pListener != m_listeners.constEnd()) {
+                    pListener.value()->setControl(1.0);
+                }
+                return;
+            }
             slotSetIndex(*it);
         } else {
             // TODO: This default behavior is a little odd, is it really what

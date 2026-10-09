@@ -34,6 +34,7 @@ class WWaveformViewer : public WWidget, public TrackDropTarget {
     void mousePressEvent(QMouseEvent * /*unused*/) override;
     void mouseMoveEvent(QMouseEvent * /*unused*/) override;
     void mouseReleaseEvent(QMouseEvent * /*unused*/) override;
+    void mouseDoubleClickEvent(QMouseEvent* pEvent) override;
     void leaveEvent(QEvent* /*unused*/) override;
 
   signals:
