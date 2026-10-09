@@ -1,80 +1,120 @@
 #!/usr/bin/env python3
-"""Generates DJ Mantra's launcher icon: two waveforms, one above the other
-(deck 1 on top, deck 2 below, like the immersive waveform view), colored by
-song section, with a white playhead across both.
+"""Generates DJ Mantra's launcher icon: the vertical waveform view (as djay's
+portrait waveform view, docs/ui-reference/pixel7-portrait-waveform-*.png)
+filling the whole circle: deck 1 and deck 2 as two vertical "spines" of
+thin horizontal slices in spectral colours (red bass, green/cyan mids,
+blue/purple highs), grey beat lines and the red playhead across both.
 
 Writes the Android adaptive icon (vector drawables, API 26+) into
 packaging/android/package/res and, with --preview FILE.png, a PNG preview.
 Deterministic: the same output on every run.
 """
 import argparse
+import colorsys
 import math
 import os
 import random
 
-BACKGROUND = "#0D0A1E"
-PLAYHEAD = "#FFFFFF"
-# Section colors (djay-style section palette)
-COLORS = {
-    "intro": "#3D7BFF",
-    "build": "#22D3EE",
-    "drop": "#FF3D6E",
-    "break": "#A855F7",
-    "drop2": "#FF8A1F",
-    "outro": "#2BD47D",
+BACKGROUND = "#000000"
+PLAYHEAD = "#FF2A2A"
+BEATLINE = "#4A4A50"
+DIVIDER = "#3A3A3E"
+
+# The whole 108 dp canvas is drawn: the launcher's mask (circle, squircle)
+# cuts it, so the waveforms reach the edge of the icon
+SIZE = 108.0
+SLICE, STEP = 0.5, 0.85
+CENTERS = (36.5, 71.5)
+MAX_HALF = 15.0
+PLAYHEAD_Y = 51.0
+BEAT_STEP = (12.0, 9.0)   # deck 2 is faster: closer beat lines
+
+
+def envelope(deck, y):
+    """Loudness 0..1 and the slice's colour band along the track (top to
+    bottom): "blue" (highs), "mid" (green/cyan), "bass" (red)."""
+    t = (y - 18.0) / 72.0          # 0..1 over the part the launcher shows
+    if deck == 0:
+        loud = 0.35 + 0.45 * min(max(t, 0.0), 1.0) + 0.2 * math.sin(t * 10.0) ** 2
+        band = "blue" if t < 0.2 else ("mid" if t < 0.62 else "bass")
+    else:
+        wave = abs(math.sin(t * 8.0 + 0.4))
+        loud = 0.35 + 0.6 * wave
+        band = "bass" if wave > 0.45 else ("magenta" if wave > 0.25 else "mid")
+    return min(loud, 1.0), band
+
+
+PALETTE = {
+    "blue": ["#3355FF", "#5533EE", "#7744FF", "#2277FF"],
+    "mid": ["#22DD88", "#22CCCC", "#33EE55", "#44BBEE"],
+    "bass": ["#FF2222", "#FF3311", "#EE1144", "#FF5522"],
+    "magenta": ["#CC33DD", "#9944FF", "#EE33AA"],
 }
-# (section, share of the width, loudness 0..1)
-DECK1 = [("intro", 0.16, 0.35), ("build", 0.18, 0.6), ("drop", 0.26, 1.0),
-         ("break", 0.14, 0.4), ("drop2", 0.26, 0.95)]
-DECK2 = [("break", 0.14, 0.4), ("drop2", 0.28, 0.95), ("build", 0.16, 0.6),
-         ("drop", 0.24, 1.0), ("outro", 0.18, 0.4)]
-
-# Adaptive icon: 108x108 canvas, everything inside the 66 dp safe zone
-X0, X1 = 21.0, 87.0
-BAR, GAP = 1.3, 0.6
-DECK_CENTERS = (42.0, 66.0)
-MAX_HALF = 10.5
 
 
-def bars(sections, seed):
-    rnd = random.Random(seed)
-    n = int((X1 - X0 + GAP) / (BAR + GAP))
-    total = sum(share for _, share, _ in sections)
-    edges = []
-    acc = 0.0
-    for name, share, loud in sections:
-        edges.append((acc / total, (acc + share) / total, name, loud))
-        acc += share
-    result = []
-    for i in range(n):
-        t = (i + 0.5) / n
-        for start, end, name, loud in edges:
-            if start <= t < end or (t >= end and end == 1.0):
-                break
-        # Beat-like pulse plus noise, scaled by the section's loudness
-        pulse = 0.65 + 0.35 * abs(math.sin(i * 1.7))
-        h = MAX_HALF * loud * pulse * (0.75 + 0.25 * rnd.random())
-        h = max(h, 1.2)
-        result.append((X0 + i * (BAR + GAP), h, COLORS[name]))
-    return result
+def spectral(band, rnd):
+    """A slice colour from its band, with streaks of the other bands now and
+    then, as in djay's spectral waveform."""
+    r = rnd.random()
+    if r < 0.12:
+        band = rnd.choice(["blue", "mid", "magenta"])
+    elif r < 0.18:
+        band = "bass"
+    return rnd.choice(PALETTE[band])
+
+
+def slices(deck):
+    rnd = random.Random(deck + 7)
+    out = []
+    y = 0.2
+    while y < SIZE:
+        loud, band = envelope(deck, y)
+        beat = abs(math.sin(y * math.pi / BEAT_STEP[deck]))
+        # jagged edge: every slice its own width
+        half = MAX_HALF * loud * (0.6 + 0.4 * beat) * (0.55 + 0.45 * rnd.random())
+        half = max(half, 1.2)
+        out.append((y, half, spectral(band, rnd)))
+        # high-frequency fringe: a thin, wider, darker slice now and then
+        if rnd.random() < 0.3:
+            out.append((y + SLICE * 0.5, half * (1.1 + 0.3 * rnd.random()), "#5A3A8A"))
+        y += STEP
+    return out
+
+
+def shapes():
+    """(color, x, y, w, h) rectangles, back to front."""
+    rects = []
+    for deck, cx in enumerate(CENTERS):
+        y = (PLAYHEAD_Y % BEAT_STEP[deck]) - BEAT_STEP[deck]
+        while y < SIZE:
+            x0 = 54.6 if deck else 0.0
+            rects.append((BEATLINE, x0, y, 53.4, 0.3))
+            y += BEAT_STEP[deck]
+        fringe = [s for s in slices(deck) if s[2] == "#5A3A8A"]
+        body = [s for s in slices(deck) if s[2] != "#5A3A8A"]
+        for y, half, color in fringe + body:
+            h = SLICE * (0.6 if color == "#5A3A8A" else 1.0)
+            rects.append((color, cx - half, y, 2 * half, h))
+    rects.append((DIVIDER, 53.75, 0.0, 0.5, SIZE))
+    rects.append((PLAYHEAD, 0.0, PLAYHEAD_Y, SIZE, 0.7))
+    return rects
 
 
 def vector_foreground():
-    paths = {}
-    for deck, (sections, cy) in enumerate(zip((DECK1, DECK2), DECK_CENTERS)):
-        for x, h, color in bars(sections, seed=deck + 1):
-            paths.setdefault(color, []).append(
-                f"M{x:.2f},{cy - h:.2f}h{BAR}v{2 * h:.2f}h-{BAR}z")
+    paths = []
+    for color, x, y, w, h in shapes():
+        d = f"M{x:.2f},{y:.2f}h{w:.2f}v{h:.2f}h{-w:.2f}z"
+        if paths and paths[-1][0] == color:
+            paths[-1][1].append(d)
+        else:
+            paths.append((color, [d]))
     out = ['<?xml version="1.0" encoding="utf-8"?>',
            '<!-- Generated by tools/android/gen_launcher_icon.py -->',
            '<vector xmlns:android="http://schemas.android.com/apk/res/android"',
            '    android:width="108dp" android:height="108dp"',
            '    android:viewportWidth="108" android:viewportHeight="108">']
-    for color, parts in paths.items():
+    for color, parts in paths:
         out.append(f'    <path android:fillColor="{color}" android:pathData="{"".join(parts)}"/>')
-    # Playhead
-    out.append(f'    <path android:fillColor="{PLAYHEAD}" '
-               f'android:pathData="M53.4,28h1.2v52h-1.2z"/>')
     out.append('</vector>')
     return "\n".join(out) + "\n"
 
@@ -96,17 +136,17 @@ COLORS_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 
 def preview(path, size=432):
     from PIL import Image, ImageDraw
-    scale = size / 108.0
+    scale = size / SIZE
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     mask = Image.new("L", (size, size), 0)
     ImageDraw.Draw(mask).ellipse((0, 0, size - 1, size - 1), fill=255)
     canvas = Image.new("RGBA", (size, size), BACKGROUND)
     draw = ImageDraw.Draw(canvas)
-    for deck, (sections, cy) in enumerate(zip((DECK1, DECK2), DECK_CENTERS)):
-        for x, h, color in bars(sections, seed=deck + 1):
-            draw.rectangle((x * scale, (cy - h) * scale,
-                            (x + BAR) * scale - 1, (cy + h) * scale), fill=color)
-    draw.rectangle((53.4 * scale, 28 * scale, 54.6 * scale, 80 * scale), fill=PLAYHEAD)
+    for color, x, y, w, h in shapes():
+        draw.rectangle((x * scale, y * scale, (x + w) * scale, (y + h) * scale), fill=color)
+    # the launcher shows about the middle 72 of 108 dp: preview that part
+    crop = int(18 * scale)
+    canvas = canvas.crop((crop, crop, size - crop, size - crop)).resize((size, size))
     img.paste(canvas, (0, 0), mask)
     img.save(path)
 
