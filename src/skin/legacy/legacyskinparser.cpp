@@ -1398,7 +1398,13 @@ QWidget* LegacySkinParser::parseVuMeter(const QDomElement& node) {
     }
 #endif
     auto* pWaveformWidgetFactory = WaveformWidgetFactory::instance();
-    if (CmdlineArgs::Instance().getUseLegacyVuMeter() ||
+    // DJ Mantra: no OpenGL widgets on Android (they get no EGL surface
+    // there), so the meters are the software ones, like the waveforms
+    bool useLegacyVuMeter = CmdlineArgs::Instance().getUseLegacyVuMeter();
+#ifdef __ANDROID_PORT__
+    useLegacyVuMeter = true;
+#endif
+    if (useLegacyVuMeter ||
             (!pWaveformWidgetFactory->isOpenGlAvailable() &&
                     !pWaveformWidgetFactory->isOpenGlesAvailable())) {
         // Legacy WVuMeter

@@ -174,6 +174,14 @@ class UiTest:
     def test_widget(self, orientation, page, w):
         key = w["key"]
         item = key.split(",")[-1]
+        if w["type"] in ("VuMeterGL", "VuMeterGLSL"):
+            # OpenGL widgets draw nothing on Android: the meter must be the
+            # software one (round 3: the VU meters did not move)
+            if (orientation, key, w["type"]) not in self.tested:
+                self.tested.add((orientation, key, w["type"]))
+                self.record(orientation, page, w, "check", [], False,
+                            "OpenGL VU meter (draws nothing on Android)")
+            return
         if w["type"] in DISPLAY_TYPES or w["name"] in PAGE_OBJECTS or key in SKIP_KEYS:
             return
         if (orientation, key, w["name"]) in self.tested:
