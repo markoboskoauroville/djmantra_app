@@ -1,0 +1,13 @@
+10-09 16:42:17.259 10124 10141 I DJMantra: info [Main] UI levels 0.582 0.000 0.582
+10-09 16:42:18.305 10124 10141 I DJMantra: info [Main] UI levels 0.578 0.000 0.578
+10-09 16:42:19.355 10124 10141 I DJMantra: info [Main] UI levels 0.571 0.000 0.571
+10-09 16:42:20.405 10124 10141 I DJMantra: info [Main] UI levels 0.577 0.000 0.577
+10-09 16:42:21.447 10124 10141 I DJMantra: info [Main] UI levels 0.580 0.000 0.580
+10-09 16:42:22.443 10124 10141 I DJMantra: info [Main] UI levels 0.577 0.000 0.577
+10-09 16:42:23.448 10124 10141 I DJMantra: info [Main] UI levels 0.572 0.000 0.572
+10-09 16:42:24.447 10124 10141 I DJMantra: info [Main] UI levels 0.571 0.000 0.571
+10-09 16:42:25.444 10124 10141 I DJMantra: info [Main] UI levels 0.591 0.000 0.591
+10-09 16:42:26.448 10124 10141 I DJMantra: info [Main] UI levels 0.576 0.000 0.576
+10-09 16:42:27.447 10124 10141 I DJMantra: info [Main] UI levels 0.579 0.000 0.579
+10-09 16:42:28.447 10124 10141 I DJMantra: info [Main] UI levels 0.574 0.000 0.574
+10-09 16:42:29.448 10124 10141 I DJMantra: info [Main] UI levels 0.572 0.000 0.572
