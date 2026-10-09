@@ -381,8 +381,9 @@ def loop_row(n):
         spacer(),
         button("%s,waveform_zoom_down" % grp(n), "IconButton", "&#8722;", "34f,34f", states=1),
         button("%s,loop_halve" % grp(n), "IconButton", "&lt;", "34f,34f", states=1),
-        button("%s,beatloop_activate" % grp(n), "LoopButton", "&#10227;", "52f,34f",
-               states=2, display_key="%s,loop_enabled" % grp(n)),
+        button("%s,beatloop_activate" % grp(n), "LoopButton", "", "52f,34f",
+               states=2, display_key="%s,loop_enabled" % grp(n),
+               pixmaps=[("loop.svg", "loop_on.svg"), ("loop_on.svg", "loop_on.svg")]),
         """<Number>
   <ObjectName>LoopSize</ObjectName>
   <Size>26f,34f</Size>
@@ -590,9 +591,9 @@ def performance_portrait():
     middle = stack([
         ("[DJMantra],p_mixer", vbox(mixer_portrait(), policy="me,me"), 0),
         ("[DJMantra],p_waveforms", vbox(waveforms(True), policy="me,me"), 0),
-        ("[DJMantra],p_pads", vbox(hbox(pads(1), hspace(6), pads(2), policy="me,me"),
-                                   hbox(loop_row(1), loop_row(2), policy="me,min"),
-                                   policy="me,me"), 0),
+        # deck 1's pads above deck 2's, each across the whole width: square pads
+        ("[DJMantra],p_pads", vbox(pads(1), loop_row(1), vspace(6), pads(2), loop_row(2),
+                                   name="PadsArea", policy="me,me"), 0),
         ("[DJMantra],p_deck1", vbox(deck_page_portrait(1), policy="me,me"), 0),
         ("[DJMantra],p_deck2", vbox(deck_page_portrait(2), policy="me,me"), 0),
     ])
@@ -774,7 +775,7 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #Chevron { border-radius: 17px; background-color: #4a4a4f; border: none; }
 #RoundButton[displayValue="1"] { border-color: %(BLUE)s; color: %(BLUE)s; }
 #BendButton, #IconButton { background-color: transparent; border: none; color: %(GREY)s; font-size: 22px; }
-#LoopButton { background-color: transparent; border: 2px solid #6a6a70; border-radius: 16px; font-size: 18px; }
+#LoopButton { background-color: transparent; border: 2px solid #6a6a70; border-radius: 16px; padding: 3px; }
 #LoopButton[displayValue="1"] { border-color: %(GREEN)s; color: %(GREEN)s; }
 #TabButton, #LibraryButton, #PlayButton, #GearButton { background-color: transparent; border: none; }
 #CueReturn { padding: 6px; }
@@ -865,6 +866,15 @@ def graphics():
         '<path d="M10 25 A11 11 0 0 1 30 18" fill="none" stroke="#ffffff" stroke-width="3.2"'
         ' stroke-linecap="round"/><path d="M24 12 L32 18 L24 22 Z" fill="#ffffff"/>'
         '<circle cx="31" cy="28" r="2.6" fill="#ffffff"/>')
+    def loop_icon(color):
+        return svg(52, 34,
+            '<path d="M14 13 A9 9 0 0 1 36 11" fill="none" stroke="%s" stroke-width="3"'
+            ' stroke-linecap="round"/><path d="M33 5 L39 12 L31 14 Z" fill="%s"/>'
+            '<path d="M38 21 A9 9 0 0 1 16 23" fill="none" stroke="%s" stroke-width="3"'
+            ' stroke-linecap="round"/><path d="M19 29 L13 22 L21 20 Z" fill="%s"/>'
+            % ((color,) * 4))
+    g["loop.svg"] = loop_icon("#d8d8dc")
+    g["loop_on.svg"] = loop_icon(GREEN)
     g["chevron.svg"] = svg(34, 34,
         '<circle cx="17" cy="17" r="16" fill="#4a4a4f"/>'
         '<path d="M10 14 L17 21 L24 14" fill="none" stroke="#ffffff" stroke-width="3"'

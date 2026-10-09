@@ -851,10 +851,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel1],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel1],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
@@ -921,10 +923,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel2],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel2],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
@@ -962,12 +966,8 @@
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 <WidgetGroup trigger="[DJMantra],p_pads" on_hide_select="0">
+<ObjectName>PadsArea</ObjectName>
 <Layout>vertical</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
-<WidgetGroup>
-<Layout>horizontal</Layout>
 <SizePolicy>me,me</SizePolicy>
 
 <Children>
@@ -1079,7 +1079,79 @@
 </HotcueButton>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
-<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
+<WidgetGroup>
+<ObjectName>LoopRow</ObjectName>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&#8722;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel1],waveform_zoom_down</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&lt;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel1],loop_halve</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<PushButton>
+<ObjectName>LoopButton</ObjectName>
+<Size>52f,34f</Size>
+<NumberStates>2</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
+</State>
+<State><Number>1</Number>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
+</State>
+<Connection><ConfigKey>[Channel1],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+<Connection><ConfigKey>[Channel1],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
+</PushButton>
+<Number>
+  <ObjectName>LoopSize</ObjectName>
+  <Size>26f,34f</Size>
+  <Alignment>center</Alignment>
+  <NumberOfDigits>0</NumberOfDigits>
+  <Connection><ConfigKey>[Channel1],beatloop_size</ConfigKey></Connection>
+</Number>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&gt;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel1],loop_double</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>+</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel1],waveform_zoom_up</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+</Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>0min,6f</Size></WidgetGroup>
 <WidgetGroup>
 <ObjectName>PadsDeck</ObjectName>
 <Layout>vertical</Layout>
@@ -1188,82 +1260,6 @@
 </HotcueButton>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
-</Children></WidgetGroup>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup>
-<ObjectName>LoopRow</ObjectName>
-<Layout>horizontal</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<PushButton>
-<ObjectName>IconButton</ObjectName>
-<Size>34f,34f</Size>
-<NumberStates>1</NumberStates>
-<RightClickIsPushButton>false</RightClickIsPushButton>
-<State><Number>0</Number>
-<Text>&#8722;</Text><Alignment>center</Alignment>
-</State>
-<Connection><ConfigKey>[Channel1],waveform_zoom_down</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
-</PushButton>
-<PushButton>
-<ObjectName>IconButton</ObjectName>
-<Size>34f,34f</Size>
-<NumberStates>1</NumberStates>
-<RightClickIsPushButton>false</RightClickIsPushButton>
-<State><Number>0</Number>
-<Text>&lt;</Text><Alignment>center</Alignment>
-</State>
-<Connection><ConfigKey>[Channel1],loop_halve</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
-</PushButton>
-<PushButton>
-<ObjectName>LoopButton</ObjectName>
-<Size>52f,34f</Size>
-<NumberStates>2</NumberStates>
-<RightClickIsPushButton>false</RightClickIsPushButton>
-<State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
-</State>
-<State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
-</State>
-<Connection><ConfigKey>[Channel1],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
-<Connection><ConfigKey>[Channel1],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
-</PushButton>
-<Number>
-  <ObjectName>LoopSize</ObjectName>
-  <Size>26f,34f</Size>
-  <Alignment>center</Alignment>
-  <NumberOfDigits>0</NumberOfDigits>
-  <Connection><ConfigKey>[Channel1],beatloop_size</ConfigKey></Connection>
-</Number>
-<PushButton>
-<ObjectName>IconButton</ObjectName>
-<Size>34f,34f</Size>
-<NumberStates>1</NumberStates>
-<RightClickIsPushButton>false</RightClickIsPushButton>
-<State><Number>0</Number>
-<Text>&gt;</Text><Alignment>center</Alignment>
-</State>
-<Connection><ConfigKey>[Channel1],loop_double</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
-</PushButton>
-<PushButton>
-<ObjectName>IconButton</ObjectName>
-<Size>34f,34f</Size>
-<NumberStates>1</NumberStates>
-<RightClickIsPushButton>false</RightClickIsPushButton>
-<State><Number>0</Number>
-<Text>+</Text><Alignment>center</Alignment>
-</State>
-<Connection><ConfigKey>[Channel1],waveform_zoom_up</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
-</PushButton>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-</Children></WidgetGroup>
 <WidgetGroup>
 <ObjectName>LoopRow</ObjectName>
 <Layout>horizontal</Layout>
@@ -1297,10 +1293,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel2],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel2],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
@@ -1333,7 +1331,6 @@
 <Connection><ConfigKey>[Channel2],waveform_zoom_up</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-</Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 <WidgetGroup trigger="[DJMantra],p_deck1" on_hide_select="0">
@@ -1442,10 +1439,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel1],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel1],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
@@ -1587,10 +1586,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel2],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel2],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
@@ -2937,10 +2938,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel1],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel1],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
@@ -3007,10 +3010,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel2],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel2],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
@@ -3368,10 +3373,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel1],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel1],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
@@ -3438,10 +3445,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#10227;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/loop_on.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel2],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 <Connection><ConfigKey>[Channel2],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>

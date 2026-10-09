@@ -40,7 +40,7 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #Chevron { border-radius: 17px; background-color: #4a4a4f; border: none; }
 #RoundButton[displayValue="1"] { border-color: #2f8cff; color: #2f8cff; }
 #BendButton, #IconButton { background-color: transparent; border: none; color: #9a9aa0; font-size: 22px; }
-#LoopButton { background-color: transparent; border: 2px solid #6a6a70; border-radius: 16px; font-size: 18px; }
+#LoopButton { background-color: transparent; border: 2px solid #6a6a70; border-radius: 16px; padding: 3px; }
 #LoopButton[displayValue="1"] { border-color: #3ad13a; color: #3ad13a; }
 #TabButton, #LibraryButton, #PlayButton, #GearButton { background-color: transparent; border: none; }
 #CueReturn { padding: 6px; }
