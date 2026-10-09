@@ -1218,6 +1218,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/track/trackrecord.cpp
   src/track/trackref.cpp
   src/util/battery/battery.cpp
+  src/controllers/djmantra/controlleroverrides.cpp
   src/util/androidwindow.cpp
   src/util/bundledresources.cpp
   src/util/uitestprobe.cpp

@@ -13,6 +13,7 @@
 #include "control/controlindicatortimer.h"
 #include "control/controlobject.h"
 #include "control/controlproxy.h"
+#include "controllers/djmantra/controlleroverrides.h"
 #include "controllers/controllermanager.h"
 #include "controllers/keyboard/keyboardeventfilter.h"
 #include "database/mixxxdb.h"
@@ -703,6 +704,10 @@ void CoreServices::initialize(QApplication* pApp) {
     m_pPlayerManager->loadSamplers();
 
     m_pTouchShift = std::make_unique<ControlPushButton>(ConfigKey("[Controls]", "touch_shift"));
+
+    // DJ Mantra: the controller's layout and the functions chosen for its
+    // buttons in the virtual controller
+    djmantra::ControllerOverrides::instance().init(pConfig);
 
     // The UI controls must be created here so that controllers can bind to
     // them on startup.

@@ -6,6 +6,7 @@
 #include "control/controlobject.h"
 #include "controllers/defs_controllers.h"
 #include "controllers/midi/midioutputhandler.h"
+#include "controllers/djmantra/controlleroverrides.h"
 #include "controllers/midi/midiutils.h"
 #include "controllers/scripting/legacy/controllerscriptenginelegacy.h"
 #include "defs_urls.h"
@@ -284,6 +285,12 @@ void MidiController::receivedShortMessage(unsigned char status,
 
     MidiKey mappingKey(status, control);
     triggerActivity();
+    // DJ Mantra: a function chosen in the virtual controller replaces the
+    // mapping for that button, fader or knob
+    if (!isLearning() &&
+            djmantra::ControllerOverrides::instance().handleMidi(status, control, value)) {
+        return;
+    }
     if (isLearning()) {
         emit messageReceived(status, control, value);
 
