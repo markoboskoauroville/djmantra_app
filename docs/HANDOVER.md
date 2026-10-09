@@ -1,7 +1,7 @@
 # DJ Mantra handover
 
 Read this first in any new session (any account). It is kept current by every session before it
-stops; the newest state wins over older notes. Last update: **2026-10-09 09:30 UTC**, by the
+stops; the newest state wins over older notes. Last update: **2026-10-09 12:40 UTC**, by the
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
@@ -91,6 +91,22 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   the probe now logs "UI press <widget class> <name> x y" for every press, so round 6 shows
   which widget gets those taps.
 - Controller: button labels shrink to fit; no tofu arrow in the function list.
+
+## Round 6 (emulator, fb33586, `testing/results/2026-10-09_1201_ui_emulator/`) and fixes
+
+- Same 23 failures as round 5; VU meters still grey (level 0.58); bars back in portrait.
+- Cause found in the log: Android paints the software waveforms from `repaint()` into a null
+  device: ~800 "QPainter: Painter not active" warnings per frame (13 000 log lines during the
+  landscape mixer test, the "UI levels" timer starved), so the GUI thread lagged and touches
+  were dropped. The VU meters' `repaint()` never reached the screen either (the earlier queued
+  connection changed nothing: the tick already runs on the GUI thread; reverted).
+  Fix: `update()` instead of `repaint()` on Android in `WaveformWidgetAbstract::render()` and
+  `WVuMeterLegacy::maybeUpdate()`.
+- Bars: the window now stays in Qt's full screen state (`AndroidWindow::keepFullScreen`), so
+  Qt itself hides the bars after every rotation.
+- The "UI press" lines only show containers because controls take touch events (not mouse
+  presses); the deck 2 SYNC tap worked by hand (1 then 0). Re-check deck 2 in round 7 once the
+  lag is gone.
 
 ## Next, in order
 

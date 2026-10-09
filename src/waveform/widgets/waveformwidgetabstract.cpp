@@ -31,7 +31,14 @@ void WaveformWidgetAbstract::preRender(VSyncThread* vsyncThread) {
 
 mixxx::Duration WaveformWidgetAbstract::render() {
     if (m_widget) {
+#ifdef __ANDROID_PORT__
+        // DJ Mantra: an immediate repaint() on Android paints into a null
+        // device (hundreds of "QPainter: Painter not active" warnings per
+        // frame, which slowed every touch, round 6): schedule it instead
+        m_widget->update();
+#else
         m_widget->repaint(); // Repaints the widget directly by calling paintEvent()
+#endif
     }
     // Time for Painter setup, unknown in this case
     return mixxx::Duration();

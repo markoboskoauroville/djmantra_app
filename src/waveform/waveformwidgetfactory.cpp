@@ -495,18 +495,11 @@ void WaveformWidgetFactory::addVuMeter(WVuMeterLegacy* pVuMeter) {
     // Do not hold the pointer to of timer listeners since they may be deleted.
     // We don't activate update() or repaint() directly so listener widgets
     // can decide whether to paint or not.
-    // DJ Mantra: on Android the tick comes from the render thread and a
-    // repaint() there draws nothing (the meters stayed grey with a level of
-    // 0.58, round 5): queue it to the GUI thread
     connect(this,
             &WaveformWidgetFactory::waveformUpdateTick,
             pVuMeter,
             &WVuMeterLegacy::maybeUpdate,
-#ifdef __ANDROID_PORT__
-            Qt::QueuedConnection);
-#else
             Qt::DirectConnection);
-#endif
 }
 
 void WaveformWidgetFactory::addVuMeter(WVuMeterBase* pVuMeter) {

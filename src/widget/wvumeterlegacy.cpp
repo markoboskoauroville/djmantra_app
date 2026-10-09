@@ -148,7 +148,13 @@ void WVuMeterLegacy::updateState(mixxx::Duration elapsed) {
 
 void WVuMeterLegacy::maybeUpdate() {
     if (m_dParameter != m_dLastParameter || m_dPeakParameter != m_dLastPeakParameter) {
+#ifdef __ANDROID_PORT__
+        // DJ Mantra: an immediate repaint() never reaches the screen on
+        // Android (the meters stayed grey at a level of 0.58, rounds 5 and 6)
+        update();
+#else
         repaint();
+#endif
     }
 }
 
