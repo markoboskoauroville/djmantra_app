@@ -80,6 +80,18 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   `ControllerOverrides`); CHANGE (or a tap) opens the function list. Not yet tested with the
   real controller (needs Marko or a MIDI test sender on the emulator).
 
+## Round 5 (emulator, a5a97b8, `testing/results/2026-10-09_1132_ui_emulator/`) and fixes
+
+- Sound passes; controller page in the mapper style works (tap = green, CHANGE enabled).
+- VU: level 0.58 on deck 1 but the meters stay grey → `WVuMeterLegacy::maybeUpdate` was called
+  directly from the render thread (repaint there draws nothing on Android) → queued on Android.
+- Portrait: status + navigation bars came back after rotation → hidden again after the
+  rotation settles (androidwindow.cpp).
+- Landscape: deck 2's EQ, sync, bend, pitch still don't respond on the emulator (desktop OK);
+  the probe now logs "UI press <widget class> <name> x y" for every press, so round 6 shows
+  which widget gets those taps.
+- Controller: button labels shrink to fit; no tofu arrow in the function list.
+
 ## Next, in order
 
 1. **Round 4 on the emulator** with android-latest (6155c56): `device_test.sh --sound`,

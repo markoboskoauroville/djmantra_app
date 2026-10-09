@@ -1,6 +1,8 @@
 #include "util/uitestprobe.h"
 
+#include <QApplication>
 #include <QEvent>
+#include <QMouseEvent>
 #include <QScreen>
 #include <QWidget>
 #include <QWindow>
@@ -80,11 +82,24 @@ UiTestProbe::UiTestProbe(QWidget* pWindow)
         qInfo().noquote() << "UI levels" << values.join(QLatin1Char(' '));
     });
     pLevels->start(1000);
+    // Which widget gets each press (round 5: taps on deck 2's EQ in the
+    // emulator changed nothing)
+    qApp->installEventFilter(this);
     qInfo() << "UI test probe on";
     scheduleDump();
 }
 
 bool UiTestProbe::eventFilter(QObject* pObject, QEvent* pEvent) {
+    if (pEvent->type() == QEvent::MouseButtonPress && pObject->isWidgetType() && m_pWindow) {
+        auto* pWidget = static_cast<QWidget*>(pObject);
+        const auto* pMouse = static_cast<QMouseEvent*>(pEvent);
+        const qreal ratio = m_pWindow->devicePixelRatioF();
+        const QPoint pos = pWidget->mapTo(m_pWindow->window(), pMouse->position().toPoint()) * ratio;
+        qInfo().noquote() << "UI press" << pObject->metaObject()->className()
+                          << (pObject->objectName().isEmpty() ? QStringLiteral("-")
+                                                               : pObject->objectName())
+                          << pos.x() << pos.y();
+    }
     if (pObject == m_pWindow && pEvent->type() == QEvent::Resize) {
         scheduleDump();
     }

@@ -41,6 +41,9 @@ bool AndroidWindow::eventFilter(QObject* pObject, QEvent* pEvent) {
             QWidget* pWindow = m_pWindow;
             for (int delay : {300, 1200}) {
                 QTimer::singleShot(delay, pWindow, [pWindow] {
+                    // the system can show the bars again after a rotation
+                    // (round 5: status and navigation bars back in portrait)
+                    hideSystemBars();
                     pWindow->update();
                     const auto children = pWindow->findChildren<QWidget*>();
                     for (QWidget* pChild : children) {

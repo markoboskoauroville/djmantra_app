@@ -250,6 +250,14 @@ void ControllerMapView::paintEvent(QPaintEvent* /*pEvent*/) {
             p.setPen(QPen(ring, lw));
             p.drawRoundedRect(r, radius, radius);
             setFont(pad ? u * 0.3 : std::min(u * 0.3, r.height() * 0.55));
+            if (!pad) {
+                // shrink the label until it fits the button ("neural mix")
+                while (p.fontMetrics().horizontalAdvance(c.label) > r.width() - 4 &&
+                        mono.pixelSize() > 7) {
+                    mono.setPixelSize(mono.pixelSize() - 1);
+                    p.setFont(mono);
+                }
+            }
             p.setPen(col);
             p.drawText(pad ? r.adjusted(0, 0, -u * 0.15, -u * 0.1) : r,
                     pad ? (Qt::AlignRight | Qt::AlignBottom) : Qt::AlignCenter,
@@ -459,7 +467,7 @@ void DlgControllerRemap::chooseFunction(int controlIndex, int inputIndex) {
     QScroller::grabGesture(pList->viewport(), QScroller::LeftMouseButtonGesture);
     pList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-    auto* pDefault = new QListWidgetItem(tr("↺ Back to the controller mapping"), pList);
+    auto* pDefault = new QListWidgetItem(tr("Back to the controller mapping"), pList);
     pDefault->setData(Qt::UserRole, QString());
     for (const ConfigKey& key : m_pPicker->controlsAvailable()) {
         const QString title = m_pPicker->controlTitleForConfigKey(key);
