@@ -157,11 +157,20 @@ class UiTest:
             time.sleep(0.7)
         return self.map
 
-    def control_changed(self, key, since_log=None):
-        new = self.dev.fresh()
+    def control_changed(self, key, since_log=None, timeout=4.0):
+        """The values the control took since the last log read. Keeps reading
+        for up to `timeout` s: on the emulator the lines can come late (round
+        4: deck 2's changes were in the log, after the test had looked)."""
         pattern = "UI control %s = " % key
-        values = [line.split(" = ")[-1].strip() for line in new.splitlines() if pattern in line]
-        return values
+        values = []
+        end = time.time() + timeout
+        while True:
+            new = self.dev.fresh()
+            values += [line.split(" = ")[-1].strip() for line in new.splitlines()
+                       if pattern in line]
+            if values or time.time() >= end:
+                return values
+            time.sleep(0.5)
 
     def record(self, orientation, page, widget, action, values, ok, note=""):
         self.results.append(dict(orientation=orientation, page=page, type=widget["type"],
