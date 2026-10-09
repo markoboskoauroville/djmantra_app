@@ -216,6 +216,13 @@ jobs:
             || { echo "FAIL: the launcher label is not DJ Mantra"; exit 1; }
           "$BT/aapt" dump badging "$APK" | grep -q "icon='res/" \
             || { echo "FAIL: no launcher icon"; exit 1; }
+          # Without these, "All files access" cannot be switched on and the
+          # Mix Ultra is not found over Bluetooth
+          "$BT/aapt" dump permissions "$APK" | tee -a "$GITHUB_STEP_SUMMARY"
+          for p in MANAGE_EXTERNAL_STORAGE READ_MEDIA_AUDIO BLUETOOTH_SCAN BLUETOOTH_CONNECT; do
+            "$BT/aapt" dump permissions "$APK" | grep -q "android.permission.$p" \
+              || { echo "FAIL: the APK does not declare android.permission.$p"; exit 1; }
+          done
           FILES=$(unzip -l "$APK" | grep -c " assets/res/" || true)
           echo "assets/res: $FILES files" | tee -a "$GITHUB_STEP_SUMMARY"
           unzip -l "$APK" | grep -q " assets/res/djmantra-res.stamp" \

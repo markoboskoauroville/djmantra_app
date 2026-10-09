@@ -1967,25 +1967,9 @@ if(ANDROID)
     find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
   endif()
   target_link_libraries(mixxx-lib PRIVATE Qt6::CorePrivate)
-  # Music on USB drives and SD cards (/storage/<volume>/...) is read through
-  # plain file paths, which needs "All files access" (MANAGE_EXTERNAL_STORAGE,
-  # requested at startup). The media permissions cover internal storage.
-  if(COMMAND qt_add_android_permission)
-    qt_add_android_permission(mixxx NAME android.permission.MANAGE_EXTERNAL_STORAGE)
-    qt_add_android_permission(mixxx NAME android.permission.READ_EXTERNAL_STORAGE
-      ATTRIBUTES maxSdkVersion 32)
-    qt_add_android_permission(mixxx NAME android.permission.READ_MEDIA_AUDIO)
-    qt_add_android_permission(mixxx NAME android.permission.READ_MEDIA_VIDEO)
-    # Bluetooth LE MIDI (Hercules DJControl Mix Ultra): scan and connect, no location
-    qt_add_android_permission(mixxx NAME android.permission.BLUETOOTH_SCAN
-      ATTRIBUTES usesPermissionFlags neverForLocation)
-    qt_add_android_permission(mixxx NAME android.permission.BLUETOOTH_CONNECT)
-    qt_add_android_permission(mixxx NAME android.permission.BLUETOOTH ATTRIBUTES maxSdkVersion 30)
-    qt_add_android_permission(mixxx NAME android.permission.BLUETOOTH_ADMIN ATTRIBUTES maxSdkVersion 30)
-    qt_add_android_permission(mixxx NAME android.permission.ACCESS_FINE_LOCATION ATTRIBUTES maxSdkVersion 30)
-  else()
-    message(WARNING "qt_add_android_permission needs Qt 6.8: storage permissions missing")
-  endif()
+  # Permissions (All files access, media, Bluetooth LE MIDI) are written in
+  # packaging/android/package/AndroidManifest.xml: qt_add_android_permission()
+  # did not reach the APK.
 endif()
 
 #
