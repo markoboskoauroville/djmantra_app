@@ -50,6 +50,22 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
 - Round 3 on 3 devices: sound passes everywhere; the UI test's 23 failures were the test
   itself (log buffer, slow double tap); fixed in `6d19dcb`, not yet re-run.
 
+## Round 4 result (emulator, build 6155c56, `testing/results/2026-10-09_1052_ui_emulator/`)
+
+- Sound test passes (peak 0.125); CONTROLLER screen works (controller.png).
+- **VU meters still don't move** (vu-1.png, vu-2.png) although the software meters are in
+  this build and the log shows output peaks ~0.3: check that `WVuMeterLegacy::maybeUpdate`
+  gets `waveformUpdateTick` on Android and that `[ChannelN],vu_meter` changes (watch it with
+  the --ui-test probe), fix, re-test.
+- **19 UI test failures that now look real** (the log-reading fix is in): in landscape almost
+  every **deck 2 control on the right half** (pregain, volume, EQ, bend, sync, pitch) and in
+  portrait deck 2's EQ/filter and both volume faders; the **waveform double tap** in both
+  orientations. Deck 1's same controls pass. Look for an invisible widget over the right half
+  (e.g. a stack page or the hidden SizeAwareStack child catching touches), compare the tap
+  coordinates in `log.txt` with the widget map, and check the double-tap timing with
+  `cmd input`.
+- The report's "Sound: peak 0" is the report's parsing (the app logs "Output level: peak").
+
 ## Next, in order
 
 1. **Round 4 on the emulator** with android-latest (6155c56): `device_test.sh --sound`,
