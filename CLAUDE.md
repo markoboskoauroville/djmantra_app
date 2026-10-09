@@ -16,3 +16,13 @@ Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/result
   OAuth PKCE and does not need the secret.
 - Desktop Linux must keep building and passing Mixxx's test suite (`.github/workflows/linux.yml`).
 - No unofficial or reverse-engineered service APIs (Shazam wrappers, StreamRip-style downloaders).
+- **All device tests run through the local session "Claude Code local"** (Marko's Mac, Remote
+  Control, session `session_01NtxDMqMEkD435RBFuqFs1s`; owner's rule 9.10.2026). It has the
+  phones on USB: Nothing Phone 2, Pixel 7 and a Pixel 7 emulator. The app must work on all
+  three; where a feature cannot, make it work where it can. Protocol in `testing/README.md`:
+  1. Check the session first (`get_session`: `connection_status` connected). If it is not
+     connected, ask Marko to start Remote Control on the Mac; do not run device tests anywhere else.
+  2. Send it the exact commands (`send_message`); it runs them, commits the results to
+     `testing/results/` on the development branch and messages back (`SendMessage` to "DJ APP cloud").
+  3. Read the results, fix in the cloud, push, wait for the release, send the next round. Develop
+     on without Marko; he is needed only for the last phase (USB-C audio out, Mix Ultra, USB stick).

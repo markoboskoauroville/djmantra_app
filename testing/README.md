@@ -33,3 +33,25 @@ In the repo folder, start `claude` and run:
 Then tell the cloud session: **"read the latest phone test results"**.
 
 Without Claude Code, `tools/android/phone_test.sh` runs the automatic part on its own.
+
+## Remote test loop (from 9.10.2026)
+
+Device tests are run by the local session **Claude Code local** on the Mac, driven by the cloud
+session over Remote Control. Marko does not need to be there.
+
+1. The cloud session checks the local one is connected; if not, it asks Marko to start Remote
+   Control on the Mac.
+2. It sends the commands. The usual round, in the djmantra_app clone on the Mac:
+   ```bash
+   git pull origin claude/admiring-feynman-hym3vp
+   adb devices -l                       # Nothing Phone 2, Pixel 7, Pixel 7 emulator
+   tools/android/device_test.sh --sound # every device: install, launch, tone through the speaker
+   git add testing/results && git commit -m "Device test <stamp>" && git push
+   ```
+3. The local session messages the result table back to "DJ APP cloud" and stops; the cloud
+   session reads `testing/results/<stamp>_devices.md` and the per-device folders, fixes, pushes,
+   and sends the next round when the new android-latest release is up.
+
+Devices: Nothing Phone 2 and Pixel 7 on USB, Pixel 7 emulator (arm64) on the Mac. Sound goes
+through the phone speaker; USB-C audio, the Mix Ultra and USB sticks are the last phase, with
+Marko present.
