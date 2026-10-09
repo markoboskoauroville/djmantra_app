@@ -62,6 +62,24 @@ UiTestProbe::UiTestProbe(QWidget* pWindow)
             pProxy->connectValueChanged(this, [this] { scheduleDump(); });
         }
     }
+    // The VU meters' input, once a second (round 4: the meters on the
+    // emulator stayed grey while sound played)
+    auto* pLevels = new QTimer(this);
+    QList<ControlProxy*> levels;
+    for (const auto& group : {"[Channel1]", "[Channel2]", "[Main]"}) {
+        levels.append(new ControlProxy(QString::fromLatin1(group),
+                QStringLiteral("vu_meter"),
+                this,
+                ControlFlag::NoWarnIfMissing));
+    }
+    connect(pLevels, &QTimer::timeout, this, [levels] {
+        QStringList values;
+        for (auto* pLevel : levels) {
+            values.append(QString::number(pLevel->valid() ? pLevel->get() : -1, 'f', 3));
+        }
+        qInfo().noquote() << "UI levels" << values.join(QLatin1Char(' '));
+    });
+    pLevels->start(1000);
     qInfo() << "UI test probe on";
     scheduleDump();
 }
