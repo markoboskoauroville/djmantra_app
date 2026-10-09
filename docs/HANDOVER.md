@@ -27,8 +27,13 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   sound, permissions), `tools/android/ui_test.py --serial emulator-5554 --out DIR` (taps every
   control in portrait and landscape; app started with `--ui-test --play`), the app's
   `--ui-test` widget map in logcat, `tools/skin/render_skin.sh` (desktop renders in Xvfb).
-- Routines: "DJ Mantra: hourly resume (cloud)" (:27) and "(Claude Code local)" (:30) resume
-  work after a stop; "DJ Mantra: round 4" (one-shot, fired).
+- Routines: "DJ Mantra: hourly resume (cloud)" (trig_01GEgoXS7Y35wD9tS6AyYGUs) is **paused**
+  while the weekly limit is at warning; "DJ Mantra: restart after the weekly limit reset"
+  (trig_01XgbkeGxhhMckq9m9nVUchT) fires once on 2026-10-15 01:05 UTC, re-enables it and
+  continues. "(Claude Code local)" (:30) keeps the emulator awake and finishes interrupted
+  rounds. A session on another account can simply start from this file instead.
+- Round 4 (emulator only) was sent to "Claude Code local" at 08:52 UTC; its results go to
+  `testing/results/*_ui_emulator/` (check whether they arrived).
 
 ## Done (9.10.2026)
 
