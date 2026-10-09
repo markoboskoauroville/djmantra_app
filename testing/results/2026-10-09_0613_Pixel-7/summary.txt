@@ -1,0 +1,98 @@
+Performing Streamed Install
+Success
+installed: versionName=0.5.0
+All files access: MANAGE_EXTERNAL_STORAGE: default
+Starting: Intent { cmp=com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity
+TotalTime: 221
+WaitTime: 223
+Complete
+main window ready after 6s
+### Launch test: ok
+
+focused window:   mCurrentFocus=Window{48192a7 u0 com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity}
+
+    10-09 06:14:07.548 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.548 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mkv"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mov"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mp3"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 3 (default) : "MAD: MPEG Audio Decoder 0.16.4 NDEBUG FPM_64BIT OPT_ACCURACY"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mp4"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "ogg"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org OggVorbis"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "opus"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org libopusfile"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "wav"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 3 (default) : "libsndfile"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "webm"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "wv"
+    10-09 06:14:07.549 15022 15043 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 06:14:07.582 15022 15043 I DJMantra: info [Main] DbConnection - Available drivers for database connections: QList("QSQLITE")
+    10-09 06:14:07.584 15022 15043 I DJMantra: info [Main] DbConnectionPool - Cloned thread-local database connection "MIXXX-1" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 06:14:07.584 15022 15043 I DJMantra: info [Main] CoreServices - Connecting to database
+    10-09 06:14:07.584 15022 15043 I DJMantra: info [Main] CoreServices - Initializing or upgrading database schema
+    10-09 06:14:07.636 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel1]" , "cue_point" )
+    10-09 06:14:07.645 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel2]" , "cue_point" )
+    10-09 06:14:07.654 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler1]" , "cue_point" )
+    10-09 06:14:07.658 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler2]" , "cue_point" )
+    10-09 06:14:07.662 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler3]" , "cue_point" )
+    10-09 06:14:07.665 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler4]" , "cue_point" )
+    10-09 06:14:07.668 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[PreviewDeck1]" , "cue_point" )
+    10-09 06:14:07.708 15022 15043 I DJMantra: info [Main] LocalTrackCache - Mode 1 directory "/data/user/0/com.djmantra.app/files/track-cache" max MB 8192
+    10-09 06:14:07.708 15022 15043 I DJMantra: info [Main] GlobalTrackCache - Creating instance
+    10-09 06:14:07.709 15022 15043 I DJMantra: info [Main] TrackCollection - Connecting database
+    10-09 06:14:07.713 15022 15043 I DJMantra: info [Main] TrackCollectionManager - Starting library scanner thread
+    10-09 06:14:07.714 15022 15094 I DJMantra: info [LibraryScanner 1] DbConnectionPool - Cloned thread-local database connection "MIXXX-2" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 06:14:07.715 15022 15043 I DJMantra: info [Main] TrackCollection - Connecting track source
+    10-09 06:14:07.727 15022 15043 I DJMantra: info [Main] Prepared deletion of 1 playlists of type 2 that contain fewer than 1 tracks
+    10-09 06:14:07.727 15022 15043 I DJMantra: info [Main] Deleting 1 playlists
+    10-09 06:14:07.730 15022 15043 I DJMantra: info [Main] Deleting 1 playlists
+    10-09 06:14:07.764 15022 15043 I DJMantra: info [Main] LocalTrackCache - Mode 1 directory "/data/user/0/com.djmantra.app/files/track-cache" max MB 8192
+    10-09 06:14:07.765 15022 15098 I DJMantra: info [AnalyzerThread 2 #4] DbConnectionPool - Cloned thread-local database connection "MIXXX-6" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 06:14:07.766 15022 15096 I DJMantra: info [AnalyzerThread 0 #1] DbConnectionPool - Cloned thread-local database connection "MIXXX-3" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 06:14:07.766 15022 15097 I DJMantra: info [AnalyzerThread 1 #2] DbConnectionPool - Cloned thread-local database connection "MIXXX-4" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 06:14:07.766 15022 15099 I DJMantra: info [AnalyzerThread 3 #3] DbConnectionPool - Cloned thread-local database connection "MIXXX-5" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 06:14:07.766 15022 15043 I DJMantra: info [Main] VolumeWatcher - External drives: QList()
+    10-09 06:14:07.772 15022 15043 I DJMantra: info [Main] Library folder "/storage/emulated/0/Android/data/com.djmantra.app/files/Music" added
+    10-09 06:14:07.788 15022 15094 I DJMantra: info [LibraryScanner 1] LibraryScanner - Cleaning up database...
+    10-09 06:14:07.788 15022 15043 W DJMantra: warning [Main] Could not read sampler bank file "/data/user/0/com.djmantra.app/files/.mixxx/samplers.xml"
+    10-09 06:14:07.788 15022 15043 I DJMantra: info [Main] Android: starting without OpenGL widgets (software waveforms)
+    10-09 06:14:07.788 15022 15094 I DJMantra: info [LibraryScanner 1] LibraryScanner - Finished database cleanup: 0 ms
+    10-09 06:14:07.798 15022 15043 I DJMantra: info [Main] DJMantraMIDI: Bluetooth permission not granted
+    10-09 06:14:07.798 15022 15094 I DJMantra: info [LibraryScanner 1] LibraryScanner - Updating query planner statistics for database...
+    10-09 06:14:07.803 15022 15094 I DJMantra: info [LibraryScanner 1] LibraryScanner - Finished updating query planner statistics for database: 4 ms
+    10-09 06:14:08.059 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel3]" , "cue_point" )
+    10-09 06:14:08.069 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel4]" , "cue_point" )
+    10-09 06:14:08.083 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler5]" , "cue_point" )
+    10-09 06:14:08.087 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler6]" , "cue_point" )
+    10-09 06:14:08.090 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler7]" , "cue_point" )
+    10-09 06:14:08.094 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler8]" , "cue_point" )
+    10-09 06:14:08.098 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler9]" , "cue_point" )
+    10-09 06:14:08.101 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler10]" , "cue_point" )
+    10-09 06:14:08.105 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler11]" , "cue_point" )
+    10-09 06:14:08.108 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler12]" , "cue_point" )
+    10-09 06:14:08.120 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler13]" , "cue_point" )
+    10-09 06:14:08.123 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler14]" , "cue_point" )
+    10-09 06:14:08.127 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler15]" , "cue_point" )
+    10-09 06:14:08.130 15022 15043 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler16]" , "cue_point" )
+    10-09 06:14:12.828 15022 15043 I DJMantra: info [Main] Loaded skin "LateNight" from "/data/user/0/com.djmantra.app/files/res/skins/LateNight"
+    10-09 06:14:13.416 15022 15143 I DJMantra: info [0xb40000742a8e74f0] SoundDeviceOboe - First sound callback: 1024 frames
+    10-09 06:14:13.416 15022 15043 I DJMantra: info [Main] SoundDeviceOboe - Sound output open: 48000 Hz, 2 channels, 1024 frames per callback, burst 128 , API AAudio , device 3
+    10-09 06:14:13.418 15022 15043 I DJMantra: info [Main] DJ Mantra main window ready, full screen: true size QSize(914, 411)
+    10-09 06:14:13.428 15022 15100 I DJMantra: info [Controller] Starting engine
+    10-09 06:14:13.428 15022 15100 I DJMantra: info [Controller] Applying controller mapping...
+    10-09 06:14:13.438 15022 15100 I DJMantra: info [Controller] DJMantraMIDI - Looking for "DJControl Mix Ultra" over USB and Bluetooth
+    10-09 06:14:13.453 15022 15147 W DJMantraMIDI: Bluetooth permission missing: java.lang.SecurityException: Need android.permission.BLUETOOTH_SCAN permission for android.content.AttributionSource@63508e89: BtScan.ScanBinder.startScanInternal()
+    10-09 06:14:14.806 15022 15043 I DJMantra: info [Main] Asking for All files access
+    10-09 06:14:22.466 15022 15147 I DJMantraMIDI: Looking for the controller over Bluetooth
+
+OK: started, sound output running, main window ready, alive 15s later, no critical errors
