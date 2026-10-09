@@ -1,0 +1,101 @@
+Performing Streamed Install
+Success
+installed: versionName=0.5.0
+All files access: Uid mode: MANAGE_EXTERNAL_STORAGE: allow
+MANAGE_EXTERNAL_STORAGE: allow; time=+3h49m55s315ms ago
+Starting: Intent { cmp=com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity (has extras) }
+Status: ok
+LaunchState: COLD
+Activity: com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity
+TotalTime: 204
+WaitTime: 206
+Complete
+main window ready after 3s
+### Launch test: ok
+
+focused window:   mCurrentFocus=Window{2d55241 u0 com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity}
+
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "caf"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 2 (lower) : "libsndfile"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "flac"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org libFLAC"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 2 (lower) : "libsndfile"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "flv"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "m4a"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mj2"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mka"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mkv"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mov"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.222 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mp3"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 3 (default) : "MAD: MPEG Audio Decoder 0.16.4 NDEBUG FPM_64BIT OPT_ACCURACY"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "mp4"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "ogg"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org OggVorbis"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "opus"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org libopusfile"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "wav"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 3 (default) : "libsndfile"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "webm"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "wv"
+    10-09 15:51:35.223 31120 31137 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-09 15:51:35.255 31120 31137 I DJMantra: info [Main] DbConnection - Available drivers for database connections: QList("QSQLITE")
+    10-09 15:51:35.255 31120 31137 I DJMantra: info [Main] DbConnectionPool - Cloned thread-local database connection "MIXXX-1" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 15:51:35.255 31120 31137 I DJMantra: info [Main] CoreServices - Connecting to database
+    10-09 15:51:35.255 31120 31137 I DJMantra: info [Main] CoreServices - Initializing or upgrading database schema
+    10-09 15:51:35.307 31120 31137 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel1]" , "cue_point" )
+    10-09 15:51:35.314 31120 31137 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel2]" , "cue_point" )
+    10-09 15:51:35.322 31120 31137 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler1]" , "cue_point" )
+    10-09 15:51:35.325 31120 31137 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler2]" , "cue_point" )
+    10-09 15:51:35.328 31120 31137 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler3]" , "cue_point" )
+    10-09 15:51:35.332 31120 31137 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler4]" , "cue_point" )
+    10-09 15:51:35.335 31120 31137 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[PreviewDeck1]" , "cue_point" )
+    10-09 15:51:35.368 31120 31137 I DJMantra: info [Main] LocalTrackCache - Mode 1 directory "/data/user/0/com.djmantra.app/files/track-cache" max MB 8192
+    10-09 15:51:35.368 31120 31137 I DJMantra: info [Main] GlobalTrackCache - Creating instance
+    10-09 15:51:35.368 31120 31137 I DJMantra: info [Main] TrackCollection - Connecting database
+    10-09 15:51:35.372 31120 31137 I DJMantra: info [Main] TrackCollectionManager - Starting library scanner thread
+    10-09 15:51:35.372 31120 31169 I DJMantra: info [LibraryScanner 1] DbConnectionPool - Cloned thread-local database connection "MIXXX-2" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 15:51:35.373 31120 31137 I DJMantra: info [Main] TrackCollection - Connecting track source
+    10-09 15:51:35.388 31120 31137 I DJMantra: info [Main] Deleting 1 playlists
+    10-09 15:51:35.414 31120 31137 I DJMantra: info [Main] Library - Access to directory QFileInfo(/storage/emulated/0/Android/data/com.djmantra.app/files/Music) from sandbox granted
+    10-09 15:51:35.414 31120 31137 I DJMantra: info [Main] LocalTrackCache - Mode 1 directory "/data/user/0/com.djmantra.app/files/track-cache" max MB 8192
+    10-09 15:51:35.415 31120 31173 I DJMantra: info [AnalyzerThread 1 #1] DbConnectionPool - Cloned thread-local database connection "MIXXX-3" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 15:51:35.415 31120 31137 I DJMantra: info [Main] VolumeWatcher - External drives: QList()
+    10-09 15:51:35.418 31120 31172 I DJMantra: info [AnalyzerThread 0 #2] DbConnectionPool - Cloned thread-local database connection "MIXXX-4" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-09 15:51:35.439 31120 31137 W DJMantra: warning [Main] Could not read sampler bank file "/data/user/0/com.djmantra.app/files/.mixxx/samplers.xml"
+    10-09 15:51:35.440 31120 31137 I DJMantra: info [Main] Controller layout: 55 controls from "/data/user/0/com.djmantra.app/files/res/controllers/djmantra/mix-ultra-layout.json"
+    10-09 15:51:35.440 31120 31169 I DJMantra: info [LibraryScanner 1] LibraryScanner - Cleaning up database...
+    10-09 15:51:35.445 31120 31169 I DJMantra: info [LibraryScanner 1] LibraryScanner - Deleted 3 orphaned directory hashes
+    10-09 15:51:35.446 31120 31169 I DJMantra: info [LibraryScanner 1] LibraryScanner - Finished database cleanup: 5 ms
+    10-09 15:51:35.461 31120 31169 I DJMantra: info [LibraryScanner 1] LibraryScanner - Updating query planner statistics for database...
+    10-09 15:51:35.464 31120 31169 I DJMantra: info [LibraryScanner 1] LibraryScanner - Finished updating query planner statistics for database: 2 ms
+    10-09 15:51:35.483 31120 31137 I DJMantra: info [Main] MetadataSourceTagLib - No track metadata or cover art found in file "/sdcard/Music/djmantra-test-tone.wav" of type "WAV"
+    10-09 15:51:35.483 31120 31137 I DJMantra: info [Main] Android: starting without OpenGL widgets (software waveforms)
+    10-09 15:51:35.999 31120 31137 I DJMantra: info [Main] Loaded skin "DJMantra" from "/data/user/0/com.djmantra.app/files/res/skins/DJMantra"
+    10-09 15:51:36.008 31120 31137 I DJMantra: info [Main] DJMantraMIDI: Bluetooth permission granted
+    10-09 15:51:36.050 31120 31185 I DJMantra: info [0xb4000074c6f699b0] SoundDeviceOboe - First sound callback: 1024 frames
+    10-09 15:51:36.050 31120 31137 I DJMantra: info [Main] SoundDeviceOboe - Sound output open: 48000 Hz, 2 channels, 1024 frames per callback, burst 960 , API AAudio , device 2
+    10-09 15:51:36.051 31120 31137 I DJMantra: info [Main] DJ Mantra main window ready, full screen: true size QSize(411, 914)
+    10-09 15:51:36.057 31120 31137 I DJMantra: info [Main] Deck 1 playing
+    10-09 15:51:36.066 31120 31175 I DJMantra: info [Controller] Starting engine
+    10-09 15:51:36.066 31120 31175 I DJMantra: info [Controller] Applying controller mapping...
+    10-09 15:51:36.076 31120 31175 I DJMantra: info [Controller] DJMantraMIDI - Looking for "DJControl Mix Ultra" over USB and Bluetooth
+    10-09 15:51:36.092 31120 31186 I DJMantraMIDI: Looking for the controller over Bluetooth
+    10-09 15:51:40.903 31120 31185 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.125282
+    10-09 15:51:45.913 31120 31185 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.125282
+    10-09 15:51:50.921 31120 31185 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.125282
+    10-09 15:51:55.933 31120 31185 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.125282
+
+Sound: output level: peak 0.125282
+
+OK (with sound): started, sound output running, main window ready, alive 15s later, no critical errors
