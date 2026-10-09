@@ -1,0 +1,1825 @@
+{
+ "results": [
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[QuickEffectRack1_[Channel1]],super1",
+   "action": "turn",
+   "values": [
+    "0.507874",
+    "0.531496",
+    "0.547244",
+    "0.555118",
+    "0.570866",
+    "0.586614"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "SliderComposed",
+   "name": "ChannelFader",
+   "key": "[Channel1],volume",
+   "action": "drag",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "TrimKnob",
+   "key": "[Channel1],pregain",
+   "action": "turn",
+   "values": [
+    "1.022",
+    "1.06745",
+    "1.09093",
+    "1.11492",
+    "1.13944",
+    "1.19012"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel1]_Effect1],parameter3",
+   "action": "turn",
+   "values": [
+    "1.04463",
+    "1.09125",
+    "1.13995",
+    "1.16512",
+    "1.21711",
+    "1.27143"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel1]_Effect1],parameter2",
+   "action": "turn",
+   "values": [
+    "1.02207",
+    "1.04463",
+    "1.09125",
+    "1.13995",
+    "1.19083",
+    "1.24398"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel1]_Effect1],parameter1",
+   "action": "turn",
+   "values": [
+    "1.06769",
+    "1.09125",
+    "1.13995",
+    "1.19083",
+    "1.24398",
+    "1.27143"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "TrimKnob",
+   "key": "[Channel2],pregain",
+   "action": "turn",
+   "values": [
+    "1.04447",
+    "1.06745",
+    "1.09093",
+    "1.11492",
+    "1.13944",
+    "1.19012"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel2]_Effect1],parameter3",
+   "action": "turn",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel2]_Effect1],parameter2",
+   "action": "turn",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel2]_Effect1],parameter1",
+   "action": "turn",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[QuickEffectRack1_[Channel2]],super1",
+   "action": "turn",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "SliderComposed",
+   "name": "ChannelFader",
+   "key": "[Channel2],volume",
+   "action": "drag",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "SyncButton",
+   "key": "[Channel1],sync_enabled",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "RoundButton",
+   "key": "[Channel1],keylock",
+   "action": "tap",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "SyncButton",
+   "key": "[Channel2],sync_enabled",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "CueSet",
+   "key": "[Channel1],cue_default",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "CueReturn",
+   "key": "[Channel1],cue_gotoandstop",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "CueSet",
+   "key": "[Channel2],cue_default",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "CueReturn",
+   "key": "[Channel2],cue_gotoandstop",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "PlayButton",
+   "key": "[Channel1],play",
+   "action": "tap",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "SliderComposed",
+   "name": "Crossfader",
+   "key": "[Master],crossfader",
+   "action": "drag",
+   "values": [
+    "0.0199626",
+    "0.0465793",
+    "0.069869",
+    "0.0931587",
+    "0.113121",
+    "0.136411"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "PlayButton",
+   "key": "[Channel2],play",
+   "action": "tap",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "TabButton",
+   "key": "[DJMantra],p_waveforms",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "WaveformViewer",
+   "name": "Waveform",
+   "key": "[Channel1],waveform",
+   "action": "2x tap",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "WaveformViewer",
+   "name": "Waveform",
+   "key": "[Channel2],waveform",
+   "action": "2x tap",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel1],waveform_zoom_down",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel1],loop_halve",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "LoopButton",
+   "key": "[Channel1],beatloop_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel1],loop_double",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel1],waveform_zoom_up",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel2],waveform_zoom_down",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel2],loop_halve",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "LoopButton",
+   "key": "[Channel2],beatloop_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel2],loop_double",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel2],waveform_zoom_up",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "PushButton",
+   "name": "TabButton",
+   "key": "[DJMantra],p_pads",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_1_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_2_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_3_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_4_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_5_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_6_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_7_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_8_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_1_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_2_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_3_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_4_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_5_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_6_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_7_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_8_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "TabButton",
+   "key": "[DJMantra],p_mixer",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "deck1",
+   "type": "PushButton",
+   "name": "SelectorButton",
+   "key": "[DJMantra],p_deck1",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "deck1",
+   "type": "SliderComposed",
+   "name": "PitchFader",
+   "key": "[Channel1],rate",
+   "action": "drag",
+   "values": [
+    "0.00204264",
+    "0.0142985",
+    "0.0428954",
+    "0.0653645",
+    "0.0919188",
+    "0.110303"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "deck1",
+   "type": "PushButton",
+   "name": "BendButton",
+   "key": "[Channel1],rate_temp_down",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "deck1",
+   "type": "PushButton",
+   "name": "BendButton",
+   "key": "[Channel1],rate_temp_up",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "deck2",
+   "type": "PushButton",
+   "name": "SelectorButton",
+   "key": "[DJMantra],p_deck2",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "deck2",
+   "type": "SliderComposed",
+   "name": "PitchFader",
+   "key": "[Channel2],rate",
+   "action": "drag",
+   "values": [
+    "0.00204264",
+    "0.0245117",
+    "0.0551513",
+    "0.073535",
+    "0.0960041",
+    "0.11643"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "deck2",
+   "type": "PushButton",
+   "name": "BendButton",
+   "key": "[Channel2],rate_temp_down",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "deck2",
+   "type": "PushButton",
+   "name": "BendButton",
+   "key": "[Channel2],rate_temp_up",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "SelectorButton",
+   "key": "[DJMantra],p_mixer",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "library",
+   "type": "PushButton",
+   "name": "LibraryButton",
+   "key": "[DJMantra],show_library",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "library",
+   "type": "PushButton",
+   "name": "LoadButton",
+   "key": "[Channel1],LoadSelectedTrack",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "library",
+   "type": "PushButton",
+   "name": "LoadButton",
+   "key": "[Channel2],LoadSelectedTrack",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "portrait",
+   "page": "decks",
+   "type": "PushButton",
+   "name": "BackButton",
+   "key": "[DJMantra],show_library",
+   "action": "page",
+   "values": [
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "SyncButton",
+   "key": "[Channel1],sync_enabled",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "SliderComposed",
+   "name": "PitchFader",
+   "key": "[Channel1],rate",
+   "action": "drag",
+   "values": [
+    "0.0174038",
+    "0.0482919",
+    "0.0843279",
+    "0.10492",
+    "0.13066",
+    "0.151252"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "BendButton",
+   "key": "[Channel1],rate_temp_down",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "BendButton",
+   "key": "[Channel1],rate_temp_up",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[QuickEffectRack1_[Channel1]],super1",
+   "action": "turn",
+   "values": [
+    "0.877953",
+    "0.893701",
+    "0.909449",
+    "0.925197",
+    "0.940945",
+    "0.948819"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel1]_Effect1],parameter3",
+   "action": "turn",
+   "values": [
+    "2.61322",
+    "2.67089",
+    "2.7901",
+    "2.91462",
+    "2.97895",
+    "3.1119"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel1]_Effect1],parameter2",
+   "action": "turn",
+   "values": [
+    "2.61322",
+    "2.72984",
+    "2.7901",
+    "2.91462",
+    "2.97895",
+    "3.0447"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel1]_Effect1],parameter1",
+   "action": "turn",
+   "values": [
+    "2.50157",
+    "2.61322",
+    "2.67089",
+    "2.7901",
+    "2.85168",
+    "2.91462"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "TrimKnob",
+   "key": "[Channel1],pregain",
+   "action": "turn",
+   "values": [
+    "1.96297",
+    "2.00614",
+    "2.05027",
+    "2.09537",
+    "2.14145",
+    "2.18856"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "TrimKnob",
+   "key": "[Channel2],pregain",
+   "action": "turn",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "SliderComposed",
+   "name": "ChannelFader",
+   "key": "[Channel1],volume",
+   "action": "drag",
+   "values": [
+    "0.489799",
+    "0.507629",
+    "0.525987",
+    "0.541701",
+    "0.561071",
+    "0.57765"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "SliderComposed",
+   "name": "ChannelFader",
+   "key": "[Channel2],volume",
+   "action": "drag",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[QuickEffectRack1_[Channel2]],super1",
+   "action": "turn",
+   "values": [
+    "0.523622",
+    "0.53937",
+    "0.547244",
+    "0.562992",
+    "0.57874",
+    "0.594488"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel2]_Effect1],parameter3",
+   "action": "turn",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel2]_Effect1],parameter2",
+   "action": "turn",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "KnobComposed",
+   "name": "Knob",
+   "key": "[EqualizerRack1_[Channel2]_Effect1],parameter1",
+   "action": "turn",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "BendButton",
+   "key": "[Channel2],rate_temp_down",
+   "action": "tap",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "BendButton",
+   "key": "[Channel2],rate_temp_up",
+   "action": "tap",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "SyncButton",
+   "key": "[Channel2],sync_enabled",
+   "action": "tap",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "SliderComposed",
+   "name": "PitchFader",
+   "key": "[Channel2],rate",
+   "action": "drag",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "PlayButton",
+   "key": "[Channel1],play",
+   "action": "tap",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "CueSet",
+   "key": "[Channel1],cue_default",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "CueReturn",
+   "key": "[Channel1],cue_gotoandstop",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "RoundButton",
+   "key": "[Channel1],keylock",
+   "action": "tap",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "SliderComposed",
+   "name": "Crossfader",
+   "key": "[Master],crossfader",
+   "action": "drag",
+   "values": [
+    "0.00665419",
+    "0.0367294",
+    "0.0567795",
+    "0.0793359",
+    "0.104399",
+    "0.126955"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "RoundButton",
+   "key": "[Channel2],keylock",
+   "action": "tap",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "CueSet",
+   "key": "[Channel2],cue_default",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "CueReturn",
+   "key": "[Channel2],cue_gotoandstop",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "PlayButton",
+   "key": "[Channel2],play",
+   "action": "tap",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "TabButton",
+   "key": "[DJMantra],l_waveforms",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "WaveformViewer",
+   "name": "Waveform",
+   "key": "[Channel1],waveform",
+   "action": "2x tap",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "WaveformViewer",
+   "name": "Waveform",
+   "key": "[Channel2],waveform",
+   "action": "2x tap",
+   "values": [],
+   "result": "FAIL",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel1],waveform_zoom_down",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel1],loop_halve",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "LoopButton",
+   "key": "[Channel1],beatloop_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel1],loop_double",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel1],waveform_zoom_up",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel2],waveform_zoom_down",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel2],loop_halve",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "LoopButton",
+   "key": "[Channel2],beatloop_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel2],loop_double",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "waveforms",
+   "type": "PushButton",
+   "name": "IconButton",
+   "key": "[Channel2],waveform_zoom_up",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "PushButton",
+   "name": "TabButton",
+   "key": "[DJMantra],l_pads",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_1_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_2_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_3_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_4_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_5_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_6_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_7_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel1],hotcue_8_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_1_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_2_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_3_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_4_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_5_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_6_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_7_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "pads",
+   "type": "HotcueButton",
+   "name": "Pad",
+   "key": "[Channel2],hotcue_8_activate",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "mixer",
+   "type": "PushButton",
+   "name": "TabButton",
+   "key": "[DJMantra],l_mixer",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "library",
+   "type": "PushButton",
+   "name": "LibraryButton",
+   "key": "[DJMantra],show_library",
+   "action": "page",
+   "values": [
+    "1"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "library",
+   "type": "PushButton",
+   "name": "LoadButton",
+   "key": "[Channel1],LoadSelectedTrack",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "library",
+   "type": "PushButton",
+   "name": "LoadButton",
+   "key": "[Channel2],LoadSelectedTrack",
+   "action": "tap",
+   "values": [
+    "1",
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  },
+  {
+   "orientation": "landscape",
+   "page": "decks",
+   "type": "PushButton",
+   "name": "BackButton",
+   "key": "[DJMantra],show_library",
+   "action": "page",
+   "values": [
+    "0"
+   ],
+   "result": "pass",
+   "note": ""
+  }
+ ],
+ "sound": [
+  "I/DJMantra(15668): info [Engine] SoundDeviceOboe - Output level: peak 0.00203505",
+  "I/DJMantra(15668): info [Engine] SoundDeviceOboe - Output level: peak 0.00203505",
+  "I/DJMantra(15668): info [Engine] SoundDeviceOboe - Output level: peak 0"
+ ],
+ "playing": true
+}
