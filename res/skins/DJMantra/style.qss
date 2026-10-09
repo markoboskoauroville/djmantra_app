@@ -11,6 +11,7 @@ WWidget, WLabel, QLabel { color: #f2f2f2; font-family: "Roboto", "Open Sans", sa
             border-bottom: 1px solid #3a3a3e; }
 #WaveformArea { background-color: #000000; }
 #LoopRow { background-color: #2e2e31; padding: 2px; }
+#PadsArea { background-color: #1f1f22; padding: 8px; }
 #FullWaveforms { background-color: #000000; }
 
 #ArtistText { color: #9a9aa0; font-size: 12px; }
@@ -41,7 +42,8 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #BendButton, #IconButton { background-color: transparent; border: none; color: #9a9aa0; font-size: 22px; }
 #LoopButton { background-color: transparent; border: 2px solid #6a6a70; border-radius: 16px; font-size: 18px; }
 #LoopButton[displayValue="1"] { border-color: #3ad13a; color: #3ad13a; }
-#TabButton, #LibraryButton, #PlayButton { background-color: transparent; border: none; }
+#TabButton, #LibraryButton, #PlayButton, #GearButton { background-color: transparent; border: none; }
+#CueReturn { padding: 6px; }
 #SelectorButton { background-color: transparent; border: none; font-size: 24px; color: #f2f2f2; }
 #SelectorButton[displayValue="1"] { color: #2f8cff; }
 #BackButton, #LoadButton { font-size: 13px; }

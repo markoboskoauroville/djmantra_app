@@ -51,6 +51,7 @@ CmdlineArgs::CmdlineArgs()
         : m_startInFullscreen(false), // Initialize vars
           m_startAutoDJ(false),
           m_play(false),
+          m_uiTest(false),
           m_controllerDebug(false),
           m_controllerAbortOnWarning(false),
           m_developer(false),
@@ -196,6 +197,13 @@ bool CmdlineArgs::parse(const QStringList& arguments, CmdlineArgs::ParseMode mod
                                       "on the command line is loaded.")
                             : QString());
     parser.addOption(play);
+
+    const QCommandLineOption uiTest(QStringLiteral("ui-test"),
+            forUserFeedback ? QCoreApplication::translate("CmdlineArgs",
+                                      "Logs the widgets with their place on the screen and "
+                                      "every change of their controls (for UI tests).")
+                            : QString());
+    parser.addOption(uiTest);
 
     // An option with a value
     const QCommandLineOption settingsPath(QStringLiteral("settings-path"),
@@ -414,6 +422,9 @@ bool CmdlineArgs::parse(const QStringList& arguments, CmdlineArgs::ParseMode mod
 
     if (parser.isSet(play)) {
         m_play = true;
+    }
+    if (parser.isSet(uiTest)) {
+        m_uiTest = true;
     }
     if (parser.isSet(startAutoDJ)) {
         m_startAutoDJ = true;

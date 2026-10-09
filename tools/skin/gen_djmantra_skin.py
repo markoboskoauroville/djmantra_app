@@ -350,8 +350,9 @@ def cue_pair(n, width=150, height=44):
     return hbox(
         button("%s,cue_default" % grp(n), "CueSet", "SET", "%df,%df" % (width // 2, height),
                display_key="%s,cue_indicator" % grp(n), tooltip="cue_default_cue_gotoandstop"),
-        button("%s,cue_gotoandstop" % grp(n), "CueReturn", "&#8631;",
-               "%df,%df" % (width - width // 2, height), states=1),
+        button("%s,cue_gotoandstop" % grp(n), "CueReturn", "",
+               "%df,%df" % (width - width // 2, height), states=1,
+               pixmaps=[("cue_return.svg", "cue_return.svg")]),
         name="CuePair", policy="min,min")
 
 
@@ -566,7 +567,10 @@ def performance_landscape():
     middle = stack([
         ("[DJMantra],l_mixer", vbox(decks_with(centre(mixer_landscape())), policy="me,me"), 0),
         ("[DJMantra],l_waveforms", vbox(tabs("l"), waveforms(False), policy="me,me"), 0),
-        ("[DJMantra],l_pads", vbox(decks_with(centre(hbox(pads(1), pads(2), policy="me,me"))),
+        ("[DJMantra],l_pads", vbox(tabs("l"),
+                                   hbox(pads(1), hspace(12), pads(2), name="PadsArea",
+                                        policy="me,me"),
+                                   hbox(loop_row(1), loop_row(2), policy="me,min"),
                                    policy="me,me"), 0),
     ])
 
@@ -603,7 +607,8 @@ def performance_portrait():
                 vbox(bpm(2, "right"), label("BPM", "BpmCaption", align="right"), policy="me,min"),
                 hspace(6), sync(2), policy="me,min")
     row2 = hbox(cue_pair(1, 150, 42), spacer(),
-                button("[DJMantra],waveform_fullscreen", "Chevron", "&#8964;", "34f,34f"),
+                button("[DJMantra],waveform_fullscreen", "Chevron", "", "34f,34f",
+                       pixmaps=[("chevron.svg", "chevron.svg"), ("chevron.svg", "chevron.svg")]),
                 spacer(), cue_pair(2, 150, 42), policy="me,min")
     row3 = hbox(play(1, 58), hspace(12), crossfader(), hspace(12), play(2, 58), policy="me,min")
     transport = vbox(row1, vspace(6), row2, vspace(6), row3, name="Transport", policy="me,min")
@@ -632,6 +637,9 @@ def library_view():
         hspace(8),
         button("[Channel1],LoadSelectedTrack", "LoadButton", "LOAD 1", "84f,38f", states=1),
         button("[Channel2],LoadSelectedTrack", "LoadButton", "LOAD 2", "84f,38f", states=1),
+        hspace(6),
+        button("[DJMantra],show_preferences", "GearButton", "", "38f,38f", states=1,
+               pixmaps=[("gear.svg", "gear.svg")]),
         name="LibraryTop", policy="me,min")
     body = """<Splitter>
   <ObjectName>LibrarySplitter</ObjectName>
@@ -735,6 +743,7 @@ WWidget, WLabel, QLabel { color: %(WHITE)s; font-family: "Roboto", "Open Sans", 
             border-bottom: 1px solid #3a3a3e; }
 #WaveformArea { background-color: #000000; }
 #LoopRow { background-color: #2e2e31; padding: 2px; }
+#PadsArea { background-color: %(CENTER)s; padding: 8px; }
 #FullWaveforms { background-color: #000000; }
 
 #ArtistText { color: %(GREY)s; font-size: 12px; }
@@ -765,7 +774,8 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #BendButton, #IconButton { background-color: transparent; border: none; color: %(GREY)s; font-size: 22px; }
 #LoopButton { background-color: transparent; border: 2px solid #6a6a70; border-radius: 16px; font-size: 18px; }
 #LoopButton[displayValue="1"] { border-color: %(GREEN)s; color: %(GREEN)s; }
-#TabButton, #LibraryButton, #PlayButton { background-color: transparent; border: none; }
+#TabButton, #LibraryButton, #PlayButton, #GearButton { background-color: transparent; border: none; }
+#CueReturn { padding: 6px; }
 #SelectorButton { background-color: transparent; border: none; font-size: 24px; color: %(WHITE)s; }
 #SelectorButton[displayValue="1"] { color: %(BLUE)s; }
 #BackButton, #LoadButton { font-size: 13px; }
@@ -848,6 +858,19 @@ def graphics():
         '<rect width="200" height="200" rx="12" fill="#2f2f33"/>'
         '<path d="M120 50 L120 125 A20 20 0 1 1 108 106 L108 70 L80 76 L80 140 A20 20 0 1 1 68 121'
         ' L68 60 Z" fill="#5a5a60"/>')
+
+    g["cue_return.svg"] = svg(40, 40,
+        '<path d="M10 25 A11 11 0 0 1 30 18" fill="none" stroke="#ffffff" stroke-width="3.2"'
+        ' stroke-linecap="round"/><path d="M24 12 L32 18 L24 22 Z" fill="#ffffff"/>'
+        '<circle cx="31" cy="28" r="2.6" fill="#ffffff"/>')
+    g["chevron.svg"] = svg(34, 34,
+        '<circle cx="17" cy="17" r="16" fill="#4a4a4f"/>'
+        '<path d="M10 14 L17 21 L24 14" fill="none" stroke="#ffffff" stroke-width="3"'
+        ' stroke-linecap="round" stroke-linejoin="round"/>')
+    teeth = "".join('<rect x="16.5" y="3" width="5" height="8" rx="1.5" fill="#d8d8dc" '
+                    'transform="rotate(%d 19 19)"/>' % a for a in range(0, 360, 45))
+    g["gear.svg"] = svg(38, 38, teeth +
+        '<circle cx="19" cy="19" r="10" fill="#d8d8dc"/><circle cx="19" cy="19" r="4.5" fill="#0d0d0f"/>')
 
     def tab(icon_body, on):
         bg = '<rect x="6" y="1" width="48" height="32" rx="6" fill="%s"/>' % BLUE if on else ""

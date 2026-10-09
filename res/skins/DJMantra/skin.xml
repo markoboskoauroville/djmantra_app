@@ -1788,7 +1788,8 @@
 <NumberStates>1</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#8631;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/cue_return.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/cue_return.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel1],cue_gotoandstop</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -1800,10 +1801,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#8964;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/chevron.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/chevron.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Text>&#8964;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/chevron.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/chevron.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],waveform_fullscreen</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -1835,7 +1838,8 @@
 <NumberStates>1</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#8631;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/cue_return.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/cue_return.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel2],cue_gotoandstop</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -3049,118 +3053,6 @@
 
 <Children>
 <WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
-<WidgetGroup>
-<ObjectName>Deck</ObjectName>
-<Layout>horizontal</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
-<WidgetGroup>
-<ObjectName>DeckControls</ObjectName>
-<Layout>vertical</Layout>
-<Size>78f,-1me</Size>
-<SizePolicy>min,me</SizePolicy>
-
-<Children>
-<PushButton>
-<ObjectName>SyncButton</ObjectName>
-<Size>72f,36f</Size>
-<NumberStates>2</NumberStates>
-<RightClickIsPushButton>false</RightClickIsPushButton>
-<State><Number>0</Number>
-<Text>SYNC</Text><Alignment>center</Alignment>
-</State>
-<State><Number>1</Number>
-<Text>SYNC</Text><Alignment>center</Alignment>
-</State>
-<Connection><ConfigKey>[Channel1],sync_enabled</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
-</PushButton>
-<Label><ObjectName>BpmCaption</ObjectName><Text>BPM</Text><Alignment>center</Alignment></Label>
-<Number>
-  <ObjectName>BpmText</ObjectName>
-  <Size>-1me,-1min</Size>
-  <Alignment>center</Alignment>
-  <NumberOfDigits>1</NumberOfDigits>
-  <Connection><ConfigKey>[Channel1],visual_bpm</ConfigKey></Connection>
-</Number>
-<WidgetGroup><Layout>horizontal</Layout><Size>0min,4f</Size></WidgetGroup>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<SliderComposed>
-  <ObjectName>PitchFader</ObjectName>
-  <Size>44f,-1me</Size>
-  <Handle scalemode="STRETCH_ASPECT">skins:DJMantra/svg/pitch_handle.svg</Handle>
-  <Slider scalemode="STRETCH">skins:DJMantra/svg/pitch_track.svg</Slider>
-  <Horizontal>false</Horizontal>
-  <Connection><ConfigKey>[Channel1],rate</ConfigKey></Connection>
-</SliderComposed>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-</Children></WidgetGroup>
-</Children></WidgetGroup>
-<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
-<WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
-<CoverArt>
-  <ObjectName>DeckCover</ObjectName>
-  <Size>-1me,-1me</Size>
-  <MinimumSize>120,120</MinimumSize>
-  <Group>[Channel1]</Group>
-  <DefaultCover>skins:DJMantra/svg/cover_default.svg</DefaultCover>
-</CoverArt>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>min,min</SizePolicy>
-
-<Children>
-<PushButton>
-<ObjectName>BendButton</ObjectName>
-<Size>36f,30f</Size>
-<NumberStates>1</NumberStates>
-<RightClickIsPushButton>false</RightClickIsPushButton>
-<State><Number>0</Number>
-<Text>&#8722;</Text><Alignment>center</Alignment>
-</State>
-<Connection><ConfigKey>[Channel1],rate_temp_down</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
-</PushButton>
-<PushButton>
-<ObjectName>BendButton</ObjectName>
-<Size>36f,30f</Size>
-<NumberStates>1</NumberStates>
-<RightClickIsPushButton>false</RightClickIsPushButton>
-<State><Number>0</Number>
-<Text>+</Text><Alignment>center</Alignment>
-</State>
-<Connection><ConfigKey>[Channel1],rate_temp_up</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
-</PushButton>
-</Children></WidgetGroup>
-</Children></WidgetGroup>
-</Children></WidgetGroup>
-</Children></WidgetGroup>
-<WidgetGroup>
-<ObjectName>Centre</ObjectName>
-<Layout>vertical</Layout>
-<Size>210f,-1me</Size>
-<SizePolicy>min,me</SizePolicy>
-
-<Children>
-<WidgetGroup>
 <ObjectName>TabRow</ObjectName>
 <Layout>horizontal</Layout>
 <SizePolicy>me,max</SizePolicy>
@@ -3215,6 +3107,7 @@
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
 <WidgetGroup>
+<ObjectName>PadsArea</ObjectName>
 <Layout>horizontal</Layout>
 <SizePolicy>me,me</SizePolicy>
 
@@ -3327,6 +3220,7 @@
 </HotcueButton>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
 <ObjectName>PadsDeck</ObjectName>
 <Layout>vertical</Layout>
@@ -3436,106 +3330,150 @@
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
-</Children></WidgetGroup>
-<WidgetGroup>
-<ObjectName>Deck</ObjectName>
-<Layout>horizontal</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
-<WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
-<CoverArt>
-  <ObjectName>DeckCover</ObjectName>
-  <Size>-1me,-1me</Size>
-  <MinimumSize>120,120</MinimumSize>
-  <Group>[Channel2]</Group>
-  <DefaultCover>skins:DJMantra/svg/cover_default.svg</DefaultCover>
-</CoverArt>
 <WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
 <WidgetGroup>
+<ObjectName>LoopRow</ObjectName>
 <Layout>horizontal</Layout>
-<SizePolicy>min,min</SizePolicy>
+<SizePolicy>me,min</SizePolicy>
 
 <Children>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 <PushButton>
-<ObjectName>BendButton</ObjectName>
-<Size>36f,30f</Size>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
 <NumberStates>1</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
 <Text>&#8722;</Text><Alignment>center</Alignment>
 </State>
-<Connection><ConfigKey>[Channel2],rate_temp_down</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+<Connection><ConfigKey>[Channel1],waveform_zoom_down</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
 <PushButton>
-<ObjectName>BendButton</ObjectName>
-<Size>36f,30f</Size>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&lt;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel1],loop_halve</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<PushButton>
+<ObjectName>LoopButton</ObjectName>
+<Size>52f,34f</Size>
+<NumberStates>2</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&#10227;</Text><Alignment>center</Alignment>
+</State>
+<State><Number>1</Number>
+<Text>&#10227;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel1],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+<Connection><ConfigKey>[Channel1],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
+</PushButton>
+<Number>
+  <ObjectName>LoopSize</ObjectName>
+  <Size>26f,34f</Size>
+  <Alignment>center</Alignment>
+  <NumberOfDigits>0</NumberOfDigits>
+  <Connection><ConfigKey>[Channel1],beatloop_size</ConfigKey></Connection>
+</Number>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&gt;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel1],loop_double</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
 <NumberStates>1</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
 <Text>+</Text><Alignment>center</Alignment>
 </State>
-<Connection><ConfigKey>[Channel2],rate_temp_up</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+<Connection><ConfigKey>[Channel1],waveform_zoom_up</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
-</Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
-</Children></WidgetGroup>
-<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
 <WidgetGroup>
-<ObjectName>DeckControls</ObjectName>
-<Layout>vertical</Layout>
-<Size>78f,-1me</Size>
-<SizePolicy>min,me</SizePolicy>
+<ObjectName>LoopRow</ObjectName>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
 
 <Children>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 <PushButton>
-<ObjectName>SyncButton</ObjectName>
-<Size>72f,36f</Size>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&#8722;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel2],waveform_zoom_down</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&lt;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel2],loop_halve</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<PushButton>
+<ObjectName>LoopButton</ObjectName>
+<Size>52f,34f</Size>
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>SYNC</Text><Alignment>center</Alignment>
+<Text>&#10227;</Text><Alignment>center</Alignment>
 </State>
 <State><Number>1</Number>
-<Text>SYNC</Text><Alignment>center</Alignment>
+<Text>&#10227;</Text><Alignment>center</Alignment>
 </State>
-<Connection><ConfigKey>[Channel2],sync_enabled</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+<Connection><ConfigKey>[Channel2],beatloop_activate</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+<Connection><ConfigKey>[Channel2],loop_enabled</ConfigKey><ConnectControl>false</ConnectControl></Connection>
 </PushButton>
-<Label><ObjectName>BpmCaption</ObjectName><Text>BPM</Text><Alignment>center</Alignment></Label>
 <Number>
-  <ObjectName>BpmText</ObjectName>
-  <Size>-1me,-1min</Size>
+  <ObjectName>LoopSize</ObjectName>
+  <Size>26f,34f</Size>
   <Alignment>center</Alignment>
-  <NumberOfDigits>1</NumberOfDigits>
-  <Connection><ConfigKey>[Channel2],visual_bpm</ConfigKey></Connection>
+  <NumberOfDigits>0</NumberOfDigits>
+  <Connection><ConfigKey>[Channel2],beatloop_size</ConfigKey></Connection>
 </Number>
-<WidgetGroup><Layout>horizontal</Layout><Size>0min,4f</Size></WidgetGroup>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>&gt;</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel2],loop_double</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<PushButton>
+<ObjectName>IconButton</ObjectName>
+<Size>34f,34f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Text>+</Text><Alignment>center</Alignment>
+</State>
+<Connection><ConfigKey>[Channel2],waveform_zoom_up</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<SliderComposed>
-  <ObjectName>PitchFader</ObjectName>
-  <Size>44f,-1me</Size>
-  <Handle scalemode="STRETCH_ASPECT">skins:DJMantra/svg/pitch_handle.svg</Handle>
-  <Slider scalemode="STRETCH">skins:DJMantra/svg/pitch_track.svg</Slider>
-  <Horizontal>false</Horizontal>
-  <Connection><ConfigKey>[Channel2],rate</ConfigKey></Connection>
-</SliderComposed>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-</Children></WidgetGroup>
-</Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -3596,7 +3534,8 @@
 <NumberStates>1</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#8631;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/cue_return.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/cue_return.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel1],cue_gotoandstop</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -3674,7 +3613,8 @@
 <NumberStates>1</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Text>&#8631;</Text><Alignment>center</Alignment>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/cue_return.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/cue_return.svg</Pressed>
 </State>
 <Connection><ConfigKey>[Channel2],cue_gotoandstop</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -3753,6 +3693,18 @@
 <Text>LOAD 2</Text><Alignment>center</Alignment>
 </State>
 <Connection><ConfigKey>[Channel2],LoadSelectedTrack</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
+<PushButton>
+<ObjectName>GearButton</ObjectName>
+<Size>38f,38f</Size>
+<NumberStates>1</NumberStates>
+<RightClickIsPushButton>false</RightClickIsPushButton>
+<State><Number>0</Number>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/gear.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/gear.svg</Pressed>
+</State>
+<Connection><ConfigKey>[DJMantra],show_preferences</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
 </Children></WidgetGroup>
 <Splitter>

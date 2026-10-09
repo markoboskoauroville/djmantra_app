@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- DJ Mantra: no status bar (more room for the decks); the action bar stays,
-     as it holds the app menu (Preferences, sound settings) on Android. The
-     display cutout is used in landscape. -->
+<!-- DJ Mantra: no action bar and no status bar (the skin uses the whole
+     screen; Preferences open from the gear in the library view). The system
+     bars are hidden at runtime (WindowBridge.immersive); the display cutout
+     is used in both orientations. -->
 <resources>
-    <style name="DJMantraTheme" parent="@android:style/Theme.DeviceDefault.DayNight">
+    <style name="DJMantraTheme" parent="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/black</item>
     </style>
 </resources>

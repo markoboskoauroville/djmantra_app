@@ -38,6 +38,11 @@ class CmdlineArgs final {
     bool getPlay() const {
         return m_play;
     }
+    // DJ Mantra: log the skin's widgets with their place on screen, and every
+    // change of the controls they show (tools/android/ui_test.py)
+    bool getUiTest() const {
+        return m_uiTest;
+    }
     bool getControllerDebug() const {
         return m_controllerDebug;
     }
@@ -99,6 +104,7 @@ class CmdlineArgs final {
     bool m_startInFullscreen;       // Start in fullscreen mode
     bool m_startAutoDJ;
     bool m_play;
+    bool m_uiTest;
     bool m_controllerDebug;
     bool m_controllerAbortOnWarning; // Controller Engine will be stricter
     bool m_developer; // Developer Mode

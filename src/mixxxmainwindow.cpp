@@ -28,6 +28,7 @@
 #include "dialog/dlgabout.h"
 #include "dialog/dlgdevelopertools.h"
 #include "dialog/dlgkeywheel.h"
+#include "control/controlpushbutton.h"
 #include "moc_mixxxmainwindow.cpp"
 #include "preferences/dialog/dlgpreferences.h"
 #ifdef __BROADCAST__
@@ -54,7 +55,11 @@
 #include "util/sandbox.h"
 #include "util/scopedoverridecursor.h"
 #include "util/timer.h"
+#include "util/uitestprobe.h"
 #include "util/versionstore.h"
+#ifdef __ANDROID_PORT__
+#include "util/androidwindow.h"
+#endif
 #include "waveform/guitick.h"
 #include "waveform/sharedglcontext.h"
 #include "waveform/visualsmanager.h"
@@ -120,6 +125,20 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
         }
     }
 #endif
+    // DJ Mantra: Preferences from a skin button (the phone has no menu bar)
+    {
+        auto* pShowPreferences = new ControlPushButton(
+                ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("show_preferences")));
+        pShowPreferences->setParent(this);
+        connect(pShowPreferences,
+                &ControlObject::valueChanged,
+                this,
+                [this](double value) {
+                    if (value > 0) {
+                        slotOptionsPreferences();
+                    }
+                });
+    }
     // These depend on the settings
 #ifdef __LINUX__
     // If the desktop features a global menubar and we'll go fullscreen during
@@ -473,7 +492,11 @@ void MixxxMainWindow::initialize() {
     // The Android smoke test in CI waits for this line
     qInfo() << "DJ Mantra main window ready, full screen:" << isFullScreen()
             << "size" << size();
+    if (CmdlineArgs::Instance().getUiTest()) {
+        new djmantra::UiTestProbe(this);
+    }
 #ifdef __ANDROID_PORT__
+    new djmantra::AndroidWindow(this);
     // Reading USB drives needs "All files access": asked over the main
     // window, not during the startup
     QTimer::singleShot(0, this, [] { djmantra::ExternalDrives::requestAllFilesAccess(); });

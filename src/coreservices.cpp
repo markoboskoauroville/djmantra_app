@@ -12,6 +12,7 @@
 #endif
 #include "control/controlindicatortimer.h"
 #include "control/controlobject.h"
+#include "control/controlproxy.h"
 #include "controllers/controllermanager.h"
 #include "controllers/keyboard/keyboardeventfilter.h"
 #include "database/mixxxdb.h"
@@ -27,7 +28,6 @@
 #include "library/trackcollection.h"
 #include "library/trackcollectionmanager.h"
 #include "mixer/playerinfo.h"
-#include "mixer/deck.h"
 #include "mixer/playermanager.h"
 #include "moc_coreservices.cpp"
 #include "preferences/dialog/dlgpreferences.h"
@@ -38,7 +38,6 @@
 #include "skin/skincontrols.h"
 #include "soundio/soundmanager.h"
 #include "sources/soundsourceproxy.h"
-#include "track/track.h"
 #include "util/clipboard.h"
 #include "util/db/dbconnectionpooled.h"
 #include "util/font.h"
@@ -717,18 +716,19 @@ void CoreServices::initialize(QApplication* pApp) {
     for (int i = 0; i < numTracks; ++i) {
         if (SoundSourceProxy::isFileNameSupported(musicFiles.at(i))) {
             if (i == 0 && m_cmdlineArgs.getPlay()) {
-                Deck* pDeck = m_pPlayerManager->getDeck(1);
-                auto pConnection = std::make_shared<QMetaObject::Connection>();
-                *pConnection = connect(pDeck,
-                        &BaseTrackPlayer::newTrackLoaded,
-                        this,
-                        [pConnection](TrackPointer pTrack) {
-                            QObject::disconnect(*pConnection);
-                            ControlObject::set(ConfigKey(QStringLiteral("[Channel1]"),
-                                                       QStringLiteral("play")),
-                                    1.0);
-                            qInfo() << "Deck 1 playing" << pTrack->getLocation();
-                        });
+                // Log once when deck 1 really plays (the device tests wait for it)
+                auto* pPlay = new ControlProxy(QStringLiteral("[Channel1]"),
+                        QStringLiteral("play"),
+                        this);
+                pPlay->connectValueChanged(this, [pPlay](double value) {
+                    if (value > 0) {
+                        qInfo() << "Deck 1 playing";
+                        pPlay->deleteLater();
+                    }
+                });
+                m_pPlayerManager->slotLoadLocationToPlayer(
+                        musicFiles.at(i), QStringLiteral("[Channel1]"), true);
+                continue;
             }
             m_pPlayerManager->slotLoadToDeck(musicFiles.at(i), i + 1);
         }
