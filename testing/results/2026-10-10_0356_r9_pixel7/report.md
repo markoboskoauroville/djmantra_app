@@ -49,3 +49,15 @@ app under test: a photo means switching away from DJ Mantra.
 
 The Pixel 7 lock is removed (Marko, 10.10.2026: one session). Phone left in portrait (rotation locked; before:
 `screens/rotation-before.txt`).
+
+## Step F: the phone's Music files (`music-files.md`, `music-files.json`, script `music_test.py`)
+
+226 files (180 m4a, 39 opus, 6 mp3, 1 mp4), each copied to /sdcard/Music/.djtest/test.<ext> and started with --play.
+**208 played with sound on BlackHole.**
+
+8. **MP3 does not open at all: 6 of 6.** `SoundSourceProxy - Giving up to open file ".../test.mp3" after 2
+   unsuccessful attempts`, no engine level, BlackHole -120 dBFS. The app still logs "Deck 1 playing" for it, so
+   that line alone does not mean sound.
+9. m4a 171/180, opus 36/39, mp4 1/1 above -60 dBFS. Of the rest, all but two have an engine peak (quiet intros,
+   -60 to -86 dBFS in the 3 s window): not failures. #153 (Nahko - Budding Trees.m4a) and #208 (Shaman's Dream -
+   Moonlight Saptah.m4a): no engine level line and no error; worth a look.

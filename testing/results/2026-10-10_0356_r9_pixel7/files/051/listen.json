@@ -1,0 +1,8 @@
+{
+ "rate": 48000,
+ "seconds": 2.42,
+ "level_dbfs": -30.8,
+ "peak_dbfs": -16.9,
+ "strongest_hz": 764.5,
+ "tone_over_noise_db": 61.4
+}
