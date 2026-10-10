@@ -1,5 +1,6 @@
 #include "util/androidwindow.h"
 
+#include <QApplication>
 #include <QEvent>
 #include <QTimer>
 #include <QWidget>
@@ -24,6 +25,13 @@ AndroidWindow::AndroidWindow(QWidget* pWindow)
     auto* pTimer = new QTimer(this);
     connect(pTimer, &QTimer::timeout, this, &AndroidWindow::followSystemBars);
     pTimer->start(300);
+    // Android left stale pixels where only a part of the window was repainted
+    // (round 10: pads after a mode change, the One Deck time and header):
+    // the whole window is repainted after every touch and a few times a second
+    auto* pRepaint = new QTimer(this);
+    connect(pRepaint, &QTimer::timeout, m_pWindow, qOverload<>(&QWidget::update));
+    pRepaint->start(400);
+    qApp->installEventFilter(this);
 #endif
 }
 
@@ -66,9 +74,12 @@ void AndroidWindow::hideSystemBars() {
 }
 
 bool AndroidWindow::eventFilter(QObject* pObject, QEvent* pEvent) {
-    if (pObject == m_pWindow &&
-            (pEvent->type() == QEvent::Resize ||
-                    pEvent->type() == QEvent::WindowActivate)) {
+    if (pEvent->type() == QEvent::MouseButtonRelease && pObject->isWidgetType()) {
+        QTimer::singleShot(60, m_pWindow, qOverload<>(&QWidget::update));
+    }
+    // Only a rotation hides the bars again: a reactivated window does not
+    // (round 10: the bars a swipe brought were hidden at once again)
+    if (pObject == m_pWindow && pEvent->type() == QEvent::Resize) {
         hideSystemBars();
         if (pEvent->type() == QEvent::Resize) {
             // Repaint after the rotation has settled

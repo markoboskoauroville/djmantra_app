@@ -91,9 +91,15 @@ public final class WindowBridge {
         if (insets == null) {
             return;
         }
-        Insets bars = insets.getInsets(WindowInsets.Type.systemBars());
+        // The bars' full room while they are visible, nothing while hidden:
+        // not the animated value (round 10: the margins went to 0 while the
+        // bar was still on screen)
+        final boolean visible = insets.isVisible(WindowInsets.Type.systemBars());
+        Insets bars = visible
+                ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+                : Insets.NONE;
         sInsets = new int[] {bars.left, bars.top, bars.right, bars.bottom};
-        if (!insets.isVisible(WindowInsets.Type.systemBars())) {
+        if (!visible) {
             sShownSince = 0;
             return;
         }

@@ -410,6 +410,10 @@ QStringList TrackPicker::songsIn(const QString& folder) const {
 }
 
 void TrackPicker::playNext(int direction) {
+    // the other One Deck list (portrait / landscape) may have played the last song
+    m_current = m_pConfig->getValue(
+            ConfigKey(kGroup, QStringLiteral("picker_current_%1").arg(m_embedded ? 1 : 0)),
+            m_current);
     const QString folder = m_current.isEmpty() ? m_path : QFileInfo(m_current).path();
     if (folder.isEmpty()) {
         return;
@@ -508,6 +512,10 @@ void TrackPicker::goUp() {
 }
 
 void TrackPicker::refresh() {
+    if (m_embedded) {
+        m_current = m_pConfig->getValue(
+                ConfigKey(kGroup, QStringLiteral("picker_current_1")), m_current);
+    }
     m_pList->clear();
     QString empty;
     auto addItem = [this](const QString& name, const QString& path, int kind, const QString& sub) {

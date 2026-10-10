@@ -774,9 +774,15 @@ def one_deck_view():
   <Connection><ConfigKey>[DJMantra],one_deck_continuous</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>""",
         name="Transport", policy="me,min")
-    return vbox(top, overview(1, 30), waveform, transport,
-                vbox(name="OneDeckList", policy="me,me"),
-                name="OneDeck", policy="me,me")
+    portrait = vbox(top, overview(1, 30), waveform, transport,
+                    vbox(name="OneDeckList", policy="me,me"),
+                    name="OneDeck", policy="me,me", maxsize="699,-1")
+    # landscape: the player on the left, the songs on the right
+    player = vbox(top, overview(1, 26), vbox(visual(1, False), policy="me,me"), transport,
+                  policy="me,me")
+    landscape = hbox(player, vbox(name="OneDeckList", policy="me,me", size="380f,-1me"),
+                     name="OneDeck", policy="me,me", minsize="700,0")
+    return size_aware(portrait, landscape)
 
 
 def size_aware(portrait, landscape):
@@ -1013,14 +1019,18 @@ def graphics():
     g["play_off.svg"] = transport_button(tri, BUTTON)
     g["play_on.svg"] = transport_button(bars, BUTTON)
     g["play_pressed.svg"] = transport_button(tri, PRESSED)
-    # the menu button: "dj" in the heavy, squarish rounded letters of the
-    # controller's logo (rounded-rectangle bowl, flat j hook, square dot)
-    g["dj_logo.svg"] = svg(36, 38,
-        '<path fill-rule="evenodd" fill="#ffffff" d="M8 10h14v20H8a6 6 0 0 1-6-6v-8a6 6 0 0 1 6-6z'
-        'M10 16a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h6v-8z"/>'
-        '<rect x="15" y="1" width="7" height="29" rx="1.5" fill="#ffffff"/>'
-        '<path fill="#ffffff" d="M26 10h7v22a5 5 0 0 1-5 5h-6v-6h3a1 1 0 0 0 1-1z"/>'
-        '<rect x="26" y="1" width="7" height="6" rx="1.5" fill="#ffffff"/>')
+    # the menu button and the app's "dj" mark (after Marko's model, changed a
+    # little): a heavy lowercase "dj", a round bowl, a tall d stem, a j with a
+    # round dot and a hook under the d, white on a black rounded tile
+    g["dj_logo.svg"] = svg(40, 40,
+        '<rect x="0.5" y="0.5" width="39" height="39" rx="9" fill="#000000" '
+        'stroke="#2e3133" stroke-width="1"/>'
+        '<g transform="translate(2,-1)" fill="none" stroke="#ffffff" stroke-width="4.2" '
+        'stroke-linecap="round" stroke-linejoin="round">'
+        '<circle cx="13.6" cy="24.6" r="5.4"/>'
+        '<path d="M19.4 9.6v20.9"/>'
+        '<path d="M28 19.4v12.4a4 4 0 0 1-4 4h-0.6"/></g>'
+        '<circle cx="30" cy="12.6" r="2.5" fill="#ffffff"/>')
     # the start screen: the app's icon (tools/android/gen_launcher_icon.py)
     import importlib.util
     spec = importlib.util.spec_from_file_location(

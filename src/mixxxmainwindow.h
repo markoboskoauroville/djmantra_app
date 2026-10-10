@@ -130,7 +130,9 @@ class MixxxMainWindow : public QMainWindow {
     QWidget* m_pCentralWidget;
     LaunchImage* m_pLaunchImage;
     // DJ Mantra's One Deck: the song list in the skin
-    QPointer<djmantra::TrackPicker> m_pOneDeckList;
+    QList<QPointer<djmantra::TrackPicker>> m_oneDeckLists; // portrait, landscape
+    /// The One Deck song list on screen now (null if none)
+    djmantra::TrackPicker* oneDeckList() const;
 #ifndef __APPLE__
     Qt::WindowStates m_prevState;
 #endif

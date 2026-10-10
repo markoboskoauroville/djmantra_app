@@ -208,19 +208,25 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
         // One Deck (djay's One Deck: listening to the library): the song list
         // under the waveform, built into the skin by loadConfiguredSkin()
         pushButton("one_deck_folders", [this] {
-            if (m_pOneDeckList) {
-                m_pOneDeckList->showFolders();
+            if (auto* pList = oneDeckList()) {
+                pList->showFolders();
             }
         });
+        // After the button's own signal has finished, never inside it (round
+        // 10 on the Pixel 7: the app froze on a tap on next while a song played)
         pushButton("one_deck_next", [this] {
-            if (m_pOneDeckList) {
-                m_pOneDeckList->playNext(1);
-            }
+            QTimer::singleShot(0, this, [this] {
+                if (auto* pList = oneDeckList()) {
+                    pList->playNext(1);
+                }
+            });
         });
         pushButton("one_deck_prev", [this] {
-            if (m_pOneDeckList) {
-                m_pOneDeckList->playNext(-1);
-            }
+            QTimer::singleShot(0, this, [this] {
+                if (auto* pList = oneDeckList()) {
+                    pList->playNext(-1);
+                }
+            });
         });
         // At the end of a song: the next one in its folder (CONTINUOUS), or
         // nothing (STOP AFTER the current song): [DJMantra],one_deck_continuous
@@ -233,10 +239,15 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
                             QStringLiteral("one_deck_continuous")),
                     ControlFlag::NoAssertIfMissing | ControlFlag::NoWarnIfMissing);
             const bool continuous = !pContinuous || pContinuous->get() > 0;
-            if (playing == 0 && continuous && pPosition->get() >= 0.995 && m_pOneDeckList &&
+            if (playing == 0 && continuous && pPosition->get() >= 0.995 &&
                     ControlObject::get(ConfigKey(QStringLiteral("[DJMantra]"),
                             QStringLiteral("one_deck"))) > 0) {
-                m_pOneDeckList->playNext(1);
+                // after this control's signal, as for the next button
+                QTimer::singleShot(0, this, [this] {
+                    if (auto* pList = oneDeckList()) {
+                        pList->playNext(1);
+                    }
+                });
             }
         });
         // The controller's buttons 1 and 2 next to the browser: a deck's songs
@@ -1489,23 +1500,33 @@ bool MixxxMainWindow::loadConfiguredSkin() {
     m_pCentralWidget = m_pSkinLoader->loadConfiguredSkin(this,
             &m_skinCreatedControls,
             m_pCoreServices.get());
-    // DJ Mantra's One Deck: the song list into its place in the skin
+    // DJ Mantra's One Deck: a song list into each of its places in the skin
+    // (portrait and landscape)
+    m_oneDeckLists.clear();
     if (m_pCentralWidget) {
-        if (auto* pHost = m_pCentralWidget->findChild<QWidget*>(QStringLiteral("OneDeckList"))) {
-            m_pOneDeckList = new djmantra::TrackPicker(
+        const auto hosts = m_pCentralWidget->findChildren<QWidget*>(QStringLiteral("OneDeckList"));
+        for (QWidget* pHost : hosts) {
+            auto* pList = new djmantra::TrackPicker(
                     m_pCoreServices->getSettings(), pHost, QStringLiteral("[Channel1]"), true);
             if (!pHost->layout()) {
                 new QVBoxLayout(pHost);
             }
             pHost->layout()->setContentsMargins(0, 0, 0, 0);
-            pHost->layout()->addWidget(m_pOneDeckList);
-            connect(m_pOneDeckList,
+            pHost->layout()->addWidget(pList);
+            m_oneDeckLists.append(pList);
+            connect(pList,
                     &djmantra::TrackPicker::loadRequested,
                     this,
                     [this](const QString& location, const QString& group) {
-                        // a tap plays the song at once
-                        m_pCoreServices->getPlayerManager()->slotLoadLocationToPlayer(
-                                location, group, true);
+                        // A tap plays the song at once. A playing deck is stopped
+                        // first, and the song loads on the next turn of the event
+                        // loop, as for a stopped deck (round 10: loading into the
+                        // playing deck left it stuck mid-load)
+                        ControlObject::set(ConfigKey(group, QStringLiteral("play")), 0);
+                        QTimer::singleShot(0, this, [this, location, group] {
+                            m_pCoreServices->getPlayerManager()->slotLoadLocationToPlayer(
+                                    location, group, true);
+                        });
                     });
         }
     }
@@ -1514,6 +1535,15 @@ bool MixxxMainWindow::loadConfiguredSkin() {
     }
     emit skinLoaded();
     return m_pCentralWidget != nullptr;
+}
+
+djmantra::TrackPicker* MixxxMainWindow::oneDeckList() const {
+    for (const auto& pList : m_oneDeckLists) {
+        if (pList && pList->isVisible()) {
+            return pList;
+        }
+    }
+    return m_oneDeckLists.isEmpty() ? nullptr : m_oneDeckLists.first().data();
 }
 
 /// Try to load default styles that can be overridden by skins
