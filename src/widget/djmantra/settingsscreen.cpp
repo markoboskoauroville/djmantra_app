@@ -12,6 +12,7 @@
 #include <QToolButton>
 #include <QUrl>
 #include <QVBoxLayout>
+#include <QtDebug>
 
 #include "control/controlproxy.h"
 #include "util/androidwindow.h"
@@ -59,6 +60,7 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
         pSlider->setValue(qRound(m_pMainGain->getParameter() * 1000));
         connect(pSlider, &QSlider::valueChanged, this, [this](int value) {
             m_pMainGain->setParameter(value / 1000.0);
+            qInfo().noquote() << "Settings main gain" << m_pMainGain->get();
         });
     }
     pVolumeLayout->addWidget(iconLabel(icons::kVolumeDown, 24, pVolume));
@@ -75,6 +77,7 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
         pSplit->setChecked(m_pHeadSplit->get() > 0);
         connect(pSplit, &QAbstractButton::toggled, this, [this](bool on) {
             m_pHeadSplit->set(on ? 1.0 : 0.0);
+            qInfo().noquote() << "Settings split output" << m_pHeadSplit->get();
         });
     }
 

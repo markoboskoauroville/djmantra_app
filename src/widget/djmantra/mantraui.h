@@ -5,6 +5,7 @@
 #include <QIcon>
 #include <QWidget>
 #include <functional>
+#include <memory>
 
 class QLabel;
 class QPainter;
@@ -60,6 +61,36 @@ class Switch : public QAbstractButton {
 
   protected:
     void paintEvent(QPaintEvent* pEvent) override;
+};
+
+/// Android's bottom sheet of actions (instead of QMenu: Qt's popup menus
+/// lose the touch on Android, round 8: "Load to Deck 2" did nothing).
+/// Fill it like a QMenu, then show() it over the window; a tap on an item
+/// closes the sheet and runs the item's action.
+class Sheet {
+  public:
+    struct Item {
+        QString text;
+        std::function<void()> action;
+        bool checkable = false;
+        bool checked = false;
+        void setCheckable(bool on) {
+            checkable = on;
+        }
+        void setChecked(bool on) {
+            checked = on;
+        }
+    };
+    Item* addAction(const QString& text, QObject* pContext, std::function<void()> action);
+    void addSeparator() {
+    }
+    bool isEmpty() const {
+        return m_items.isEmpty();
+    }
+    void show(QWidget* pWindow, const QString& title = QString());
+
+  private:
+    QList<std::shared_ptr<Item>> m_items;
 };
 
 /// A full screen page over the main window: ← and the title at the top,

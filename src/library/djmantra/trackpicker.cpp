@@ -12,7 +12,6 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <QListWidget>
-#include <QMenu>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
@@ -29,6 +28,7 @@
 #include "moc_trackpicker.cpp"
 #include "sources/soundsourceproxy.h"
 #include "util/androidwindow.h"
+#include "widget/djmantra/mantraui.h"
 
 namespace djmantra {
 
@@ -569,7 +569,7 @@ void TrackPicker::itemTapped(QListWidgetItem* pItem) {
 void TrackPicker::itemMenu(QListWidgetItem* pItem) {
     const QString path = pItem->data(kPathRole).toString();
     const int kind = pItem->data(kKindRole).toInt();
-    QMenu menu(this);
+    ui::Sheet menu;
     if (kind == KindRoot) {
         menu.addAction(tr("Remove from Folders"), this, [this, path] {
             QStringList folders = list(kRootsKey);
@@ -619,9 +619,7 @@ void TrackPicker::itemMenu(QListWidgetItem* pItem) {
         }
     }
     if (!menu.isEmpty()) {
-        menu.exec(m_pList->viewport()->mapToGlobal(
-                QPoint(qMax(0, m_pList->viewport()->width() - 260),
-                        m_pList->visualItemRect(pItem).center().y())));
+        menu.show(m_pWindow, pItem->text());
     }
 }
 
@@ -654,7 +652,7 @@ void TrackPicker::addFolder() {
 }
 
 void TrackPicker::showSourceMenu() {
-    QMenu menu(this);
+    ui::Sheet menu;
     menu.addAction(tr("Folders"), this, [this] { showFolder(QString()); });
     QStringList storages;
 #ifdef Q_OS_ANDROID
@@ -677,11 +675,11 @@ void TrackPicker::showSourceMenu() {
                 : QFileInfo(storage).fileName();
         menu.addAction(name, this, [this, storage] { showFolder(storage); });
     }
-    menu.exec(m_pSource->mapToGlobal(QPoint(0, m_pSource->height())));
+    menu.show(m_pWindow, tr("Show"));
 }
 
 void TrackPicker::showMoreMenu() {
-    QMenu menu(this);
+    ui::Sheet menu;
     auto* pByName = menu.addAction(tr("Sort by name"), this, [this] {
         m_newestFirst = false;
         refresh();
@@ -707,16 +705,28 @@ void TrackPicker::showMoreMenu() {
             refresh();
         });
     }
-    menu.exec(m_pMore->mapToGlobal(QPoint(m_pMore->width() - 220, m_pMore->height())));
+    menu.show(m_pWindow);
 }
 
 QStringList TrackPicker::roots() const {
     QStringList folders = list(kRootsKey);
     if (folders.isEmpty()) {
         // First start: the phone's music and download folders
-        for (const auto location :
-                {QStandardPaths::MusicLocation, QStandardPaths::DownloadLocation}) {
-            const QString path = QStandardPaths::writableLocation(location);
+#ifdef Q_OS_ANDROID
+        // The shared folders every music app sees. QStandardPaths gives the
+        // app's own private Music folder (round 8: "Music" held only Mixxx's
+        // Recordings, the user's songs in /sdcard/Music were not offered).
+        const QStringList defaults = {
+                QStringLiteral("/storage/emulated/0/Music"),
+                QStringLiteral("/storage/emulated/0/Download"),
+        };
+#else
+        const QStringList defaults = {
+                QStandardPaths::writableLocation(QStandardPaths::MusicLocation),
+                QStandardPaths::writableLocation(QStandardPaths::DownloadLocation),
+        };
+#endif
+        for (const QString& path : defaults) {
             if (!path.isEmpty() && QFileInfo(path).isDir() && !folders.contains(path)) {
                 folders.append(path);
             }

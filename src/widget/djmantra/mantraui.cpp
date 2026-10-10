@@ -8,8 +8,10 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QScroller>
 #include <QSvgRenderer>
+#include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -185,6 +187,129 @@ class IconLabel : public QWidget {
 
 } // namespace
 
+namespace {
+
+/// The sheet's widget: the window dimmed, the items in a panel at the bottom
+class SheetWidget : public QWidget {
+  public:
+    SheetWidget(QWidget* pWindow,
+            const QString& title,
+            const QList<std::shared_ptr<Sheet::Item>>& items)
+            : QWidget(pWindow),
+              m_pWindow(pWindow) {
+        setAttribute(Qt::WA_DeleteOnClose);
+        setFocusPolicy(Qt::StrongFocus);
+        setStyleSheet(QStringLiteral(
+                "QLabel { color: %1; background: transparent; font-size: 18px; }"
+                "QLabel#SheetTitle { color: %2; font-size: 15px; }")
+                        .arg(kText.name(), kSubText.name()));
+        m_pPanel = new QWidget(this);
+        auto* pLayout = new QVBoxLayout(m_pPanel);
+        pLayout->setContentsMargins(0, 18, 0, 18);
+        pLayout->setSpacing(0);
+        if (!title.isEmpty()) {
+            auto* pTitle = new QLabel(title, m_pPanel);
+            pTitle->setObjectName(QStringLiteral("SheetTitle"));
+            pTitle->setContentsMargins(24, 0, 24, 10);
+            pLayout->addWidget(pTitle);
+        }
+        for (const auto& pItem : items) {
+            const auto action = pItem->action;
+            auto* pRow = new Row(
+                    [this, action] {
+                        close();
+                        if (action) {
+                            // after the sheet is gone (the action may open a screen)
+                            QTimer::singleShot(0, m_pWindow, action);
+                        }
+                    },
+                    m_pPanel);
+            auto* pRowLayout = new QHBoxLayout(pRow);
+            pRowLayout->setContentsMargins(24, 16, 24, 16);
+            auto* pText = new QLabel(pItem->text, pRow);
+            pText->setAttribute(Qt::WA_TransparentForMouseEvents);
+            pRowLayout->addWidget(pText, 1);
+            if (pItem->checkable && pItem->checked) {
+                auto* pCheck = new QLabel(QStringLiteral("✓"), pRow);
+                pCheck->setStyleSheet(QStringLiteral("color: %1;").arg(kAccent.name()));
+                pCheck->setAttribute(Qt::WA_TransparentForMouseEvents);
+                pRowLayout->addWidget(pCheck);
+            }
+            pLayout->addWidget(pRow);
+        }
+        m_pWindow->installEventFilter(this);
+        place();
+        // Android shows the system bars again over a new screen (round 7)
+        AndroidWindow::hideSystemBars();
+        show();
+        raise();
+        setFocus();
+    }
+
+  protected:
+    bool eventFilter(QObject* pObject, QEvent* pEvent) override {
+        if (pObject == m_pWindow && pEvent->type() == QEvent::Resize) {
+            place();
+        }
+        return QWidget::eventFilter(pObject, pEvent);
+    }
+    void mousePressEvent(QMouseEvent* pEvent) override {
+        pEvent->accept();
+    }
+    void mouseReleaseEvent(QMouseEvent* pEvent) override {
+        // a tap above the panel closes the sheet
+        if (!m_pPanel->geometry().contains(pEvent->position().toPoint())) {
+            close();
+        }
+    }
+    void keyPressEvent(QKeyEvent* pEvent) override {
+        if (pEvent->key() == Qt::Key_Back || pEvent->key() == Qt::Key_Escape) {
+            close();
+            pEvent->accept();
+            return;
+        }
+        QWidget::keyPressEvent(pEvent);
+    }
+    void paintEvent(QPaintEvent*) override {
+        QPainter painter(this);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.fillRect(rect(), QColor(0, 0, 0, 140));
+        QPainterPath panel;
+        panel.addRoundedRect(QRectF(m_pPanel->geometry()).adjusted(0, 0, 0, 40), 24, 24);
+        painter.fillPath(panel, QColor(0x2B, 0x2D, 0x31));
+    }
+
+  private:
+    void place() {
+        setGeometry(m_pWindow->rect());
+        const int width = qMin(m_pWindow->width(), 640);
+        const int height = qMin(m_pPanel->sizeHint().height(), m_pWindow->height() - 40);
+        m_pPanel->setGeometry((m_pWindow->width() - width) / 2,
+                m_pWindow->height() - height,
+                width,
+                height);
+    }
+
+    QWidget* m_pWindow;
+    QWidget* m_pPanel;
+};
+
+} // namespace
+
+Sheet::Item* Sheet::addAction(
+        const QString& text, QObject* pContext, std::function<void()> action) {
+    Q_UNUSED(pContext);
+    auto pItem = std::make_shared<Item>();
+    pItem->text = text;
+    pItem->action = std::move(action);
+    m_items.append(pItem);
+    return pItem.get();
+}
+
+void Sheet::show(QWidget* pWindow, const QString& title) {
+    new SheetWidget(pWindow, title, m_items);
+}
+
 Screen::Screen(QWidget* pWindow, const QString& title)
         : QWidget(pWindow),
           m_pWindow(pWindow) {
@@ -243,6 +368,11 @@ Screen::Screen(QWidget* pWindow, const QString& title)
     m_pColumn->setContentsMargins(0, 8, 0, 24);
     m_pColumn->setSpacing(0);
     pScroll->setWidget(pContent);
+    // Android moved only part of the page when scrolling (round 8: the rows
+    // slid under a slider that stayed put): repaint the whole page each step
+    connect(pScroll->verticalScrollBar(), &QScrollBar::valueChanged, pContent, [pContent] {
+        pContent->update();
+    });
     pLayout->addWidget(pScroll, 1);
 
     // Android shows the system bars again over a new screen (round 7)

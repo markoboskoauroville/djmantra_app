@@ -19,6 +19,20 @@ AndroidWindow::AndroidWindow(QWidget* pWindow)
           m_pWindow(pWindow) {
     pWindow->installEventFilter(this);
     hideSystemBars();
+    keepFullScreen();
+}
+
+void AndroidWindow::keepFullScreen() {
+    // Qt's own full screen state: Qt hides the system bars itself and hides
+    // them again after every rotation (round 6: our hiding alone lost to Qt,
+    // which showed the bars again in portrait for a maximized window). Round
+    // 8: with only WindowBridge's re-hide, the bars came back during the UI
+    // test's rotations; with this (a4aa481) they had stayed away. Both now.
+    QTimer::singleShot(0, m_pWindow, [pWindow = m_pWindow] {
+        if (!(pWindow->windowState() & Qt::WindowFullScreen)) {
+            pWindow->setWindowState(pWindow->windowState() | Qt::WindowFullScreen);
+        }
+    });
 }
 
 // static
@@ -34,8 +48,10 @@ void AndroidWindow::hideSystemBars() {
 bool AndroidWindow::eventFilter(QObject* pObject, QEvent* pEvent) {
     if (pObject == m_pWindow &&
             (pEvent->type() == QEvent::Resize ||
-                    pEvent->type() == QEvent::WindowActivate)) {
+                    pEvent->type() == QEvent::WindowActivate ||
+                    pEvent->type() == QEvent::WindowStateChange)) {
         hideSystemBars();
+        keepFullScreen();
         if (pEvent->type() == QEvent::Resize) {
             // Repaint after the rotation has settled
             QWidget* pWindow = m_pWindow;

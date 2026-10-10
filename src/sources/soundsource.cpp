@@ -53,6 +53,15 @@ QString SoundSource::getTypeFromFile(const QFileInfo& fileInfo) {
         return fileSuffix;
     }
 
+#ifdef __ANDROID_PORT__
+    if (fileSuffix == QLatin1String("mp3")) {
+        // DJ Mantra: the same for MP3 on Android. An ID3v2 tag with cover art
+        // made the content lookup answer "audio/x-aac", and the AAC decoder
+        // couldn't open a normal MP3 (round 8 on the emulator: "Couldn't load
+        // track" for every such song).
+        return fileSuffix;
+    }
+#endif
     QMimeType mimeType = QMimeDatabase().mimeTypeForFile(
             fileInfo, QMimeDatabase::MatchContent);
     // According to the documentation mimeTypeForFile always returns a valid
