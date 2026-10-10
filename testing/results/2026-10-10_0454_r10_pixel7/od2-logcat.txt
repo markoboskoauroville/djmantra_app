@@ -1,0 +1,41 @@
+--------- beginning of main
+10-10 05:03:06.864 21498 21518 I DJMantra: info [Main] UI levels 0.108 0.000 0.108
+10-10 05:03:07.119 21498 21566 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.17944
+10-10 05:03:07.864 21498 21518 I DJMantra: info [Main] UI levels 0.044 0.000 0.044
+10-10 05:03:08.864 21498 21518 I DJMantra: info [Main] UI levels 0.036 0.000 0.036
+10-10 05:03:09.867 21498 21518 I DJMantra: info [Main] UI levels 0.015 0.000 0.015
+10-10 05:03:10.870 21498 21518 I DJMantra: info [Main] UI levels 0.002 0.000 0.002
+10-10 05:03:11.666 21498 21518 I DJMantra: info [Main] UI control [Channel1],play_indicator = 0
+10-10 05:03:11.666 21498 21518 I DJMantra: info [Main] UI control [Channel1],play = 0
+10-10 05:03:11.868 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:12.124 21498 21566 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.0169168
+10-10 05:03:12.868 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:13.867 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:14.868 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:15.868 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:16.871 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:17.143 21498 21566 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0
+10-10 05:03:17.869 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:18.872 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:19.869 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:20.856 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:21.856 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:22.872 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:23.857 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:24.859 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:25.859 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:26.859 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:27.859 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:28.860 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:29.861 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:30.862 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:31.860 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:32.865 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:33.864 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:34.863 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:35.864 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:36.868 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:37.866 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:38.866 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:39.868 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000
+10-10 05:03:40.868 21498 21518 I DJMantra: info [Main] UI levels 0.000 0.000 0.000

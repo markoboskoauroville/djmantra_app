@@ -261,6 +261,11 @@ class UiTest:
         if item in TOGGLES and values:
             self.tap(x, y)
             time.sleep(0.8)
+        if item.startswith("load_deck"):
+            # the load button opens the song picker over the whole screen (f7d3886); close it with Back,
+            # or every later tap lands in the picker (round 10, 10.10.2026: 57 of 62 false FAILs)
+            self.dev.shell("cmd input keyevent KEYCODE_BACK")
+            time.sleep(1.0)
         self.record(orientation, page, w, "tap", values, bool(values))
 
     def test_page(self, orientation, page):

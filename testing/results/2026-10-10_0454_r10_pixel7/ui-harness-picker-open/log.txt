@@ -1,0 +1,1300 @@
+--------- beginning of main
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel1]" , "play" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel1]" , "playposition" )
+I/DJMantra(21772): info [Main] SoundSourceFFmpeg - Disabling untested input formats: aa, aax, ac3, ac4, ace, acm, act, adf, adp, ads, adx, aea, afc, aix, alp, amr, amrnb, amrwb, anm, apac, apc, ape, apm, apng, aptx, aptx_hd, apv, aqtitle, argo_asf, argo_brp, argo_cvg, asf, asf_o, ass, ast, au, av1, avr, avs, avs2, avs3, bethsoftvid, bfi, bin, bink, binka, bit, bitpacked, bmv, bfstm, brstm, boa, bonk, c93, caf, cavsvideo, cdg, cdxl, cine, codec2, codec2raw, concat, data, daud, dcstr, derf, dfa, dfpwm, dhav, dirac, dnxhd, dsf, dsicin, dss, dts, dtshd, dv, dvbsub, dvbtxt, dxa, ea, ea_cdata, eac3, epaf, evc, ffmetadata, filmstrip, fits, flac, flic, live_flv, 4xm, frm, fsb, fwse, g722, g723_1, g726, g726le, g728, g729, gdv, genh, gif, gsm, gxf, h261, h263, h264, hca, hcom, hevc, hls, hnm, hxvs, iamf, ico, idcin, idf, iff, ifv, ilbc, image2, image2pipe, alias_pix, brender_pix, ingenient, ipmovie, ipu, ircam, iss, iv8, ivf, ivr, jacosub, jv, jpegxl_anim, kux, kvag, laf, lc3, lmlm4, loas, luodat, lrc, lvf, lxf, mca, mcc, mgsts, microdvd, mjpeg, mjpeg_2000, mlp, mlv, mm, mmf, mods, moflex, mpc, mpc8, mpeg, mpegts, mpegtsraw, mpegvideo, mpjpeg, mpl2, mpsub, msf, msnwctcp, msp, mtaf, mtv, musx, mv, mvi, mxf, mxg, nc, nistsphere, nsp, nsv, nut, nuv, obu, ogg, oma, osq, paf, alaw, mulaw, vidc, f64be, f64le, f32be, f32le, s32be, s32le, s24be, s24le, s16be, s16le, s8, u32be, u32le, u24be, u24le, u16be, u16le, u8, pdv, pjs, pmp, pp_bnk, pva, pvf, qcp, qoa, r3d, rawvideo, rcwt, realtext, redspark, rka, rl2, rm, roq, rpl, rsd, rso, rtp, rtsp, s337m, sami, sap, sbc, sbg, scc, scd, sdns, sdp, sdr2, sds, sdx, film_cpk, ser, sga, shn, siff, simbiosis_imx, sln, smk, smjpeg, smush, sol, sox, spdif, srt, psxstr, stl, subviewer1, subviewer, sup, svag, svs, swf, tak, tedcaptions, thp, 3dostr, tiertexseq, tmv, truehd, tta, txd, tty, ty, usm, v210, v210x, vag, vc1, vc1test, vividas, vivo, vmd, vobsub, voc, vpk, vplayer, vqf, vvc, w64, wady, wavarc, wc3movie, webm_dash_manifest, webp_anim, webvtt, wsaud, wsd, wsvqa, wtv, wve, xa, xbin, xmd, xmv, xvag, xwma, yop, yuv4mpegpipe, bmp_pipe, cri_pipe, dds_pipe, dpx_pipe, exr_pipe, gem_pipe, gif_pipe, hdr_pipe, j2k_pipe, jpeg_pipe, jpegls_pipe, jpegxl_pipe, jpegxs_pipe, pam_pipe, pbm_pipe, pcx_pipe, pfm_pipe, pgmyuv_pipe, pgm_pipe, pgx_pipe, phm_pipe, photocd_pipe, pictor_pipe, png_pipe, ppm_pipe, psd_pipe, qdraw_pipe, qoi_pipe, sgi_pipe, svg_pipe, sunrast_pipe, tiff_pipe, vbn_pipe, webp_pipe, xbm_pipe, xpm_pipe, xwd_pipe
+I/DJMantra(21772): info [Main] SoundSourceSndFile - Disabling OGG decoding for "libsndfile-1.2.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "3g2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "3gp"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "aac"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "aiff"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 3 (default) : "libsndfile"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "avi"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "caf"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 2 (lower) : "libsndfile"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "flac"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org libFLAC"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 2 (lower) : "libsndfile"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "flv"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "m4a"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "mj2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "mka"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "mkv"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "mov"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "mp3"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 3 (default) : "MAD: MPEG Audio Decoder 0.16.4 NDEBUG FPM_64BIT OPT_ACCURACY"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "mp4"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "ogg"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org OggVorbis"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "opus"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org libopusfile"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "wav"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 3 (default) : "libsndfile"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "webm"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] SoundSourceProxy - SoundSource providers for file type "wv"
+I/DJMantra(21772): info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+I/DJMantra(21772): info [Main] DbConnection - Available drivers for database connections: QList("QSQLITE")
+I/DJMantra(21772): info [Main] DbConnectionPool - Cloned thread-local database connection "MIXXX-1" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+I/DJMantra(21772): info [Main] CoreServices - Connecting to database
+I/DJMantra(21772): info [Main] CoreServices - Initializing or upgrading database schema
+I/DJMantra(21772): info [Main] SchemaManager - Database schema is up-to-date at version 40
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel1]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel2]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler1]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler2]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler3]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler4]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[PreviewDeck1]" , "cue_point" )
+I/DJMantra(21772): info [Main] LocalTrackCache - Mode 1 directory "/data/user/0/com.djmantra.app/files/track-cache" max MB 8192
+I/DJMantra(21772): info [Main] GlobalTrackCache - Creating instance
+I/DJMantra(21772): info [Main] TrackCollection - Connecting database
+I/DJMantra(21772): info [Main] TrackCollectionManager - Starting library scanner thread
+I/DJMantra(21772): info [LibraryScanner 1] DbConnectionPool - Cloned thread-local database connection "MIXXX-2" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+I/DJMantra(21772): info [Main] TrackCollection - Connecting track source
+I/DJMantra(21772): info [Main] Deleting 1 playlists
+I/DJMantra(21772): info [Main] Library - Access to directory QFileInfo(/storage/emulated/0/Android/data/com.djmantra.app/files/Music) from sandbox granted
+I/DJMantra(21772): info [Main] LocalTrackCache - Mode 1 directory "/data/user/0/com.djmantra.app/files/track-cache" max MB 8192
+I/DJMantra(21772): info [AnalyzerThread 2 #3] DbConnectionPool - Cloned thread-local database connection "MIXXX-5" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+I/DJMantra(21772): info [AnalyzerThread 1 #2] DbConnectionPool - Cloned thread-local database connection "MIXXX-4" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+I/DJMantra(21772): info [AnalyzerThread 0 #1] DbConnectionPool - Cloned thread-local database connection "MIXXX-3" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+I/DJMantra(21772): info [AnalyzerThread 3 #4] DbConnectionPool - Cloned thread-local database connection "MIXXX-6" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+I/DJMantra(21772): info [Main] VolumeWatcher - External drives: QList()
+W/DJMantra(21772): warning [Main] Could not read sampler bank file "/data/user/0/com.djmantra.app/files/.mixxx/samplers.xml"
+I/DJMantra(21772): info [LibraryScanner 1] LibraryScanner - Cleaning up database...
+I/DJMantra(21772): info [Main] Controller layout: 55 controls from "/data/user/0/com.djmantra.app/files/res/controllers/djmantra/mix-ultra-layout.json"
+I/DJMantra(21772): info [LibraryScanner 1] LibraryScanner - Deleted 3 orphaned directory hashes
+I/DJMantra(21772): info [LibraryScanner 1] LibraryScanner - Finished database cleanup: 4 ms
+I/DJMantra(21772): info [LibraryScanner 1] LibraryScanner - Updating query planner statistics for database...
+I/DJMantra(21772): info [LibraryScanner 1] LibraryScanner - Finished updating query planner statistics for database: 4 ms
+I/DJMantra(21772): info [Main] MetadataSourceTagLib - No track metadata or cover art found in file "/sdcard/Music/djmantra-test-tone.wav" of type "WAV"
+I/DJMantra(21772): info [Main] MetadataSourceTagLib - No track metadata or cover art found in file "/sdcard/Music/djmantra-test-tone-2.wav" of type "WAV"
+I/DJMantra(21772): info [Main] Android: starting without OpenGL widgets (software waveforms)
+I/DJMantra(21772): info [Main] DJMantraMIDI: Bluetooth permission granted
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler5]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler6]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler7]" , "cue_point" )
+W/DJMantra(21772): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler8]" , "cue_point" )
+I/DJMantra(21772): info [Main] Loaded skin "DJMantra" from "/data/user/0/com.djmantra.app/files/res/skins/DJMantra"
+I/DJMantra(21772): info [Main] TrackPicker Folders rows 2
+I/DJMantra(21772): info [0xb400007d4688f470] SoundDeviceOboe - First sound callback: 1024 frames
+I/DJMantra(21772): info [Main] SoundDeviceOboe - Sound output open: 48000 Hz, 2 channels, 1024 frames per callback, burst 960 , API AAudio , device 43
+I/DJMantra(21772): info [Main] DJ Mantra main window ready, full screen: true size QSize(411, 914)
+I/DJMantra(21772): info [Main] UI test probe on
+I/DJMantra(21772): info [Main] Deck 1 playing
+I/DJMantra(21772): info [Controller] Starting engine
+I/DJMantra(21772): info [Controller] Applying controller mapping...
+W/DJMantra(21772): warning [CachingReaderWorker 1] First sound has been moved! The beatgrid and other annotations are no longer valid "file:///sdcard/Music/djmantra-test-tone.wav"
+I/DJMantra(21772): info [Controller] DJMantraMIDI - Looking for "DJControl Mix Ultra" over USB and Bluetooth
+W/DJMantra(21772): warning [Main] Track duration has changed since last analysis 5121 != 1921
+W/DJMantra(21772): warning [Main] Track duration has changed since last analysis 5121 != 1921
+W/DJMantra(21772): warning [Main] Track duration has changed since last analysis 5121 != 1921
+I/DJMantra(21772): info [0xb400007d468d6670] DJMantraMIDI - "DJControl Mix Ultra" connected over "bluetooth"
+I/DJMantra(21772): info [0xb400007d468d6670] DJMantraMIDI - "DJControl Mix Ultra" connected over "bluetooth"
+I/DJMantra(21772): info [Main] Window: the system bars take QMargins(0, 52, 0, 48)
+W/DJMantra(21772): warning [CachingReaderWorker 2] First sound has been moved! The beatgrid and other annotations are no longer valid "file:///sdcard/Music/djmantra-test-tone.wav"
+W/DJMantra(21772): warning [Main] Track duration has changed since last analysis 5121 != 1921
+W/DJMantra(21772): warning [Main] Track duration has changed since last analysis 5121 != 1921
+I/DJMantra(21772): info [Main] Window: the system bars take QMargins(0, 0, 0, 0)
+I/DJMantra(21772): info [Main] UI levels 0.618 0.000 0.618
+I/DJMantra(21772): info [Main] UI map begin 1 1079 2399 ratio 2.625
+I/DJMantra(21772): info [Main] UI widget PushButton LibraryButton [DJMantra],show_menu 499 16 84 84 full
+I/DJMantra(21772): info [Main] UI widget NumberPos TimeText [Channel1],playposition 194 200 171 63 full
+I/DJMantra(21772): info [Main] UI widget Key KeyDeck1 [Channel1],visual_key 470 200 53 63 full
+I/DJMantra(21772): info [Main] UI widget Overview Overview [Channel1],playposition 26 273 496 58 full
+I/DJMantra(21772): info [Main] UI widget Key KeyDeck2 [Channel2],visual_key 559 200 53 63 full
+I/DJMantra(21772): info [Main] UI widget NumberPos TimeText [Channel2],playposition 717 200 171 63 full
+I/DJMantra(21772): info [Main] UI widget Overview Overview [Channel2],playposition 559 273 496 58 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton TabButton [DJMantra],p_mixer 305 352 158 89 full
+I/DJMantra(21772): info [Main] UI widget PushButton TabButton [DJMantra],p_waveforms 462 352 158 89 full
+I/DJMantra(21772): info [Main] UI widget PushButton TabButton [DJMantra],p_pads 620 352 158 89 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel1]_Effect1],parameter3 118 454 110 110 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel1]_Effect1],parameter2 118 864 110 110 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel1]_Effect1],parameter1 118 1271 110 110 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [QuickEffectRack1_[Channel1]],super1 113 1680 121 121 full
+I/DJMantra(21772): info [Main] UI widget PushButton LoadDeckButton [DJMantra],load_deck1 431 454 105 79 full
+I/DJMantra(21772): info [Main] UI widget PushButton LoadDeckButton [DJMantra],load_deck2 546 454 105 79 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [Master],gain 501 533 79 79 full
+I/DJMantra(21772): info [Main] UI widget PushButton PflButton [Channel1],pfl 431 651 105 79 full
+I/DJMantra(21772): info [Main] UI widget PushButton PflButton [Channel2],pfl 546 651 105 79 full
+I/DJMantra(21772): info [Main] UI widget SliderComposed ChannelFader [Channel1],volume 360 740 147 1100 full
+I/DJMantra(21772): info [Main] UI widget VuMeterLegacy - [Channel1],vu_meter 507 740 32 1100 full
+I/DJMantra(21772): info [Main] UI widget VuMeterLegacy - [Channel2],vu_meter 543 740 32 1100 full
+I/DJMantra(21772): info [Main] UI widget SliderComposed ChannelFader [Channel2],volume 575 740 147 1100 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel2]_Effect1],parameter3 853 454 110 110 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel2]_Effect1],parameter2 853 864 110 110 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel2]_Effect1],parameter1 853 1271 110 110 full
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [QuickEffectRack1_[Channel2]],super1 848 1680 121 121 full
+I/DJMantra(21772): info [Main] UI widget PushButton SelectorButton [DJMantra],p_deck1 0 1843 360 105 full
+I/DJMantra(21772): info [Main] UI widget PushButton SelectorButton [DJMantra],p_mixer 360 1843 360 105 full
+I/DJMantra(21772): info [Main] UI widget PushButton SelectorButton [DJMantra],p_deck2 719 1843 360 105 full
+I/DJMantra(21772): info [Main] UI widget PushButton SyncButton [Channel1],sync_enabled 26 1977 184 105 full
+I/DJMantra(21772): info [Main] UI widget Number BpmText [Channel1],visual_bpm 226 1974 260 71 full
+I/DJMantra(21772): info [Main] UI widget PushButton RoundButton [Channel1],keylock 486 1974 110 110 full
+I/DJMantra(21772): info [Main] UI widget Number BpmText [Channel2],visual_bpm 596 1974 257 71 full
+I/DJMantra(21772): info [Main] UI widget PushButton SyncButton [Channel2],sync_enabled 869 1977 184 105 full
+I/DJMantra(21772): info [Main] UI widget PushButton CueButton [Channel1],cue_default 26 2100 394 110 full
+I/DJMantra(21772): info [Main] UI widget PushButton Chevron [DJMantra],waveform_fullscreen 496 2111 89 89 full
+I/DJMantra(21772): info [Main] UI widget PushButton CueButton [Channel2],cue_default 659 2100 394 110 full
+I/DJMantra(21772): info [Main] UI widget PushButton PlayButton [Channel1],play 26 2226 152 152 full
+I/DJMantra(21772): info [Main] UI widget SliderComposed Crossfader [Master],crossfader 210 2239 659 126 full
+I/DJMantra(21772): info [Main] UI widget PushButton PlayButton [Channel2],play 900 2226 152 152 full
+I/DJMantra(21772): info [Main] UI map end 1
+I/DJMantra(21772): info [Main] UI levels 0.601 0.000 0.603
+I/DJMantra(21772): info [Main] UI levels 0.615 0.000 0.615
+I/DJMantra(21772): info [Main] UI levels 0.612 0.000 0.612
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.325051
+I/DJMantra(21772): info [Main] UI levels 0.613 0.000 0.613
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+I/DJMantra(21772): info [Main] UI levels 0.610 0.000 0.610
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.325051
+I/DJMantra(21772): info [Main] UI levels 0.613 0.000 0.613
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.608 0.000 0.608
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+I/DJMantra(21772): info [Main] UI levels 0.613 0.000 0.613
+I/DJMantra(21772): info [Main] UI levels 0.615 0.000 0.615
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.325051
+I/DJMantra(21772): info [Main] UI levels 0.613 0.000 0.613
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.601 0.000 0.601
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.615 0.000 0.615
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.325051
+I/DJMantra(21772): info [Main] UI levels 0.612 0.000 0.612
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.613 0.000 0.613
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.325051
+I/DJMantra(21772): info [Main] UI levels 0.610 0.000 0.610
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.613 0.000 0.613
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.614 0.000 0.614
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.613 0.000 0.613
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.325051
+I/DJMantra(21772): info [Main] UI levels 0.615 0.000 0.615
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.04463
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.06769
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.11534
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.16512
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.19083
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.24398
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.2995
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.35749
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.41808
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.44938
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.51406
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.58164
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.65222
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.68869
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.76406
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.84279
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.88346
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 1.96752
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.05533
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.14706
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.24288
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.29239
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.3947
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter3 = 2.50157
+I/DJMantra(21772): info [Main] UI levels 0.622 0.000 0.622
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 399
+I/DJMantra(21772): info [Main] UI press WWidgetGroup TabRow 173 399
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Portrait 173 399
+I/DJMantra(21772): info [Main] UI press WSizeAwareStack SizeAwareStack 173 399
+I/DJMantra(21772): info [Main] UI press WWidgetStack WidgetStack 173 399
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 173 399
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 173 399
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 173 399
+I/DJMantra(21772): info [Main] UI levels 0.623 0.000 0.623
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.02207
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.06769
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.09125
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.13995
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.19083
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.24398
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.27143
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.32818
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.38745
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.44938
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.51406
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.54748
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.61654
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.68869
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.72596
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.80299
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.88346
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 1.96752
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 2.05533
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 2.10069
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 2.19445
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 2.29239
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 2.3947
+I/DJMantra(21772): info [Main] UI levels 0.827 0.000 0.827
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter2 = 2.44755
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.512548
+I/DJMantra(21772): info [Main] UI levels 0.877 0.000 0.877
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 809
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 809
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixer 173 809
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 809
+I/DJMantra(21772): info [Main] UI press WWidgetStack WidgetStack 173 809
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Portrait 173 809
+I/DJMantra(21772): info [Main] UI press WSizeAwareStack SizeAwareStack 173 809
+I/DJMantra(21772): info [Main] UI press WWidgetStack WidgetStack 173 809
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 173 809
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 173 809
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 173 809
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.02207
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.06769
+I/DJMantra(21772): info [Main] UI levels 0.873 0.000 0.873
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.11534
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.16512
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.19083
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.24398
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.2995
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.32818
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.38745
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.44938
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.51406
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.54748
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.61654
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.68869
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.76406
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.80299
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.88346
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 1.96752
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 2.05533
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 2.14706
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 2.19445
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 2.29239
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 2.34298
+I/DJMantra(21772): info [Main] UI control [EqualizerRack1_[Channel1]_Effect1],parameter1 = 2.44755
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.942
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 1215
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 1215
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixer 173 1215
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 1215
+I/DJMantra(21772): info [Main] UI press WWidgetStack WidgetStack 173 1215
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Portrait 173 1215
+I/DJMantra(21772): info [Main] UI press WSizeAwareStack SizeAwareStack 173 1215
+I/DJMantra(21772): info [Main] UI press WWidgetStack WidgetStack 173 1215
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 173 1215
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 173 1215
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 173 1215
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.943
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.515748
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.523622
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.53937
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.555118
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.570866
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.586614
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.602362
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.61811
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.633858
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.649606
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.665354
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.681102
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.69685
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.704724
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.720472
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.73622
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.759843
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.767717
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.783465
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.799213
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.814961
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.830709
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.846457
+I/DJMantra(21772): info [Main] UI control [QuickEffectRack1_[Channel1]],super1 = 0.862205
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.336
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.043
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 1620
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 1620
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixer 173 1620
+I/DJMantra(21772): info [Main] UI press WWidgetGroup WidgetGroup 173 1620
+I/DJMantra(21772): info [Main] UI press WWidgetStack WidgetStack 173 1620
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Portrait 173 1620
+I/DJMantra(21772): info [Main] UI press WSizeAwareStack SizeAwareStack 173 1620
+I/DJMantra(21772): info [Main] UI press WWidgetStack WidgetStack 173 1620
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 173 1620
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 173 1620
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 173 1620
+--------- beginning of main
+I/DJMantra(21772): info [Main] TrackPicker Folders rows 2
+I/DJMantra(21772): info [Main] UI control [DJMantra],load_deck1 = 1
+I/DJMantra(21772): info [Main] UI control [DJMantra],load_deck1 = 0
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.017
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 599 494
+W/DJMantra(21772): warning [Main] Case insensitive sorting unsupported in the posix collation implementation
+W/DJMantra(21772): warning [Main] Numeric mode unsupported in the posix collation implementation
+I/DJMantra(21772): info [Main] TrackPicker Download rows 10
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 541 572
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 541 494
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 483 690
+W/DJMantra(21772): warning [Main] Case insensitive sorting unsupported in the posix collation implementation
+W/DJMantra(21772): warning [Main] Numeric mode unsupported in the posix collation implementation
+I/DJMantra(21772): info [Main] TrackPicker #Ples.Duse.Tidal rows 3
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 599 690
+I/DJMantra(21772): info [Main] TrackPicker beat stats_AMBIENT rows 2
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 433 1289
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 433 1016
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 648 1289
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 648 1016
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 908 509
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 908 399
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 908 919
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 908 809
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 908 1326
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 908 1215
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 908 1740
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 908 1620
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 118 2029
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 541 2029
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 961 2029
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 223 2155
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 856 2155
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 102 2302
+I/DJMantra(21772): info [Main] TrackPicker beat stats_AMBIENT rows 2
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 538 2302
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+I/DJMantra(21772): info [Main] TrackPicker Queue rows 0
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 704 2302
+I/DJMantra(21772): info [Main] TrackPicker Queue rows 0
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 977 2302
+I/DJMantra(21772): info [Main] TrackPicker History rows 0
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.936 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 541 396
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 698 396
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 383 396
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 181 1895
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 898 1895
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 541 1895
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+I/DJMantra(21772): info [Main] UI map begin 2 2399 1079 ratio 2.625
+I/DJMantra(21772): info [Main] UI widget Key KeyDeck1 [Channel1],visual_key 1071 16 53 47 clipped
+I/DJMantra(21772): info [Main] UI widget NumberPos TimeText [Channel1],playposition 953 63 171 63 clipped
+I/DJMantra(21772): info [Main] UI widget Overview Overview [Channel1],playposition 200 126 924 58 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton LibraryButton [DJMantra],show_menu 1155 55 89 89 clipped
+I/DJMantra(21772): info [Main] UI widget Key KeyDeck2 [Channel2],visual_key 2147 16 53 47 clipped
+I/DJMantra(21772): info [Main] UI widget NumberPos TimeText [Channel2],playposition 2029 63 171 63 clipped
+I/DJMantra(21772): info [Main] UI widget Overview Overview [Channel2],playposition 1276 126 924 58 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton SyncButton [Channel1],sync_enabled 16 210 189 95 clipped
+I/DJMantra(21772): info [Main] UI widget Number BpmText [Channel1],visual_bpm 16 344 205 71 clipped
+I/DJMantra(21772): info [Main] UI widget SliderComposed PitchFader [Channel1],rate 60 425 116 446 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton BendButton [Channel1],rate_temp_down 719 793 95 79 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton BendButton [Channel1],rate_temp_up 814 793 95 79 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton TabButton [DJMantra],l_mixer 963 205 158 89 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton TabButton [DJMantra],l_waveforms 1121 205 158 89 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton TabButton [DJMantra],l_pads 1278 205 158 89 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel1]_Effect1],parameter3 969 307 89 89 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel1]_Effect1],parameter2 969 454 89 89 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel1]_Effect1],parameter1 969 601 89 89 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [QuickEffectRack1_[Channel1]],super1 963 748 100 100 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton LoadDeckButton [DJMantra],load_deck1 1110 307 84 74 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton LoadDeckButton [DJMantra],load_deck2 1205 307 84 74 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [Master],gain 1160 381 79 79 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton PflButton [Channel1],pfl 1110 499 84 74 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton PflButton [Channel2],pfl 1205 499 84 74 clipped
+I/DJMantra(21772): info [Main] UI widget SliderComposed ChannelFader [Channel1],volume 1108 583 68 305 clipped
+I/DJMantra(21772): info [Main] UI widget VuMeterLegacy - [Channel1],vu_meter 1176 583 21 305 clipped
+I/DJMantra(21772): info [Main] UI widget VuMeterLegacy - [Channel2],vu_meter 1202 583 21 305 clipped
+I/DJMantra(21772): info [Main] UI widget SliderComposed ChannelFader [Channel2],volume 1223 583 68 305 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel2]_Effect1],parameter3 1341 307 89 89 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel2]_Effect1],parameter2 1341 454 89 89 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [EqualizerRack1_[Channel2]_Effect1],parameter1 1341 601 89 89 clipped
+I/DJMantra(21772): info [Main] UI widget KnobComposed Knob [QuickEffectRack1_[Channel2]],super1 1336 748 100 100 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton BendButton [Channel2],rate_temp_down 1491 793 95 79 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton BendButton [Channel2],rate_temp_up 1586 793 95 79 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton SyncButton [Channel2],sync_enabled 2179 210 189 95 clipped
+I/DJMantra(21772): info [Main] UI widget Number BpmText [Channel2],visual_bpm 2179 344 205 71 clipped
+I/DJMantra(21772): info [Main] UI widget SliderComposed PitchFader [Channel2],rate 2223 425 116 446 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton PlayButton [Channel1],play 26 911 147 147 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton CueButton [Channel1],cue_default 200 927 394 116 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton RoundButton [Channel1],keylock 620 927 116 116 clipped
+I/DJMantra(21772): info [Main] UI widget SliderComposed Crossfader [Master],crossfader 772 921 856 126 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton RoundButton [Channel2],keylock 1664 927 116 116 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton CueButton [Channel2],cue_default 1806 927 394 116 clipped
+I/DJMantra(21772): info [Main] UI widget PushButton PlayButton [Channel2],play 2226 911 147 147 clipped
+I/DJMantra(21772): info [Main] UI map end 2
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 110 257
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 118 648
+I/DJMantra(21772): info [Main] UI press QListWidget - 118 648
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 118 648
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 118 648
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 118 648
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 118 648
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 118 538
+I/DJMantra(21772): info [Main] UI press QListWidget - 118 538
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 118 538
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 118 538
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 118 538
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 118 538
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 767 832
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.936 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 861 832
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.930 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1013 352
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.944 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.940 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1013 263
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1013 499
+I/DJMantra(21772): info [Main] UI press QListWidget - 1013 499
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1013 499
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1013 499
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1013 499
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1013 499
+I/DJMantra(21772): info [Main] UI levels 0.938 0.000 0.015
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.00375709
+I/DJMantra(21772): info [Main] UI levels 0.943 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.945 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.942 0.000 0.015
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI control [Channel1],play_indicator = 0
+I/DJMantra(21772): info [Main] UI control [Channel1],play = 0
+I/DJMantra(21772): info [Main] UI levels 0.684 0.000 0.011
+--------- beginning of main
+I/DJMantra(21772): info [Engine] SoundDeviceOboe - Output level: peak 0.0126871
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.061 0.000 0.001
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1013 410
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1013 646
+I/DJMantra(21772): info [Main] UI press QListWidget - 1013 646
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1013 646
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1013 646
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1013 646
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1013 646
+I/DJMantra(21772): info [Main] UI levels 0.005 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1013 557
+I/DJMantra(21772): info [Main] UI press QListWidget - 1013 557
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1013 557
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1013 557
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1013 557
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1013 557
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1013 798
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1013 698
+I/DJMantra(21772): info [Main] UI press QListWidget - 1013 698
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1013 698
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1013 698
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1013 698
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1013 698
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1152 344
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1247 344
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1200 420
+I/DJMantra(21772): info [Main] UI press QListWidget - 1200 420
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1200 420
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1200 420
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1200 420
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1200 420
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1200 341
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1152 536
+I/DJMantra(21772): info [Main] UI press QListWidget - 1152 536
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1152 536
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1152 536
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1152 536
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1152 536
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1247 536
+I/DJMantra(21772): info [Main] UI press QListWidget - 1247 536
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1247 536
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1247 536
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1247 536
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1247 536
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1142 735
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1142 659
+I/DJMantra(21772): info [Main] UI press QListWidget - 1142 659
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1142 659
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1142 659
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1142 659
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1142 659
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1257 735
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1257 659
+I/DJMantra(21772): info [Main] UI press QListWidget - 1257 659
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1257 659
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1257 659
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1257 659
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1257 659
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1386 352
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1386 263
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1386 499
+I/DJMantra(21772): info [Main] UI press QListWidget - 1386 499
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1386 499
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1386 499
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1386 499
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1386 499
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1386 410
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1386 646
+I/DJMantra(21772): info [Main] UI press QListWidget - 1386 646
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1386 646
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1386 646
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1386 646
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1386 646
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1386 557
+I/DJMantra(21772): info [Main] UI press QListWidget - 1386 557
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1386 557
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1386 557
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1386 557
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1386 557
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1386 798
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 1386 698
+I/DJMantra(21772): info [Main] UI press QListWidget - 1386 698
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 1386 698
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 1386 698
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1386 698
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 1386 698
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1538 832
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1633 832
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 2273 257
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 2281 648
+I/DJMantra(21772): info [Main] UI press QListWidget - 2281 648
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 2281 648
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 2281 648
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 2281 648
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 2281 648
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QLabel PickerEmpty 2281 538
+I/DJMantra(21772): info [Main] UI press QListWidget - 2281 538
+I/DJMantra(21772): info [Main] UI press djmantra::TrackPicker - 2281 538
+I/DJMantra(21772): info [Main] UI press WWidgetGroup Mixxx 2281 538
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 2281 538
+I/DJMantra(21772): info [Main] UI press MixxxMainWindow - 2281 538
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 100 984
+I/DJMantra(21772): info [Main] TrackPicker beat stats_AMBIENT rows 2
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 396 984
+I/DJMantra(21772): info [Main] TrackPicker beat stats_AMBIENT rows 2
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 677 984
+I/DJMantra(21772): info [Main] TrackPicker beat stats_AMBIENT rows 2
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 1200 984
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] TrackPicker Queue rows 0
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 1415 984
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] TrackPicker Queue rows 0
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 1722 984
+I/DJMantra(21772): info [Main] TrackPicker History rows 0
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 2003 984
+I/DJMantra(21772): info [Main] TrackPicker History rows 0
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI press QToolButton PickerTab 2300 984
+I/DJMantra(21772): info [Main] TrackPicker History rows 0
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1200 249
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1357 249
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+I/DJMantra(21772): info [Main] UI press QWidget qt_scrollarea_viewport 1042 249
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
+--------- beginning of main
+I/DJMantra(21772): info [Main] UI levels 0.000 0.000 0.000
