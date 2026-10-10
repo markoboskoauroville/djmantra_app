@@ -30,9 +30,7 @@ Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/result
 - **All device tests run through the local session "Djapp local"** (Marko's Mac, Remote
   Control, session `session_01HGBdB5gPBHRGZUks9DixYh`, from 10.10.2026; before that "Claude Code
   local" `session_01NtxDMqMEkD435RBFuqFs1s`, now archived). It runs the **real phone over USB
-  (adb)** and the Pixel 7 emulator (`emulator-5554`). The Pixel 7 is shared with Marko's NDI
-  camera project: **take it with `~/pixel7/pixel7-lock.sh` before any adb command to it and give
-  it back after** (`docs/PIXEL7_SHARING.md`). **The test loop has eyes and ears**
+  (adb)** and the Pixel 7 emulator (`emulator-5554`). The Pixel 7 needs no lock (10.10.2026, Marko: "remove the lock algorithm because now we have only one session running"). **The test loop has eyes and ears**
   (owner, 10.10.2026): a camera on the Mac looks at the Mix Ultra (its lights) and the Mac's
   microphone hears the phone's speaker: `tools/android/observe.py` (listen --expect 440, look,
   lights). The Nothing Phone (2a) is out of the loop. Protocol in `testing/README.md`:

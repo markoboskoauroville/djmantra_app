@@ -122,7 +122,7 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   did nothing. ui_test's drags fail where hand drags work: check ui_test.py's drag speed.
 - **Song picker done** (9db7422): note icons → `src/library/djmantra/trackpicker.*`;
   renders `docs/skin/picker-*.png`. Build 9353a98 on main = round 7 (sent to Claude Code
-  local: emulator + Pixel 7 under the lock).
+  local: emulator + Pixel 7).
 
 ## Round 7 results (emulator, 9353a98, `testing/results/2026-10-09_1636_ui_emulator/`)
 
@@ -176,8 +176,7 @@ automatic mix (two songs, SYNC, crossfader sweep, listened to by the mic).
   version at the bottom) and Android's own `android-settings.png` (rounded grouped cards,
   search field). `djay-menu.png`: djay's top menu (REC, Settings, MIDI, brightness). The whole
   app is to feel like an Android app.
-- **The real Pixel 7 is back in the loop** (wireless debugging), shared with Marko's NDI camera
-  project through a lock on the Mac: `docs/PIXEL7_SHARING.md`, `tools/android/pixel7_lock.sh`.
+- **The real Pixel 7 is back in the loop** (wireless debugging), no lock since 10.10.2026 (one session drives it).
 
 ## Next, in order
 

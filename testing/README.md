@@ -56,9 +56,7 @@ Devices: Nothing Phone 2 and Pixel 7 on USB, Pixel 7 emulator (arm64) on the Mac
 through the phone speaker; USB-C audio, the Mix Ultra and USB sticks are the last phase, with
 Marko present.
 
-## The real Pixel 7 is shared (from 9.10.2026)
+## The real Pixel 7
 
-The Pixel 7 (wireless debugging) is also used by Marko's NDI camera project. Every round on it
-starts with `~/pixel7/pixel7-lock.sh take djmantra <minutes> "<what>"` and ends with
-`~/pixel7/pixel7-lock.sh give djmantra`, also when the round fails. Rules and the camera
-session's prompt: `docs/PIXEL7_SHARING.md`. The emulator (`emulator-5554`) needs no lock.
+No lock since 10.10.2026 (Marko: "remove the lock algorithm because now we have only one session
+running"): adb straight to it, like the emulator (`emulator-5554`).
