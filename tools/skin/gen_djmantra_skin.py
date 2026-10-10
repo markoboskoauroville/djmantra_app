@@ -219,7 +219,10 @@ def cover(n, size="-1me,-1me", minsize="40,40", name="Cover"):
   <DefaultCover>%scover_default.svg</DefaultCover>%s
 </CoverArt>""" % (name, size, minsize, grp(n), P,
                   # the header's note icons open the deck's song picker
-                  "\n  <OpensTrackPicker>true</OpensTrackPicker>" if name == "HeaderCover" else "")
+                  "\n  <OpensTrackPicker>true</OpensTrackPicker>" if name == "HeaderCover" else
+                  # One Deck: the album art picks the folder
+                  "\n  <OpensTrackPicker>folders</OpensTrackPicker>" if name == "OneDeckCover"
+                  else "")
 
 
 def track_prop(n, prop, name, align="left"):
@@ -728,6 +731,38 @@ def library_view():
     return vbox(top, body, name="LibraryView", policy="me,me")
 
 
+def one_deck_view():
+    """djay's One Deck for the phone (Marko's screenshot of djay Pro): listening
+    to the library. Album art (a tap: the folders), title, artist, BPM, key,
+    time; the overview and the waveform; previous / play / next / cue; then
+    the songs of the folder (a tap plays one, the next follows at the end).
+    The list is put into "OneDeckList" by the main window."""
+    def fact(caption, value):
+        return vbox(label(caption, "OneDeckCaption", align="left"), value, policy="me,min")
+    info = vbox(fact("TITLE", track_prop(1, "title", "OneDeckTitle")),
+                fact("ARTIST", track_prop(1, "artist", "OneDeckArtist")),
+                hbox(fact("BPM", bpm(1, "left")), fact("KEY", key_label(1, "left")),
+                     fact("TIME", time_remaining(1, "left")), policy="me,min"),
+                policy="me,min")
+    top = hbox(cover(1, "104f,104f", "104,104", "OneDeckCover"), hspace(12), info,
+               vbox(library_button(32), vstretch(), policy="min,me"),
+               name="TopBar", size="-1me,124f")
+    waveform = vbox(visual(1, False), policy="me,min", size="-1me,118f")
+    transport = hbox(
+        button("[DJMantra],one_deck_prev", "IconButton", "", "48f,48f", states=1,
+               pixmaps=[("prev.svg", "prev.svg")]),
+        play(1, 52),
+        button("[DJMantra],one_deck_next", "IconButton", "", "48f,48f", states=1,
+               pixmaps=[("next.svg", "next.svg")]),
+        hspace(14),
+        button("%s,cue_default" % grp(1), "CueButton", "CUE", "96f,44f",
+               display_key="%s,cue_indicator" % grp(1)),
+        spacer(), name="Transport", policy="me,min")
+    return vbox(top, overview(1, 30), waveform, transport,
+                vbox(name="OneDeckList", policy="me,me"),
+                name="OneDeck", policy="me,me")
+
+
 def size_aware(portrait, landscape):
     return ("<SizeAwareStack><SizePolicy>me,me</SizePolicy><Children>\n%s\n%s\n"
             "</Children></SizeAwareStack>" % (portrait, landscape))
@@ -753,6 +788,7 @@ def skin_xml():
         "[DJMantra],p_pads": "0",
         "[DJMantra],p_deck1": "0",
         "[DJMantra],p_deck2": "0",
+        "[DJMantra],one_deck": "0",
         "[DJMantra],d1_hotcue": "1", "[DJMantra],d1_loop": "0",
         "[DJMantra],d1_fx": "0", "[DJMantra],d1_sampler": "0",
         "[DJMantra],d2_hotcue": "1", "[DJMantra],d2_loop": "0",
@@ -767,6 +803,7 @@ def skin_xml():
         (None, size_aware(performance_portrait(), performance_landscape()), None),
         ("[DJMantra],show_library", vbox(library_view(), policy="me,me"), 0),
         ("[DJMantra],waveform_fullscreen", vbox(fullscreen_waveforms(), policy="me,me"), 0),
+        ("[DJMantra],one_deck", vbox(one_deck_view(), policy="me,me"), 0),
     ])
     return """<!--
   DJ Mantra skin: djay's phone layout with album art instead of turntables.
@@ -856,6 +893,10 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #BackButton, #LoadButton { font-size: 13px; }
 #LoadButton { margin-left: 4px; }
 #CueButton { border-radius: 8px; }
+#OneDeck { background-color: %(BG)s; }
+#OneDeckCaption { color: %(GREY)s; font-size: 11px; font-weight: bold; }
+#OneDeckTitle { color: %(WHITE)s; font-size: 18px; }
+#OneDeckArtist { color: %(WHITE)s; font-size: 15px; }
 #CueButton[displayValue="1"] { border-color: #ffffff; }
 #PflButton, #LoadDeckButton { font-size: 13px; border-radius: 6px; padding: 0px; }
 #PflButton[displayValue="1"] { color: #0d0d0f; background-color: %(ORANGE)s; border-color: %(ORANGE)s; }
@@ -954,6 +995,10 @@ def graphics():
     icon = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(icon)
     g["app_icon.svg"] = icon.svg_icon()
+    g["prev.svg"] = svg(48, 48, '<rect x="11" y="14" width="4" height="20" rx="1" fill="#ffffff"/>'
+                        '<path d="M37 14 L17 24 L37 34 Z" fill="#ffffff"/>')
+    g["next.svg"] = svg(48, 48, '<rect x="33" y="14" width="4" height="20" rx="1" fill="#ffffff"/>'
+                        '<path d="M11 14 L31 24 L11 34 Z" fill="#ffffff"/>')
     g["record.svg"] = svg(64, 64,
         '<circle cx="32" cy="32" r="27" fill="#0d0d0f" stroke="#ffffff" stroke-width="4"/>'
         '<circle cx="32" cy="32" r="9" fill="#ffb020"/>')

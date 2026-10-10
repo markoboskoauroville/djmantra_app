@@ -42,6 +42,8 @@ class MainMenu : public QWidget {
         std::function<void()> library;
         std::function<void()> controller;
         std::function<void()> settings;
+        std::function<void()> oneDeck; // switches One Deck / two decks
+        bool inOneDeck = false;
     };
     MainMenu(QWidget* pWindow, const Actions& actions);
 

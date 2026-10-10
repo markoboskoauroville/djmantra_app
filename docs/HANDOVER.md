@@ -162,6 +162,18 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
 and video file under the phone's Music folder (load, play, heard by the mic) and, last, a short
 automatic mix (two songs, SYNC, crossfader sweep, listened to by the mic).
 
+## One Deck (10.10.2026, after Marko's djay Pro screenshot; `docs/skin/one-deck.png`)
+
+- Menu sheet → ONE DECK / TWO DECKS (`[DJMantra],one_deck`). Album art (tap = the folder list),
+  title / artist / BPM / key / time, overview, waveform, prev / play / next / CUE, then the
+  songs of the folder: the main window puts an embedded `TrackPicker` into the skin's
+  "OneDeckList". A tap plays at once (orange row), ⏮ ⏭ and the end of a song go through the
+  folder.
+- Also on the branch: engine sample rate from the Oboe stream (the 8.8 % fast playback), the
+  UI making room for the system bars (insets → content margins), the controller-style mixer
+  (HIGH / GAIN, MID, LOW, FILTER; 1 · 2, MASTER, headphones) and pad modes, CUE instead of
+  SET, the "dj" logo, the app icon on the start screen.
+
 ## New requests from Marko (9.10.2026 afternoon, screenshots in `docs/ui-reference/`)
 
 - (done 9db7422) **Note icons = file pickers per deck** (`djmantra-portrait-mixer-note-icons.png`): the

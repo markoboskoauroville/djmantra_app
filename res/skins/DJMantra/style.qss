@@ -49,6 +49,10 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #BackButton, #LoadButton { font-size: 13px; }
 #LoadButton { margin-left: 4px; }
 #CueButton { border-radius: 8px; }
+#OneDeck { background-color: #232325; }
+#OneDeckCaption { color: #9a9aa0; font-size: 11px; font-weight: bold; }
+#OneDeckTitle { color: #f2f2f2; font-size: 18px; }
+#OneDeckArtist { color: #f2f2f2; font-size: 15px; }
 #CueButton[displayValue="1"] { border-color: #ffffff; }
 #PflButton, #LoadDeckButton { font-size: 13px; border-radius: 6px; padding: 0px; }
 #PflButton[displayValue="1"] { color: #0d0d0f; background-color: #E8A33D; border-color: #E8A33D; }

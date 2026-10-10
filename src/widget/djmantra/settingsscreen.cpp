@@ -194,6 +194,10 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
             tr("CONTROLLER"),
             QStringLiteral("qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #FF9F1C, stop:1 #F0542D)"),
             actions.controller));
+    pTiles->addWidget(tile(icons::kNote,
+            actions.inOneDeck ? tr("TWO DECKS") : tr("ONE DECK"),
+            QStringLiteral("qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #FFD400, stop:1 #FF9800)"),
+            actions.oneDeck));
     pTiles->addStretch(1);
     pLayout->addLayout(pTiles);
 

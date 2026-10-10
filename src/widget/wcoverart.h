@@ -65,6 +65,8 @@ class WCoverArt : public QWidget, public WBaseWidget, public TrackDropTarget {
     // DJ Mantra: a tap opens the song picker for this deck (skin option
     // <OpensTrackPicker>true</OpensTrackPicker>)
     bool m_opensTrackPicker = false;
+    // <OpensTrackPicker>folders</OpensTrackPicker>: One Deck's folder list
+    bool m_opensFolders = false;
     WCoverArtMenu* m_pMenu;
     TrackPointer m_loadedTrack;
     QPixmap m_loadedCover;

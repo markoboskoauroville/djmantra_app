@@ -52,6 +52,7 @@ const int kHistoryMax = 100;
 const int kPathRole = Qt::UserRole;
 const int kKindRole = Qt::UserRole + 1;
 const int kSubtitleRole = Qt::UserRole + 2;
+const int kCurrentRole = Qt::UserRole + 3;
 enum Kind {
     KindUp,
     KindFolder,
@@ -135,7 +136,10 @@ class RowDelegate : public QStyledItemDelegate {
         pPainter->save();
         pPainter->setRenderHint(QPainter::Antialiasing);
         const QRect rect = option.rect;
-        if (option.state & QStyle::State_Sunken) {
+        if (index.data(kCurrentRole).toBool()) {
+            // the song that plays, as djay's orange row
+            pPainter->fillRect(rect, QColor(0xFF, 0x98, 0x00));
+        } else if (option.state & QStyle::State_Sunken) {
             pPainter->fillRect(rect, kBar);
         }
         const int kind = index.data(kKindRole).toInt();
@@ -171,7 +175,9 @@ class RowDelegate : public QStyledItemDelegate {
         QFont font = option.font;
         font.setPixelSize(17);
         pPainter->setFont(font);
-        pPainter->setPen(kText);
+        const bool current = index.data(kCurrentRole).toBool();
+        // dark text on the orange row of the song that plays
+        pPainter->setPen(current ? QColor(0x11, 0x12, 0x15) : kText);
         const QFontMetrics metrics(font);
         const QString name = metrics.elidedText(
                 index.data(Qt::DisplayRole).toString(), Qt::ElideMiddle, textRight - textLeft);
@@ -187,7 +193,7 @@ class RowDelegate : public QStyledItemDelegate {
             QFont small = font;
             small.setPixelSize(13);
             pPainter->setFont(small);
-            pPainter->setPen(kSubText);
+            pPainter->setPen(current ? QColor(0x3A, 0x2A, 0x00) : kSubText);
             pPainter->drawText(QRect(textLeft,
                                        rect.top() + rect.height() / 2 + 4,
                                        textRight - textLeft,
@@ -208,15 +214,21 @@ class RowDelegate : public QStyledItemDelegate {
 
 } // namespace
 
-TrackPicker::TrackPicker(UserSettingsPointer pConfig, QWidget* pWindow, const QString& group)
+TrackPicker::TrackPicker(UserSettingsPointer pConfig,
+        QWidget* pWindow,
+        const QString& group,
+        bool embedded)
         : QWidget(pWindow),
           m_pConfig(pConfig),
           m_pWindow(pWindow),
+          m_embedded(embedded),
           m_group(group),
           m_tab(Tab::Files),
           m_newestFirst(false),
           m_lastReleaseX(0) {
-    setAttribute(Qt::WA_DeleteOnClose);
+    if (!m_embedded) {
+        setAttribute(Qt::WA_DeleteOnClose);
+    }
     // Opaque, so the widgets below (VU meters, waveforms) never paint through
     setAttribute(Qt::WA_OpaquePaintEvent);
     setAutoFillBackground(true);
@@ -350,14 +362,23 @@ TrackPicker::TrackPicker(UserSettingsPointer pConfig, QWidget* pWindow, const QS
         }
     });
 
-    // Over the whole window, following its size
-    m_pWindow->installEventFilter(this);
-    setGeometry(m_pWindow->rect());
     const QString lastFolder = m_pConfig->getValue(
             ConfigKey(kGroup, QStringLiteral("picker_last_folder")), QString());
     if (!lastFolder.isEmpty() && QFileInfo(lastFolder).isDir()) {
         m_path = lastFolder;
     }
+    m_current = m_pConfig->getValue(
+            ConfigKey(kGroup, QStringLiteral("picker_current_%1").arg(m_embedded ? 1 : 0)),
+            QString());
+    if (m_embedded) {
+        // A part of the page: its layout places it
+        m_pClose->hide();
+        showTab(Tab::Files);
+        return;
+    }
+    // Over the whole window, following its size
+    m_pWindow->installEventFilter(this);
+    setGeometry(m_pWindow->rect());
     // Android shows the system bars again over a new screen (round 7)
     AndroidWindow::hideSystemBars();
     showTab(Tab::Files);
@@ -366,8 +387,52 @@ TrackPicker::TrackPicker(UserSettingsPointer pConfig, QWidget* pWindow, const QS
     setFocus();
 }
 
+void TrackPicker::showFolders() {
+    showTab(Tab::Files);
+    showFolder(QString());
+}
+
+QStringList TrackPicker::songsIn(const QString& folder) const {
+    QFileInfoList songs = QDir(folder).entryInfoList(QDir::Files | QDir::Readable);
+    QCollator collator;
+    collator.setNumericMode(true);
+    collator.setCaseSensitivity(Qt::CaseInsensitive);
+    std::sort(songs.begin(), songs.end(), [&collator](const QFileInfo& a, const QFileInfo& b) {
+        return collator.compare(a.fileName(), b.fileName()) < 0;
+    });
+    QStringList paths;
+    for (const QFileInfo& song : std::as_const(songs)) {
+        if (SoundSourceProxy::isFileNameSupported(song.fileName())) {
+            paths.append(song.filePath());
+        }
+    }
+    return paths;
+}
+
+void TrackPicker::playNext(int direction) {
+    const QString folder = m_current.isEmpty() ? m_path : QFileInfo(m_current).path();
+    if (folder.isEmpty()) {
+        return;
+    }
+    const QStringList songs = songsIn(folder);
+    if (songs.isEmpty()) {
+        return;
+    }
+    const int index = songs.indexOf(m_current);
+    const int next = index < 0 ? 0 : index + direction;
+    if (next < 0 || next >= songs.size()) {
+        return; // the first or the last song of the folder
+    }
+    load(songs.at(next), m_group);
+}
+
+QWidget* TrackPicker::sheetHost() const {
+    // Embedded, the sheets cover the whole app, not just the list
+    return m_embedded && window() ? window() : m_pWindow;
+}
+
 bool TrackPicker::eventFilter(QObject* pObject, QEvent* pEvent) {
-    if (pObject == m_pWindow && pEvent->type() == QEvent::Resize) {
+    if (!m_embedded && pObject == m_pWindow && pEvent->type() == QEvent::Resize) {
         setGeometry(m_pWindow->rect());
     } else if (pObject == m_pList->viewport() && pEvent->type() == QEvent::Resize) {
         placeEmptyText();
@@ -382,7 +447,7 @@ void TrackPicker::keyPressEvent(QKeyEvent* pEvent) {
     if (pEvent->key() == Qt::Key_Back || pEvent->key() == Qt::Key_Escape) {
         if (m_tab == Tab::Files && !m_path.isEmpty()) {
             goUp();
-        } else {
+        } else if (!m_embedded) {
             close();
         }
         pEvent->accept();
@@ -450,6 +515,7 @@ void TrackPicker::refresh() {
         pItem->setData(kPathRole, path);
         pItem->setData(kKindRole, kind);
         pItem->setData(kSubtitleRole, sub);
+        pItem->setData(kCurrentRole, !path.isEmpty() && path == m_current);
     };
 
     if (m_tab == Tab::Files) {
@@ -619,7 +685,7 @@ void TrackPicker::itemMenu(QListWidgetItem* pItem) {
         }
     }
     if (!menu.isEmpty()) {
-        menu.show(m_pWindow, pItem->text());
+        menu.show(sheetHost(), pItem->text());
     }
 }
 
@@ -631,8 +697,16 @@ void TrackPicker::load(const QString& location, const QString& group) {
         history.removeLast();
     }
     setList(kHistoryKey, history);
+    m_current = location;
+    m_pConfig->setValue(
+            ConfigKey(kGroup, QStringLiteral("picker_current_%1").arg(m_embedded ? 1 : 0)),
+            location);
     emit loadRequested(location, group);
-    close();
+    if (m_embedded) {
+        refresh(); // marks the new song
+    } else {
+        close();
+    }
 }
 
 void TrackPicker::addFolder() {
@@ -675,7 +749,7 @@ void TrackPicker::showSourceMenu() {
                 : QFileInfo(storage).fileName();
         menu.addAction(name, this, [this, storage] { showFolder(storage); });
     }
-    menu.show(m_pWindow, tr("Show"));
+    menu.show(sheetHost(), tr("Show"));
 }
 
 void TrackPicker::showMoreMenu() {
@@ -705,7 +779,7 @@ void TrackPicker::showMoreMenu() {
             refresh();
         });
     }
-    menu.show(m_pWindow);
+    menu.show(sheetHost());
 }
 
 QStringList TrackPicker::roots() const {

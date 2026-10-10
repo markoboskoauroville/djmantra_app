@@ -26,7 +26,17 @@ class TrackPicker : public QWidget {
   public:
     /// pWindow: the main window it covers; group: "[Channel1]", "[Channel2]",
     /// or empty for the library (a tapped song asks for the deck)
-    TrackPicker(UserSettingsPointer pConfig, QWidget* pWindow, const QString& group);
+    /// embedded: a part of a page (One Deck's song list): no close button,
+    /// stays open after a song is chosen, marks the song that plays
+    TrackPicker(UserSettingsPointer pConfig,
+            QWidget* pWindow,
+            const QString& group,
+            bool embedded = false);
+
+    /// The list of folders (One Deck: a tap on the album art)
+    void showFolders();
+    /// The next (+1) or previous (-1) song in the playing song's folder
+    void playNext(int direction);
 
   signals:
     void loadRequested(const QString& location, const QString& group);
@@ -54,6 +64,8 @@ class TrackPicker : public QWidget {
     void addFolder();
     void showSourceMenu();
     void showMoreMenu();
+    QWidget* sheetHost() const;
+    QStringList songsIn(const QString& folder) const;
 
     QStringList roots() const;
     QStringList list(const QString& key) const;
@@ -63,6 +75,8 @@ class TrackPicker : public QWidget {
 
     UserSettingsPointer m_pConfig;
     QWidget* m_pWindow;
+    bool m_embedded;
+    QString m_current; // the song chosen last (embedded: the one that plays)
     QString m_group;
     Tab m_tab;
     QString m_path; // empty: the list of folders

@@ -59,7 +59,11 @@ WCoverArt::~WCoverArt() {
 void WCoverArt::setup(const QDomNode& node, const SkinContext& context) {
     Q_UNUSED(node);
     setMouseTracking(true);
-    context.hasNodeSelectBool(node, QStringLiteral("OpensTrackPicker"), &m_opensTrackPicker);
+    QString opens;
+    if (context.hasNodeSelectString(node, QStringLiteral("OpensTrackPicker"), &opens)) {
+        m_opensTrackPicker = opens.contains(QLatin1String("true"), Qt::CaseInsensitive);
+        m_opensFolders = opens.contains(QLatin1String("folders"), Qt::CaseInsensitive);
+    }
 
     // Background color
     QColor bgc(255,255,255);
@@ -262,6 +266,13 @@ void WCoverArt::mouseReleaseEvent(QMouseEvent* pEvent) {
         return;
     }
 
+    if (m_opensFolders && pEvent->button() == Qt::LeftButton && m_clickTimer.isActive()) {
+        // DJ Mantra's One Deck: the album art picks the folder
+        ControlObject::set(ConfigKey(QStringLiteral("[DJMantra]"),
+                                   QStringLiteral("one_deck_folders")),
+                1);
+        return;
+    }
     if (m_opensTrackPicker && pEvent->button() == Qt::LeftButton && m_clickTimer.isActive()) {
         // DJ Mantra: the deck's song picker ([DJMantra],pick_track = deck number)
         QString number = m_group;

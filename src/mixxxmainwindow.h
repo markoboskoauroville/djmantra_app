@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QPointer>
 #include <QString>
 #include <memory>
 
@@ -15,6 +16,9 @@ class DlgPreferences;
 class DlgKeywheel;
 class GuiTick;
 class LaunchImage;
+namespace djmantra {
+class TrackPicker;
+}
 class VisualsManager;
 class WMainMenuBar;
 
@@ -125,6 +129,8 @@ class MixxxMainWindow : public QMainWindow {
 
     QWidget* m_pCentralWidget;
     LaunchImage* m_pLaunchImage;
+    // DJ Mantra's One Deck: the song list in the skin
+    QPointer<djmantra::TrackPicker> m_pOneDeckList;
 #ifndef __APPLE__
     Qt::WindowStates m_prevState;
 #endif

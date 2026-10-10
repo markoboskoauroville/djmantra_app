@@ -7,6 +7,7 @@
 #include <QOpenGLContext>
 #include <QTimer>
 #include <QUrl>
+#include <QVBoxLayout>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QGLFormat>
@@ -28,6 +29,7 @@
 #include "dialog/dlgabout.h"
 #include "dialog/dlgdevelopertools.h"
 #include "dialog/dlgkeywheel.h"
+#include "control/controlproxy.h"
 #include "control/controlpushbutton.h"
 #include "controllers/djmantra/dlgcontrollerremap.h"
 #include "library/djmantra/trackpicker.h"
@@ -195,9 +197,42 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
             actions.library = [pickTrack] { pickTrack(QString()); };
             actions.controller = showControllerMap;
             actions.settings = showSettings;
+            const ConfigKey oneDeck(QStringLiteral("[DJMantra]"), QStringLiteral("one_deck"));
+            actions.inOneDeck = ControlObject::get(oneDeck) > 0;
+            actions.oneDeck = [oneDeck] {
+                ControlObject::set(oneDeck, ControlObject::get(oneDeck) > 0 ? 0 : 1);
+            };
             new djmantra::MainMenu(screenParent(), actions);
         });
         pushButton("show_preferences", showSettings);
+        // One Deck (djay's One Deck: listening to the library): the song list
+        // under the waveform, built into the skin by loadConfiguredSkin()
+        pushButton("one_deck_folders", [this] {
+            if (m_pOneDeckList) {
+                m_pOneDeckList->showFolders();
+            }
+        });
+        pushButton("one_deck_next", [this] {
+            if (m_pOneDeckList) {
+                m_pOneDeckList->playNext(1);
+            }
+        });
+        pushButton("one_deck_prev", [this] {
+            if (m_pOneDeckList) {
+                m_pOneDeckList->playNext(-1);
+            }
+        });
+        // At the end of a song the next one in its folder plays
+        auto* pPlay = new ControlProxy(QStringLiteral("[Channel1]"), QStringLiteral("play"), this);
+        auto* pPosition = new ControlProxy(
+                QStringLiteral("[Channel1]"), QStringLiteral("playposition"), this);
+        pPlay->connectValueChanged(this, [this, pPosition](double playing) {
+            if (playing == 0 && pPosition->get() >= 0.995 && m_pOneDeckList &&
+                    ControlObject::get(ConfigKey(QStringLiteral("[DJMantra]"),
+                            QStringLiteral("one_deck"))) > 0) {
+                m_pOneDeckList->playNext(1);
+            }
+        });
         // The controller's buttons 1 and 2 next to the browser: a deck's songs
         pushButton("load_deck1", [pickTrack] { pickTrack(QStringLiteral("[Channel1]")); });
         pushButton("load_deck2", [pickTrack] { pickTrack(QStringLiteral("[Channel2]")); });
@@ -1448,6 +1483,26 @@ bool MixxxMainWindow::loadConfiguredSkin() {
     m_pCentralWidget = m_pSkinLoader->loadConfiguredSkin(this,
             &m_skinCreatedControls,
             m_pCoreServices.get());
+    // DJ Mantra's One Deck: the song list into its place in the skin
+    if (m_pCentralWidget) {
+        if (auto* pHost = m_pCentralWidget->findChild<QWidget*>(QStringLiteral("OneDeckList"))) {
+            m_pOneDeckList = new djmantra::TrackPicker(
+                    m_pCoreServices->getSettings(), pHost, QStringLiteral("[Channel1]"), true);
+            if (!pHost->layout()) {
+                new QVBoxLayout(pHost);
+            }
+            pHost->layout()->setContentsMargins(0, 0, 0, 0);
+            pHost->layout()->addWidget(m_pOneDeckList);
+            connect(m_pOneDeckList,
+                    &djmantra::TrackPicker::loadRequested,
+                    this,
+                    [this](const QString& location, const QString& group) {
+                        // a tap plays the song at once
+                        m_pCoreServices->getPlayerManager()->slotLoadLocationToPlayer(
+                                location, group, true);
+                    });
+        }
+    }
     if (centralWidget() == m_pLaunchImage) {
         initializationProgressUpdate(100, "");
     }
