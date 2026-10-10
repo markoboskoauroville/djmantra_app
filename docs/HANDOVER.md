@@ -158,6 +158,10 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
 - ui_test: its deck 2 "failures" are the test's check, not the touch (the replay of its exact
   swipes moved deck 2's knob, round 8 swipe-replay.txt). Still to fix in ui_test.py.
 
+**Priority (Marko, 10.10.2026): user interface fixes first.** Round 9 also tests every audio
+and video file under the phone's Music folder (load, play, heard by the mic) and, last, a short
+automatic mix (two songs, SYNC, crossfader sweep, listened to by the mic).
+
 ## New requests from Marko (9.10.2026 afternoon, screenshots in `docs/ui-reference/`)
 
 - (done 9db7422) **Note icons = file pickers per deck** (`djmantra-portrait-mixer-note-icons.png`): the
