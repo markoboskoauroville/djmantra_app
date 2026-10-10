@@ -144,6 +144,20 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   still open Mixxx's preferences dialog: rewrite those pages natively next (output device,
   buffer size; MIDI devices list; the rest).
 
+## 10.10.2026: real phone, eyes and ears (owner's request)
+
+- Device tests now go through the new local session **"Djapp local"**
+  (session_01HGBdB5gPBHRGZUks9DixYh) on Marko's Mac, with the real phone over USB.
+- `tools/android/observe.py`: the Mac's microphone hears the phone's speaker (level, strongest
+  frequency, `--expect 440` / `--silence -50`), a camera on the Mac looks at the Mix Ultra
+  (`look`, and `lights` = which cells of a 32x18 grid changed between two pictures).
+- Round 8 fixes in 8c83bcb (MP3 as MP3 on Android, /sdcard/Music and Download as the picker's
+  folders, bottom sheets instead of QMenu, Settings scroll repaint, Qt full screen + Java
+  re-hide). Round 9 sent to Djapp local: setup (cameras, mic, controller connection), sound by
+  ear, lights by camera, the new screens on the real phone, ui_test.
+- ui_test: its deck 2 "failures" are the test's check, not the touch (the replay of its exact
+  swipes moved deck 2's knob, round 8 swipe-replay.txt). Still to fix in ui_test.py.
+
 ## New requests from Marko (9.10.2026 afternoon, screenshots in `docs/ui-reference/`)
 
 - (done 9db7422) **Note icons = file pickers per deck** (`djmantra-portrait-mixer-note-icons.png`): the
