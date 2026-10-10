@@ -1,0 +1,230 @@
+-rw-rw---- 1 u0_a287 media_rw       36 2026-09-10 15:59 /storage/emulated/0/Music/.thumbnails/.database_uuid
+-rw-rw---- 1 u0_a287 media_rw        0 2026-09-10 15:59 /storage/emulated/0/Music/.thumbnails/.nomedia
+-rwxrwx--- 1 u0_a287 media_rw  7319173 2026-09-21 08:07 /storage/emulated/0/Music/Aum Ganesha Ganesha short english .mp3
+-rw-rw---- 1 u0_a287 media_rw 10980913 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/ATYYA - ATYYA - Above The Clouds (ATYYA Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw  3703506 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Ai Breeze - 🎧 Desert Soul Awakening – Ai Breeze Ethno Chill 2026.opus
+-rw-rw---- 1 u0_a287 media_rw 11812941 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Anilah - Warrior (Revisited).opus
+-rw-rw---- 1 u0_a287 media_rw 18173538 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Arewa Trend Music - Inda Rai (Nayi Nisa).m4a
+-rw-rw---- 1 u0_a287 media_rw  7312304 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Asymmetric Recordings - Dip - Lonya & Mz Sunday Luv - Judgement Day (Madloch Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 12459037 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Auntie Flo - Waiting for A (Woman) [feat. Anbuley] [The Revenge Rework Dixon Beat Edit].m4a
+-rw-rw---- 1 u0_a287 media_rw 16679495 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Ayla Schafer - She who whispers LIVE - Ayla Schafer.m4a
+-rw-rw---- 1 u0_a287 media_rw  7967556 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Âme - Rej.opus
+-rw-rw---- 1 u0_a287 media_rw 15008930 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Bahramji & Maneesh De Moor - Dreamcatcher.m4a
+-rw-rw---- 1 u0_a287 media_rw  7615456 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Bahramji & Mashti - Faithfulness.opus
+-rw-rw---- 1 u0_a287 media_rw 21753629 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Bahramji, Mercan Dede, Baham, Golshifteh Farahani - Jananeh.m4a
+-rw-rw---- 1 u0_a287 media_rw  7233163 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Balance Right - Five Sequences (Balance Right Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw  7369329 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Beats Antique - Beauty Beats.m4a
+-rw-rw---- 1 u0_a287 media_rw 11457656 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Beats Antique - Egyptic.m4a
+-rw-rw---- 1 u0_a287 media_rw 10020796 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Beats Antique - Tabla Toy.m4a
+-rw-rw---- 1 u0_a287 media_rw  9220330 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Beautiful Chorus - I Am.m4a
+-rw-rw---- 1 u0_a287 media_rw 11015819 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Beautiful Chorus - Infinite Universe.m4a
+-rw-rw---- 1 u0_a287 media_rw  9901075 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Bedrock Records - Guy J - Save Me.opus
+-rw-rw---- 1 u0_a287 media_rw  6531167 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Boards of Canada - Deep Time (2).m4a
+-rw-rw---- 1 u0_a287 media_rw  6612664 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Boards of Canada - Deep Time.m4a
+-rw-rw---- 1 u0_a287 media_rw  5754556 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Bomba Estéreo - Soy Yo.m4a
+-rw-rw---- 1 u0_a287 media_rw  6650767 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Bonobo - Cirrus.m4a
+-rw-rw---- 1 u0_a287 media_rw  7928409 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Bonobo - Kerala.m4a
+-rw-rw---- 1 u0_a287 media_rw 12076572 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Bonobo - Linked.m4a
+-rw-rw---- 1 u0_a287 media_rw 10711096 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Bonobo - Migration.m4a
+-rw-rw---- 1 u0_a287 media_rw  4934895 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/CCEBA - Barda feat. Gus Goncalves, “Rama en el río” - Ciclo Luminiscencias.opus
+-rw-rw---- 1 u0_a287 media_rw  5856451 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Carbon Based Lifeforms - Photosynthesis.opus
+-rw-rw---- 1 u0_a287 media_rw 12148887 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Carbon Based Lifeforms - Vortex.m4a
+-rw-rw---- 1 u0_a287 media_rw  9814345 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Chancha Vía Circuito - Ilaló (feat. Mateo Kingman).m4a
+-rw-rw---- 1 u0_a287 media_rw  4536009 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Chancha Vía Circuito - Sueño en Paraguay (El Bu'ho Remix).opus
+-rw-rw---- 1 u0_a287 media_rw  9975304 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Christian Löffler - Lid.m4a
+-rw-rw---- 1 u0_a287 media_rw  4547220 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/CloZee - Koto.opus
+-rw-rw---- 1 u0_a287 media_rw  9251106 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/CloZee - Winter Is Coming.m4a
+-rw-rw---- 1 u0_a287 media_rw 13117246 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Desert Dwellers - Lotus Heart (Kalya Scintilla Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 16345271 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Desert Dwellers - The Great Mystery.m4a
+-rw-rw---- 1 u0_a287 media_rw  8121805 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Deva Premal & Miten - So Much Magnificence.opus
+-rw-rw---- 1 u0_a287 media_rw 13920627 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Deva Premal - Om Namo Bhagavate.m4a
+-rw-rw---- 1 u0_a287 media_rw 19399426 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Deva Premal - Om Shree Saché.m4a
+-rw-rw---- 1 u0_a287 media_rw  5115408 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Dub Colossus - Azmari Dub.opus
+-rw-rw---- 1 u0_a287 media_rw  4691040 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/El Búho - Camino De Flores.opus
+-rw-rw---- 1 u0_a287 media_rw  6237954 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Elements of Dysfunction - The Glass Haired Devil.m4a
+-rw-rw---- 1 u0_a287 media_rw  6300587 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Emancipator - Greenland.m4a
+-rw-rw---- 1 u0_a287 media_rw 10466639 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Emancipator - Minor Cause.m4a
+-rw-rw---- 1 u0_a287 media_rw  6096291 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Emancipator - Soon It Will Be Cold Enough to Build Fires.m4a
+-rw-rw---- 1 u0_a287 media_rw  4775077 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/EspacioRonda - Mirabai Ceiba - Long time sun.m4a
+-rw-rw---- 1 u0_a287 media_rw  7971156 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Federico Aubele - Postales.m4a
+-rw-rw---- 1 u0_a287 media_rw 16422970 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Fernando Olaya, Michael A - In Between Worlds (Michael a Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw  6562870 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Galper - Hamsin.m4a
+-rw-rw---- 1 u0_a287 media_rw  7408094 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Garth Stevenson - Flying.m4a
+-rw-rw---- 1 u0_a287 media_rw  6107748 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Gurbax & Beats Antique - Dirty South.m4a
+-rw-rw---- 1 u0_a287 media_rw 11536165 2026-10-07 13:58 /storage/emulated/0/Music/ECSTATIC-365/Gurunam Singh - Change.m4a
+-rw-rw---- 1 u0_a287 media_rw 14119271 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Gurunam Singh - Ra Ma Da Sa Meditation (Extended Version).m4a
+-rw-rw---- 1 u0_a287 media_rw 11890608 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Guy Gerber - What To Do.m4a
+-rw-rw---- 1 u0_a287 media_rw 14680162 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Guy J， Guy Mantzur - All In.m4a
+-rw-rw---- 1 u0_a287 media_rw  7267081 2026-10-07 13:58 /storage/emulated/0/Music/ECSTATIC-365/HUGEL, Imael Angel & Ultra Naté - Movin' To The Sun.m4a
+-rw-rw---- 1 u0_a287 media_rw  6455189 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Hang Massive - Once Again (Live).opus
+-rw-rw---- 1 u0_a287 media_rw 10623858 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Helios - Halving The Compass.m4a
+-rw-rw---- 1 u0_a287 media_rw 11201205 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Hraach - Apricot Tree.m4a
+-rw-rw---- 1 u0_a287 media_rw  6450577 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Innellea - The Belonging - Innellea (The Belonging Album).m4a
+-rw-rw---- 1 u0_a287 media_rw  4153378 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Jai Uttal & The Pagan Love Orchestra - Guru Bramha.opus
+-rw-rw---- 1 u0_a287 media_rw 15072816 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Jai Uttal - Hara Hara Mahedev-Om Namah Shivaya.opus
+-rw-rw---- 1 u0_a287 media_rw 13766561 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Jai-Jagdeesh - Aad Guray Nameh.m4a
+-rw-rw---- 1 u0_a287 media_rw  4912185 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Jose Larralde - Quimey Neuquen.opus
+-rw-rw---- 1 u0_a287 media_rw  5826751 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/José Padilla - Adiós Ayer.opus
+-rw-rw---- 1 u0_a287 media_rw  7267595 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Jungle - The Wave.m4a
+-rw-rw---- 1 u0_a287 media_rw  3822675 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/KIMBO Official REMIX - SOL RISING - TAKE ME HIGHER - [CHILL VIBEZ] 2018.m4a
+-rw-rw---- 1 u0_a287 media_rw 12200994 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Kaya Project - Walking Through.m4a
+-rw-rw---- 1 u0_a287 media_rw  7348600 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Kelly Boesch - Pulling at My Strings.m4a
+-rw-rw---- 1 u0_a287 media_rw 39923297 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Krishna Das - Hare Krishna (Live).m4a
+-rw-rw---- 1 u0_a287 media_rw 14759418 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Krishna Das Music - Baba Hanuman - Krishna Das! Live With Lyrics.opus
+-rw-rw---- 1 u0_a287 media_rw  9994700 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Lee Burridge & Lost Desert - Float On.opus
+-rw-rw---- 1 u0_a287 media_rw 16008046 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Liquid Bloom - Roots of the Earth (Hedflux Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 15559119 2026-10-07 13:58 /storage/emulated/0/Music/ECSTATIC-365/Liquid Bloom - Sacred Blessing.m4a
+-rw-rw---- 1 u0_a287 media_rw 98573515 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Liquid Bloom, Bloomurian & Onanya - Forest Guardians (CALAGNA Remix).opus
+-rw-rw---- 1 u0_a287 media_rw 12950825 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Loop Guru - Paradigm Shuffle (The Bird Of Paradise).m4a
+-rw-rw---- 1 u0_a287 media_rw 15887032 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Marconi Union - Weightless, Pt. 1.m4a
+-rw-rw---- 1 u0_a287 media_rw  7207545 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Maribou State & Holly Walker - Midas.m4a
+-rw-rw---- 1 u0_a287 media_rw  8592517 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Marya Stark - Lineage.m4a
+-rw-rw---- 1 u0_a287 media_rw 12312864 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Massive Attack - Angel.m4a
+-rw-rw---- 1 u0_a287 media_rw  9214261 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Massive Attack - Teardrop.m4a
+-rw-rw---- 1 u0_a287 media_rw  4279653 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Matt - Nous contre eux (feat. Dadoo).opus
+-rw-rw---- 1 u0_a287 media_rw 10739232 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Matthew Dekay & Lee Burridge - Lost In a Moment (Dixon Rework).opus
+-rw-rw---- 1 u0_a287 media_rw  8677139 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Max Cooper - Order from Chaos.m4a
+-rw-rw---- 1 u0_a287 media_rw 10409104 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Moe Turk - Hey Look.m4a
+-rw-rw---- 1 u0_a287 media_rw  5673698 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Morcheeba - The Sea.opus
+-rw-rw---- 1 u0_a287 media_rw 11424712 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Nahko And Medicine For The People - Aloha Ke Akua (Acoustic - Piano).opus
+-rw-rw---- 1 u0_a287 media_rw 15154297 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Nahko And Medicine For The People - Black As Night.m4a
+-rw-rw---- 1 u0_a287 media_rw 13319504 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Nahko And Medicine For The People - Budding Trees.m4a
+-rw-rw---- 1 u0_a287 media_rw  8938927 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Natacha Atlas - Mon Amie la Rose.m4a
+-rw-rw---- 1 u0_a287 media_rw  7174352 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Nicola Cruz - Equinoccio (feat. Huaira).m4a
+-rw-rw---- 1 u0_a287 media_rw 12705910 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Nicolas Jaar - Mi Mujer.m4a
+-rw-rw---- 1 u0_a287 media_rw 27718779 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Nils Frahm - All Melody.m4a
+-rw-rw---- 1 u0_a287 media_rw 16126072 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Nils Frahm - Says.m4a
+-rw-rw---- 1 u0_a287 media_rw  9538068 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Nu - Man O To (Be Svendsen Remix).opus
+-rw-rw---- 1 u0_a287 media_rw  6822089 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Ólafur Arnalds - Near Light.m4a
+-rw-rw---- 1 u0_a287 media_rw 15814956 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/PROFF, Khen & Volen Sentir - Mirage (Extended Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 15117611 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Peia - Machi.m4a
+-rw-rw---- 1 u0_a287 media_rw  3648368 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Phaeleh - Afterglow (feat. Soundmouse).m4a
+-rw-rw---- 1 u0_a287 media_rw 13556658 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Quantic & Nidia Góngora - Muévelo Negro.m4a
+-rw-rw---- 1 u0_a287 media_rw  3593893 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Quantic - Mi Swing Es Tropical (feat. tempo & Candela All Stars).opus
+-rw-rw---- 1 u0_a287 media_rw  3724192 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Quantic - Time Is the Enemy.opus
+-rw-rw---- 1 u0_a287 media_rw 12899208 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Random Rab, Lapa - Parallels.m4a
+-rw-rw---- 1 u0_a287 media_rw  5611531 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Recondite - Levo (Club Edit).opus
+-rw-rw---- 1 u0_a287 media_rw  8394073 2026-10-07 13:58 /storage/emulated/0/Music/ECSTATIC-365/Rising Appalachia - Resilient.m4a
+-rw-rw---- 1 u0_a287 media_rw  6475767 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Ronald Rubinel - Mille et une nuits.opus
+-rw-rw---- 1 u0_a287 media_rw  7123511 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Röyksopp - Eple.m4a
+-rw-rw---- 1 u0_a287 media_rw  7203839 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Rudi Buys - The One (Dance Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 18856091 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Sahar Z, Guy Mantzur - Patterns (Original Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 20490322 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Sat Kartar - Aad Sach.m4a
+-rw-rw---- 1 u0_a287 media_rw 15256157 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Shaman's Dream, Geometrae & Ruby Chase - Moon Whisperer.m4a
+-rw-rw---- 1 u0_a287 media_rw 14621873 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Shpongle - Once Upon the Sea of Blissful Awareness.m4a
+-rw-rw---- 1 u0_a287 media_rw 26404895 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Snatam Kaur - Ra Ma Da Sa.m4a
+-rw-rw---- 1 u0_a287 media_rw  7509713 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Snatam Kaur - Servant of Peace.opus
+-rw-rw---- 1 u0_a287 media_rw 16457300 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Snatam Kaur - Snatam Kaur - Ong Namo [Live in Barcelona].opus
+-rw-rw---- 1 u0_a287 media_rw 11028404 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Starling Arrow & Ayla Nereo - Wild Sweet (feat. Tina Malia, Marya Stark, Leah Song, Chloe Smith & Rising Appalachia).m4a
+-rw-rw---- 1 u0_a287 media_rw 13877119 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Stephan Bodzin - Singularity.m4a
+-rw-rw---- 1 u0_a287 media_rw 21972318 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Sudha & Maneesh De Moor - Moola Meditation.opus
+-rw-rw---- 1 u0_a287 media_rw  4055572 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/The Chemical Brothers - Go.m4a
+-rw-rw---- 1 u0_a287 media_rw  8950142 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/The Nordic Echo - Icelandic Folk Air.m4a
+-rw-rw---- 1 u0_a287 media_rw 81933876 2026-10-07 13:58 /storage/emulated/0/Music/ECSTATIC-365/The Psychedelic Muse - Desert Dwellers - Anahata Yoga Dub [Full Album].opus
+-rw-rw---- 1 u0_a287 media_rw  9439776 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Thievery Corporation - Lebanese Blonde.m4a
+-rw-rw---- 1 u0_a287 media_rw  9236359 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/This Never Happened - Lane 8 ft. RBBTS - Visions (Township Rebellion Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw  7934390 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Tina Malia - Gayatri Mantra.opus
+-rw-rw---- 1 u0_a287 media_rw  9301478 2026-10-07 13:58 /storage/emulated/0/Music/ECSTATIC-365/Tina Malia - Heaven.m4a
+-rw-rw---- 1 u0_a287 media_rw  5831088 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Tina Malia - Sarva Mangala.opus
+-rw-rw---- 1 u0_a287 media_rw 15393689 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Township Rebellion - Infinite Meadow.m4a
+-rw-rw---- 1 u0_a287 media_rw  6910788 2026-10-07 13:58 /storage/emulated/0/Music/ECSTATIC-365/Trentemøller - Moan (Trentemøller Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw  6637598 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Trevor Hall - The Lime Tree.m4a
+-rw-rw---- 1 u0_a287 media_rw 11439929 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/Trevor Hall - You Can't Rush Your Healing.m4a
+-rw-rw---- 1 u0_a287 media_rw 10311544 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Tycho - A Walk.m4a
+-rw-rw---- 1 u0_a287 media_rw  4922551 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Tycho - Awake.opus
+-rw-rw---- 1 u0_a287 media_rw  6458938 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/UKF Dubstep - Phaeleh - Storm (Ft. Jess Mills).m4a
+-rw-rw---- 1 u0_a287 media_rw 11152551 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Wah! - Opening.m4a
+-rw-rw---- 1 u0_a287 media_rw  7420327 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Watcha Clan - Balkan Qoulou.m4a
+-rw-rw---- 1 u0_a287 media_rw  6596950 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Watcha Clan - Im Nin'alu.m4a
+-rw-rw---- 1 u0_a287 media_rw  8456265 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Xavier Rudd - Follow The Sun.m4a
+-rw-rw---- 1 u0_a287 media_rw 14015883 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Xavier Rudd - Spirit Bird.m4a
+-rw-rw---- 1 u0_a287 media_rw  9021406 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Xavier Rudd - Stoney Creek (A Cappella).m4a
+-rw-rw---- 1 u0_a287 media_rw  4457177 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/Zero 7 & Sophie Barker - In the Waiting Line.opus
+-rw-rw---- 1 u0_a287 media_rw 17575454 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/eastforestmusic - East Forest x Duncan Trussell - So What -.m4a
+-rw-rw---- 1 u0_a287 media_rw  4465817 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/elmazote - voice - dj drez - jahta beat.opus
+-rw-rw---- 1 u0_a287 media_rw  2735851 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/newwave808 - Jon Hopkins - Autumn Hill.opus
+-rw-rw---- 1 u0_a287 media_rw  6519753 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/phaelehtv - Phaeleh - Last Goodbye.m4a
+-rw-rw---- 1 u0_a287 media_rw 10204925 2026-10-07 14:00 /storage/emulated/0/Music/ECSTATIC-365/phaelehtv - Phaeleh - Time (feat. Cashforgold).m4a
+-rw-rw---- 1 u0_a287 media_rw  9915037 2026-10-07 13:59 /storage/emulated/0/Music/ECSTATIC-365/porangui - Poranguí - Ayahuasca (Liquid Bloom and Poranguí Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw  9378286 2026-10-07 14:00 /storage/emulated/0/Music/Ecstatic dance Marko/01. Mustafa Ismaeel, Alaa Jazaeri, Kali-B - Never Enough.m4a
+-rw-rw---- 1 u0_a287 media_rw 13797754 2026-10-07 14:00 /storage/emulated/0/Music/Ecstatic dance Marko/02. Moodena - DC Heights.m4a
+-rw-rw---- 1 u0_a287 media_rw 16259077 2026-10-07 14:00 /storage/emulated/0/Music/Ecstatic dance Marko/03. Alankara, Jazzy D, Han Litz - Pacifique.m4a
+-rw-rw---- 1 u0_a287 media_rw  9004602 2026-10-07 14:00 /storage/emulated/0/Music/Ecstatic dance Marko/04. Francis Mercier, Magic System - Premier Gaou (Nitefreak Remix).m4a
+-rwxrwx--- 1 u0_a287 media_rw  2956059 2026-09-21 07:56 /storage/emulated/0/Music/Gambara Ganesha Mantra (Sanskrit Devotional Choir).mp3
+-rw-rw---- 1 u0_a287 media_rw 19295409 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/01. 2 Pure Dust - Every Day (Essential Dub).m4a
+-rw-rw---- 1 u0_a287 media_rw 23990677 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/02. Ben Brown - City Streets (Kris B and Nosmo Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw  3142574 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/03. Dtorres - Clum.m4a
+-rw-rw---- 1 u0_a287 media_rw 21228491 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/04. Mo.Bass - Front (Original Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 14501537 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/05. James Talk - Eden (Original).m4a
+-rw-rw---- 1 u0_a287 media_rw 20330248 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/06. Kamilo Sanclemente - Angels (Original Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 15000570 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/07. Budai, ViC - Emesen.m4a
+-rw-rw---- 1 u0_a287 media_rw  5133388 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/08. Anton Seim - Pleasure Time (Manchus Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 19078020 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/09. Shoreliners - Sandcastles (Oleg Izergin cafe remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 18991213 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/10. Toni Bass, David Penn - Dancin'.m4a
+-rw-rw---- 1 u0_a287 media_rw  6843850 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/11. Merlyn Martin, Huggie - Confirmation (Pacco & Rudy B Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 12314769 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/12. Berlin Minimal - Bärlin Bärlin (Original New Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 16587589 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/13. Robert Babicz - Dark Flower (Joris Voorn Magnolia Mix) [Mixed].m4a
+-rw-rw---- 1 u0_a287 media_rw 16127598 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/14. Robert Babicz - Black Lion (Original Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 20428031 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/16. K-Milian - Oditi.m4a
+-rw-rw---- 1 u0_a287 media_rw  6566520 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/17. Jerry K - Natural Phenomena.m4a
+-rw-rw---- 1 u0_a287 media_rw 23593412 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/19. Ben Coda - Human Movement (Original Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw  8759998 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/20. Simon Field - Let This One Ride (Extended Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 14811291 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/22. Cesium - On the Low (Original Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 19762335 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/23. J Michael Kober - Gutter Candy (Original Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw 18777966 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/24. Jollify - X Melody (Elias Tzikas & Paperboy Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 18618863 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/25. Daniel Boon - Save.m4a
+-rw-rw---- 1 u0_a287 media_rw 13481510 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/26. DJ Noor, Stefan Addo - Athena (Vlad Janela Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw  5129848 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/27. Jorge Montia - Deep Blue (Coqui Selection Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 20115595 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/28. Kintar - Nog ABK.m4a
+-rw-rw---- 1 u0_a287 media_rw  5968399 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/29. Yann Solo, Karl Jefferson - Mechanism (Alan Barratt Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 18115652 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/30. Fernando S - Inside Your Eyes.m4a
+-rw-rw---- 1 u0_a287 media_rw  5536667 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/31. Christian Fischer - Kolibri (Marcelinho Remix).m4a
+-rw-rw---- 1 u0_a287 media_rw 18635951 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/32. Various Artists - Younger.m4a
+-rw-rw---- 1 u0_a287 media_rw  8666073 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/33. Carter Jackman - Pacing Thunder (Radio Edit).m4a
+-rw-rw---- 1 u0_a287 media_rw  8682619 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/34. JWJ - Trance Gate.m4a
+-rw-rw---- 1 u0_a287 media_rw 15737120 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/35. Tvardovsky - Julie.m4a
+-rw-rw---- 1 u0_a287 media_rw 20101419 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/36. JAYDEE - Don't Be Sad (Original Mix).m4a
+-rw-rw---- 1 u0_a287 media_rw  7281628 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/37. JAYDEE - Oversea (Radio Edit).m4a
+-rw-rw---- 1 u0_a287 media_rw 14500220 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/38. Nox Vahn, Mimi Page - Dream Of Love (Mixed).m4a
+-rw-rw---- 1 u0_a287 media_rw  8907073 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/39. Felix - Don't You Want Me 2015.m4a
+-rw-rw---- 1 u0_a287 media_rw  8905176 2026-10-07 13:22 /storage/emulated/0/Music/Goa Marko/40. Felix - Don't You Want Me.m4a
+-rw-rw---- 1 u0_a287 media_rw 16648011 2026-10-07 13:58 /storage/emulated/0/Music/Hits#DJMantra/01. Sina Bathaie - Tehran.m4a
+-rw-rw---- 1 u0_a287 media_rw 11293438 2026-10-07 13:58 /storage/emulated/0/Music/Hits#DJMantra/02. Seba Campos - Canto Al Sol.m4a
+-rw-rw---- 1 u0_a287 media_rw 19458809 2026-10-07 13:58 /storage/emulated/0/Music/Hits#DJMantra/03. Sina Bathaie, CamelVIP - Breath of Life.m4a
+-rw-rw---- 1 u0_a287 media_rw  7699491 2026-10-07 13:58 /storage/emulated/0/Music/Hits#DJMantra/04. The Second Voice - LET ME BE.m4a
+-rw-rw---- 1 u0_a287 media_rw 16534741 2026-10-07 13:58 /storage/emulated/0/Music/Hits#DJMantra/05. Geju - Niv.m4a
+-rw-rw---- 1 u0_a287 media_rw 12185829 2026-09-16 21:59 /storage/emulated/0/Music/Mantra - Deep Waters 3 (vox_1).mp3
+-rwxrwx--- 1 u0_a287 media_rw  3394406 2026-09-21 08:01 /storage/emulated/0/Music/Mantra - Ganesha Sharana .mp3
+-rwxrwx--- 1 u0_a287 media_rw  2837553 2026-09-22 13:52 /storage/emulated/0/Music/Motiv Recordings/2026-09-22 13.48.26.m4a
+-rwxrwx--- 1 u0_a287 media_rw   302289 2026-09-22 13:48 /storage/emulated/0/Music/Motiv Recordings/RecentlyDeleted/2026-09-22 13.47.59@del20260922134824155.m4a
+-rw-rw---- 1 u0_a287 media_rw 16728301 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/01. Deborah Van Dyke - Om Mani Padme Hum.m4a
+-rw-rw---- 1 u0_a287 media_rw 36493263 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/02. Jai Uttal, Ben Leinbach - Nataraja.m4a
+-rw-rw---- 1 u0_a287 media_rw 45741810 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/03. Ben Leinbach, Jai Uttal, Manose - Mother's Wingspan.m4a
+-rw-rw---- 1 u0_a287 media_rw 11293496 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/04. Chantress Seba - Rising Into Light (Live).m4a
+-rw-rw---- 1 u0_a287 media_rw 11391509 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/05. Chantress Seba - Dream Prayer (Live).m4a
+-rw-rw---- 1 u0_a287 media_rw 10259819 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/06. Deborah Van Dyke - Om Nama Shivaya.m4a
+-rw-rw---- 1 u0_a287 media_rw 15526386 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/07. Deborah Van Dyke - Sound Current.m4a
+-rw-rw---- 1 u0_a287 media_rw 11415947 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/08. Deborah Van Dyke - Yod Hey Vav Hey.m4a
+-rw-rw---- 1 u0_a287 media_rw 18362214 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/09. Sam Garrett, Mollie Mendoza - Root Down Deep.m4a
+-rw-rw---- 1 u0_a287 media_rw 16724472 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/10. Sam Garrett - Journey.m4a
+-rw-rw---- 1 u0_a287 media_rw 18521060 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/11. Sam Garrett, Mollie Mendoza - Mama.m4a
+-rw-rw---- 1 u0_a287 media_rw 17513555 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/12. Mollie Mendoza, Sam Garrett - Light Of Your Grace (Live at Monte Sahaja).m4a
+-rw-rw---- 1 u0_a287 media_rw 11647146 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/13. Sam Garrett - Higher Than The Mountains.m4a
+-rw-rw---- 1 u0_a287 media_rw  8773346 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/14. Chantress Seba - Mountain Meditation (Live).m4a
+-rw-rw---- 1 u0_a287 media_rw  9828916 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/15. Chantress Seba - Ra Haset.m4a
+-rw-rw---- 1 u0_a287 media_rw 23509488 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/16. Shaman's Dream - Moonlight Saptah.m4a
+-rw-rw---- 1 u0_a287 media_rw 13613213 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/17. Ram Dass, AWARÉ - To Become Born.m4a
+-rw-rw---- 1 u0_a287 media_rw  5586111 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/18. Estas Tonne, Zola Dubnikova - A Call to Prayer.m4a
+-rw-rw---- 1 u0_a287 media_rw 16417191 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/19. Maneesh de Moor - Madre De La Selva.m4a
+-rw-rw---- 1 u0_a287 media_rw 20917094 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/20. Shantala, Sean Frenette, Jami Sieber - Kothbiro-Jaya Radhe.m4a
+-rw-rw---- 1 u0_a287 media_rw  9218820 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/21. Wolfgang Ohmer, Clara Sorace - Namasté.m4a
+-rw-rw---- 1 u0_a287 media_rw  5545393 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/22. Ali Maya, Mary Isis - Om Tare Tuttare (Micro Meditation) (feat. Mary Isis).m4a
+-rw-rw---- 1 u0_a287 media_rw  7502344 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/23. Bhagavan Das - Closing Prayers.m4a
+-rw-rw---- 1 u0_a287 media_rw 27792622 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/24. Kamari & Manvir - Shavasana.m4a
+-rw-rw---- 1 u0_a287 media_rw 14586800 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/25. Shantala - Closing Meditation.m4a
+-rw-rw---- 1 u0_a287 media_rw 22795535 2026-10-07 14:00 /storage/emulated/0/Music/Partner Yoga/26. Edo & Jo, Edo - Om Gam Ganapataye Namaha.m4a
+-rw-rw---- 1 u0_a287 media_rw 22946739 2026-04-23 16:40 /storage/emulated/0/Music/Return to Oz (ARTBAT Remix).mp4
+-rw-rw---- 1 u0_a287 media_rw  6422826 2026-10-07 14:00 /storage/emulated/0/Music/SUNRISE DANCE {by genre}/MOTION PICTURE/Fever(1).mp3
+-rw-rw---- 1 u0_a287 media_rw  3765069 2026-09-22 07:25 /storage/emulated/0/Music/cura prox cura, cura, cura.mp3
+-rw-rw---- 1 u0_a287 media_rw 42336044 2026-10-10 03:58 /storage/emulated/0/Music/djmantra-test-tone-2.wav
+-rw-rw---- 1 u0_a287 media_rw 42336044 2026-10-10 03:58 /storage/emulated/0/Music/djmantra-test-tone.wav

@@ -1,0 +1,101 @@
+Performing Streamed Install
+Success
+installed: versionName=0.5.0
+All files access: Uid mode: MANAGE_EXTERNAL_STORAGE: allow
+MANAGE_EXTERNAL_STORAGE: allow; time=+20h41m32s966ms ago
+Starting: Intent { cmp=com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity (has extras) }
+Status: ok
+LaunchState: COLD
+Activity: com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity
+TotalTime: 273
+WaitTime: 275
+Complete
+main window ready after 0s
+### Launch test: ok
+
+focused window:   mCurrentFocus=null
+
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org OggVorbis"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "opus"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - 4 (higher) : "Xiph.org libopusfile"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "wav"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - 3 (default) : "libsndfile"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "webm"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - SoundSource providers for file type "wv"
+    10-10 03:57:56.988 13029 13049 I DJMantra: info [Main] SoundSourceProxy - 1 (lowest) : "FFmpeg 9.0.2"
+    10-10 03:57:57.017 13029 13049 I DJMantra: info [Main] DbConnection - Available drivers for database connections: QList("QSQLITE")
+    10-10 03:57:57.019 13029 13049 I DJMantra: info [Main] DbConnectionPool - Cloned thread-local database connection "MIXXX-1" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-10 03:57:57.020 13029 13049 I DJMantra: info [Main] CoreServices - Connecting to database
+    10-10 03:57:57.020 13029 13049 I DJMantra: info [Main] CoreServices - Initializing or upgrading database schema
+    10-10 03:57:57.072 13029 13049 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel1]" , "cue_point" )
+    10-10 03:57:57.081 13029 13049 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Channel2]" , "cue_point" )
+    10-10 03:57:57.093 13029 13049 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler1]" , "cue_point" )
+    10-10 03:57:57.097 13029 13049 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler2]" , "cue_point" )
+    10-10 03:57:57.104 13029 13049 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler3]" , "cue_point" )
+    10-10 03:57:57.107 13029 13049 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[Sampler4]" , "cue_point" )
+    10-10 03:57:57.111 13029 13049 W DJMantra: warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[PreviewDeck1]" , "cue_point" )
+    10-10 03:57:57.159 13029 13049 I DJMantra: info [Main] LocalTrackCache - Mode 1 directory "/data/user/0/com.djmantra.app/files/track-cache" max MB 8192
+    10-10 03:57:57.159 13029 13049 I DJMantra: info [Main] GlobalTrackCache - Creating instance
+    10-10 03:57:57.160 13029 13049 I DJMantra: info [Main] TrackCollection - Connecting database
+    10-10 03:57:57.165 13029 13049 I DJMantra: info [Main] TrackCollectionManager - Starting library scanner thread
+    10-10 03:57:57.166 13029 13090 I DJMantra: info [LibraryScanner 1] DbConnectionPool - Cloned thread-local database connection "MIXXX-2" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-10 03:57:57.166 13029 13049 I DJMantra: info [Main] TrackCollection - Connecting track source
+    10-10 03:57:57.192 13029 13049 I DJMantra: info [Main] Deleting 1 playlists
+    10-10 03:57:57.223 13029 13049 I DJMantra: info [Main] Library - Access to directory QFileInfo(/storage/emulated/0/Android/data/com.djmantra.app/files/Music) from sandbox granted
+    10-10 03:57:57.223 13029 13049 I DJMantra: info [Main] LocalTrackCache - Mode 1 directory "/data/user/0/com.djmantra.app/files/track-cache" max MB 8192
+    10-10 03:57:57.224 13029 13092 I DJMantra: info [AnalyzerThread 0 #3] DbConnectionPool - Cloned thread-local database connection "MIXXX-5" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-10 03:57:57.224 13029 13093 I DJMantra: info [AnalyzerThread 1 #2] DbConnectionPool - Cloned thread-local database connection "MIXXX-4" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-10 03:57:57.224 13029 13095 I DJMantra: info [AnalyzerThread 3 #1] DbConnectionPool - Cloned thread-local database connection "MIXXX-3" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-10 03:57:57.225 13029 13094 I DJMantra: info [AnalyzerThread 2 #4] DbConnectionPool - Cloned thread-local database connection "MIXXX-6" QSqlDatabase(driver="QSQLITE", database="file:///data/user/0/com.djmantra.app/files/.mixxx/mixxxdb.sqlite", host="", port=-1, user="mixxx", open=true)
+    10-10 03:57:57.225 13029 13049 I DJMantra: info [Main] VolumeWatcher - External drives: QList()
+    10-10 03:57:57.237 13029 13049 W DJMantra: warning [Main] Could not read sampler bank file "/data/user/0/com.djmantra.app/files/.mixxx/samplers.xml"
+    10-10 03:57:57.237 13029 13090 I DJMantra: info [LibraryScanner 1] LibraryScanner - Cleaning up database...
+    10-10 03:57:57.239 13029 13049 I DJMantra: info [Main] Controller layout: 55 controls from "/data/user/0/com.djmantra.app/files/res/controllers/djmantra/mix-ultra-layout.json"
+    10-10 03:57:57.242 13029 13090 I DJMantra: info [LibraryScanner 1] LibraryScanner - Deleted 3 orphaned directory hashes
+    10-10 03:57:57.242 13029 13090 I DJMantra: info [LibraryScanner 1] LibraryScanner - Finished database cleanup: 5 ms
+    10-10 03:57:57.265 13029 13090 I DJMantra: info [LibraryScanner 1] LibraryScanner - Updating query planner statistics for database...
+    10-10 03:57:57.268 13029 13090 I DJMantra: info [LibraryScanner 1] LibraryScanner - Finished updating query planner statistics for database: 3 ms
+    10-10 03:57:57.279 13029 13049 I DJMantra: info [Main] MetadataSourceTagLib - No track metadata or cover art found in file "/sdcard/Music/djmantra-test-tone.wav" of type "WAV"
+    10-10 03:57:57.280 13029 13049 I DJMantra: info [Main] Android: starting without OpenGL widgets (software waveforms)
+    10-10 03:57:57.288 13029 13049 I DJMantra: info [Main] DJMantraMIDI: Bluetooth permission granted
+    10-10 03:57:58.082 13029 13049 I DJMantra: info [Main] Loaded skin "DJMantra" from "/data/user/0/com.djmantra.app/files/res/skins/DJMantra"
+    10-10 03:57:58.180 13029 13049 I DJMantra: info [Main] SoundDeviceOboe - Sound output open: 48000 Hz, 2 channels, 1024 frames per callback, burst 960 , API AAudio , device 43
+    10-10 03:57:58.180 13029 13102 I DJMantra: info [0xb400007d46858ef0] SoundDeviceOboe - First sound callback: 1024 frames
+    10-10 03:57:58.180 13029 13049 I DJMantra: info [Main] DJ Mantra main window ready, full screen: true size QSize(411, 914)
+    10-10 03:57:58.189 13029 13049 I DJMantra: info [Main] Deck 1 playing
+    10-10 03:57:58.192 13029 13096 I DJMantra: info [Controller] Starting engine
+    10-10 03:57:58.192 13029 13096 I DJMantra: info [Controller] Applying controller mapping...
+    10-10 03:57:58.208 13029 13096 I DJMantra: info [Controller] DJMantraMIDI - Looking for "DJControl Mix Ultra" over USB and Bluetooth
+    10-10 03:57:58.221 13029 13104 I DJMantraMIDI: Looking for the controller over Bluetooth
+    10-10 03:57:58.439 13029 13029 I DJMantraMIDI: Found DJControl Mix Ultra E0:79:8D:12:60:41 over Bluetooth
+    10-10 03:57:58.569 13029 13104 I DJMantraMIDI: Opening DJControl Mix Ultra type 3
+    10-10 03:57:58.569 13029 13104 W DJMantraMIDI: Could not open the device
+    10-10 03:57:58.573 13029 13104 I DJMantraMIDI: Connected (bluetooth)
+    10-10 03:57:58.575 13029 13104 I DJMantra: info [0xb400007d468b5db0] DJMantraMIDI - "DJControl Mix Ultra" connected over "bluetooth"
+    10-10 03:57:58.598  1204  1204 I adbd    : adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'DJMantra''
+    10-10 03:57:58.990 13029 13121 I DJMantraMIDI: in 90 00 7F
+    10-10 03:57:59.318 13029 13121 I DJMantraMIDI: in B0 00 38
+    10-10 03:57:59.319 13029 13121 I DJMantraMIDI: in B0 03 7F
+    10-10 03:57:59.319 13029 13121 I DJMantraMIDI: in B1 00 22
+    10-10 03:57:59.320 13029 13121 I DJMantraMIDI: in B2 00 7F
+    10-10 03:57:59.320 13029 13121 I DJMantraMIDI: in B1 08 00
+    10-10 03:57:59.322 13029 13121 I DJMantraMIDI: in B2 08 1D
+    10-10 03:57:59.322 13029 13121 I DJMantraMIDI: in B1 01 40
+    10-10 03:57:59.324 13029 13121 I DJMantraMIDI: in B2 01 40
+    10-10 03:57:59.324 13029 13121 I DJMantraMIDI: in B1 02 7F
+    10-10 03:57:59.324 13029 13121 I DJMantraMIDI: in B2 02 40
+    10-10 03:57:59.349 13029 13121 I DJMantraMIDI: in B1 03 40
+    10-10 03:57:59.366 13029 13121 I DJMantraMIDI: in B2 03 40
+    10-10 03:57:59.366 13029 13121 I DJMantraMIDI: in B1 04 40
+    10-10 03:57:59.367 13029 13121 I DJMantraMIDI: in B2 04 40
+    10-10 03:58:03.052 13029 13102 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.125282
+    10-10 03:58:08.068 13029 13102 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.125282
+    10-10 03:58:13.071 13029 13102 I DJMantra: info [Engine] SoundDeviceOboe - Output level: peak 0.125282
+    10-10 03:58:15.729 13029 13029 W DJMantra: warning [0xb400007d468a1af0] QObject: Cannot create children for a parent that is in a different thread.
+    10-10 03:58:15.729 13029 13029 W DJMantra: (Parent is MixxxApplication(0x7ca8c65f68), parent's thread is QThread(0xb400007d46801990), current thread is QThread(0xb400007d468a1af0)
+
+Sound: output level: peak 0.125282
+
+OK (with sound): started, sound output running, main window ready, alive 15s later, no critical errors

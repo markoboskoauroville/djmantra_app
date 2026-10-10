@@ -103,7 +103,7 @@ def analyse(path):
                 level_dbfs=round(20 * math.log10(rms), 1) if rms > 0 else -120.0,
                 peak_dbfs=round(20 * math.log10(peak), 1) if peak > 0 else -120.0,
                 strongest_hz=round(strongest, 1),
-                tone_over_noise_db=round(20 * math.log10(magnitudes[k] / noise), 1))
+                tone_over_noise_db=round(20 * math.log10(magnitudes[k] / noise), 1) if magnitudes[k] > 0 else 0.0)  # BlackHole gives exact digital silence
 
 
 def listen(args):
