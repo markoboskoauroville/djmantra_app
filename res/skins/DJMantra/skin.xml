@@ -75,7 +75,7 @@
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 <PushButton>
 <ObjectName>LibraryButton</ObjectName>
-<Size>40f,40f</Size>
+<Size>32f,32f</Size>
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
@@ -2729,7 +2729,7 @@
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>min,me</SizePolicy></WidgetGroup>
 <PushButton>
 <ObjectName>LibraryButton</ObjectName>
-<Size>44f,44f</Size>
+<Size>34f,34f</Size>
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>

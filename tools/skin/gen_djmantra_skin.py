@@ -623,7 +623,7 @@ def stack(pages, current_key=None):
 
 def performance_landscape():
     header = hbox(header_deck_landscape(1), hspace(12),
-                  vbox(vstretch(), library_button(44), vstretch(), policy="min,me"),
+                  vbox(vstretch(), library_button(34), vstretch(), policy="min,me"),
                   hspace(12), header_deck_landscape(2),
                   name="TopBar", policy="me,max")
 
@@ -652,7 +652,7 @@ def performance_landscape():
 
 
 def performance_portrait():
-    header = vbox(hbox(spacer(), library_button(40), spacer(), policy="me,min"),
+    header = vbox(hbox(spacer(), library_button(32), spacer(), policy="me,min"),
                   hbox(header_deck_portrait(1), hspace(14), header_deck_portrait(2),
                        policy="me,min"),
                   name="TopBar", policy="me,max")
@@ -938,13 +938,14 @@ def graphics():
         '<circle cx="32" cy="32" r="29" fill="#1b1b1d" stroke="%s" stroke-width="4"/>' % GREEN + tri)
     g["play_pressed.svg"] = svg(64, 64,
         '<circle cx="32" cy="32" r="29" fill="#3a3a3e" stroke="%s" stroke-width="4"/>' % GREEN + tri)
-    # the menu button: "dj" in heavy round letters, like the controller's logo
-    g["dj_logo.svg"] = svg(50, 48,
-        '<circle cx="15.5" cy="27" r="9.5" fill="none" stroke="#ffffff" stroke-width="7"/>'
-        '<rect x="22" y="4" width="7" height="32.5" rx="3.5" fill="#ffffff"/>'
-        '<path d="M39.5 18 V37 Q39.5 44.5 32 44.5" fill="none" stroke="#ffffff" '
-        'stroke-width="7" stroke-linecap="round"/>'
-        '<circle cx="39.5" cy="8.5" r="4.2" fill="#ffffff"/>')
+    # the menu button: "dj" in the heavy, squarish rounded letters of the
+    # controller's logo (rounded-rectangle bowl, flat j hook, square dot)
+    g["dj_logo.svg"] = svg(36, 38,
+        '<path fill-rule="evenodd" fill="#ffffff" d="M8 10h14v20H8a6 6 0 0 1-6-6v-8a6 6 0 0 1 6-6z'
+        'M10 16a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h6v-8z"/>'
+        '<rect x="15" y="1" width="7" height="29" rx="1.5" fill="#ffffff"/>'
+        '<path fill="#ffffff" d="M26 10h7v22a5 5 0 0 1-5 5h-6v-6h3a1 1 0 0 0 1-1z"/>'
+        '<rect x="26" y="1" width="7" height="6" rx="1.5" fill="#ffffff"/>')
     # the start screen: the app's icon (tools/android/gen_launcher_icon.py)
     import importlib.util
     spec = importlib.util.spec_from_file_location(
