@@ -1,0 +1,179 @@
+[STREAM]
+index=0
+codec_name=mp3
+codec_long_name=MP3 (MPEG audio layer 3)
+profile=unknown
+codec_type=audio
+codec_tag_string=[0][0][0][0]
+codec_tag=0x0000
+mime_codec_string=mp4a.40.34
+sample_fmt=fltp
+sample_rate=48000
+channels=2
+channel_layout=stereo
+bits_per_sample=0
+initial_padding=0
+id=N/A
+r_frame_rate=0/0
+avg_frame_rate=0/0
+time_base=1/14112000
+start_pts=324870
+start_time=0.023021
+duration_ts=6762660912
+duration=479.213500
+bit_rate=202947
+max_bit_rate=N/A
+bits_per_raw_sample=N/A
+nb_frames=N/A
+nb_read_frames=N/A
+nb_read_packets=N/A
+DISPOSITION:default=0
+DISPOSITION:dub=0
+DISPOSITION:original=0
+DISPOSITION:comment=0
+DISPOSITION:lyrics=0
+DISPOSITION:karaoke=0
+DISPOSITION:forced=0
+DISPOSITION:hearing_impaired=0
+DISPOSITION:visual_impaired=0
+DISPOSITION:clean_effects=0
+DISPOSITION:attached_pic=0
+DISPOSITION:timed_thumbnails=0
+DISPOSITION:non_diegetic=0
+DISPOSITION:captions=0
+DISPOSITION:descriptions=0
+DISPOSITION:metadata=0
+DISPOSITION:dependent=0
+DISPOSITION:still_image=0
+DISPOSITION:multilayer=0
+TAG:encoder=Lavc60.31
+[/STREAM]
+[STREAM]
+index=1
+codec_name=mjpeg
+codec_long_name=Motion JPEG
+profile=Baseline
+codec_type=video
+codec_tag_string=[0][0][0][0]
+codec_tag=0x0000
+width=360
+height=360
+coded_width=360
+coded_height=360
+has_b_frames=0
+sample_aspect_ratio=1:1
+display_aspect_ratio=1:1
+pix_fmt=yuvj420p
+level=-99
+color_range=pc
+color_space=bt470bg
+color_transfer=unknown
+color_primaries=unknown
+chroma_location=center
+field_order=unknown
+id=N/A
+r_frame_rate=90000/1
+avg_frame_rate=0/0
+time_base=1/90000
+start_pts=2072
+start_time=0.023022
+duration_ts=43129215
+duration=479.213500
+bit_rate=N/A
+max_bit_rate=N/A
+bits_per_raw_sample=8
+nb_frames=N/A
+nb_read_frames=N/A
+nb_read_packets=N/A
+DISPOSITION:default=0
+DISPOSITION:dub=0
+DISPOSITION:original=0
+DISPOSITION:comment=0
+DISPOSITION:lyrics=0
+DISPOSITION:karaoke=0
+DISPOSITION:forced=0
+DISPOSITION:hearing_impaired=0
+DISPOSITION:visual_impaired=0
+DISPOSITION:clean_effects=0
+DISPOSITION:attached_pic=1
+DISPOSITION:timed_thumbnails=0
+DISPOSITION:non_diegetic=0
+DISPOSITION:captions=0
+DISPOSITION:descriptions=0
+DISPOSITION:metadata=0
+DISPOSITION:dependent=0
+DISPOSITION:still_image=0
+DISPOSITION:multilayer=0
+TAG:title=Cover
+TAG:comment=Cover (front)
+[/STREAM]
+[FORMAT]
+filename=/private/tmp/claude-501/-Users-markobosko-Developer-claude-code/0e6e80fb-cb40-4141-8f63-efc2a5be9d44/scratchpad/mp3/orig.mp3
+nb_streams=2
+nb_programs=0
+nb_stream_groups=0
+format_name=mp3
+format_long_name=MP2/3 (MPEG audio layer 2/3)
+start_time=0.023021
+duration=479.213500
+size=12185829
+bit_rate=203430
+probe_score=52
+TAG:title=Mantra - Deep Waters 3 (vox_1)
+TAG:artist=mantreshvar
+TAG:encoder=Lavf60.16.100
+TAG:major_brand=isom
+TAG:minor_version=512
+TAG:compatible_brands=isomiso2mp41
+TAG:comment=made with suno; created=2026-08-30T06:20:06Z; id=2ae7201f-ab75-47cf-9178-1b1c81a05623
+TAG:lyrics-eng=[Intro: organ riff alone, dry, no drums, 8 bars]
+
+[Closed hi hats enter, clicking, organ continues, 8 bars]
+
+[Kick enters, four to the floor, groove starting, 12 bars]
+
+[Sub bass and congas enter, groove settled, 16 bars]
+
+[Organ riff opens up, more improvised, shakers added, 12 bars]
+
+[Full groove, steady, no changes, organ riffing throughout, 24 bars]
+
+[Percussion thins, bass lighter, tension, 8 bars]
+
+[Break: hi hats out, kick out, organ and pad alone, 8 bars]
+
+[Organ rising, percussion returning underneath, building, 8 bars]
+
+[Silence: everything stops dead, only the delay tail ringing, 1 bar]
+
+[One deep male voice, spoken, low and flat, buried in echo, the only spoken words in the song]
+DJ Mantra
+deep waters
+
+[The drop, the only one in the track, fullest, one deep gong hit, 16 bars]
+(soulful female voice enters for the first time, wordless, open vowel, under the music)
+Aaaaah
+Ooooh
+
+[Main groove continues, steady, organ riffing, 16 bars]
+(same female voice, wordless, buried, following the organ)
+Mmmmh
+Aaah
+
+[Organ at its busiest, percussion layered, 12 bars]
+(female voice murmurs the words once, low and half spoken, still behind the music)
+deep waters
+
+[Full groove, steady, 12 bars]
+(wordless again, sparse, unhurried)
+Oooh
+Mmmmh
+
+[Final section, fullest, gong ringing, 8 bars]
+(female voice murmurs the words one last time, buried in echo)
+deep waters
+
+[Outro: layers falling away, female voice last, then organ alone, 8 bars]
+(wordless, fading)
+Aaah
+[/FORMAT]
