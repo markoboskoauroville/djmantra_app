@@ -1,0 +1,2 @@
+  mCurrentFocus=null
+  mCurrentFocus=Window{fa60439 u0 com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity}
