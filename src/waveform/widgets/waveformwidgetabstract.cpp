@@ -35,6 +35,17 @@ mixxx::Duration WaveformWidgetAbstract::render() {
         // DJ Mantra: an immediate repaint() on Android paints into a null
         // device (hundreds of "QPainter: Painter not active" warnings per
         // frame, which slowed every touch, round 6): schedule it instead
+        // The renderer can keep an older size (a page of a stack shown
+        // again, the system bars coming and going): the waveform was drawn
+        // into the top part only, the rest stale ("3 waveforms", 10.10.2026)
+        const float dpr = static_cast<float>(m_widget->devicePixelRatioF());
+        if (getWidth() != m_widget->width() || getHeight() != m_widget->height() ||
+                getDevicePixelRatio() != dpr) {
+            qInfo() << "Waveform: renderer size" << getWidth() << getHeight()
+                    << getDevicePixelRatio() << "-> widget" << m_widget->width()
+                    << m_widget->height() << dpr;
+            resizeRenderer(m_widget->width(), m_widget->height(), dpr);
+        }
         m_widget->update();
 #else
         m_widget->repaint(); // Repaints the widget directly by calling paintEvent()
