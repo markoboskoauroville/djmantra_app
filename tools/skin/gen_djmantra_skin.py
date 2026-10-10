@@ -28,12 +28,16 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 SKIN = os.path.join(ROOT, "res", "skins", "DJMantra")
 P = "skins:DJMantra/svg/"
 
-# Colours (djay-like, dark charcoal)
-BG = "#232325"
-PANEL = "#2b2b2e"
-TOPBAR = "#0d0d0f"
-CENTER = "#1f1f22"
-GREY = "#9a9aa0"
+# Colours measured from djay Pro (Marko's reference, 10.10.2026): charcoal
+# panels, near-black areas, buttons a shade lighter with a near-black outline
+BG = "#1e2021"
+PANEL = "#1e2021"
+TOPBAR = "#0e1011"
+CENTER = "#191b1c"
+GREY = "#8a8d90"
+BUTTON = "#1f2122"
+OUTLINE = "#0b0c0d"
+PRESSED = "#2e3133"
 WHITE = "#f2f2f2"
 BLUE = "#2f8cff"
 GREEN = "#3ad13a"
@@ -152,11 +156,11 @@ def knob(key, size=40, bipolar=True, name="Knob"):
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
   <ArcColor>%s</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>%s</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>%s</ConfigKey></Connection>
-</KnobComposed>""" % (name, size, size, P, P, size / 2.0 - 2, BLUE,
+</KnobComposed>""" % (name, size, size, P, P, size / 2.0 - 2, "#4a4d50",
                      "false" if bipolar else "true", key)
 
 
@@ -880,17 +884,18 @@ WWidget, WLabel, QLabel { color: %(WHITE)s; font-family: "Roboto", "Open Sans", 
 #KeyDeck1 { color: %(GREEN)s; font-size: 13px; }
 #KeyDeck2 { color: %(MAGENTA)s; font-size: 13px; }
 #BpmText { color: %(WHITE)s; font-size: 20px; }
-#BpmCaption, #KnobLabel { color: %(GREY)s; font-size: 11px; text-transform: uppercase; }
+#BpmCaption, #KnobLabel { color: %(GREY)s; font-size: 11px; font-weight: bold; }
 #KnobLabel { qproperty-alignment: AlignCenter; }
 #PadsTitle { color: %(GREY)s; font-size: 11px; }
 #LoopSize { color: %(WHITE)s; font-size: 14px; }
 
-/* Text buttons: dark rounded rectangles */
+/* Text buttons as in djay Pro: a shade lighter than the panel, a near-black
+   outline, bold white text */
 WPushButton {
-  color: %(WHITE)s; background-color: #1b1b1d; border: 2px solid #4a4a4f;
-  border-radius: 7px; font-size: 15px; font-weight: bold;
+  color: %(WHITE)s; background-color: %(BUTTON)s; border: 2px solid %(OUTLINE)s;
+  border-radius: 8px; font-size: 16px; font-weight: bold;
 }
-WPushButton[pressed="true"] { background-color: #3a3a3e; }
+WPushButton[pressed="true"] { background-color: %(PRESSED)s; }
 #SyncButton[displayValue="1"] { color: #0d0d0f; background-color: %(BLUE)s; border-color: %(BLUE)s; }
 #CueSet[displayValue="1"] { border-color: #ffffff; }
 #CuePair WPushButton { border-radius: 0px; }
@@ -916,7 +921,7 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #OneDeckCaption { color: %(GREY)s; font-size: 11px; font-weight: bold; }
 #OneDeckTitle { color: %(WHITE)s; font-size: 18px; }
 #OneDeckArtist { color: %(WHITE)s; font-size: 15px; }
-#CueButton[displayValue="1"] { border-color: #ffffff; }
+#CueButton[displayValue="1"] { border-color: #5c5f62; }
 #PflButton, #LoadDeckButton { font-size: 13px; border-radius: 6px; padding: 0px; }
 #PflButton[displayValue="1"] { color: #0d0d0f; background-color: %(ORANGE)s; border-color: %(ORANGE)s; }
 #ModeRow { padding: 0px 2px; }
@@ -924,10 +929,10 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #ModeButton[displayValue="1"] { color: #0d0d0f; background-color: #ffffff; border-color: #ffffff; }
 #PadPlay { font-size: 17px; }
 #PadPlay[displayValue="1"] { color: %(GREEN)s; border-color: %(GREEN)s; }
-WPushButton#PadButton { background-color: #333336; border: 1px solid #4a4a4f; border-radius: 8px;
+WPushButton#PadButton { background-color: #2a2d2f; border: 2px solid %(OUTLINE)s; border-radius: 8px;
                         font-size: 15px; margin: 3px; }
 WPushButton#PadButton[displayValue="1"] { background-color: %(BLUE)s; border-color: %(BLUE)s; }
-WHotcueButton#Pad { background-color: #333336; border: 1px solid #4a4a4f; border-radius: 8px;
+WHotcueButton#Pad { background-color: #2a2d2f; border: 2px solid %(OUTLINE)s; border-radius: 8px;
                     font-size: 15px; margin: 3px; }
 
 /* Library */
@@ -948,7 +953,8 @@ QMenu { background-color: %(PANEL)s; color: %(WHITE)s; border: 1px solid #4a4a4f
 QMenu::item:selected { background-color: %(BLUE)s; }
 QToolTip { background-color: %(PANEL)s; color: %(WHITE)s; border: 1px solid #4a4a4f; }
 """ % dict(BG=BG, PANEL=PANEL, TOPBAR=TOPBAR, CENTER=CENTER, GREY=GREY, WHITE=WHITE,
-           BLUE=BLUE, GREEN=GREEN, MAGENTA=MAGENTA, ORANGE="#E8A33D")
+           BLUE=BLUE, GREEN=GREEN, MAGENTA=MAGENTA, ORANGE="#E8A33D",
+           BUTTON=BUTTON, OUTLINE=OUTLINE, PRESSED=PRESSED)
 
 
 def svg(w, h, body):
@@ -958,30 +964,35 @@ def svg(w, h, body):
 
 def graphics():
     g = {}
+    # knobs: a black disc in a dark ring, a white rounded line (djay Pro)
     g["knob_bg.svg"] = svg(64, 64,
-        '<circle cx="32" cy="32" r="22" fill="#141416" stroke="#4a4a4f" stroke-width="2"/>')
+        '<circle cx="32" cy="32" r="21" fill="#0f1011" stroke="#060707" stroke-width="2"/>')
     g["knob_indicator.svg"] = svg(64, 64,
-        '<rect x="30.5" y="12" width="3" height="16" rx="1.5" fill="#ffffff"/>')
+        '<rect x="30" y="13.5" width="4" height="13" rx="2" fill="#ffffff"/>')
     ticks = "".join('<rect x="2" y="%d" width="40" height="1" fill="#3e3e43"/>' % y
                     for y in range(20, 300, 56))
     g["fader_track.svg"] = svg(44, 300, ticks +
         '<rect x="19" y="6" width="6" height="288" rx="3" fill="#3a3a3e"/>')
-    g["fader_handle.svg"] = svg(44, 22,
-        '<rect x="1" y="1" width="42" height="20" rx="8" fill="#9a9aa0" stroke="#5a5a60"/>'
-        '<rect x="6" y="9.5" width="32" height="3" rx="1.5" fill="#ffffff"/>')
+    # fader caps: grey pills with a soft gradient (djay Pro)
+    pill = ('<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">'
+            '<stop offset="0" stop-color="#a3a6a9"/><stop offset="1" stop-color="#6f7275"/>'
+            '</linearGradient></defs>')
+    g["fader_handle.svg"] = svg(44, 22, pill +
+        '<rect x="1" y="2" width="42" height="18" rx="9" fill="url(#g)"/>')
     g["pitch_track.svg"] = svg(44, 300, ticks +
         '<rect x="20" y="6" width="4" height="288" rx="2" fill="#3a3a3e"/>'
         '<rect x="4" y="149" width="36" height="2" fill="#6a6a70"/>')
-    g["pitch_handle.svg"] = svg(44, 22,
-        '<rect x="1" y="1" width="42" height="20" rx="10" fill="#d8d8dc" stroke="#7a7a80"/>'
-        '<rect x="7" y="9.5" width="30" height="3" rx="1.5" fill="#2b2b2e"/>')
+    g["pitch_handle.svg"] = svg(44, 22, pill +
+        '<rect x="1" y="2" width="42" height="18" rx="9" fill="url(#g)"/>')
     xticks = "".join('<rect x="%d" y="6" width="1.5" height="36" fill="#4a4a4f"/>' % x
                      for x in range(20, 400, 60))
     g["xfader_track.svg"] = svg(400, 48, xticks +
         '<rect x="6" y="22" width="388" height="4" rx="2" fill="#3a3a3e"/>')
     g["xfader_handle.svg"] = svg(22, 48,
-        '<rect x="1" y="1" width="20" height="46" rx="7" fill="#d8d8dc" stroke="#7a7a80"/>'
-        '<rect x="9.5" y="6" width="3" height="36" rx="1.5" fill="#2b2b2e"/>')
+        '<defs><linearGradient id="h" x1="0" y1="0" x2="1" y2="0">'
+        '<stop offset="0" stop-color="#a3a6a9"/><stop offset="1" stop-color="#6f7275"/>'
+        '</linearGradient></defs>'
+        '<rect x="2" y="1" width="18" height="46" rx="9" fill="url(#h)"/>')
     segs_off = "".join('<rect x="0" y="%d" width="12" height="4" fill="#4a4a50"/>' % y
                        for y in range(0, 300, 6))
 
@@ -991,13 +1002,17 @@ def graphics():
                       for y in range(0, 300, 6))
     g["vu_back.svg"] = svg(12, 300, segs_off)
     g["vu_on.svg"] = svg(12, 300, segs_on)
-    tri = '<path d="M27 21 L45 32 L27 43 Z" fill="#ffffff"/>'
-    g["play_off.svg"] = svg(64, 64,
-        '<circle cx="32" cy="32" r="29" fill="#1b1b1d" stroke="#4a4a4f" stroke-width="3"/>' + tri)
-    g["play_on.svg"] = svg(64, 64,
-        '<circle cx="32" cy="32" r="29" fill="#1b1b1d" stroke="%s" stroke-width="4"/>' % GREEN + tri)
-    g["play_pressed.svg"] = svg(64, 64,
-        '<circle cx="32" cy="32" r="29" fill="#3a3a3e" stroke="%s" stroke-width="4"/>' % GREEN + tri)
+    # play: a solid white triangle in a rounded rectangle; playing: pause
+    def transport_button(body, fill):
+        return svg(64, 64, '<rect x="2" y="8" width="60" height="48" rx="9" fill="%s" '
+                   'stroke="%s" stroke-width="2.5"/>' % (fill, OUTLINE) + body)
+    tri = ('<path d="M26 21.5 L44 32 L26 42.5 Z" fill="#ffffff" stroke="#ffffff" '
+           'stroke-width="2" stroke-linejoin="round"/>')
+    bars = ('<rect x="24" y="22" width="6" height="20" rx="1.5" fill="#ffffff"/>'
+            '<rect x="34" y="22" width="6" height="20" rx="1.5" fill="#ffffff"/>')
+    g["play_off.svg"] = transport_button(tri, BUTTON)
+    g["play_on.svg"] = transport_button(bars, BUTTON)
+    g["play_pressed.svg"] = transport_button(tri, PRESSED)
     # the menu button: "dj" in the heavy, squarish rounded letters of the
     # controller's logo (rounded-rectangle bowl, flat j hook, square dot)
     g["dj_logo.svg"] = svg(36, 38,
@@ -1021,15 +1036,24 @@ def graphics():
     g["record.svg"] = svg(64, 64,
         '<circle cx="32" cy="32" r="27" fill="#0d0d0f" stroke="#ffffff" stroke-width="4"/>'
         '<circle cx="32" cy="32" r="9" fill="#ffb020"/>')
+    # no album art: djay's beamed notes in a dashed rounded square
     g["cover_default.svg"] = svg(200, 200,
-        '<rect width="200" height="200" rx="12" fill="#2f2f33"/>'
-        '<path d="M120 50 L120 125 A20 20 0 1 1 108 106 L108 70 L80 76 L80 140 A20 20 0 1 1 68 121'
-        ' L68 60 Z" fill="#5a5a60"/>')
+        '<rect width="200" height="200" fill="#1e2021"/>'
+        '<rect x="6" y="6" width="188" height="188" rx="22" fill="none" stroke="#5c5f62" '
+        'stroke-width="4" stroke-dasharray="11 9"/>'
+        '<path d="M80 72 L132 62 L132 76 L80 86 Z" fill="#8a8d90"/>'
+        '<rect x="80" y="72" width="7" height="58" fill="#8a8d90"/>'
+        '<rect x="125" y="62" width="7" height="58" fill="#8a8d90"/>'
+        '<ellipse cx="74" cy="131" rx="13" ry="10" transform="rotate(-18 74 131)" fill="#8a8d90"/>'
+        '<ellipse cx="119" cy="121" rx="13" ry="10" transform="rotate(-18 119 121)" fill="#8a8d90"/>')
 
+    # back to the cue point: djay's arc arrow over a dot
     g["cue_return.svg"] = svg(40, 40,
-        '<path d="M10 25 A11 11 0 0 1 30 18" fill="none" stroke="#ffffff" stroke-width="3.2"'
-        ' stroke-linecap="round"/><path d="M24 12 L32 18 L24 22 Z" fill="#ffffff"/>'
-        '<circle cx="31" cy="28" r="2.6" fill="#ffffff"/>')
+        '<path d="M9 26 C10 17 22 12.5 28.5 18.5" fill="none" stroke="#ffffff" '
+        'stroke-width="3.4" stroke-linecap="round"/>'
+        '<path d="M24.6 13.4 L32.6 20.6 L23.4 22.4 Z" fill="#ffffff" stroke="#ffffff" '
+        'stroke-width="1.2" stroke-linejoin="round"/>'
+        '<circle cx="31.5" cy="29" r="2.7" fill="#ffffff"/>')
     def loop_icon(color):
         return svg(52, 34,
             '<path d="M14 13 A9 9 0 0 1 36 11" fill="none" stroke="%s" stroke-width="3"'

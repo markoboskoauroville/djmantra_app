@@ -44,7 +44,7 @@
   <SizePolicy>me,me</SizePolicy>
   <Layout>vertical</Layout>
   <LaunchImageStyle>
-    LaunchImage { background-color: #0d0d0f; }
+    LaunchImage { background-color: #0e1011; }
     QLabel { image: url(skins:DJMantra/svg/app_icon.svg); min-width: 128px; min-height: 128px;
              max-width: 128px; max-height: 128px; }
     QProgressBar { background-color: #333; border: none; min-width: 128px; max-width: 128px;
@@ -165,7 +165,7 @@
   <ObjectName>Overview</ObjectName>
   <Size>-1me,22f</Size>
   <Group>[Channel1]</Group>
-  <BgColor>#0d0d0f</BgColor>
+  <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
   <PlayedOverlayColor>#60000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
@@ -264,7 +264,7 @@
   <ObjectName>Overview</ObjectName>
   <Size>-1me,22f</Size>
   <Group>[Channel2]</Group>
-  <BgColor>#0d0d0f</BgColor>
+  <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
   <PlayedOverlayColor>#60000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
@@ -390,8 +390,8 @@
   <ArcRadius>19.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel1]_Effect1],parameter3</ConfigKey></Connection>
@@ -422,8 +422,8 @@
   <ArcRadius>19.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel1]_Effect1],parameter2</ConfigKey></Connection>
@@ -454,8 +454,8 @@
   <ArcRadius>19.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel1]_Effect1],parameter1</ConfigKey></Connection>
@@ -486,8 +486,8 @@
   <ArcRadius>21.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[QuickEffectRack1_[Channel1]],super1</ConfigKey></Connection>
@@ -553,8 +553,8 @@
   <ArcRadius>13.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[Master],gain</ConfigKey></Connection>
@@ -672,8 +672,8 @@
   <ArcRadius>19.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel2]_Effect1],parameter3</ConfigKey></Connection>
@@ -704,8 +704,8 @@
   <ArcRadius>19.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel2]_Effect1],parameter2</ConfigKey></Connection>
@@ -736,8 +736,8 @@
   <ArcRadius>19.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel2]_Effect1],parameter1</ConfigKey></Connection>
@@ -768,8 +768,8 @@
   <ArcRadius>21.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[QuickEffectRack1_[Channel2]],super1</ConfigKey></Connection>
@@ -2691,7 +2691,7 @@
   <ObjectName>Overview</ObjectName>
   <Size>-1me,22f</Size>
   <Group>[Channel1]</Group>
-  <BgColor>#0d0d0f</BgColor>
+  <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
   <PlayedOverlayColor>#60000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
@@ -2803,7 +2803,7 @@
   <ObjectName>Overview</ObjectName>
   <Size>-1me,22f</Size>
   <Group>[Channel2]</Group>
-  <BgColor>#0d0d0f</BgColor>
+  <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
   <PlayedOverlayColor>#60000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
@@ -3050,8 +3050,8 @@
   <ArcRadius>15.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel1]_Effect1],parameter3</ConfigKey></Connection>
@@ -3082,8 +3082,8 @@
   <ArcRadius>15.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel1]_Effect1],parameter2</ConfigKey></Connection>
@@ -3114,8 +3114,8 @@
   <ArcRadius>15.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel1]_Effect1],parameter1</ConfigKey></Connection>
@@ -3146,8 +3146,8 @@
   <ArcRadius>17.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[QuickEffectRack1_[Channel1]],super1</ConfigKey></Connection>
@@ -3213,8 +3213,8 @@
   <ArcRadius>13.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[Master],gain</ConfigKey></Connection>
@@ -3332,8 +3332,8 @@
   <ArcRadius>15.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel2]_Effect1],parameter3</ConfigKey></Connection>
@@ -3364,8 +3364,8 @@
   <ArcRadius>15.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel2]_Effect1],parameter2</ConfigKey></Connection>
@@ -3396,8 +3396,8 @@
   <ArcRadius>15.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[EqualizerRack1_[Channel2]_Effect1],parameter1</ConfigKey></Connection>
@@ -3428,8 +3428,8 @@
   <ArcRadius>17.0</ArcRadius>
   <ArcThickness>2.5</ArcThickness>
   <ArcBgThickness>2.5</ArcBgThickness>
-  <ArcColor>#2f8cff</ArcColor>
-  <ArcBgColor>#3a3a3e</ArcBgColor>
+  <ArcColor>#4a4d50</ArcColor>
+  <ArcBgColor>#2e3133</ArcBgColor>
   <ArcUnipolar>false</ArcUnipolar>
   <ArcRoundCaps>true</ArcRoundCaps>
   <Connection><ConfigKey>[QuickEffectRack1_[Channel2]],super1</ConfigKey></Connection>
@@ -5579,7 +5579,7 @@
   <ObjectName>Overview</ObjectName>
   <Size>-1me,30f</Size>
   <Group>[Channel1]</Group>
-  <BgColor>#0d0d0f</BgColor>
+  <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
   <PlayedOverlayColor>#60000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
