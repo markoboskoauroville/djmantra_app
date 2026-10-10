@@ -349,12 +349,11 @@ def play(n, size=56):
 
 
 def cue_pair(n, width=150, height=44):
+    """The controller's "cue" button (set the cue point, back to it, hold to
+    preview), the same size as before."""
     return hbox(
-        button("%s,cue_default" % grp(n), "CueSet", "SET", "%df,%df" % (width // 2, height),
+        button("%s,cue_default" % grp(n), "CueButton", "CUE", "%df,%df" % (width, height),
                display_key="%s,cue_indicator" % grp(n), tooltip="cue_default_cue_gotoandstop"),
-        button("%s,cue_gotoandstop" % grp(n), "CueReturn", "",
-               "%df,%df" % (width - width // 2, height), states=1,
-               pixmaps=[("cue_return.svg", "cue_return.svg")]),
         name="CuePair", policy="min,min")
 
 
@@ -398,12 +397,31 @@ def loop_row(n):
         spacer(), name="LoopRow", policy="me,min")
 
 
-def pads(n):
-    rows = []
-    for r in range(2):
-        cells = []
-        for c in range(4):
-            num = r * 4 + c + 1
+PAD_MODES = (("hotcue", "HOT CUE"), ("loop", "LOOP"), ("fx", "FX"), ("sampler", "SAMPLER"))
+LOOP_SIZES = (("0.25", "&#188;"), ("0.5", "&#189;"), ("1", "1"), ("2", "2"),
+              ("4", "4"), ("8", "8"), ("16", "16"), ("32", "32"))
+
+
+def pad_button(key, text, display_key=None, states=2):
+    return """<PushButton>
+  <ObjectName>PadButton</ObjectName>
+  <SizePolicy>me,me</SizePolicy>
+  <MinimumSize>36,36</MinimumSize>
+  <NumberStates>%d</NumberStates>
+  %s
+  <Connection><ConfigKey>%s</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>%s
+</PushButton>""" % (states, "".join("<State><Number>%d</Number><Text>%s</Text></State>" % (i, text)
+                              for i in range(states)), key,
+                    ("<Connection><ConfigKey>%s</ConfigKey><ConnectControl>false</ConnectControl>"
+                     "</Connection>" % display_key) if display_key else "")
+
+
+def pad_cells(n, mode):
+    g = grp(n)
+    cells = []
+    for i in range(8):
+        num = i + 1
+        if mode == "hotcue":
             cells.append("""<HotcueButton>
   <ObjectName>Pad</ObjectName>
   <SizePolicy>me,me</SizePolicy>
@@ -414,9 +432,46 @@ def pads(n):
   <State><Number>0</Number><Text>%d</Text></State>
   <State><Number>1</Number><Text>%d</Text></State>
   <State><Number>2</Number><Text>%d</Text></State>
-</HotcueButton>""" % (grp(n), num, num, num, num))
-        rows.append(hbox(*cells, policy="me,me"))
-    return vbox(label("DECK %d · HOT CUES" % n, "PadsTitle"), *rows,
+</HotcueButton>""" % (g, num, num, num, num))
+        elif mode == "loop":
+            size, text = LOOP_SIZES[i]
+            cells.append(pad_button("%s,beatloop_%s_toggle" % (g, size), text,
+                                    "%s,beatloop_%s_enabled" % (g, size)))
+        elif mode == "fx":
+            unit = "[EffectRack1_EffectUnit%d" % n
+            if i < 3:
+                cells.append(pad_button("%s_Effect%d],enabled" % (unit, num), "FX%d" % num))
+            elif i == 3:
+                cells.append(pad_button("%s],group_%s_enable" % (unit, g), "ON"))
+            else:
+                jump = (("4", "backward", "&#171; 4"), ("1", "backward", "&#8249; 1"),
+                        ("1", "forward", "1 &#8250;"), ("4", "forward", "4 &#187;"))[i - 4]
+                cells.append(pad_button("%s,beatjump_%s_%s" % (g, jump[0], jump[1]), jump[2],
+                                        states=1))
+        else:  # sampler
+            cells.append(pad_button("[Sampler%d],cue_gotoandplay" % num, "S%d" % num,
+                                    "[Sampler%d],play_indicator" % num, states=1))
+    return vbox(hbox(*cells[:4], policy="me,me"), hbox(*cells[4:], policy="me,me"),
+                policy="me,me")
+
+
+def pads(n, column=True):
+    """A deck's lower half as on the controller: the mode buttons (hot cue,
+    loop, fx, sampler), sync / cue / play on the left, the 8 pads."""
+    modes = hbox(*[button("[DJMantra],d%d_%s" % (n, key), "ModeButton", text, "-1me,28f")
+                   for key, text in PAD_MODES], name="ModeRow", policy="me,min")
+    pages = stack([("[DJMantra],d%d_%s" % (n, key), vbox(pad_cells(n, key), policy="me,me"), 0)
+                   for key, _ in PAD_MODES])
+    left = vbox(sync(n, "62f,34f"), vspace(4),
+                button("%s,cue_default" % grp(n), "CueButton", "CUE", "62f,-1me",
+                       display_key="%s,cue_indicator" % grp(n)),
+                vspace(4),
+                button("%s,play" % grp(n), "PadPlay", "&#9654;/II", "62f,-1me",
+                       display_key="%s,play_indicator" % grp(n)),
+                policy="min,me")
+    # without the column where the transport row below already has them
+    body = hbox(left, hspace(4), pages, policy="me,me") if column else pages
+    return vbox(label("DECK %d" % n, "PadsTitle", align="left"), modes, vspace(4), body,
                 name="PadsDeck", policy="me,me")
 
 
@@ -450,7 +505,7 @@ def header_deck_portrait(n):
 def library_button(size=40):
     # the menu sheet (djay's): Library, Controller, REC, Settings
     return button("[DJMantra],show_menu", "LibraryButton", "", "%df,%df" % (size, size),
-                  pixmaps=[("record.svg", "record.svg"), ("record.svg", "record.svg")])
+                  pixmaps=[("dj_logo.svg", "dj_logo.svg"), ("dj_logo.svg", "dj_logo.svg")])
 
 
 def tabs(prefix):
@@ -482,39 +537,49 @@ def deck_landscape(n):
     return hbox(*parts, name="Deck", policy="me,me")
 
 
-def mixer_landscape():
-    def eq_col(n):
-        return vbox(knob_with_label(filter_key(n), "FILTER", 42),
-                    knob_with_label(eq_key(n, 3), "HIGH", 34),
-                    knob_with_label(eq_key(n, 2), "MID", 34),
-                    knob_with_label(eq_key(n, 1), "LOW", 34),
-                    policy="min,me")
-    faders = vbox(
-        hbox(knob("%s,pregain" % grp(1), 26, False, "TrimKnob"), spacer(),
-             knob("%s,pregain" % grp(2), 26, False, "TrimKnob"), policy="me,min"),
-        hbox(slider_v("%s,volume" % grp(1), size="30f,-1me"), vumeter(1), hspace(2),
-             vumeter(2), slider_v("%s,volume" % grp(2), size="30f,-1me"), policy="me,me"),
+def pfl(n, size="40f,30f"):
+    """The controller's headphone buttons 1 and 2 (pre-listen)."""
+    return button("%s,pfl" % grp(n), "PflButton", "&#127911;%d" % n, size)
+
+
+def load_button(n, size="40f,30f"):
+    """The controller's buttons 1 and 2 next to the browser: a deck's songs."""
+    return button("[DJMantra],load_deck%d" % n, "LoadDeckButton", "%d" % n, size, states=1)
+
+
+def eq_column(n, big=34, filt=38):
+    """The controller's knob column of a deck: high/gain, mid, low, filter."""
+    return vbox(knob_with_label(eq_key(n, 3), "HIGH / GAIN", big),
+                vstretch(), knob_with_label(eq_key(n, 2), "MID", big),
+                vstretch(), knob_with_label(eq_key(n, 1), "LOW", big),
+                vstretch(), knob_with_label(filter_key(n), "FILTER", filt),
+                policy="min,me")
+
+
+def mixer_centre(fader_width=30, meter_width=10, button="40f,30f"):
+    """Between the knob columns, as on the controller: 1 and 2, master,
+    the headphone buttons, then the volume faders with their meters."""
+    return vbox(
+        hbox(spacer(), load_button(1, button), hspace(4), load_button(2, button), spacer(),
+             policy="me,min"),
+        knob_with_label("[Master],gain", "MASTER", 30),
+        hbox(spacer(), pfl(1, button), hspace(4), pfl(2, button), spacer(), policy="me,min"),
+        vspace(4),
+        hbox(slider_v("%s,volume" % grp(1), size="%df,-1me" % fader_width),
+             vumeter(1, "%df,-1me" % meter_width), hspace(2),
+             vumeter(2, "%df,-1me" % meter_width),
+             slider_v("%s,volume" % grp(2), size="%df,-1me" % fader_width), policy="me,me"),
         policy="me,me")
-    return hbox(eq_col(1), hspace(4), faders, hspace(4), eq_col(2), name="Mixer",
-                policy="me,me")
+
+
+def mixer_landscape():
+    return hbox(eq_column(1), hspace(2), mixer_centre(26, 8, "32f,28f"), hspace(2), eq_column(2),
+                name="Mixer", policy="me,me")
 
 
 def mixer_portrait():
-    def outer(n):
-        return vbox(knob_with_label(filter_key(n), "FILTER", 46),
-                    slider_v("%s,volume" % grp(n), size="60f,-1me"),
-                    policy="min,me")
-
-    def inner(n):
-        return vbox(hbox(spacer(), knob("%s,pregain" % grp(n), 28, False, "TrimKnob"), spacer(),
-                         policy="me,min"),
-                    vstretch(), knob_with_label(eq_key(n, 3), "HIGH", 42),
-                    vstretch(), knob_with_label(eq_key(n, 2), "MID", 42),
-                    vstretch(), knob_with_label(eq_key(n, 1), "LOW", 42),
-                    policy="me,me")
-    meters = hbox(vumeter(1, "12f,-1me"), hspace(6), vumeter(2, "12f,-1me"), policy="min,me")
-    return hbox(outer(1), inner(1), meters, inner(2), outer(2), name="Mixer",
-                policy="me,me")
+    return hbox(eq_column(1, 42, 46), hspace(6), mixer_centre(56, 12), hspace(6),
+                eq_column(2, 42, 46), name="Mixer", policy="me,me")
 
 
 def deck_page_portrait(n):
@@ -572,7 +637,7 @@ def performance_landscape():
         ("[DJMantra],l_mixer", vbox(decks_with(centre(mixer_landscape())), policy="me,me"), 0),
         ("[DJMantra],l_waveforms", vbox(tabs("l"), waveforms(False), policy="me,me"), 0),
         ("[DJMantra],l_pads", vbox(tabs("l"),
-                                   hbox(pads(1), hspace(12), pads(2), name="PadsArea",
+                                   hbox(pads(1, False), hspace(12), pads(2, False), name="PadsArea",
                                         policy="me,me"),
                                    hbox(loop_row(1), loop_row(2), policy="me,min"),
                                    policy="me,me"), 0),
@@ -595,7 +660,7 @@ def performance_portrait():
         ("[DJMantra],p_mixer", vbox(mixer_portrait(), policy="me,me"), 0),
         ("[DJMantra],p_waveforms", vbox(waveforms(True), policy="me,me"), 0),
         # deck 1's pads above deck 2's, each across the whole width: square pads
-        ("[DJMantra],p_pads", vbox(pads(1), loop_row(1), vspace(6), pads(2), loop_row(2),
+        ("[DJMantra],p_pads", vbox(pads(1, False), loop_row(1), vspace(6), pads(2, False), loop_row(2),
                                    name="PadsArea", policy="me,me"), 0),
         ("[DJMantra],p_deck1", vbox(deck_page_portrait(1), policy="me,me"), 0),
         ("[DJMantra],p_deck2", vbox(deck_page_portrait(2), policy="me,me"), 0),
@@ -675,7 +740,7 @@ def size_aware(portrait, landscape):
 def skin_xml():
     attrs = {
         "[App],num_decks": "2",
-        "[App],num_samplers": "4",
+        "[App],num_samplers": "8",
         "[Skin],show_spinnies": "0",
         "[Skin],show_coverart": "1",
         "[DJMantra],show_library": "0",
@@ -688,6 +753,10 @@ def skin_xml():
         "[DJMantra],p_pads": "0",
         "[DJMantra],p_deck1": "0",
         "[DJMantra],p_deck2": "0",
+        "[DJMantra],d1_hotcue": "1", "[DJMantra],d1_loop": "0",
+        "[DJMantra],d1_fx": "0", "[DJMantra],d1_sampler": "0",
+        "[DJMantra],d2_hotcue": "1", "[DJMantra],d2_loop": "0",
+        "[DJMantra],d2_fx": "0", "[DJMantra],d2_sampler": "0",
     }
     # Remaining time, as in djay (a tap on the time changes it until the next start)
     persist = {"[Controls],ShowDurationRemaining": "1"}
@@ -722,10 +791,10 @@ def skin_xml():
   <Layout>vertical</Layout>
   <LaunchImageStyle>
     LaunchImage { background-color: %s; }
-    QLabel { image: url(skins:DJMantra/svg/record.svg); min-width: 80px; min-height: 80px;
-             max-width: 80px; max-height: 80px; }
-    QProgressBar { background-color: #333; border: none; min-width: 160px; max-width: 160px;
-                   min-height: 3px; max-height: 3px; }
+    QLabel { image: url(skins:DJMantra/svg/app_icon.svg); min-width: 128px; min-height: 128px;
+             max-width: 128px; max-height: 128px; }
+    QProgressBar { background-color: #333; border: none; min-width: 128px; max-width: 128px;
+                   min-height: 0px; max-height: 0px; }
     QProgressBar::chunk { background-color: %s; }
   </LaunchImageStyle>
   <Children>
@@ -786,6 +855,18 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #SelectorButton[displayValue="1"] { color: %(BLUE)s; }
 #BackButton, #LoadButton { font-size: 13px; }
 #LoadButton { margin-left: 4px; }
+#CueButton { border-radius: 8px; }
+#CueButton[displayValue="1"] { border-color: #ffffff; }
+#PflButton, #LoadDeckButton { font-size: 13px; border-radius: 6px; padding: 0px; }
+#PflButton[displayValue="1"] { color: #0d0d0f; background-color: %(ORANGE)s; border-color: %(ORANGE)s; }
+#ModeRow { padding: 0px 2px; }
+#ModeButton { font-size: 11px; border-radius: 5px; margin: 0px 2px; border-width: 1px; }
+#ModeButton[displayValue="1"] { color: #0d0d0f; background-color: #ffffff; border-color: #ffffff; }
+#PadPlay { font-size: 17px; }
+#PadPlay[displayValue="1"] { color: %(GREEN)s; border-color: %(GREEN)s; }
+WPushButton#PadButton { background-color: #333336; border: 1px solid #4a4a4f; border-radius: 8px;
+                        font-size: 15px; margin: 3px; }
+WPushButton#PadButton[displayValue="1"] { background-color: %(BLUE)s; border-color: %(BLUE)s; }
 WHotcueButton#Pad { background-color: #333336; border: 1px solid #4a4a4f; border-radius: 8px;
                     font-size: 15px; margin: 3px; }
 
@@ -807,7 +888,7 @@ QMenu { background-color: %(PANEL)s; color: %(WHITE)s; border: 1px solid #4a4a4f
 QMenu::item:selected { background-color: %(BLUE)s; }
 QToolTip { background-color: %(PANEL)s; color: %(WHITE)s; border: 1px solid #4a4a4f; }
 """ % dict(BG=BG, PANEL=PANEL, TOPBAR=TOPBAR, CENTER=CENTER, GREY=GREY, WHITE=WHITE,
-           BLUE=BLUE, GREEN=GREEN, MAGENTA=MAGENTA)
+           BLUE=BLUE, GREEN=GREEN, MAGENTA=MAGENTA, ORANGE="#E8A33D")
 
 
 def svg(w, h, body):
@@ -857,6 +938,21 @@ def graphics():
         '<circle cx="32" cy="32" r="29" fill="#1b1b1d" stroke="%s" stroke-width="4"/>' % GREEN + tri)
     g["play_pressed.svg"] = svg(64, 64,
         '<circle cx="32" cy="32" r="29" fill="#3a3a3e" stroke="%s" stroke-width="4"/>' % GREEN + tri)
+    # the menu button: "dj" in heavy round letters, like the controller's logo
+    g["dj_logo.svg"] = svg(50, 48,
+        '<circle cx="15.5" cy="27" r="9.5" fill="none" stroke="#ffffff" stroke-width="7"/>'
+        '<rect x="22" y="4" width="7" height="32.5" rx="3.5" fill="#ffffff"/>'
+        '<path d="M39.5 18 V37 Q39.5 44.5 32 44.5" fill="none" stroke="#ffffff" '
+        'stroke-width="7" stroke-linecap="round"/>'
+        '<circle cx="39.5" cy="8.5" r="4.2" fill="#ffffff"/>')
+    # the start screen: the app's icon (tools/android/gen_launcher_icon.py)
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "gen_launcher_icon", os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                          "..", "android", "gen_launcher_icon.py"))
+    icon = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(icon)
+    g["app_icon.svg"] = icon.svg_icon()
     g["record.svg"] = svg(64, 64,
         '<circle cx="32" cy="32" r="27" fill="#0d0d0f" stroke="#ffffff" stroke-width="4"/>'
         '<circle cx="32" cy="32" r="9" fill="#ffb020"/>')

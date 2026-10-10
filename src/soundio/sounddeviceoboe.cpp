@@ -10,6 +10,7 @@
 #include <xmmintrin.h>
 #endif
 
+#include "control/controlobject.h"
 #include "soundio/soundmanager.h"
 #include "util/logger.h"
 
@@ -107,6 +108,15 @@ oboe::Result SoundDeviceOboe::openStream() {
         return result;
     }
     m_pStream = pStream;
+    // Tell the engine the rate the phone really plays at, as the PortAudio
+    // device does: the engine kept its 44.1 kHz default while the phone
+    // played at 48 kHz, so everything played 8.8% fast (round 9 on the
+    // Pixel 7: the 440 Hz test tone came out at 480 Hz)
+    m_sampleRate = mixxx::audio::SampleRate(static_cast<uint32_t>(pStream->getSampleRate()));
+    ControlObject::set(ConfigKey(QStringLiteral("[App]"), QStringLiteral("samplerate")),
+            m_sampleRate.value());
+    ControlObject::set(ConfigKey(QStringLiteral("[App]"), QStringLiteral("output_latency_ms")),
+            1000.0 * pStream->getBufferSizeInFrames() / pStream->getSampleRate());
     kLogger.info() << "Sound output open:" << pStream->getSampleRate() << "Hz,"
                    << pStream->getChannelCount() << "channels,"
                    << pStream->getFramesPerDataCallback() << "frames per callback, burst"

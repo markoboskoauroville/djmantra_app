@@ -48,6 +48,18 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #SelectorButton[displayValue="1"] { color: #2f8cff; }
 #BackButton, #LoadButton { font-size: 13px; }
 #LoadButton { margin-left: 4px; }
+#CueButton { border-radius: 8px; }
+#CueButton[displayValue="1"] { border-color: #ffffff; }
+#PflButton, #LoadDeckButton { font-size: 13px; border-radius: 6px; padding: 0px; }
+#PflButton[displayValue="1"] { color: #0d0d0f; background-color: #E8A33D; border-color: #E8A33D; }
+#ModeRow { padding: 0px 2px; }
+#ModeButton { font-size: 11px; border-radius: 5px; margin: 0px 2px; border-width: 1px; }
+#ModeButton[displayValue="1"] { color: #0d0d0f; background-color: #ffffff; border-color: #ffffff; }
+#PadPlay { font-size: 17px; }
+#PadPlay[displayValue="1"] { color: #3ad13a; border-color: #3ad13a; }
+WPushButton#PadButton { background-color: #333336; border: 1px solid #4a4a4f; border-radius: 8px;
+                        font-size: 15px; margin: 3px; }
+WPushButton#PadButton[displayValue="1"] { background-color: #2f8cff; border-color: #2f8cff; }
 WHotcueButton#Pad { background-color: #333336; border: 1px solid #4a4a4f; border-radius: 8px;
                     font-size: 15px; margin: 3px; }
 

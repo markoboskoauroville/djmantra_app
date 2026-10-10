@@ -131,8 +131,14 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
     // DJ Mantra: the phone screens (the phone has no menu bar). The skin's
     // buttons set these controls; the screens are drawn over the window.
     {
-        const auto pickTrack = [this](const QString& group) {
-            auto* pPicker = new djmantra::TrackPicker(m_pCoreServices->getSettings(), this, group);
+        // The screens cover the skin, inside the window's margins: so they
+        // too make room for the system bars when those come back
+        const auto screenParent = [this]() -> QWidget* {
+            return centralWidget() ? centralWidget() : this;
+        };
+        const auto pickTrack = [this, screenParent](const QString& group) {
+            auto* pPicker = new djmantra::TrackPicker(
+                    m_pCoreServices->getSettings(), screenParent(), group);
             connect(pPicker,
                     &djmantra::TrackPicker::loadRequested,
                     this,
@@ -145,7 +151,7 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
             auto* pDialog = new djmantra::DlgControllerRemap(this);
             pDialog->open();
         };
-        const auto showSettings = [this, pickTrack, showControllerMap] {
+        const auto showSettings = [this, screenParent, pickTrack, showControllerMap] {
             djmantra::SettingsActions actions;
             actions.library = [pickTrack] { pickTrack(QString()); };
             actions.controller = showControllerMap;
@@ -155,7 +161,7 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
             };
             actions.midi = [this] { slotOptionsPreferences(); };
             actions.advanced = [this] { slotOptionsPreferences(); };
-            new djmantra::SettingsScreen(this, actions);
+            new djmantra::SettingsScreen(screenParent(), actions);
         };
         // A deck's song picker: a tap on the deck's cover in the header sets
         // the deck number
@@ -184,14 +190,17 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
             });
         };
         // The menu sheet (the round button in the middle of the header)
-        pushButton("show_menu", [this, pickTrack, showControllerMap, showSettings] {
+        pushButton("show_menu", [screenParent, pickTrack, showControllerMap, showSettings] {
             djmantra::MainMenu::Actions actions;
             actions.library = [pickTrack] { pickTrack(QString()); };
             actions.controller = showControllerMap;
             actions.settings = showSettings;
-            new djmantra::MainMenu(this, actions);
+            new djmantra::MainMenu(screenParent(), actions);
         });
         pushButton("show_preferences", showSettings);
+        // The controller's buttons 1 and 2 next to the browser: a deck's songs
+        pushButton("load_deck1", [pickTrack] { pickTrack(QStringLiteral("[Channel1]")); });
+        pushButton("load_deck2", [pickTrack] { pickTrack(QStringLiteral("[Channel2]")); });
         // The virtual controller, to choose what each controller button,
         // fader and knob does
         pushButton("show_controller_map", showControllerMap);
