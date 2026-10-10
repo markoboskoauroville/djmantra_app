@@ -271,9 +271,10 @@ def bpm(n, align="center", size="-1me,-1min"):
 
 
 def overview(n, height=26):
+    # height None: as tall as there is room
     return """<Overview>
   <ObjectName>Overview</ObjectName>
-  <Size>-1me,%df</Size>
+  <Size>-1me,%s</Size>
   <Group>%s</Group>
   <BgColor>%s</BgColor>
   <SignalColor>#ff4040</SignalColor>
@@ -303,7 +304,7 @@ def overview(n, height=26):
     <DisabledOpacity>0.3</DisabledOpacity>
   </MarkRange>
   <Connection><ConfigKey>%s,playposition</ConfigKey></Connection>
-</Overview>""" % (height, grp(n), TOPBAR, RED, grp(n))
+</Overview>""" % ("-1me" if height is None else "%df" % height, grp(n), TOPBAR, RED, grp(n))
 
 
 def visual(n, vertical):
@@ -738,7 +739,8 @@ def library_view():
 def one_deck_view():
     """djay's One Deck for the phone (Marko's screenshot of djay Pro): listening
     to the library. Album art (a tap: the folders), title, artist, BPM, key,
-    time; the overview and the waveform; previous / play / next / cue; then
+    time; the overview, the only waveform here (Marko, 10.10.2026: a tap
+    jumps there); previous / play / next / cue; then
     the songs of the folder (a tap plays one, the next follows at the end).
     The list is put into "OneDeckList" by the main window."""
     def fact(caption, value):
@@ -751,7 +753,6 @@ def one_deck_view():
     top = hbox(cover(1, "104f,104f", "104,104", "OneDeckCover"), hspace(12), info,
                vbox(library_button(32), vstretch(), policy="min,me"),
                name="TopBar", size="-1me,124f")
-    waveform = vbox(visual(1, False), policy="me,min", size="-1me,118f")
     transport = hbox(
         button("[DJMantra],one_deck_prev", "IconButton", "", "48f,48f", states=1,
                pixmaps=[("prev.svg", "prev.svg")]),
@@ -774,11 +775,11 @@ def one_deck_view():
   <Connection><ConfigKey>[DJMantra],one_deck_continuous</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>""",
         name="Transport", policy="me,min")
-    portrait = vbox(top, overview(1, 30), waveform, transport,
+    portrait = vbox(top, overview(1, 148), transport,
                     vbox(name="OneDeckList", policy="me,me"),
                     name="OneDeck", policy="me,me", maxsize="699,-1")
     # landscape: the player on the left, the songs on the right
-    player = vbox(top, overview(1, 26), vbox(visual(1, False), policy="me,me"), transport,
+    player = vbox(top, overview(1, None), transport,
                   policy="me,me")
     landscape = hbox(player, vbox(name="OneDeckList", policy="me,me", size="380f,-1me"),
                      name="OneDeck", policy="me,me", minsize="700,0")

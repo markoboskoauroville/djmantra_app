@@ -589,6 +589,12 @@ void WOverview::mousePressEvent(QMouseEvent* e) {
             setControlParameterUp(dValue);
             m_bLeftClickDragging = false;
         } else {
+            // DJ Mantra: a tap jumps the playhead right away (Marko,
+            // 10.10.2026); on a touch screen the release can come after a
+            // leave event that cancels the drag, so do not wait for it.
+            // Dragging on moves it on and the release sets the end.
+            m_iPlayPos = m_iPickupPos;
+            setControlParameterUp(positionToValue(m_iPickupPos));
             m_bLeftClickDragging = true;
             m_bTimeRulerActive = true;
             m_timeRulerPos = e->pos();

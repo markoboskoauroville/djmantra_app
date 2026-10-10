@@ -3,6 +3,7 @@
 #include <QDragEnterEvent>
 #include <QEvent>
 
+#include "control/controlobject.h"
 #include "control/controlproxy.h"
 #include "moc_wwaveformviewer.cpp"
 #include "util/dnd.h"
@@ -11,6 +12,11 @@
 #include "waveform/widgets/waveformwidgetabstract.h"
 #include "widget/wcuemenupopup.h"
 #include "widget/wglwidget.h"
+
+namespace {
+// how far a finger may move and still tap (pixels)
+constexpr int kTapSlop = 12;
+} // namespace
 
 WWaveformViewer::WWaveformViewer(
         const QString& group,
@@ -90,13 +96,10 @@ void WWaveformViewer::mousePressEvent(QMouseEvent* event) {
             m_pWheel->setParameter(0.5);
             m_bBending = false;
         }
-        m_bScratching = true;
-        int eventPosValue = m_waveformWidget->getOrientation() == Qt::Horizontal ?
-                    event->pos().x() : event->pos().y();
-        double audioSamplePerPixel = m_waveformWidget->getAudioSamplePerPixel();
-        double targetPosition = -1.0 * eventPosValue * audioSamplePerPixel * 2;
-        m_pScratchPosition->set(targetPosition);
-        m_pScratchPositionEnable->set(1.0);
+        // DJ Mantra: the waveform answers touch (Marko, 10.10.2026): a tap
+        // jumps the playhead there, a drag scratches. Scratching starts only
+        // when the finger moves, so a tap does not stop the sound.
+        m_bTapPending = true;
     } else if (event->button() == Qt::RightButton) {
         const auto currentTrack = m_waveformWidget->getTrackInfo();
         if (!isPlaying() && m_pHoveredMark) {
@@ -130,6 +133,20 @@ void WWaveformViewer::mousePressEvent(QMouseEvent* event) {
 void WWaveformViewer::mouseMoveEvent(QMouseEvent* event) {
     if (!m_waveformWidget || m_waveformWidget->getType() == WaveformWidgetType::EmptyWaveform) {
         return;
+    }
+
+    if (m_bTapPending) {
+        if ((event->pos() - m_mouseAnchor).manhattanLength() < kTapSlop) {
+            return;
+        }
+        // a drag: scratch from where the finger went down
+        m_bTapPending = false;
+        m_bScratching = true;
+        int anchorValue = m_waveformWidget->getOrientation() == Qt::Horizontal ?
+                m_mouseAnchor.x() : m_mouseAnchor.y();
+        m_pScratchPosition->set(
+                -1.0 * anchorValue * m_waveformWidget->getAudioSamplePerPixel() * 2);
+        m_pScratchPositionEnable->set(1.0);
     }
 
     // Only send signals for mouse moving if the left button is pressed
@@ -192,7 +209,11 @@ void WWaveformViewer::mouseDoubleClickEvent(QMouseEvent* pEvent) {
     }
 }
 
-void WWaveformViewer::mouseReleaseEvent(QMouseEvent* /*event*/) {
+void WWaveformViewer::mouseReleaseEvent(QMouseEvent* event) {
+    if (m_bTapPending) {
+        m_bTapPending = false;
+        seekTo(event->pos());
+    }
     if (m_bScratching) {
         m_pScratchPositionEnable->set(0.0);
         m_bScratching = false;
@@ -205,6 +226,23 @@ void WWaveformViewer::mouseReleaseEvent(QMouseEvent* /*event*/) {
 
     // Set the cursor back to an arrow.
     setCursor(Qt::ArrowCursor);
+}
+
+void WWaveformViewer::seekTo(QPoint pos) {
+    if (!m_waveformWidget || m_waveformWidget->getTrackSamples() <= 0) {
+        return;
+    }
+    // the part of the track the waveform shows, from its first to its last pixel
+    const bool horizontal = m_waveformWidget->getOrientation() == Qt::Horizontal;
+    const double length = horizontal ? width() : height();
+    if (length <= 0) {
+        return;
+    }
+    const double first = m_waveformWidget->getFirstDisplayedPosition();
+    const double last = m_waveformWidget->getLastDisplayedPosition();
+    const double at = (horizontal ? pos.x() : pos.y()) / length;
+    ControlObject::set(ConfigKey(m_group, QStringLiteral("playposition")),
+            math_clamp(first + (last - first) * at, 0.0, 1.0));
 }
 
 void WWaveformViewer::wheelEvent(QWheelEvent* event) {

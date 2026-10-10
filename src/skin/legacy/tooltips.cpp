@@ -58,7 +58,7 @@ void Tooltips::addStandardTooltips() {
     add("waveform_display")
             << tr("Waveform Display")
             << tr("Shows the loaded track's waveform near the playback position.")
-            << QString("%1: %2").arg(leftClick, scratchMouse)
+            << QString("%1: %2").arg(leftClick, tr("A tap jumps there; drag to scratch, spin-back or throw tracks."))
             << QString("%1: %2").arg(rightClick, tr("Drag with mouse to make temporary pitch adjustments."))
             << QString("%1: %2").arg(scrollWheel, tr("Scroll to change the waveform zoom level."))
             << dropTracksHere;

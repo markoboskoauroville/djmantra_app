@@ -5579,7 +5579,7 @@
 </Children></WidgetGroup>
 <Overview>
   <ObjectName>Overview</ObjectName>
-  <Size>-1me,30f</Size>
+  <Size>-1me,148f</Size>
   <Group>[Channel1]</Group>
   <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
@@ -5610,48 +5610,6 @@
   </MarkRange>
   <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
 </Overview>
-<WidgetGroup>
-<Layout>vertical</Layout>
-<Size>-1me,118f</Size>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<Visual>
-  <ObjectName>Waveform</ObjectName>
-  <TooltipId>waveform_display</TooltipId>
-  <SizePolicy>me,me</SizePolicy>
-  <Channel>1</Channel>
-  <Orientation>horizontal</Orientation>
-  <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
-  <AxesColor>#00000000</AxesColor>
-  <PlayPosColor>#ff2a2a</PlayPosColor>
-  <EndOfTrackColor>#ff6600</EndOfTrackColor>
-  <DefaultMark>
-    <Align>bottom|right</Align>
-    <Color>#ff8800</Color>
-    <TextColor>#ffffff</TextColor>
-    <Text> %1 </Text>
-  </DefaultMark>
-  <Mark>
-    <Control>cue_point</Control>
-    <Text>CUE</Text>
-    <Align>top|right</Align>
-    <Color>#ffffff</Color>
-    <TextColor>#000000</TextColor>
-  </Mark>
-  <MarkRange>
-    <StartControl>loop_start_position</StartControl>
-    <EndControl>loop_end_position</EndControl>
-    <EnabledControl>loop_enabled</EnabledControl>
-    <Color>#3ad13a</Color>
-    <Opacity>0.4</Opacity>
-    <DisabledColor>#ffffff</DisabledColor>
-    <DisabledOpacity>0.2</DisabledOpacity>
-  </MarkRange>
-</Visual>
-</Children></WidgetGroup>
 <WidgetGroup>
 <ObjectName>Transport</ObjectName>
 <Layout>horizontal</Layout>
@@ -5866,7 +5824,7 @@
 </Children></WidgetGroup>
 <Overview>
   <ObjectName>Overview</ObjectName>
-  <Size>-1me,26f</Size>
+  <Size>-1me,-1me</Size>
   <Group>[Channel1]</Group>
   <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
@@ -5897,47 +5855,6 @@
   </MarkRange>
   <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
 </Overview>
-<WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,me</SizePolicy>
-
-<Children>
-<Visual>
-  <ObjectName>Waveform</ObjectName>
-  <TooltipId>waveform_display</TooltipId>
-  <SizePolicy>me,me</SizePolicy>
-  <Channel>1</Channel>
-  <Orientation>horizontal</Orientation>
-  <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
-  <AxesColor>#00000000</AxesColor>
-  <PlayPosColor>#ff2a2a</PlayPosColor>
-  <EndOfTrackColor>#ff6600</EndOfTrackColor>
-  <DefaultMark>
-    <Align>bottom|right</Align>
-    <Color>#ff8800</Color>
-    <TextColor>#ffffff</TextColor>
-    <Text> %1 </Text>
-  </DefaultMark>
-  <Mark>
-    <Control>cue_point</Control>
-    <Text>CUE</Text>
-    <Align>top|right</Align>
-    <Color>#ffffff</Color>
-    <TextColor>#000000</TextColor>
-  </Mark>
-  <MarkRange>
-    <StartControl>loop_start_position</StartControl>
-    <EndControl>loop_end_position</EndControl>
-    <EnabledControl>loop_enabled</EnabledControl>
-    <Color>#3ad13a</Color>
-    <Opacity>0.4</Opacity>
-    <DisabledColor>#ffffff</DisabledColor>
-    <DisabledOpacity>0.2</DisabledOpacity>
-  </MarkRange>
-</Visual>
-</Children></WidgetGroup>
 <WidgetGroup>
 <ObjectName>Transport</ObjectName>
 <Layout>horizontal</Layout>

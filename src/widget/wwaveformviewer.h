@@ -76,6 +76,9 @@ class WWaveformViewer : public WWidget, public TrackDropTarget {
     parented_ptr<ControlProxy> m_pPassthroughEnabled;
     bool m_bScratching;
     bool m_bBending;
+    // DJ Mantra: a press that has not moved yet (a tap jumps there, a drag
+    // scratches once the finger has moved)
+    bool m_bTapPending = false;
     QPoint m_mouseAnchor;
     parented_ptr<WCueMenuPopup> m_pCueMenuPopup;
     WaveformMarkPointer m_pHoveredMark;
@@ -88,6 +91,8 @@ class WWaveformViewer : public WWidget, public TrackDropTarget {
 
     CuePointer getCuePointerFromCueMark(WaveformMarkPointer pMark) const;
     void highlightMark(WaveformMarkPointer pMark);
+    /// DJ Mantra: jump the playhead to the spot under pos
+    void seekTo(QPoint pos);
     void unhighlightMark(WaveformMarkPointer pMark);
     bool isPlaying() const;
 };
