@@ -11,6 +11,7 @@
     <language>en</language>
     <license>GPL-2.0-or-later</license>
     <attributes>
+      <attribute config_key="[DJMantra],one_deck_continuous" persist="true">1</attribute>
       <attribute config_key="[Controls],ShowDurationRemaining">1</attribute>
       <attribute config_key="[App],num_decks">2</attribute>
       <attribute config_key="[App],num_samplers">8</attribute>
@@ -5710,6 +5711,14 @@
 <Connection><ConfigKey>[Channel1],cue_indicator</ConfigKey><ConnectControl>false</ConnectControl></Connection>
 </PushButton>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+<PushButton>
+  <ObjectName>ContinuousButton</ObjectName>
+  <Size>118f,44f</Size>
+  <NumberStates>2</NumberStates>
+  <State><Number>0</Number><Text>STOP AFTER</Text></State>
+  <State><Number>1</Number><Text>CONTINUOUS</Text></State>
+  <Connection><ConfigKey>[DJMantra],one_deck_continuous</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>
 </Children></WidgetGroup>
 <WidgetGroup>
 <ObjectName>OneDeckList</ObjectName>

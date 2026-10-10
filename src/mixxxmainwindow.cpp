@@ -222,12 +222,18 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
                 m_pOneDeckList->playNext(-1);
             }
         });
-        // At the end of a song the next one in its folder plays
+        // At the end of a song: the next one in its folder (CONTINUOUS), or
+        // nothing (STOP AFTER the current song): [DJMantra],one_deck_continuous
         auto* pPlay = new ControlProxy(QStringLiteral("[Channel1]"), QStringLiteral("play"), this);
         auto* pPosition = new ControlProxy(
                 QStringLiteral("[Channel1]"), QStringLiteral("playposition"), this);
         pPlay->connectValueChanged(this, [this, pPosition](double playing) {
-            if (playing == 0 && pPosition->get() >= 0.995 && m_pOneDeckList &&
+            const ControlObject* pContinuous = ControlObject::getControl(
+                    ConfigKey(QStringLiteral("[DJMantra]"),
+                            QStringLiteral("one_deck_continuous")),
+                    ControlFlag::NoAssertIfMissing | ControlFlag::NoWarnIfMissing);
+            const bool continuous = !pContinuous || pContinuous->get() > 0;
+            if (playing == 0 && continuous && pPosition->get() >= 0.995 && m_pOneDeckList &&
                     ControlObject::get(ConfigKey(QStringLiteral("[DJMantra]"),
                             QStringLiteral("one_deck"))) > 0) {
                 m_pOneDeckList->playNext(1);

@@ -757,7 +757,19 @@ def one_deck_view():
         hspace(14),
         button("%s,cue_default" % grp(1), "CueButton", "CUE", "96f,44f",
                display_key="%s,cue_indicator" % grp(1)),
-        spacer(), name="Transport", policy="me,min")
+        spacer(),
+        # what happens at the end of a song: the next one in the folder
+        # (CONTINUOUS, as radio playout calls it) or stop (Winamp's "stop
+        # after current")
+        """<PushButton>
+  <ObjectName>ContinuousButton</ObjectName>
+  <Size>118f,44f</Size>
+  <NumberStates>2</NumberStates>
+  <State><Number>0</Number><Text>STOP AFTER</Text></State>
+  <State><Number>1</Number><Text>CONTINUOUS</Text></State>
+  <Connection><ConfigKey>[DJMantra],one_deck_continuous</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
+</PushButton>""",
+        name="Transport", policy="me,min")
     return vbox(top, overview(1, 30), waveform, transport,
                 vbox(name="OneDeckList", policy="me,me"),
                 name="OneDeck", policy="me,me")
@@ -796,7 +808,11 @@ def skin_xml():
     }
     # Remaining time, as in djay (a tap on the time changes it until the next start)
     persist = {"[Controls],ShowDurationRemaining": "1"}
-    attr_xml = "\n".join('      <attribute config_key="%s">%s</attribute>' % kv
+    # kept between starts: One Deck's continuous play / stop after current
+    kept = {"[DJMantra],one_deck_continuous": "1"}
+    attr_xml = "\n".join('      <attribute config_key="%s" persist="true">%s</attribute>' % kv
+                         for kv in kept.items()) + "\n" + \
+        "\n".join('      <attribute config_key="%s">%s</attribute>' % kv
                          for kv in persist.items()) + "\n" + "\n".join('      <attribute config_key="%s">%s</attribute>' % kv
                          for kv in attrs.items())
     root = stack([
@@ -894,6 +910,9 @@ WPushButton[pressed="true"] { background-color: #3a3a3e; }
 #LoadButton { margin-left: 4px; }
 #CueButton { border-radius: 8px; }
 #OneDeck { background-color: %(BG)s; }
+#ContinuousButton { font-size: 12px; border-radius: 8px; }
+#ContinuousButton[displayValue="1"] { color: %(GREEN)s; border-color: %(GREEN)s; }
+#ContinuousButton[displayValue="0"] { color: %(ORANGE)s; border-color: %(ORANGE)s; }
 #OneDeckCaption { color: %(GREY)s; font-size: 11px; font-weight: bold; }
 #OneDeckTitle { color: %(WHITE)s; font-size: 18px; }
 #OneDeckArtist { color: %(WHITE)s; font-size: 15px; }
