@@ -5,6 +5,20 @@ stops; the newest state wins over older notes. Last update: **2026-10-09 14:20 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## 11.10.2026 (latest): round 11 on Marko's phone itself
+
+- Cloud session "DJ mantra app testing" (session_01Ggm1Tq5a9mnY3wAZMMS9jh), branch
+  `ccr-eb7d1019-d3kubd`. "Djapp local" (Mac) no longer exists; the local session now is
+  **"download-9c"** (session_015uEBPKd7RHnchVAbjobVrB): Claude Code in Termux on Marko's Android
+  phone, adb to the phone itself over wireless debugging. Message it with `send_message`.
+- Marko's 69 test songs (public Drive folder) → `/sdcard/Music` with
+  `tools/android/fetch_test_songs.sh` (list: `testing/songs/drive-songs.tsv`).
+- Round 11 sent 11.10 ~23:55 UTC (android-latest = 657f953): songs, device_test --sound, ui_test,
+  5 songs load/play, two-deck mix with SYNC + crossfader, One Deck. Results go to
+  `testing/results/*_r11_phone/REPORT.md` on `ccr-eb7d1019-d3kubd`. Next: read them, fix, push to
+  `main` for a new android-latest, send round 12. Loop until everything passes.
+- The 7-day limit is at warning (resets 2026-10-15 01:00 UTC): keep this file current.
+
 ## Where things are
 
 - Repo `markoboskoauroville/djmantra_app`, development branch `claude/admiring-feynman-hym3vp`
