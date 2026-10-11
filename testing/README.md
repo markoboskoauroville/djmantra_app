@@ -60,3 +60,10 @@ Marko present.
 
 No lock since 10.10.2026 (Marko: "remove the lock algorithm because now we have only one session
 running"): adb straight to it, like the emulator (`emulator-5554`).
+
+## Test songs (11.10.2026)
+
+Marko's 69 test MP3s (about 880 MB) are in a public Google Drive folder
+(`1pgo5Zyxl-t4uVHfLtMMXOSCO9uQpFOT_`), listed in `testing/songs/drive-songs.tsv`.
+`tools/android/fetch_test_songs.sh` downloads them into the phone's `/sdcard/Music` (run in Termux on
+the phone) or, with `--serial`, pushes them there over adb. Use them for the load, play and mix tests.
