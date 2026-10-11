@@ -250,6 +250,29 @@ def time_remaining(n, align="right"):
 </NumberPos>""" % (align, n, grp(n))
 
 
+def bar_beat(n, align="left"):
+    # Ableton's bar.beat with the time signature, e.g. "17.3  4/4"
+    return """<BarBeat>
+  <ObjectName>BarBeatText</ObjectName>
+  <Size>-1min,-1min</Size>
+  <Alignment>%s</Alignment>
+  <Channel>%d</Channel>
+</BarBeat>""" % (align, n)
+
+
+def counter(n, align="left"):
+    """Marko's deck counter (11.10.2026), as in Ableton Live: on top bar.beat,
+    the time signature and the key; under it only the time, elapsed and
+    remaining (m:ss  -m:ss)."""
+    if align == "left":
+        top = hbox(bar_beat(n, "left"), hspace(8), key_label(n, "left"), spacer(),
+                   policy="me,min")
+    else:
+        top = hbox(spacer(), key_label(n, "right"), hspace(8), bar_beat(n, "right"),
+                   policy="me,min")
+    return vbox(top, time_remaining(n, align), policy="me,min")
+
+
 def key_label(n, align="right"):
     return """<Key>
   <ObjectName>KeyDeck%d</ObjectName>
@@ -485,8 +508,9 @@ def pads(n, column=True):
 
 def header_deck_landscape(n):
     text = vbox(
-        hbox(track_prop(n, "artist", "ArtistText"), key_label(n), policy="me,min"),
-        hbox(track_prop(n, "title", "TitleText"), time_remaining(n), policy="me,min"),
+        track_prop(n, "artist", "ArtistText", "left" if n == 1 else "right"),
+        track_prop(n, "title", "TitleText", "left" if n == 1 else "right"),
+        counter(n, "left" if n == 1 else "right"),
         overview(n, 22),
         policy="me,max")
     art = cover(n, "58f,58f", "58,58", "HeaderCover")
@@ -496,15 +520,14 @@ def header_deck_landscape(n):
 
 def header_deck_portrait(n):
     if n == 1:
-        time_key = hbox(time_remaining(n, "left"), spacer(), key_label(n), policy="me,min")
         text = vbox(track_prop(n, "artist", "ArtistText"),
-                    track_prop(n, "title", "TitleText"), time_key, policy="me,min")
+                    track_prop(n, "title", "TitleText"), counter(n, "left"), policy="me,min")
         top = hbox(cover(n, "58f,58f", "58,58", "HeaderCover"), hspace(6), text,
                    policy="me,min")
     else:
-        time_key = hbox(key_label(n, "left"), spacer(), time_remaining(n), policy="me,min")
         text = vbox(track_prop(n, "artist", "ArtistText", "right"),
-                    track_prop(n, "title", "TitleText", "right"), time_key, policy="me,min")
+                    track_prop(n, "title", "TitleText", "right"), counter(n, "right"),
+                    policy="me,min")
         top = hbox(text, hspace(6), cover(n, "58f,58f", "58,58", "HeaderCover"),
                    policy="me,min")
     return vbox(top, vspace(4), overview(n, 22), policy="me,max")
@@ -747,8 +770,8 @@ def one_deck_view():
         return vbox(label(caption, "OneDeckCaption", align="left"), value, policy="me,min")
     info = vbox(fact("TITLE", track_prop(1, "title", "OneDeckTitle")),
                 fact("ARTIST", track_prop(1, "artist", "OneDeckArtist")),
-                hbox(fact("BPM", bpm(1, "left")), fact("KEY", key_label(1, "left")),
-                     fact("TIME", time_remaining(1, "left")), policy="me,min"),
+                hbox(fact("BPM", bpm(1, "left")), hspace(12), counter(1, "left"),
+                     policy="me,min"),
                 policy="me,min")
     top = hbox(cover(1, "104f,104f", "104,104", "OneDeckCover"), hspace(12), info,
                vbox(library_button(32), vstretch(), policy="min,me"),
@@ -817,8 +840,8 @@ def skin_xml():
         "[DJMantra],d2_hotcue": "1", "[DJMantra],d2_loop": "0",
         "[DJMantra],d2_fx": "0", "[DJMantra],d2_sampler": "0",
     }
-    # Remaining time, as in djay (a tap on the time changes it until the next start)
-    persist = {"[Controls],ShowDurationRemaining": "1"}
+    # Elapsed and remaining, m:ss only (Marko, 11.10.2026: "only minutes and seconds")
+    persist = {"[Controls],ShowDurationRemaining": "2", "[Controls],TimeFormat": "1"}
     # kept between starts: One Deck's continuous play / stop after current
     kept = {"[DJMantra],one_deck_continuous": "1"}
     attr_xml = "\n".join('      <attribute config_key="%s" persist="true">%s</attribute>' % kv
@@ -887,9 +910,10 @@ WWidget, WLabel, QLabel { color: %(WHITE)s; font-family: "Roboto", "Open Sans", 
 
 #ArtistText { color: %(GREY)s; font-size: 12px; }
 #TitleText { color: %(WHITE)s; font-size: 16px; }
-#TimeText { color: %(WHITE)s; font-size: 18px; }
+#TimeText { color: %(WHITE)s; font-size: 15px; }
 #KeyDeck1 { color: %(GREEN)s; font-size: 13px; }
 #KeyDeck2 { color: %(MAGENTA)s; font-size: 13px; }
+#BarBeatText { color: %(WHITE)s; font-size: 15px; font-weight: bold; }
 #BpmText { color: %(WHITE)s; font-size: 20px; }
 #BpmCaption, #KnobLabel { color: %(GREY)s; font-size: 11px; font-weight: bold; }
 #KnobLabel { qproperty-alignment: AlignCenter; }

@@ -23,6 +23,11 @@ class ControlPushButton;
 ///   phrase_set_one   button: the beat closest to the play position is "1"
 ///   phrase_jump      set to n (1-based) to jump to beat n of the current
 ///                    phrase, keeping the position within the beat
+///   beat_number      beats since "1" (0-based, negative before it); valid
+///                    while beat_in_phrase >= 0 (read-only). With
+///                    beats_per_bar it gives Ableton's bar.beat counter.
+///   beats_per_bar    the time signature's upper number, 1..16 (default 4)
+///   beat_unit        its lower number: 2, 4 (default), 8 or 16
 ///
 /// Counted on the beat grid itself, so beat maps and tempo changes work.
 class PhraseControl : public EngineControl {
@@ -33,6 +38,14 @@ class PhraseControl : public EngineControl {
 
     void trackLoaded(TrackPointer pNewTrack) override;
     void trackBeatsUpdated(mixxx::BeatsPointer pBeats) override;
+
+    /// Beats from "1" (the beat closest to `anchor`) to the beat that
+    /// `position` is in: 0 on "1", negative before it. Returns false
+    /// without beats.
+    static bool beatNumber(const mixxx::BeatsPointer& pBeats,
+            mixxx::audio::FramePos anchor,
+            mixxx::audio::FramePos position,
+            int* pNumber);
 
     /// Called with the play position after every buffer (like ClockControl).
     void updatePosition(mixxx::audio::FramePos position);
@@ -57,6 +70,9 @@ class PhraseControl : public EngineControl {
     std::unique_ptr<ControlObject> m_pPhraseAnchor;
     std::unique_ptr<ControlPushButton> m_pSetOne;
     std::unique_ptr<ControlObject> m_pJump;
+    std::unique_ptr<ControlObject> m_pBeatNumber;
+    std::unique_ptr<ControlObject> m_pBeatsPerBar;
+    std::unique_ptr<ControlObject> m_pBeatUnit;
     std::unique_ptr<ControlProxy> m_pCuePoint;
 
     mixxx::BeatsPointer m_pBeats;
@@ -65,4 +81,5 @@ class PhraseControl : public EngineControl {
     mixxx::audio::FramePos m_prevBeat;
     mixxx::audio::FramePos m_nextBeat;
     int m_beat = -1;
+    int m_beatNumber = 0;
 };

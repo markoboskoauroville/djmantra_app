@@ -12,7 +12,8 @@
     <license>GPL-2.0-or-later</license>
     <attributes>
       <attribute config_key="[DJMantra],one_deck_continuous" persist="true">1</attribute>
-      <attribute config_key="[Controls],ShowDurationRemaining">1</attribute>
+      <attribute config_key="[Controls],ShowDurationRemaining">2</attribute>
+      <attribute config_key="[Controls],TimeFormat">1</attribute>
       <attribute config_key="[App],num_decks">2</attribute>
       <attribute config_key="[App],num_samplers">8</attribute>
       <attribute config_key="[Skin],show_spinnies">0</attribute>
@@ -138,10 +139,31 @@
   <Channel>1</Channel>
 </TrackProperty>
 <WidgetGroup>
+<Layout>vertical</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
+<BarBeat>
+  <ObjectName>BarBeatText</ObjectName>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Channel>1</Channel>
+</BarBeat>
+<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
+<Key>
+  <ObjectName>KeyDeck1</ObjectName>
+  <Group>[Channel1]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
+</Key>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+</Children></WidgetGroup>
 <NumberPos>
   <ObjectName>TimeText</ObjectName>
   <Size>-1min,-1min</Size>
@@ -149,14 +171,6 @@
   <Channel>1</Channel>
   <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
 </NumberPos>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<Key>
-  <ObjectName>KeyDeck1</ObjectName>
-  <Group>[Channel1]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
-  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
-</Key>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -228,18 +242,31 @@
   <Channel>2</Channel>
 </TrackProperty>
 <WidgetGroup>
+<Layout>vertical</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck2</ObjectName>
   <Group>[Channel2]</Group>
   <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
+  <Alignment>right</Alignment>
   <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
 </Key>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
+<BarBeat>
+  <ObjectName>BarBeatText</ObjectName>
+  <Size>-1min,-1min</Size>
+  <Alignment>right</Alignment>
+  <Channel>2</Channel>
+</BarBeat>
+</Children></WidgetGroup>
 <NumberPos>
   <ObjectName>TimeText</ObjectName>
   <Size>-1min,-1min</Size>
@@ -2645,11 +2672,6 @@
 <SizePolicy>me,max</SizePolicy>
 
 <Children>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
 <TrackProperty>
   <ObjectName>ArtistText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -2658,19 +2680,6 @@
   <Elide>right</Elide>
   <Channel>1</Channel>
 </TrackProperty>
-<Key>
-  <ObjectName>KeyDeck1</ObjectName>
-  <Group>[Channel1]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
-  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
-</Key>
-</Children></WidgetGroup>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
 <TrackProperty>
   <ObjectName>TitleText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -2679,10 +2688,36 @@
   <Elide>right</Elide>
   <Channel>1</Channel>
 </TrackProperty>
+<WidgetGroup>
+<Layout>vertical</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<BarBeat>
+  <ObjectName>BarBeatText</ObjectName>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Channel>1</Channel>
+</BarBeat>
+<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
+<Key>
+  <ObjectName>KeyDeck1</ObjectName>
+  <Group>[Channel1]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
+</Key>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+</Children></WidgetGroup>
 <NumberPos>
   <ObjectName>TimeText</ObjectName>
   <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
+  <Alignment>left</Alignment>
   <Channel>1</Channel>
   <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
 </NumberPos>
@@ -2757,19 +2792,33 @@
 <SizePolicy>me,max</SizePolicy>
 
 <Children>
+<TrackProperty>
+  <ObjectName>ArtistText</ObjectName>
+  <Size>-1me,-1min</Size>
+  <Property>artist</Property>
+  <Alignment>right</Alignment>
+  <Elide>right</Elide>
+  <Channel>2</Channel>
+</TrackProperty>
+<TrackProperty>
+  <ObjectName>TitleText</ObjectName>
+  <Size>-1me,-1min</Size>
+  <Property>title</Property>
+  <Alignment>right</Alignment>
+  <Elide>right</Elide>
+  <Channel>2</Channel>
+</TrackProperty>
+<WidgetGroup>
+<Layout>vertical</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
 <WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<TrackProperty>
-  <ObjectName>ArtistText</ObjectName>
-  <Size>-1me,-1min</Size>
-  <Property>artist</Property>
-  <Alignment>left</Alignment>
-  <Elide>right</Elide>
-  <Channel>2</Channel>
-</TrackProperty>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck2</ObjectName>
   <Group>[Channel2]</Group>
@@ -2777,20 +2826,14 @@
   <Alignment>right</Alignment>
   <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
 </Key>
-</Children></WidgetGroup>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<TrackProperty>
-  <ObjectName>TitleText</ObjectName>
-  <Size>-1me,-1min</Size>
-  <Property>title</Property>
-  <Alignment>left</Alignment>
-  <Elide>right</Elide>
+<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
+<BarBeat>
+  <ObjectName>BarBeatText</ObjectName>
+  <Size>-1min,-1min</Size>
+  <Alignment>right</Alignment>
   <Channel>2</Channel>
-</TrackProperty>
+</BarBeat>
+</Children></WidgetGroup>
 <NumberPos>
   <ObjectName>TimeText</ObjectName>
   <Size>-1min,-1min</Size>
@@ -5524,12 +5567,24 @@
   <Connection><ConfigKey>[Channel1],visual_bpm</ConfigKey></Connection>
 </Number>
 </Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
 <Layout>vertical</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<Label><ObjectName>OneDeckCaption</ObjectName><Text>KEY</Text><Alignment>left</Alignment></Label>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<BarBeat>
+  <ObjectName>BarBeatText</ObjectName>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Channel>1</Channel>
+</BarBeat>
+<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck1</ObjectName>
   <Group>[Channel1]</Group>
@@ -5537,13 +5592,8 @@
   <Alignment>left</Alignment>
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
-<WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<Label><ObjectName>OneDeckCaption</ObjectName><Text>TIME</Text><Alignment>left</Alignment></Label>
 <NumberPos>
   <ObjectName>TimeText</ObjectName>
   <Size>-1min,-1min</Size>
@@ -5769,12 +5819,24 @@
   <Connection><ConfigKey>[Channel1],visual_bpm</ConfigKey></Connection>
 </Number>
 </Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
 <Layout>vertical</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<Label><ObjectName>OneDeckCaption</ObjectName><Text>KEY</Text><Alignment>left</Alignment></Label>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<BarBeat>
+  <ObjectName>BarBeatText</ObjectName>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Channel>1</Channel>
+</BarBeat>
+<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck1</ObjectName>
   <Group>[Channel1]</Group>
@@ -5782,13 +5844,8 @@
   <Alignment>left</Alignment>
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
-<WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<Label><ObjectName>OneDeckCaption</ObjectName><Text>TIME</Text><Alignment>left</Alignment></Label>
 <NumberPos>
   <ObjectName>TimeText</ObjectName>
   <Size>-1min,-1min</Size>

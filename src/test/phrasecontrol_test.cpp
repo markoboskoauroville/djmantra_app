@@ -5,6 +5,7 @@
 #include "control/controlobject.h"
 #include "test/signalpathtest.h"
 #include "track/beats.h"
+#include "widget/djmantra/wbarbeat.h"
 
 using mixxx::audio::FramePos;
 
@@ -51,6 +52,32 @@ TEST(PhraseControlTest, anchorInsideTheSongAndBeforeIt) {
     // Beat 2 is 8 beats before "1": also a "1"
     EXPECT_EQ(0, PhraseControl::beatInPhrase(pBeats, anchor, inBeat(2), 8));
     EXPECT_EQ(1, PhraseControl::beatInPhrase(pBeats, anchor, inBeat(3), 8));
+}
+
+TEST(PhraseControlTest, beatNumberFromTheAnchor) {
+    const auto pBeats = grid();
+    const FramePos anchor(kFirst + 10 * kBeat);
+    int n = 99;
+    EXPECT_TRUE(PhraseControl::beatNumber(pBeats, anchor, inBeat(10), &n));
+    EXPECT_EQ(0, n);
+    EXPECT_TRUE(PhraseControl::beatNumber(pBeats, anchor, inBeat(27), &n));
+    EXPECT_EQ(17, n);
+    EXPECT_TRUE(PhraseControl::beatNumber(pBeats, anchor, inBeat(7), &n));
+    EXPECT_EQ(-3, n);
+    EXPECT_FALSE(PhraseControl::beatNumber(mixxx::BeatsPointer(), anchor, inBeat(7), &n));
+}
+
+TEST(PhraseControlTest, barBeatAsInAbleton) {
+    EXPECT_EQ(QStringLiteral("1.1"), WBarBeat::barBeat(0, 4));
+    EXPECT_EQ(QStringLiteral("1.4"), WBarBeat::barBeat(3, 4));
+    EXPECT_EQ(QStringLiteral("2.1"), WBarBeat::barBeat(4, 4));
+    EXPECT_EQ(QStringLiteral("17.3"), WBarBeat::barBeat(66, 4));
+    EXPECT_EQ(QStringLiteral("3.2"), WBarBeat::barBeat(7, 3));
+    EXPECT_EQ(QStringLiteral("2.6"), WBarBeat::barBeat(11, 6));
+    // Before "1": bar 0, then -1
+    EXPECT_EQ(QStringLiteral("0.4"), WBarBeat::barBeat(-1, 4));
+    EXPECT_EQ(QStringLiteral("0.1"), WBarBeat::barBeat(-4, 4));
+    EXPECT_EQ(QStringLiteral("-1.4"), WBarBeat::barBeat(-5, 4));
 }
 
 TEST(PhraseControlTest, anchorSlightlyOffTheGridSnaps) {
@@ -103,6 +130,10 @@ TEST_F(PhraseControlEngineTest, followsThePlayPosition) {
     EXPECT_EQ(3, beat());
     seekToBeat(9.5);
     EXPECT_EQ(1, beat());
+    // Ableton's counter: beat 9 from "1" is bar 3, beat 2 in 4/4
+    EXPECT_EQ(9, ControlObject::get(ConfigKey(m_sGroup1, "beat_number")));
+    EXPECT_EQ(4, ControlObject::get(ConfigKey(m_sGroup1, "beats_per_bar")));
+    EXPECT_EQ(4, ControlObject::get(ConfigKey(m_sGroup1, "beat_unit")));
     ControlObject::set(ConfigKey(m_sGroup1, "phrase_length"), 4);
     ProcessBuffer();
     EXPECT_EQ(1, beat());

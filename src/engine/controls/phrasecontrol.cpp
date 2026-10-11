@@ -25,10 +25,17 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
           m_pPhraseAnchor(std::make_unique<ControlObject>(ConfigKey(group, "phrase_anchor"))),
           m_pSetOne(std::make_unique<ControlPushButton>(ConfigKey(group, "phrase_set_one"))),
           m_pJump(std::make_unique<ControlObject>(ConfigKey(group, "phrase_jump"))),
+          m_pBeatNumber(std::make_unique<ControlObject>(ConfigKey(group, "beat_number"))),
+          m_pBeatsPerBar(std::make_unique<ControlObject>(ConfigKey(group, "beats_per_bar"))),
+          m_pBeatUnit(std::make_unique<ControlObject>(ConfigKey(group, "beat_unit"))),
           m_pCuePoint(std::make_unique<ControlProxy>(group, "cue_point", this)) {
     m_pBeatInPhrase->setReadOnly();
     m_pBeatInPhrase->forceSet(-1);
     m_pPhraseLength->set(kDefaultPhraseLength);
+    m_pBeatNumber->setReadOnly();
+    // 4/4 until the time signature is detected per track
+    m_pBeatsPerBar->set(4);
+    m_pBeatUnit->set(4);
     m_pPhraseAnchor->set(-1);
     connect(m_pSetOne.get(), &ControlObject::valueChanged, this, &PhraseControl::slotSetOne);
     connect(m_pJump.get(), &ControlObject::valueChanged, this, &PhraseControl::slotJump);
@@ -84,33 +91,44 @@ mixxx::audio::FramePos PhraseControl::anchor() const {
 }
 
 // static
-int PhraseControl::beatInPhrase(const mixxx::BeatsPointer& pBeats,
+bool PhraseControl::beatNumber(const mixxx::BeatsPointer& pBeats,
         mixxx::audio::FramePos anchor,
         mixxx::audio::FramePos position,
-        int phraseLength) {
-    if (!pBeats || !anchor.isValid() || !position.isValid() || phraseLength <= 0) {
-        return -1;
+        int* pNumber) {
+    if (!pBeats || !anchor.isValid() || !position.isValid()) {
+        return false;
     }
     // "1" is the beat closest to the anchor, so that a cue a few ms off the
     // grid still counts as its beat
     const auto one = pBeats->findClosestBeat(anchor);
     if (!one.isValid()) {
-        return -1;
+        return false;
     }
     mixxx::audio::FramePos prev;
     mixxx::audio::FramePos next;
     if (!pBeats->findPrevNextBeats(position, &prev, &next, true) || !prev.isValid()) {
-        return -1;
+        return false;
     }
-    int n;
     if (prev == one) {
         // Beats::numBeatsInRange() returns -1 for an empty range at frame 0
-        n = 0;
+        *pNumber = 0;
     } else if (prev > one) {
         // Beats in [one, prev] minus one: prev is beat n (0-based)
-        n = pBeats->numBeatsInRange(one, prev);
+        *pNumber = pBeats->numBeatsInRange(one, prev);
     } else {
-        n = -pBeats->numBeatsInRange(prev, one);
+        *pNumber = -pBeats->numBeatsInRange(prev, one);
+    }
+    return true;
+}
+
+// static
+int PhraseControl::beatInPhrase(const mixxx::BeatsPointer& pBeats,
+        mixxx::audio::FramePos anchor,
+        mixxx::audio::FramePos position,
+        int phraseLength) {
+    int n;
+    if (phraseLength <= 0 || !beatNumber(pBeats, anchor, position, &n)) {
+        return -1;
     }
     return ((n % phraseLength) + phraseLength) % phraseLength;
 }
@@ -133,11 +151,22 @@ void PhraseControl::updatePosition(mixxx::audio::FramePos position) {
     } else if (m_beat >= 0 && m_nextBeat.isValid() && position >= m_nextBeat &&
             position < pBeats->findNextBeat(m_nextBeat + 1)) {
         beat = (m_beat + 1) % length; // the next beat while playing on
+        ++m_beatNumber;
         m_prevBeat = m_nextBeat;
         m_nextBeat = pBeats->findNextBeat(m_nextBeat + 1);
     } else {
-        beat = beatInPhrase(pBeats, anchor(), position, length);
+        int number;
+        if (beatNumber(pBeats, anchor(), position, &number)) {
+            m_beatNumber = number;
+            beat = ((number % length) + length) % length;
+        } else {
+            beat = -1;
+        }
         pBeats->findPrevNextBeats(position, &m_prevBeat, &m_nextBeat, true);
+    }
+    // The number first: a beat_in_phrase listener reads it
+    if (m_pBeatNumber->get() != m_beatNumber) {
+        m_pBeatNumber->forceSet(m_beatNumber);
     }
     if (beat != m_beat) {
         m_beat = beat;
