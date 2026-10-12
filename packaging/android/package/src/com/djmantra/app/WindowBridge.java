@@ -75,6 +75,27 @@ public final class WindowBridge {
         return sInsets;
     }
 
+    /// One pass of the bars watch, on Android's UI thread: called by the app
+    /// every 300 ms (round 14: the decor's own postDelayed loop never ran, so
+    /// the bars a swipe brought stayed over the app and it made no room)
+    public static void poll(Context context) {
+        if (!(context instanceof Activity) || Build.VERSION.SDK_INT < 30) {
+            return;
+        }
+        final Activity activity = (Activity) context;
+        activity.runOnUiThread(() -> {
+            try {
+                Window window = activity.getWindow();
+                update(window, window.getDecorView());
+            } catch (Throwable error) {
+                if (!sErrorLogged) {
+                    sErrorLogged = true;
+                    Log.e(TAG, "WindowBridge: insets update failed", error);
+                }
+            }
+        });
+    }
+
     // Every 300 ms: note the bars' room for the app, and hide the bars again
     // once they have been there for SHOW_MS
     private static void watch(final Window window) {

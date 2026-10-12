@@ -37,6 +37,11 @@ AndroidWindow::AndroidWindow(QWidget* pWindow)
 
 void AndroidWindow::followSystemBars() {
 #if defined(Q_OS_ANDROID)
+    // One pass of the bars watch (hide them again, note their room), then read it
+    QJniObject::callStaticMethod<void>("com/djmantra/app/WindowBridge",
+            "poll",
+            "(Landroid/content/Context;)V",
+            QNativeInterface::QAndroidApplication::context().object());
     const QJniObject array = QJniObject::callStaticObjectMethod(
             "com/djmantra/app/WindowBridge", "insets", "()[I");
     if (!array.isValid()) {

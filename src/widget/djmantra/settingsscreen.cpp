@@ -158,6 +158,12 @@ void SettingsScreen::showAbout() {
     pAbout->setFocus();
 }
 
+namespace {
+// The menu sheet starts under the skin's top row: the selfie camera hole sits
+// in its middle (round 14: the sheet's close button was under the hole)
+constexpr int kSheetTop = 44;
+} // namespace
+
 MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
         : QWidget(pWindow),
           m_pWindow(pWindow),
@@ -304,7 +310,7 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
     setGeometry(m_pWindow->rect());
     // Android shows the system bars again over a new screen (round 7)
     AndroidWindow::hideSystemBars();
-    m_pSheet->setGeometry(0, 0, width(), m_pSheet->sizeHint().height());
+    m_pSheet->setGeometry(0, kSheetTop, width(), m_pSheet->sizeHint().height());
     show();
     raise();
     setFocus();
@@ -313,7 +319,7 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
 bool MainMenu::eventFilter(QObject* pObject, QEvent* pEvent) {
     if (pObject == m_pWindow && pEvent->type() == QEvent::Resize) {
         setGeometry(m_pWindow->rect());
-        m_pSheet->setGeometry(0, 0, width(), m_pSheet->sizeHint().height());
+        m_pSheet->setGeometry(0, kSheetTop, width(), m_pSheet->sizeHint().height());
     }
     return QWidget::eventFilter(pObject, pEvent);
 }

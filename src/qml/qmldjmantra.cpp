@@ -68,6 +68,11 @@ QString QmlDJMantra::version() const {
 
 void QmlDJMantra::followInsets() {
 #if defined(Q_OS_ANDROID)
+    // One pass of the bars watch (round 14: its own loop never ran)
+    QJniObject::callStaticMethod<void>("com/djmantra/app/WindowBridge",
+            "poll",
+            "(Landroid/content/Context;)V",
+            QNativeInterface::QAndroidApplication::context().object());
     const QJniObject array = QJniObject::callStaticObjectMethod(
             "com/djmantra/app/WindowBridge", "insets", "()[I");
     if (!array.isValid()) {

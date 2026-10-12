@@ -70,8 +70,9 @@ void WDeckCounter::resizeEvent(QResizeEvent* pEvent) {
 
 void WDeckCounter::fitFont() {
     if (m_skinFontSize <= 0) {
-        // The skin's size, before any of ours
-        m_skinFontSize = QFontInfo(font()).pixelSize();
+        // The skin's size (#CounterText 14 px); read before the style sheet is
+        // applied it came out small (round 14: ~8 px on the phone)
+        m_skinFontSize = std::max(14, QFontInfo(font()).pixelSize());
     }
     // The longest text of the mode (Android's fonts: digits all as wide)
     const QString longest = m_bars ? QStringLiteral("888.8  -88.8|  4/4")
