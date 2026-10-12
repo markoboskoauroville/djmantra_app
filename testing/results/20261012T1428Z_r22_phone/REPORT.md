@@ -55,3 +55,22 @@ AUTOMIX on, EQ on, deck 1 playing, deck 2 playing synced, crossfader from full l
 - 70-100 %: deck 1's HIGH and MID go down (HIGH lower than MID); its LOW stays killed; deck 2 full.
 - Never both LOWs full, both LOWs down only together at half in the swap step, no band killed on both decks. As expected.
 - Not judged: the sound ("no hollow moment"): Marko's ear. A knob-value log line (`Quick: automix eq [ChannelN] low x mid y high z`) would let the tester check the dB values.
+
+## Part 7: round 21 leftovers - FAIL (CPU, genre; the rest PASS)
+- **CPU: FAIL, no better.** `top`, both decks playing, landscape: Songs 81.6 %, Phrasing 79.0 %, Mixer 77.6 %, Keys 80.3 % of one core (round 20 portrait: 74-78 %; target 32-55 %). PSS 556 MB. Audio clean: xruns 0, late 0, slowest 3.1 ms.
+- **Genre (Deezer): FAIL, 1 of 5 looked up.** NEXT loaded Aktysia, Alba, American Dream, Amulet, Astral Voyage, Beautiful Place:
+  - Jakatta - American Dream: House (MusicBrainz).
+  - Anonimat - Aktysia, Amonita - Amulet, Awka - Astral Voyage, Viel - Beautiful Place: `no recording ...` and then `Deezer has no track for ...` for every one. Deezer's search does know such tracks; four misses in four suggests the Deezer query or its parsing is wrong (log the URL and the HTTP status / result count once).
+  - Alba logged no lookup at all (cached from an earlier round?).
+- Empty-list tap: Songs, root folder, tap on the empty area below Download: `showing the navigation bar`, `bars shown, insets [126, 0, 126, 0]`, and the map is logged again after the insets change (`map tab0 1314 916 ...`). PASS (round 20 fail fixed).
+- Landscape Phrasing at 16 BEATS: every number in its own cell, readable, not run together (`p7_land16.png`). PASS (round 20 fail fixed); still small (~18 px digits).
+
+## Round 22 finished: 8 pass, 2 fail
+Pass: 0 smoke, 1 transport, 2 sliders and knobs, 3 cueing a stopped deck, 3b NEXT and played songs, 4 AUTO CUE, 6 Camelot wheel font, 6b AUTOMIX EQ curves.
+Fail, ranked:
+1. Audio router: the lists show only "Phone default" (no speaker), though `AudioRouter: 9 output(s) added`. Second output, plug / unplug, channels 1-2 / 3-4, fallback: NOT TESTED, nothing plugged in (needs Marko with the Mix Ultra or Bluetooth headphones).
+2. CPU ~80 % of one core with both decks playing, every tab.
+3. Genre: Deezer finds nothing (4 of 4 misses); 1 of 5 genres overall.
+Notes: CUE after a play-from-cue + pause stood 3 beats before the cued beat; EQ knobs' neutral drawn at ~4-5 o'clock; landscape: the song list shows ~3 rows, the Camelot wheel is small; Settings' ← scrolls away with the page; no knob values in the log for AUTOMIX.
+Not tested: by ear (AUTOMIX "no hollow moment", jumps), the second output's 2 minutes.
+The round ran in landscape (Marko's phone sideways, auto-rotate on). Rotation was not changed by the tester in the end.
