@@ -140,6 +140,10 @@ QVariantMap QmlDJMantra::keyMatch(double fromKey, double toKey) const {
     return result;
 }
 
+int QmlDJMantra::keyMatchShift(double deckKey, double otherKey) const {
+    return djmantra::camelot::matchShift(codeOf(deckKey), codeOf(otherKey));
+}
+
 QString QmlDJMantra::formatTime(double seconds) const {
     const bool negative = seconds < 0;
     const QString text = mixxx::Duration::formatTime(

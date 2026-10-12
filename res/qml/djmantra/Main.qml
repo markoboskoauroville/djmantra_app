@@ -4,9 +4,14 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 
 // DJ Mantra's interface in Qt Quick: everything is drawn by the GPU (Marko,
-// 12.10.2026). Portrait first: the top row (menu button left, Camelot badge right,
-// the middle free for the selfie camera hole), the two deck headers, the
-// tabs MIXER | WAVEFORMS | PADS, then SYNC / CUE / PLAY and the crossfader.
+// 12.10.2026). The redesign (Marko, "let's redesign this so we don't have
+// redundancy"), top to bottom: the top row (menu button left, Camelot badge
+// right, the middle free for the selfie camera hole); the deck headers (art,
+// artist / title / key, total and remaining time); the player controls (SYNC,
+// CUE, PLAY, JUMP per deck) and the mixing modes (AUTOMIX, EQ, TEMPO BLEND,
+// 8 / 16 / 32 BEATS); the matrix display, the only phrase lights; the overview
+// waveforms; the rest: the playlist (or the mixer, or the keys), the
+// crossfader and the tabs. Landscape: the decks left, the rest right.
 // The system bars and a camera hole off the middle are kept clear with the
 // insets from Mixxx.DJMantra.
 Window {
@@ -18,9 +23,9 @@ Window {
     color: Style.background
     title: "DJ Mantra"
 
-    property int page: 0 // 0 mix (beat pads), 1 mixer, 2 keys (Camelot wheel)
+    property int page: 0 // 0 songs (the playlist), 1 mixer, 2 keys (Camelot wheel, key match)
     readonly property bool landscape: width > height
-    property string overlay: "" // "", "menu", "library", "wheel"
+    property string overlay: "" // "", "menu"
     property string libraryDeck: ""
 
     function logMap() {
@@ -112,97 +117,135 @@ Window {
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
-                onWheelRequested: window.overlay = "wheel"
+                onWheelRequested: window.page = 2
             }
         }
 
-        Row {
-            id: headers
+        Column {
+            // the decks: headers, controls, modes, matrix, overviews
+            id: decks
 
             anchors.top: topBar.bottom
             anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.margins: Style.gap
-            spacing: 14
+            anchors.leftMargin: Style.gap
+            width: window.landscape ? parent.width * 0.55 - 2 * Style.gap : parent.width - 2 * Style.gap
+            spacing: Style.gap
 
-            DeckHeader {
-                objectName: "deck1"
-                width: (headers.width - headers.spacing) / 2
-                height: 74
-                group: "[Channel1]"
-                deckColor: Style.deck1
-                onCoverTapped: {
-                    window.libraryDeck = "[Channel1]";
-                    window.overlay = "library";
+            Row {
+                id: headers
+
+                width: parent.width
+                spacing: 14
+
+                DeckHeader {
+                    objectName: "deck1"
+                    width: (headers.width - headers.spacing) / 2
+                    height: 56
+                    group: "[Channel1]"
+                    deckColor: Style.deck1
+                    onCoverTapped: {
+                        window.libraryDeck = "[Channel1]";
+                        window.page = 0;
+                    }
+                }
+
+                DeckHeader {
+                    objectName: "deck2"
+                    width: (headers.width - headers.spacing) / 2
+                    height: 56
+                    group: "[Channel2]"
+                    mirrored: true
+                    deckColor: Style.deck2
+                    onCoverTapped: {
+                        window.libraryDeck = "[Channel2]";
+                        window.page = 0;
+                    }
                 }
             }
 
-            DeckHeader {
-                objectName: "deck2"
-                width: (headers.width - headers.spacing) / 2
-                height: 74
-                group: "[Channel2]"
-                mirrored: true
-                deckColor: Style.deck2
-                onCoverTapped: {
-                    window.libraryDeck = "[Channel2]";
-                    window.overlay = "library";
+            Row {
+                id: controls
+
+                width: parent.width
+                spacing: 10
+
+                DeckControls {
+                    width: (controls.width - controls.spacing) / 2
+                    height: 44
+                    group: "[Channel1]"
+                    deckColor: Style.deck1
                 }
+
+                DeckControls {
+                    width: (controls.width - controls.spacing) / 2
+                    height: 44
+                    group: "[Channel2]"
+                    deckColor: Style.deck2
+                    mirrored: true
+                }
+            }
+
+            AutoMix {
+                width: parent.width
+                height: 38
+            }
+
+            MatrixDisplay {
+                // the OXI E16's dot-matrix display: the only phrase lights
+                id: matrix
+
+                objectName: "matrix"
+                width: parent.width
+                height: 84
+                decks: [matrix1.info, matrix2.info]
+                onCellTapped: (deck, cell) => (deck === 0 ? matrix1 : matrix2).tap(cell)
+            }
+
+            Overview {
+                objectName: "overview1"
+                width: parent.width
+                height: 26
+                group: "[Channel1]"
+                deckColor: Style.deck1
+            }
+
+            Overview {
+                objectName: "overview2"
+                width: parent.width
+                height: 26
+                group: "[Channel2]"
+                deckColor: Style.deck2
             }
         }
 
         MatrixDeck { id: matrix1; group: "[Channel1]"; deckColor: Style.deck1 }
         MatrixDeck { id: matrix2; group: "[Channel2]"; deckColor: Style.deck2 }
 
-        MatrixDisplay {
-            // the OXI E16's dot-matrix display (Marko, 12.10.2026): each
-            // deck's bar.beat, countdown to the next phrase / section change and
-            // the phrase running lights, deck 1 over deck 2
-            id: matrix
+        Item {
+            // the rest: the playlist, the mixer or the keys; the crossfader; the tabs
+            id: rest
 
-            objectName: "matrix"
-            anchors.top: headers.bottom
-            anchors.topMargin: Style.gap
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.leftMargin: Style.gap
-            anchors.rightMargin: Style.gap
-            height: 62
-            decks: [matrix1.info, matrix2.info]
-        }
-
-        Loader {
-            // portrait: tabs, page, SYNC / CUE / PLAY and crossfader below;
-            // landscape: each deck's SYNC / CUE / PLAY at its side, the page and
-            // the crossfader in the middle (round 13: the page was 40 px high)
-            id: body
-
-            anchors.top: matrix.bottom
+            anchors.top: window.landscape ? topBar.bottom : decks.bottom
             anchors.topMargin: Style.gap
             anchors.bottom: parent.bottom
-            anchors.left: parent.left
+            anchors.left: window.landscape ? decks.right : parent.left
+            anchors.leftMargin: window.landscape ? Style.gap : 0
             anchors.right: parent.right
-            sourceComponent: window.landscape ? landscapeBody : portraitBody
-        }
-
-        Component {
-            id: tabsComponent
-
-            NavBar {
-                current: window.page
-                onSelected: (index) => window.page = index
-            }
-        }
-
-        Component {
-            id: pagesComponent
 
             Item {
                 objectName: "page"
+                anchors.top: parent.top
+                anchors.bottom: crossfader.top
+                anchors.bottomMargin: Style.gap
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                MixPage {
+                LibraryPage {
+                    objectName: "playlist"
                     anchors.fill: parent
                     visible: window.page === 0
+                    deck: window.libraryDeck
+                    onDone: window.libraryDeck = "" // loaded: the next song to the free deck
                 }
 
                 MixerPage {
@@ -210,108 +253,68 @@ Window {
                     visible: window.page === 1
                 }
 
-                WheelPage {
+                Item {
                     anchors.fill: parent
                     visible: window.page === 2
-                    embedded: true
+
+                    WheelPage {
+                        anchors.top: parent.top
+                        anchors.bottom: keyTools.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        embedded: true
+                    }
+
+                    Column {
+                        id: keyTools
+
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: Style.gap
+                        spacing: Style.gap
+
+                        KeyTools {
+                            width: parent.width
+                            height: 50
+                            group: "[Channel1]"
+                            deckColor: Style.deck1
+                        }
+
+                        KeyTools {
+                            width: parent.width
+                            height: 50
+                            group: "[Channel2]"
+                            deckColor: Style.deck2
+                        }
+                    }
                 }
             }
-        }
 
-        Component {
-            id: portraitBody
+            DFader {
+                id: crossfader
 
-            Item {
-                Loader {
-                    anchors.top: parent.top
-                    anchors.bottom: portraitTransport.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    sourceComponent: pagesComponent
-                }
-
-                Transport {
-                    id: portraitTransport
-
-                    anchors.bottom: portraitNav.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                }
-
-                Loader {
-                    id: portraitNav
-
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    sourceComponent: tabsComponent
-                }
+                objectName: "crossfader"
+                anchors.bottom: nav.top
+                anchors.bottomMargin: Style.gap
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: Style.gap
+                anchors.rightMargin: Style.gap
+                height: 40
+                vertical: false
+                group: "[Master]"
+                key: "crossfader"
             }
-        }
 
-        Component {
-            id: landscapeBody
+            NavBar {
+                id: nav
 
-            Item {
-                DeckTransport {
-                    id: leftDeck
-
-                    anchors.left: parent.left
-                    anchors.leftMargin: Style.gap
-                    anchors.top: parent.top
-                    width: 96
-                    group: "[Channel1]"
-                    deck: 1
-                }
-
-                DeckTransport {
-                    id: rightDeck
-
-                    anchors.right: parent.right
-                    anchors.rightMargin: Style.gap
-                    anchors.top: parent.top
-                    width: 96
-                    group: "[Channel2]"
-                    deck: 2
-                }
-
-                Loader {
-                    id: landscapeTabs
-
-                    anchors.bottom: parent.bottom
-                    anchors.left: leftDeck.right
-                    anchors.right: rightDeck.left
-                    anchors.leftMargin: Style.gap
-                    anchors.rightMargin: Style.gap
-                    sourceComponent: tabsComponent
-                }
-
-                Loader {
-                    anchors.top: parent.top
-                    anchors.bottom: crossfader.top
-                    anchors.bottomMargin: Style.gap
-                    anchors.left: leftDeck.right
-                    anchors.right: rightDeck.left
-                    anchors.leftMargin: Style.gap
-                    anchors.rightMargin: Style.gap
-                    sourceComponent: pagesComponent
-                }
-
-                DFader {
-                    id: crossfader
-
-                    objectName: "crossfader"
-                    anchors.bottom: landscapeTabs.top
-                    anchors.bottomMargin: Style.gap
-                    anchors.left: leftDeck.right
-                    anchors.right: rightDeck.left
-                    anchors.leftMargin: Style.gap
-                    anchors.rightMargin: Style.gap
-                    height: 44
-                    vertical: false
-                    group: "[Master]"
-                    key: "crossfader"
-                }
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                current: window.page
+                onSelected: (index) => window.page = index
             }
         }
 
@@ -322,10 +325,8 @@ Window {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            active: window.overlay !== ""
-            sourceComponent: window.overlay === "menu" ? menuComponent
-                    : window.overlay === "library" ? libraryComponent
-                    : window.overlay === "wheel" ? wheelComponent : null
+            active: window.overlay === "menu"
+            sourceComponent: menuComponent
         }
     }
 
@@ -335,26 +336,13 @@ Window {
         MenuSheet {
             onLibrary: {
                 window.libraryDeck = "";
-                window.overlay = "library";
+                window.page = 0;
+                window.overlay = "";
             }
-            onWheel: window.overlay = "wheel"
-            onDone: window.overlay = ""
-        }
-    }
-
-    Component {
-        id: libraryComponent
-
-        LibraryPage {
-            deck: window.libraryDeck
-            onDone: window.overlay = ""
-        }
-    }
-
-    Component {
-        id: wheelComponent
-
-        WheelPage {
+            onWheel: {
+                window.page = 2;
+                window.overlay = "";
+            }
             onDone: window.overlay = ""
         }
     }

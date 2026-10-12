@@ -49,6 +49,9 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE QString musicalName(const QString& code) const;
     /// {text: "8A > 9A", why: "+1 energy up", color: "#3ad13a"}
     Q_INVOKABLE QVariantMap keyMatch(double fromKey, double toKey) const;
+    /// KEY MATCH: the semitones that move a deck's key to the other deck's
+    /// Camelot number on its own ring (camelot::matchShift)
+    Q_INVOKABLE int keyMatchShift(double deckKey, double otherKey) const;
     /// "1:23" (negative: "-1:23")
     Q_INVOKABLE QString formatTime(double seconds) const;
     /// "17.3" for beat number 66 in 4/4

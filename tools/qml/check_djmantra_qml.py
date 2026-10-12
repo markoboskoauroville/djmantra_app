@@ -28,7 +28,12 @@ FATAL = ("Cannot assign", "unavailable", "is not a type", "Failed to load",
 
 STUB = {
     "qmldir": "module Mixxx\nControlProxy 1.0 ControlProxy.qml\n"
-              "singleton DJMantra 1.0 DJMantra.qml\nsingleton PlayerManager 1.0 PlayerManager.qml\n",
+              "singleton DJMantra 1.0 DJMantra.qml\nsingleton PlayerManager 1.0 PlayerManager.qml\n"
+              "WaveformOverview 1.0 WaveformOverview.qml\n",
+    "WaveformOverview.qml": "import QtQuick 2.12\nItem {\n enum Channels { LeftChannel, RightChannel, BothChannels }\n"
+                            " enum Renderer { RGB, Filtered, HSV }\n property var player\n property int channels\n"
+                            " property int renderer\n property color colorHigh\n property color colorMid\n"
+                            " property color colorLow\n}\n",
     "ControlProxy.qml": "import QtQuick 2.12\nQtObject {\n property string group\n property string key\n"
                         " property real value: 0\n property real parameter: 0\n}\n",
     "PlayerManager.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
@@ -37,7 +42,7 @@ STUB = {
                     " property int insetLeft: 0\n property int insetTop: 0\n property int insetRight: 0\n"
                     " property int insetBottom: 0\n property string version: \"0\"\n"
                     " function camelot(k) { return \"8A\"; }\n function musicalName(c) { return \"\"; }\n"
-                    " function keyMatch(a, b) { return ({}); }\n function formatTime(s) { return \"0:00\"; }\n"
+                    " function keyMatch(a, b) { return ({}); }\n function keyMatchShift(a, b) { return 0; }\n function formatTime(s) { return \"0:00\"; }\n"
                     " function barBeat(n, p) { return \"1.1\"; }\n function barsBeatsLeft(b, p) { return \"-0.0\"; }\n"
                     " function waveformGain(g, l) { return 0; }\n function isPlaying(g) { return false; }\n"
                     " function freeDeck() { return \"[Channel1]\"; }\n function noteLoaded(g) {}\n"

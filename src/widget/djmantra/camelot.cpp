@@ -70,6 +70,15 @@ QString musicalName(Code code) {
     return KeyUtils::keyToString(toKey(code), KeyUtils::KeyNotation::Traditional);
 }
 
+int matchShift(Code deck, Code other) {
+    if (!deck.isValid() || !other.isValid()) {
+        return 0;
+    }
+    const int steps = ((other.number - deck.number) % 12 + 12) % 12;
+    const int semitones = (steps * 7) % 12;
+    return semitones > 6 ? semitones - 12 : semitones;
+}
+
 Match match(Code from, Code to, QString* pWhy) {
     QString why;
     Match result = Match::Clash;

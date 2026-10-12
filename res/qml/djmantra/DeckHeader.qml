@@ -3,8 +3,9 @@ import ".." as Skin
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// A deck's header: cover, the 8-beat phrase LEDs, artist and key, title, the
-// counter. No overview: the interface has no waveforms (Marko, 12.10.2026).
+// A deck's header: cover, artist and key, title, the total and the remaining
+// time (Marko, 12.10.2026, the redesign: elapsed time and bar.beat are in the
+// matrix display, the phrase lights only there).
 // Deck 1 reads left to right, deck 2 mirrored (cover at the outer edge).
 Item {
     id: root
@@ -15,9 +16,11 @@ Item {
     property var player: Mixxx.PlayerManager.getPlayer(group)
     signal coverTapped()
 
-    implicitHeight: 74
+    implicitHeight: 56
 
     Mixxx.ControlProxy { id: keyControl; group: root.group; key: "key" }
+    Mixxx.ControlProxy { id: position; group: root.group; key: "playposition" }
+    Mixxx.ControlProxy { id: duration; group: root.group; key: "duration" }
 
     Rectangle {
         id: cover
@@ -53,28 +56,12 @@ Item {
         }
     }
 
-    PhraseLeds {
-        id: leds
-
-        objectName: root.group === "[Channel1]" ? "leds1" : "leds2"
-        anchors.top: parent.top
-        anchors.topMargin: 3
-        anchors.left: root.mirrored ? undefined : cover.right
-        anchors.right: root.mirrored ? cover.left : undefined
-        anchors.leftMargin: root.mirrored ? 0 : 6
-        anchors.rightMargin: root.mirrored ? 6 : 0
-        group: root.group
-        deckColor: root.deckColor
-        // 4 over 4, as tall as the cover's upper half
-        square: 8
-    }
-
     Column {
         id: lines
 
         anchors.top: parent.top
-        anchors.left: root.mirrored ? parent.left : leds.right
-        anchors.right: root.mirrored ? leds.left : parent.right
+        anchors.left: root.mirrored ? parent.left : cover.right
+        anchors.right: root.mirrored ? cover.left : parent.right
         anchors.leftMargin: root.mirrored ? 0 : 8
         anchors.rightMargin: root.mirrored ? 8 : 0
         spacing: 1
@@ -118,11 +105,17 @@ Item {
             elide: Text.ElideRight
         }
 
-        Counter {
+        Text {
+            // total and remaining
             width: parent.width
-            height: 20
-            group: root.group
             horizontalAlignment: root.mirrored ? Text.AlignRight : Text.AlignLeft
+            text: root.player && root.player.isLoaded
+                    ? Mixxx.DJMantra.formatTime(duration.value) + "   -" +
+                      Mixxx.DJMantra.formatTime(Math.max(0, duration.value * (1 - Math.max(0, position.value))))
+                    : ""
+            color: Style.text
+            font.pixelSize: 14
+            font.bold: true
         }
     }
 

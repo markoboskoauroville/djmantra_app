@@ -14,7 +14,8 @@ Rectangle {
     property color litColor: Style.accent
     property bool lit: root.key !== "" && control.value > 0
     property int fontSize: 15
-    // "play" / "pause": drawn, not a font glyph (round 13: the pause sign was tofu)
+    // "play" / "pause" / "next" (to the next section): drawn, not a font
+    // glyph (round 13: the pause sign was tofu; round 16b: JUMP's too)
     property string icon: ""
     signal clicked()
 
@@ -47,10 +48,33 @@ Rectangle {
         }
     }
 
+    Canvas {
+        // "next": a triangle against a bar, ▸|
+        id: nextIcon
+
+        anchors.centerIn: parent
+        width: root.height * 0.42
+        height: width
+        visible: root.icon === "next"
+        onVisibleChanged: requestPaint()
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.fillStyle = String(root.lit ? Style.inkOnAccent : Style.text);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(width * 0.72, height / 2);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillRect(width * 0.78, 0, width * 0.22, height);
+        }
+    }
+
     Text {
         anchors.fill: parent
         anchors.margins: 4
-        visible: root.icon !== "pause"
+        visible: root.icon !== "pause" && root.icon !== "next"
         text: root.icon === "play" ? "\u25B6" : root.text
         color: root.lit ? Style.inkOnAccent : Style.text
         font.pixelSize: root.fontSize

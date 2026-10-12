@@ -1,5 +1,7 @@
 #include "engine/controls/phrasecontrol.h"
 
+#include <QStringList>
+
 #include "control/controlobject.h"
 #include "control/controlproxy.h"
 #include "control/controlpushbutton.h"
@@ -390,6 +392,28 @@ void PhraseControl::slotSectionJump(double value) {
     const bool playing = m_pPlay && m_pPlay->get() > 0;
     // Playing: the same place within the beat, so the mix stays in time
     const auto destination = playing && prev.isValid() ? section + (m_position - prev) : section;
-    qInfo() << getGroup() << "jump to the next section at" << section.value();
+    // In seconds, with the cues that also count as section changes (round
+    // 16b: after a jump the countdown named a change the detection had not
+    // found; a cue is the likely one)
+    const double sampleRate = frameInfo().sampleRate.isValid()
+            ? static_cast<double>(frameInfo().sampleRate.value())
+            : 44100.0;
+    QStringList cues;
+    for (const auto& pCue : m_sectionCues) {
+        const double samplePos = pCue->get();
+        if (samplePos >= 0) {
+            cues << QStringLiteral("%1 %2 s")
+                            .arg(pCue->getKey().item)
+                            .arg(mixxx::audio::FramePos::fromEngineSamplePos(samplePos)
+                                            .value() /
+                                            sampleRate,
+                                    0,
+                                    'f',
+                                    1);
+        }
+    }
+    qInfo() << getGroup() << "jump to the next section at"
+            << QString::number(section.value() / sampleRate, 'f', 1) << "s; cues:"
+            << (cues.isEmpty() ? QStringLiteral("none") : cues.join(QStringLiteral(", ")));
     seekExact(destination);
 }

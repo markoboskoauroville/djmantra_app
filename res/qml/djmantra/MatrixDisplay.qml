@@ -1,24 +1,29 @@
 import "."
 import QtQuick 2.12
 
-// A dot-matrix display, as on the OXI E16 (Marko, 12.10.2026): dark glass, a
-// grid of square pixels, a 5x7 pixel font, lit dots in the accent colours,
-// the unlit ones faintly visible. Its job (Marko): per deck, the current bar
-// and beat (17.3), ONE countdown to the next phrase / section change (-6.2)
-// and the running lights of the 8-beat phrase, LED cells of the same pixels.
-// Deck 1 over deck 2, so the numbers and the lights compare at a glance.
+// The dot-matrix display, as on the OXI E16 (Marko, 12.10.2026): dark glass,
+// a grid of square pixels, a 5x7 pixel font, lit dots in the accent colours,
+// the unlit ones faintly visible. The ONLY phrase lights of the interface.
+// Per deck, deck 1 over deck 2 so both compare at a glance:
+//   elapsed time | bar.beat (deck colour) | countdown to the next phrase /
+//   section change (yellow)
+//   the running lights: one LED cell per beat of the phrase (8 / 16 / 32),
+//   bars set apart, beat 1 yellow. A tap on a cell launches that beat
+//   (cellTapped); an armed cell blinks until its start.
 Canvas {
     id: root
 
-    // [{number, barBeat, countdown, beat (0..7, -1: none), color}] per deck
+    // [{elapsed, barBeat, countdown, beat, cells, armed, color}] per deck
     property var decks: []
-    readonly property int cellRows: 3 // a phrase LED cell is 3 dots high
+    property bool blink: false
+    readonly property int cellRows: 4
     readonly property int deckRows: 1 + 7 + 1 + cellRows // gap, numbers, gap, cells
     readonly property int totalRows: 2 * deckRows + 1
     readonly property real pitch: height / totalRows
     readonly property int columns: Math.floor(width / pitch)
     readonly property color glass: "#04060e"
     readonly property color unlit: "#121735"
+    signal cellTapped(int deck, int cell)
 
     readonly property var glyphs: ({
         "0": [14,17,19,21,25,17,14], "1": [4,12,4,4,4,4,14], "2": [14,17,1,2,4,8,31],
@@ -42,6 +47,60 @@ Canvas {
     function glyph(c) {
         const g = glyphs[c.toUpperCase()];
         return g !== undefined ? g : glyphs["?"];
+    }
+
+    // where the cells are: the first column of each and their width; a
+    // 1-dot gap between beats, 3 between bars (4 beats)
+    function cellColumns(n) {
+        const bars = Math.ceil(n / 4);
+        const gaps = (n - bars) * 1 + (bars - 1) * 3;
+        const width = Math.max(1, Math.floor((columns - 2 - gaps) / n));
+        const used = n * width + gaps;
+        let x = Math.floor((columns - used) / 2);
+        const starts = [];
+        for (let c = 0; c < n; ++c) {
+            starts.push(x);
+            x += width + ((c + 1) % 4 === 0 ? 3 : 1);
+        }
+        return {starts: starts, width: width};
+    }
+
+    function anyArmed() {
+        for (const deck of decks) {
+            if (deck.armed >= 0)
+                return true;
+        }
+        return false;
+    }
+
+    Timer {
+        // an armed cell blinks
+        interval: 250
+        repeat: true
+        running: root.anyArmed()
+        onTriggered: {
+            root.blink = !root.blink;
+            root.requestPaint();
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: (mouse) => {
+            const d = Math.min(1, Math.floor(mouse.y / (root.deckRows * root.pitch)));
+            if (d >= root.decks.length)
+                return;
+            const layout = root.cellColumns(root.decks[d].cells);
+            const x = mouse.x / root.pitch;
+            // the nearest cell, so the gaps tap too
+            let best = 0;
+            for (let c = 1; c < layout.starts.length; ++c) {
+                if (Math.abs(x - (layout.starts[c] + layout.width / 2)) <
+                        Math.abs(x - (layout.starts[best] + layout.width / 2)))
+                    best = c;
+            }
+            root.cellTapped(d, best);
+        }
     }
 
     onDecksChanged: requestPaint()
@@ -71,28 +130,24 @@ Canvas {
             }
         };
         const textWidth = (string) => string.length * 6 - 1;
-        // the phrase cells under the numbers, across the whole width
-        const cellGap = 2;
-        const cellRoom = columns - 2;
-        const cellWidth = Math.max(2, Math.floor((cellRoom - 7 * cellGap) / 8));
-        const firstCell = Math.floor((columns - (8 * cellWidth + 7 * cellGap)) / 2);
         const dimCell = "#252d5c";
         const dimFirst = "#4a4326";
         for (let d = 0; d < Math.min(2, decks.length); ++d) {
             const deck = decks[d];
             const top = d * deckRows;
-            // deck number and bar.beat, left; the countdown, right
-            text(String(deck.number), 1, top + 1, Qt.darker(deck.color, 1.6));
-            text(deck.barBeat, 8, top + 1, deck.color);
-            text(deck.countdown, columns - 1 - textWidth(deck.countdown), top + 1, Style.accent);
-            // the running lights, under the numbers
+            text(deck.elapsed, 1, top + 1, String(Style.subText));
+            text(deck.barBeat, Math.floor((columns - textWidth(deck.barBeat)) / 2), top + 1, deck.color);
+            text(deck.countdown, columns - 1 - textWidth(deck.countdown), top + 1, String(Style.accent));
+            const layout = cellColumns(deck.cells);
             const cellTop = top + 1 + 7 + 1;
-            for (let c = 0; c < 8; ++c) {
-                const on = c === deck.beat;
-                const fill = on ? (c === 0 ? Style.accent : deck.color) : (c === 0 ? dimFirst : dimCell);
-                for (let dx = 0; dx < cellWidth; ++dx)
+            for (let c = 0; c < deck.cells; ++c) {
+                const armed = c === deck.armed;
+                const on = c === deck.beat || (armed && blink);
+                const fill = on ? (c === 0 || armed ? String(Style.accent) : deck.color)
+                        : (c === 0 ? dimFirst : dimCell);
+                for (let dx = 0; dx < layout.width; ++dx)
                     for (let dy = 0; dy < cellRows; ++dy)
-                        lit[(firstCell + c * (cellWidth + cellGap) + dx) + "," + (cellTop + dy)] = fill;
+                        lit[(layout.starts[c] + dx) + "," + (cellTop + dy)] = fill;
             }
         }
         for (let y = 0; y < totalRows; ++y) {

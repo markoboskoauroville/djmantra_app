@@ -2,13 +2,16 @@ import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// The phone's music folders (Music, Download): a tap on a folder opens it,
-// LOAD 1 / LOAD 2 put a song on a deck. Back closes the folder or the page.
+// The playlist (Marko, 12.10.2026, the redesign: "the rest of user interface
+// is the playlist ... if I click on the song, it is going to be loaded inside
+// the free deck, the one which is stopped"): the phone's music folders
+// (Music, Download). A tap on a folder opens it, a tap on a song loads it
+// onto the free deck (after a cover tap: onto that deck). Back: the folder up.
 Rectangle {
     id: root
 
     property string folder: ""
-    property string deck: "" // a deck's cover was tapped: its LOAD button only
+    property string deck: "" // a deck's cover was tapped: onto that deck
     property var entries: folder === "" ? Mixxx.DJMantra.musicRoots() : Mixxx.DJMantra.listFolder(folder)
     signal done()
 
@@ -50,7 +53,7 @@ Rectangle {
         id: bar
 
         width: parent.width
-        height: 52
+        height: 44
         color: Style.surface
 
         DButton {
@@ -59,7 +62,8 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 8
             anchors.verticalCenter: parent.verticalCenter
-            width: 52
+            visible: root.folder !== ""
+            width: visible ? 52 : 0
             height: 40
             text: "\u2190"
             fontSize: 22
@@ -67,9 +71,22 @@ Rectangle {
         }
 
         Text {
+            id: target
+
+            anchors.right: parent.right
+            anchors.rightMargin: 12
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.deck === "[Channel1]" ? qsTr("tap a song: deck 1")
+                    : root.deck === "[Channel2]" ? qsTr("tap a song: deck 2") : qsTr("tap a song: free deck")
+            color: root.deck !== "" ? Style.accent : Style.subText
+            font.pixelSize: 12
+        }
+
+        Text {
             anchors.left: backButton.right
             anchors.leftMargin: 12
-            anchors.right: parent.right
+            anchors.right: target.left
+            anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
             text: root.folder === "" ? qsTr("Folders") : root.folder.substring(root.folder.lastIndexOf("/") + 1)
             color: Style.text
@@ -94,7 +111,7 @@ Rectangle {
             required property var modelData
 
             width: list.width
-            height: 64
+            height: 52
             color: rowArea.pressed ? Style.pressed : "transparent"
 
             Text {
@@ -113,8 +130,8 @@ Rectangle {
             Column {
                 anchors.left: glyph.right
                 anchors.leftMargin: 10
-                anchors.right: buttons.left
-                anchors.rightMargin: 8
+                anchors.right: parent.right
+                anchors.rightMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
 
                 Text {
@@ -140,28 +157,12 @@ Rectangle {
                 id: rowArea
 
                 anchors.fill: parent
-                enabled: row.modelData.isFolder
-                onClicked: root.folder = row.modelData.path
-            }
-
-            Row {
-                id: buttons
-
-                anchors.right: parent.right
-                anchors.rightMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-                visible: !row.modelData.isFolder
-
-                // One LOAD: onto the deck whose cover was tapped, or the free deck
-                // (Marko, 12.10.2026: "load to free deck", as djay)
-                DButton {
-                    width: 72
-                    height: 40
-                    text: root.deck === "[Channel1]" ? "LOAD 1" : root.deck === "[Channel2]" ? "LOAD 2" : "LOAD"
-                    fontSize: 12
-                    lit: true // the primary action: yellow
-                    onClicked: root.load(row.modelData.path,
-                            root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false)
+                onClicked: {
+                    if (row.modelData.isFolder)
+                        root.folder = row.modelData.path;
+                    else
+                        root.load(row.modelData.path,
+                                root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false);
                 }
             }
 

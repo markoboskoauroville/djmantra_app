@@ -2,7 +2,7 @@ import "."
 import QtQuick 2.12
 
 // The bottom navigation of the horoscope app: icon + label, the selected one
-// yellow. Pages: MIX (beat pads), MIXER, KEYS (Camelot wheel).
+// yellow. Pages: SONGS (the playlist), MIXER, KEYS (Camelot wheel, key match).
 Rectangle {
     id: root
 
@@ -16,7 +16,7 @@ Rectangle {
         anchors.fill: parent
 
         Repeater {
-            model: [qsTr("Mix"), qsTr("Mixer"), qsTr("Keys")]
+            model: [qsTr("Songs"), qsTr("Mixer"), qsTr("Keys")]
 
             delegate: Item {
                 id: tab
@@ -30,7 +30,7 @@ Rectangle {
                 height: root.height
 
                 Item {
-                    // the icons, drawn: faders, waveform bars, a 2x2 pad grid
+                    // the icons, drawn: a list, faders, the wheel
                     id: icon
 
                     width: 22
@@ -78,14 +78,18 @@ Rectangle {
                         }
                     }
 
-                    Grid {
+                    Column {
+                        // a list: dot and line, three times
                         visible: tab.index === 0
                         anchors.centerIn: parent
-                        columns: 2
-                        spacing: 3
+                        spacing: 4
                         Repeater {
-                            model: 4
-                            delegate: Rectangle { width: 7; height: 7; radius: 1.5; color: tab.tint }
+                            model: 3
+                            delegate: Row {
+                                spacing: 3
+                                Rectangle { width: 3; height: 3; radius: 1.5; color: tab.tint }
+                                Rectangle { width: 15; height: 3; radius: 1.5; color: tab.tint }
+                            }
                         }
                     }
                 }

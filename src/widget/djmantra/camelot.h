@@ -45,6 +45,12 @@ Match match(Code from, Code to, QString* pWhy = nullptr);
 QColor color(Match match);
 QString matchName(Match match);
 
+/// KEY MATCH: the semitones (-5..6) that move `deck` to `other`'s number on
+/// its own ring (pitch shifting keeps major / minor): the same key on the
+/// same ring, the relative key across (8A against 12B: 12B -> 8B). One step
+/// on the wheel is a fifth, 7 semitones. 0 without keys.
+int matchShift(Code deck, Code other);
+
 /// The 24-key wheel: B outside, A inside, 12 at the top. Keys given with
 /// setDeckKeys() are ringed in the decks' colours and their compatible
 /// neighbours lit; the other keys are dimmed.
