@@ -23,3 +23,9 @@ Round 21 was skipped at the builder's request (its fixes are in this build).
 - Both stopped, LED 5, PLAY: `button [Channel2],play 1`: started at once (no aligned wait), as asked.
 - **Note:** after that start, a pause and CUE, the deck stood at 59.2 (`p3_state.png`), 3 beats BEFORE the cued 60.1. Either the cue point moved with the start or CUE went somewhere else; please check which.
 - Playing deck jumps: unchanged from round 20 (not repeated).
+
+## Part 3b: NEXT and played songs - PASS
+- Deck 2 stopped, its ▸|: `next [Channel2]: load Aktysia` (after Addis, skipping 3 Sense on deck 1), again: `load Alba`. Deck 2 playing: `next [Channel2]: the deck is playing, nothing loaded`. Held 0.7 s: `next section [Channel2]`.
+- `played in this set: <path>` for every song that started (3 Sense, Addis, Alba). In the list: ✓ before the title, title and artist dimmed (`p3b_list.png`, `p3b_list2.png`); Aktysia (only loaded) is not marked.
+- After a restart the marks are gone (`p3b_restart.png`).
+- Landscape note: the song list shows only ~3 rows beside the decks (`p3b_list.png`); usable, but very short.
