@@ -147,7 +147,7 @@ Item {
 
                             required property int index
                             readonly property bool lit: panel.deck && panel.deck.phraseBeat === index
-                            readonly property bool armed: panel.deck && panel.deck.armedBeat === index
+                            readonly property bool armed: panel.deck && (panel.deck.armedBeat === index || panel.deck.queuedBeat === index)
                             property bool blink: false
 
                             objectName: "led" + (panel.index + 1) + "_" + (index + 1)

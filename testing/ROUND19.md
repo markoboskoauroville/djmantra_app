@@ -11,6 +11,11 @@ Build: the green Android run of the newest commit with this file. Fixes for roun
 - PLAY / pause both decks on the press (log `Quick: button [ChannelN],play 1/0`), sound.
 - SYNC on deck 2 (new log, 0.4 s after the press): `Quick: sync [Channel2]: deck 1 X bpm, deck 2 X bpm`: equal?
 - CUE. Marko's own PLAY presses if he is there.
+- DROPS (Marko's screen recording 11:52: ~4 drops a second, 10-60 ms each): both decks playing, SYNC on, 60 s on the
+  Phrasing tab. Log at start: `Sound buffer: N of M frames` (N about 3072); every 5 s `Output level: peak ..., xruns N,
+  slowest callback X ms, late K`: xruns must not grow, late 0, slowest well under the callback (21 ms at 1024 frames).
+  Record 15 s of the phone's sound (observe.py listen, or a screen recording with sound) and count the silences.
+  Repeat with KEY MATCH on (keylock: now SoundTouch on the phone, lighter than Rubber Band).
 
 ## 2. Sliders and knobs
 - Crossfader L / M / R, volume faders, Mixer knobs and their LED rings, double tap (as round 18: quick check).
@@ -18,7 +23,12 @@ Build: the green Android run of the newest commit with this file. Fixes for roun
 ## 3. LEDs (round 18 FAIL: 32-beat LEDs 19 dp)
 - Phrasing tab at 8, 16, 32 BEATS: each LED row at least ~46 px (logical; ~120 device px on the A142) at 32; the
   waveforms above shrink to make room (at 32 a thin strip). Screenshot at 32, portrait.
-- A press on a playing deck's LED: new log `Quick: jump [ChannelN] to beat M`; launch on a stopped deck as round 18.
+- Jumps are now QUANTIZED TO THE BEAT (Marko: "as Ableton with snap 1 beat ... seamless"): a press on a playing
+  deck's LED marks it (yellow frame, log `Quick: jump [ChannelN] to beat M on the next beat`); on the next beat the
+  deck plays beat M instead, in time, no gap, no stumble. Press the SAME LED several times in a row: it jumps every
+  time (round 19 bug: the 2nd press of the same beat did nothing). Try 32 → 1, 32 → 8, 4 → 1 with both decks
+  synced: does the music stay one continuous groove? Listen / record.
+- Launch on a stopped deck as round 18.
 - Matrix: time left counts down, 8 / 16 / 32 cells.
 
 ## 4. Screen (round 18 FAIL: the navigation bar never hid)

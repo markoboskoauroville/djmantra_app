@@ -46,7 +46,7 @@ class SoundDeviceOboe : public SoundDevice,
   private:
     oboe::Result openStream();
     void prepareCallbackThread();
-    void logOutputLevel(const CSAMPLE* pOutput, SINT samples, int sampleRate);
+    void logOutputLevel(const CSAMPLE* pOutput, SINT samples, int sampleRate, oboe::AudioStream* pStream);
 
     // Guards m_pStream against open/close/reopen from different threads
     mutable QMutex m_streamMutex;
@@ -55,6 +55,9 @@ class SoundDeviceOboe : public SoundDevice,
     QString m_lastError;
     std::atomic<bool> m_closing;
     bool m_callbackThreadPrepared;
+    // The engine's time per callback, for the log (callback thread only)
+    double m_callbackMaxMs = 0;
+    int m_callbacksLate = 0;
     // Output level for the log (callback thread only)
     CSAMPLE m_levelPeak;
     SINT m_levelSamples;

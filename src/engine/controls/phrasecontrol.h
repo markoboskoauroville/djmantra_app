@@ -129,5 +129,9 @@ class PhraseControl : public EngineControl {
     mixxx::audio::FramePos m_prevBeat;
     mixxx::audio::FramePos m_nextBeat;
     int m_beat = -1;
+    // phrase_jump while playing: the beat (0-based) to jump to on the next
+    // beat, -1: none (set by the control, done by the engine)
+    std::atomic<int> m_pendingJump{-1};
+    std::atomic<int> m_beatsJumped{0};
     int m_beatNumber = 0;
 };

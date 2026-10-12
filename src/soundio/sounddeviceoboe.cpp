@@ -4,6 +4,7 @@
 #include <QtDebug>
 #include <algorithm>
 #include <cfloat>
+#include <chrono>
 #include <cmath>
 
 #if defined(__SSE__)
@@ -107,6 +108,16 @@ oboe::Result SoundDeviceOboe::openStream() {
         pStream->close();
         return result;
     }
+    // Round 19 (Marko's screen recording: ~4 drops a second): the stream's
+    // buffer was the low-latency default (about 2 bursts), less than one of
+    // our 1024-frame callbacks, so any late callback was a drop. Three
+    // callbacks of room now (~64 ms at 48 kHz): a DJ app's usual safety.
+    const int32_t wanted = 3 * std::max<int32_t>(pStream->getFramesPerDataCallback(),
+                                       static_cast<int32_t>(m_configFramesPerBuffer));
+    const auto sized = pStream->setBufferSizeInFrames(
+            std::min(wanted, pStream->getBufferCapacityInFrames()));
+    kLogger.info() << "Sound buffer:" << (sized ? sized.value() : -1) << "of"
+                   << pStream->getBufferCapacityInFrames() << "frames";
     m_pStream = pStream;
     // Tell the engine the rate the phone really plays at, as the PortAudio
     // device does: the engine kept its 44.1 kHz default while the phone
@@ -186,16 +197,29 @@ oboe::DataCallbackResult SoundDeviceOboe::onAudioReady(
     const int channels = pStream->getChannelCount();
     const SINT frames = numFrames;
 
+    const auto started = std::chrono::steady_clock::now();
     m_pSoundManager->processUnderflowHappened(frames);
     m_pSoundManager->readProcess(frames);
     m_pSoundManager->onDeviceOutputCallback(frames);
     composeOutputBuffer(pOutput, frames, 0, channels);
     m_pSoundManager->writeProcess(frames);
-    logOutputLevel(pOutput, frames * channels, pStream->getSampleRate());
+    // How long the engine took, against the callback's own length
+    const double tookMs = std::chrono::duration<double, std::milli>(
+            std::chrono::steady_clock::now() - started)
+                                  .count();
+    const double budgetMs = 1000.0 * frames / pStream->getSampleRate();
+    m_callbackMaxMs = std::max(m_callbackMaxMs, tookMs);
+    if (tookMs > budgetMs) {
+        ++m_callbacksLate;
+    }
+    logOutputLevel(pOutput, frames * channels, pStream->getSampleRate(), pStream);
     return oboe::DataCallbackResult::Continue;
 }
 
-void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput, SINT samples, int sampleRate) {
+void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput,
+        SINT samples,
+        int sampleRate,
+        oboe::AudioStream* pStream) {
     // The loudest sample in about 5 s of output, in the log (the device
     // tests read it to see that sound reaches the output, not only silence)
     for (SINT i = 0; i < samples; ++i) {
@@ -206,8 +230,15 @@ void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput, SINT samples, int s
         return;
     }
     if (m_levelPeak > 0.001f || m_levelWasAudible) {
-        kLogger.info() << "Output level: peak" << m_levelPeak;
+        // Drops (Android's underrun count) and the engine's slowest callback
+        const auto count = pStream->getXRunCount();
+        const int32_t xruns = count ? count.value() : -1;
+        kLogger.info() << "Output level: peak" << m_levelPeak << ", xruns" << xruns
+                       << ", slowest callback" << m_callbackMaxMs << "ms, late"
+                       << m_callbacksLate;
     }
+    m_callbackMaxMs = 0;
+    m_callbacksLate = 0;
     m_levelWasAudible = m_levelPeak > 0.001f;
     m_levelPeak = 0;
     m_levelSamples = 0;

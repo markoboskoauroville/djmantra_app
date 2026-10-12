@@ -18,8 +18,24 @@ Item {
     property var player: Mixxx.PlayerManager.getPlayer(group)
     readonly property bool loaded: player ? player.isLoaded : false
     property int armedBeat: -1
+    // a jump on a playing deck, waiting for the next beat
+    property int queuedBeat: -1
 
-    Mixxx.ControlProxy { id: beat; group: root.group; key: "beat_in_phrase" }
+    // phrase_jump back to 0 after each press: pressing the same beat twice
+    // jumps twice (round 19: "sometimes it jumps, sometimes not": the value
+    // did not change, so the engine heard nothing)
+    function pulseJump(value) {
+        jump.value = value;
+        jump.value = 0;
+    }
+
+    Mixxx.ControlProxy {
+        id: beat
+
+        group: root.group
+        key: "beat_in_phrase"
+        onValueChanged: root.queuedBeat = -1
+    }
     Mixxx.ControlProxy { id: beatsLeft; group: root.group; key: "section_beats_left" }
     Mixxx.ControlProxy { id: found; group: root.group; key: "section_found" }
     Mixxx.ControlProxy { id: perBar; group: root.group; key: "beats_per_bar" }
@@ -49,12 +65,15 @@ Item {
         if (!loaded)
             return;
         if (play.value > 0) {
-            Mixxx.DJMantra.log("jump " + root.group + " to beat " + (index + 1));
-            jump.value = index + 1;
+            // queued: the engine jumps on the next beat (seamless, as Ableton
+            // with snap 1 beat); the LED shows it until then
+            Mixxx.DJMantra.log("jump " + root.group + " to beat " + (index + 1) + " on the next beat");
+            queuedBeat = index;
+            pulseJump(index + 1);
             return;
         }
         quantize.value = 1;
-        jump.value = index + 1;
+        pulseJump(index + 1);
         if (otherPlay.value > 0) {
             sync.value = 1;
             armedBeat = armedBeat === index ? -1 : index;
@@ -82,7 +101,7 @@ Item {
         countdown: countdown,
         beat: phraseBeat,
         cells: cells,
-        armed: armedBeat,
+        armed: armedBeat >= 0 ? armedBeat : queuedBeat,
         color: String(deckColor)
     })
 }

@@ -222,3 +222,30 @@ TEST_F(PhraseControlEngineTest, setOneAndJump) {
     ProcessBuffer();
     EXPECT_EQ(0, beat());
 }
+
+TEST_F(PhraseControlEngineTest, jumpWhilePlayingWaitsForTheBeat) {
+    // Round 19 (Marko: "as Ableton with snap 1 beat"): a jump on a playing
+    // deck waits for the next beat and happens on it: the beat that would
+    // have come is replaced by the chosen one, the music stays in time
+    seekToBeat(2.6);
+    ASSERT_EQ(2, beat());
+    ControlObject::set(ConfigKey(m_sGroup1, "play"), 1);
+    ControlObject::set(ConfigKey(m_sGroup1, "phrase_jump"), 6);
+    ControlObject::set(ConfigKey(m_sGroup1, "phrase_jump"), 0);
+    ProcessBuffer();
+    // Still beat 3 (index 2) until its end: nothing jumps at the press
+    EXPECT_EQ(2, beat());
+    int buffers = 0;
+    while (beat() == 2 && buffers < 200) {
+        ProcessBuffer();
+        ++buffers;
+    }
+    ProcessBuffer();
+    ProcessBuffer();
+    // On the next beat the deck is on beat 6 (index 5), just after its start
+    EXPECT_EQ(5, beat());
+    const double seconds =
+            ControlObject::get(ConfigKey(m_sGroup1, "playposition")) * m_pTrack->getDuration();
+    EXPECT_NEAR(5.0 * 0.5, seconds, 0.1);
+    ControlObject::set(ConfigKey(m_sGroup1, "play"), 0);
+}

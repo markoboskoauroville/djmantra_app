@@ -337,6 +337,22 @@ void PhraseControl::updatePosition(mixxx::audio::FramePos position) {
         ++m_beatNumber;
         m_prevBeat = m_nextBeat;
         m_nextBeat = pBeats->findNextBeat(m_nextBeat + 1);
+        // A queued jump happens now, on the beat (Marko, round 19: "as Ableton
+        // Live with snap 1 beat ... seamless, the listeners cannot notice"):
+        // the beat that just started is replaced by the chosen one, at the
+        // same place within it, so the music goes on in time
+        const int target = m_pendingJump.exchange(-1);
+        if (target >= 0) {
+            const int beats = (target % length) - beat;
+            if (beats != 0) {
+                const auto destinationBeat =
+                        pBeats->findNthBeat(m_prevBeat, beats > 0 ? beats + 1 : beats - 1);
+                if (destinationBeat.isValid()) {
+                    seekExact(destinationBeat + (position - m_prevBeat));
+                    m_beatsJumped.fetch_add(1);
+                }
+            }
+        }
     } else {
         int number;
         if (beatNumber(pBeats, anchor(), position, &number)) {
@@ -387,11 +403,14 @@ void PhraseControl::slotJump(double value) {
     const bool playing = m_pPlay && m_pPlay->get() > 0;
     const int length = validLength(m_pPhraseLength->get());
     const int beats = (target % length) - m_beat;
-    if (beats == 0 && playing) {
-        return;
-    }
     const auto prev = pBeats->findPrevBeat(m_position);
     if (!prev.isValid()) {
+        return;
+    }
+    if (playing) {
+        // Quantized to the beat: the jump waits for the next beat and
+        // happens on it (updatePosition), so it is seamless
+        m_pendingJump.store(target % length);
         return;
     }
     const auto destinationBeat = beats == 0
@@ -400,7 +419,7 @@ void PhraseControl::slotJump(double value) {
     if (!destinationBeat.isValid()) {
         return;
     }
-    seekExact(playing ? destinationBeat + (m_position - prev) : destinationBeat);
+    seekExact(destinationBeat);
 }
 
 void PhraseControl::slotSectionJump(double value) {
