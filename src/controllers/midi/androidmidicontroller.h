@@ -43,8 +43,10 @@ class AndroidMidiController : public MidiController {
     explicit AndroidMidiController(const QString& name);
     ~AndroidMidiController() override;
 
+    // round 23: polled every 1 ms, the controller thread took 8 % of a core
+    // with no controller there; now Java's data wakes it (wake())
     bool isPolling() const override {
-        return true;
+        return false;
     }
 
     /// Called from Java's MIDI thread
@@ -66,6 +68,9 @@ class AndroidMidiController : public MidiController {
     QMutex m_mutex;
     QQueue<QByteArray> m_incoming;
     QAtomicInt m_connectedEvents;
+    // a poll() is queued on the controller thread
+    QAtomicInt m_wakePending;
+    void wake();
     MidiStreamParser m_parser;
 };
 

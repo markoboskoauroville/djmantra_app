@@ -46,6 +46,7 @@ public final class WindowBridge {
         activity.runOnUiThread(() -> {
             Log.i(TAG, "WindowBridge: hiding the system bars");
             Window window = activity.getWindow();
+            limitFrameRate(activity, window);
             if (Build.VERSION.SDK_INT >= 30) {
                 // The app draws edge to edge (Android 15 does so anyway) and
                 // keeps out of the bars itself, with insets()
@@ -70,6 +71,37 @@ public final class WindowBridge {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
             }
         });
+    }
+
+    /// Round 23: on a 90 / 120 Hz screen the scrolling waveforms and the VU
+    /// meters redrew up to 120 times a second (the Phrasing and Mixer tabs at
+    /// ~75 % CPU); 60 frames a second look the same and cost half
+    private static void limitFrameRate(Activity activity, Window window) {
+        try {
+            android.view.Display display = activity.getWindowManager().getDefaultDisplay();
+            android.view.Display.Mode current = display.getMode();
+            android.view.Display.Mode best = null;
+            for (android.view.Display.Mode mode : display.getSupportedModes()) {
+                if (mode.getPhysicalWidth() != current.getPhysicalWidth()
+                        || mode.getPhysicalHeight() != current.getPhysicalHeight()) {
+                    continue;
+                }
+                float rate = mode.getRefreshRate();
+                if (rate >= 59 && (best == null || rate < best.getRefreshRate())) {
+                    best = mode;
+                }
+            }
+            android.view.WindowManager.LayoutParams params = window.getAttributes();
+            if (best != null) {
+                params.preferredDisplayModeId = best.getModeId();
+            }
+            params.preferredRefreshRate = 60;
+            window.setAttributes(params);
+            Log.i(TAG, "WindowBridge: frame rate " + current.getRefreshRate() + " Hz -> "
+                    + (best == null ? 60 : best.getRefreshRate()) + " Hz");
+        } catch (Exception e) {
+            Log.w(TAG, "WindowBridge: frame rate not limited: " + e);
+        }
     }
 
     /// The bars back on a tap on the empty part of the app (Marko, round 18:

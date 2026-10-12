@@ -123,8 +123,25 @@ int AndroidMidiController::close() {
 }
 
 void AndroidMidiController::receiveFromJava(const QByteArray& data) {
-    const auto locker = QMutexLocker(&m_mutex);
-    m_incoming.enqueue(data);
+    {
+        const auto locker = QMutexLocker(&m_mutex);
+        m_incoming.enqueue(data);
+    }
+    wake();
+}
+
+void AndroidMidiController::wake() {
+    if (m_wakePending.testAndSetOrdered(0, 1)) {
+        QMetaObject::invokeMethod(
+                this,
+                [this] {
+                    m_wakePending.storeRelease(0);
+                    if (isOpen()) {
+                        poll();
+                    }
+                },
+                Qt::QueuedConnection);
+    }
 }
 
 void AndroidMidiController::connectedFromJava(bool connected, const QString& transport) {
@@ -132,6 +149,7 @@ void AndroidMidiController::connectedFromJava(bool connected, const QString& tra
                    << transport;
     if (connected) {
         m_connectedEvents.ref();
+        wake();
     }
 }
 
