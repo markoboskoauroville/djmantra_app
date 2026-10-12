@@ -5,7 +5,14 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 12.10.2026 17:00 UTC (latest): test rounds 22-26, the loop runs by itself
+## 13.10.2026 night (latest): V6, the analysis measured against rekordbox
+
+Read `docs/RESULTS_2026-10-13.md` first (results), `docs/COORDINATION.md` (the three sessions: cloud builder,
+phone tester "dj amp local", Mac helper "record box local"). Phone testing was stopped by Marko until V6; ROUND29
+tests V6. Open: the off-beat grid (~27 % of songs), double / half BPM (4 songs), djay Pro as a reference and its
+waveform look (data requested from the Mac), All-In-One (madmom install needs Marko).
+
+## 12.10.2026 17:00 UTC: test rounds 22-26, the loop runs by itself
 
 - Builder: this cloud session (branch `ccr-eb7d1019-d3kubd`). Tester: the local session on Marko's Mac (it watches
   for `testing/ROUND<N>.md` + a green Android run, pushes `testing/results/*_r<N>_phone/REPORT.md`, messages each part).
