@@ -21,3 +21,9 @@ Build: the green Android run of the newest commit with this file. Grep once per 
 ## 5. Genre match (fix: only a Deezer track by a matching artist; the match is logged)
 - Clear "Addis"'s genre if you can (or load 3 songs without one): `GenreLookup: Deezer match: <artist> - <title>
   (album ...)` per song. Report each match and the genre; a wrong match = FAIL with the line.
+
+## 6. Clock (new, Marko 12.10.2026: "real-time clock in the matrix display style" at the top)
+- Needs the build with ClockDisplay.qml (re-install if parts 4-5 ran on the older one). Top bar, left of the C/G
+  meter: HH:MM in yellow matrix dots, the colon blinking each second; it matches the phone's time and turns over at
+  the minute. Portrait and landscape: not under the camera hole, not overlapping the key badge or the meter.
+  Screenshot of the top bar.

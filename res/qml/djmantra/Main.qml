@@ -154,8 +154,21 @@ Window {
                 onWheelRequested: window.page = 3
             }
 
+            ClockDisplay {
+                // the time of day, left of the usage meter (Marko, 12.10.2026);
+                // the middle of the bar is the camera hole
+                objectName: "clock"
+                anchors.right: usageMeter.left
+                anchors.rightMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                height: 24
+                width: implicitWidth
+            }
+
             UsageMeter {
                 // CPU and GPU use, top right (Marko, 12.10.2026)
+                id: usageMeter
+
                 objectName: "usage"
                 anchors.right: parent.right
                 anchors.rightMargin: 10
