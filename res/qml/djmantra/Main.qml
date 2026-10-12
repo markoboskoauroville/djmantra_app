@@ -258,6 +258,7 @@ Window {
 
         MatrixDeck { id: matrix1; group: "[Channel1]"; deckColor: Style.deck1 }
         AutoPhase { id: autoPhase; deck1: matrix1; deck2: matrix2 }
+        AutoCue { id: autoCueMode }
         MatrixDeck { id: matrix2; group: "[Channel2]"; deckColor: Style.deck2 }
 
         Item {
@@ -372,8 +373,8 @@ Window {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            active: window.overlay === "menu"
-            sourceComponent: menuComponent
+            active: window.overlay === "menu" || window.overlay === "settings"
+            sourceComponent: window.overlay === "settings" ? settingsComponent : menuComponent
         }
     }
 
@@ -386,10 +387,20 @@ Window {
                 window.page = 0;
                 window.overlay = "";
             }
+            onSettings: window.overlay = "settings"
             onWheel: {
                 window.page = 3;
                 window.overlay = "";
             }
+            onDone: window.overlay = ""
+        }
+    }
+
+    Component {
+        id: settingsComponent
+
+        SettingsPage {
+            autoCue: autoCueMode
             onDone: window.overlay = ""
         }
     }

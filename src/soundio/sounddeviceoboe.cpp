@@ -6,9 +6,16 @@
 #include <cfloat>
 #include <chrono>
 #include <cmath>
+#include <vector>
 
 #if defined(__SSE__)
 #include <xmmintrin.h>
+#endif
+
+#if defined(Q_OS_ANDROID)
+#include <QCoreApplication>
+#include <QJniEnvironment>
+#include <QJniObject>
 #endif
 
 #include "control/controlobject.h"
@@ -30,16 +37,60 @@ QString resultText(oboe::Result result) {
 
 } // namespace
 
-SoundDeviceOboe::SoundDeviceOboe(UserSettingsPointer config, SoundManager* sm)
+// static
+QList<QPair<QString, QString>> SoundDeviceOboe::androidOutputs() {
+    QList<QPair<QString, QString>> outputs;
+#if defined(Q_OS_ANDROID)
+    const QJniObject array = QJniObject::callStaticObjectMethod(
+            "com/djmantra/app/AudioRouter",
+            "outputs",
+            "(Landroid/content/Context;)[Ljava/lang/String;",
+            QNativeInterface::QAndroidApplication::context().object());
+    if (!array.isValid()) {
+        return outputs;
+    }
+    QJniEnvironment env;
+    const auto jArray = static_cast<jobjectArray>(array.object());
+    const jsize count = env->GetArrayLength(jArray);
+    for (jsize i = 0; i < count; ++i) {
+        const QJniObject item(env->GetObjectArrayElement(jArray, i));
+        const QStringList parts = item.toString().split(QChar('|'));
+        if (parts.size() >= 2) {
+            outputs.append({parts[0], parts[1]});
+        }
+    }
+#endif
+    return outputs;
+}
+
+// static
+int SoundDeviceOboe::androidOutputsVersion() {
+#if defined(Q_OS_ANDROID)
+    return QJniObject::callStaticMethod<jint>("com/djmantra/app/AudioRouter", "version", "()I");
+#else
+    return 0;
+#endif
+}
+
+SoundDeviceOboe::SoundDeviceOboe(UserSettingsPointer config,
+        SoundManager* sm,
+        const QString& routeKey,
+        const QString& label)
         : SoundDevice(config, sm),
+          m_routeKey(routeKey),
           m_outputChannels(2),
           m_closing(false),
           m_callbackThreadPrepared(false),
           m_levelPeak(0),
           m_levelSamples(0),
           m_levelWasAudible(false) {
-    m_deviceId.name = QStringLiteral("android-default-output");
-    m_strDisplayName = QObject::tr("Phone audio output (speaker, USB or Bluetooth)");
+    if (routeKey.isEmpty()) {
+        m_deviceId.name = QStringLiteral("android-default-output");
+        m_strDisplayName = QObject::tr("Phone audio output (speaker, USB or Bluetooth)");
+    } else {
+        m_deviceId.name = QStringLiteral("android-out:") + routeKey;
+        m_strDisplayName = label;
+    }
     m_hostAPI = kOboeHostApi;
     m_numOutputChannels = mixxx::audio::ChannelCount::stereo();
     m_numInputChannels = mixxx::audio::ChannelCount();
@@ -56,12 +107,11 @@ mixxx::audio::SampleRate SoundDeviceOboe::getDefaultSampleRate() const {
 
 SoundDeviceStatus SoundDeviceOboe::open(bool isClkRefDevice, int syncBuffers) {
     Q_UNUSED(syncBuffers);
-    if (!isClkRefDevice) {
-        // The phone has one output; it always drives the engine
-        m_lastError = QStringLiteral("The Android output must be the clock reference");
-        kLogger.warning() << m_lastError;
-        return SoundDeviceStatus::Error;
-    }
+    // A second output (the headphones on another device) gets the engine's
+    // samples through a FIFO: 8 callbacks of room, 2 of silence first
+    m_isClkRef = isClkRefDevice;
+    m_pFifo.reset();
+    m_fifoUnderflows = 0;
     // Channels needed by the configured outputs (main, and headphones on
     // channels 3-4 once a 4-channel USB interface is used)
     m_outputChannels = 2;
@@ -70,6 +120,12 @@ SoundDeviceStatus SoundDeviceOboe::open(bool isClkRefDevice, int syncBuffers) {
         m_outputChannels = std::max(m_outputChannels,
                 static_cast<int>(group.getChannelBase()) +
                         static_cast<int>(group.getChannelCount().value()));
+    }
+    if (!m_isClkRef) {
+        const int chunk = static_cast<int>(m_configFramesPerBuffer) * m_outputChannels;
+        m_pFifo = std::make_unique<FIFO<CSAMPLE>>(chunk * 8);
+        std::vector<CSAMPLE> silence(chunk * 2, 0);
+        m_pFifo->write(silence.data(), static_cast<int>(silence.size()));
     }
     m_closing = false;
     m_callbackThreadPrepared = false;
@@ -86,6 +142,21 @@ SoundDeviceStatus SoundDeviceOboe::open(bool isClkRefDevice, int syncBuffers) {
 oboe::Result SoundDeviceOboe::openStream() {
     const auto locker = QMutexLocker(&m_streamMutex);
     oboe::AudioStreamBuilder builder;
+#if defined(Q_OS_ANDROID)
+    // One chosen output (the router), by its current Android id
+    if (!m_routeKey.isEmpty()) {
+        const jint id = QJniObject::callStaticMethod<jint>("com/djmantra/app/AudioRouter",
+                "idFor",
+                "(Landroid/content/Context;Ljava/lang/String;)I",
+                QNativeInterface::QAndroidApplication::context().object(),
+                QJniObject::fromString(m_routeKey).object<jstring>());
+        if (id > 0) {
+            builder.setDeviceId(id);
+        } else {
+            kLogger.warning() << "Output" << m_routeKey << "is not connected: the default route";
+        }
+    }
+#endif
     builder.setDirection(oboe::Direction::Output)
             ->setPerformanceMode(oboe::PerformanceMode::LowLatency)
             ->setSharingMode(oboe::SharingMode::Shared)
@@ -125,12 +196,15 @@ oboe::Result SoundDeviceOboe::openStream() {
     // device does: the engine kept its 44.1 kHz default while the phone
     // played at 48 kHz, so everything played 8.8% fast (round 9 on the
     // Pixel 7: the 440 Hz test tone came out at 480 Hz)
-    m_sampleRate = mixxx::audio::SampleRate(static_cast<uint32_t>(pStream->getSampleRate()));
-    ControlObject::set(ConfigKey(QStringLiteral("[App]"), QStringLiteral("samplerate")),
-            m_sampleRate.value());
+    if (m_isClkRef) {
+        m_sampleRate = mixxx::audio::SampleRate(static_cast<uint32_t>(pStream->getSampleRate()));
+        ControlObject::set(ConfigKey(QStringLiteral("[App]"), QStringLiteral("samplerate")),
+                m_sampleRate.value());
+    }
     ControlObject::set(ConfigKey(QStringLiteral("[App]"), QStringLiteral("output_latency_ms")),
             1000.0 * pStream->getBufferSizeInFrames() / pStream->getSampleRate());
-    kLogger.info() << "Sound output open:" << pStream->getSampleRate() << "Hz,"
+    kLogger.info() << "Sound output open:" << m_strDisplayName
+                   << (m_isClkRef ? "(clock)" : "(second output)") << pStream->getSampleRate() << "Hz,"
                    << pStream->getChannelCount() << "channels,"
                    << pStream->getFramesPerDataCallback() << "frames per callback, burst"
                    << pStream->getFramesPerBurst() << ", API"
@@ -167,7 +241,27 @@ void SoundDeviceOboe::readProcess(SINT framesPerBuffer) {
 }
 
 void SoundDeviceOboe::writeProcess(SINT framesPerBuffer) {
-    Q_UNUSED(framesPerBuffer);
+    // On the clock device's callback: this (second) output's samples into its
+    // FIFO; when it is full (the two outputs' clocks drift) they are dropped
+    if (m_isClkRef || !m_pFifo) {
+        return;
+    }
+    const int channels = m_outputChannels;
+    const int writeCount = std::min(static_cast<int>(framesPerBuffer) * channels,
+            m_pFifo->writeAvailable() / channels * channels);
+    if (writeCount <= 0) {
+        return;
+    }
+    CSAMPLE* pData1;
+    ring_buffer_size_t size1;
+    CSAMPLE* pData2;
+    ring_buffer_size_t size2;
+    m_pFifo->aquireWriteRegions(writeCount, &pData1, &size1, &pData2, &size2);
+    composeOutputBuffer(pData1, size1 / channels, 0, channels);
+    if (size2 > 0) {
+        composeOutputBuffer(pData2, size2 / channels, size1 / channels, channels);
+    }
+    m_pFifo->releaseWriteRegions(writeCount);
 }
 
 QString SoundDeviceOboe::getError() const {
@@ -198,6 +292,19 @@ oboe::DataCallbackResult SoundDeviceOboe::onAudioReady(
     auto* pOutput = static_cast<CSAMPLE*>(pAudioData);
     const int channels = pStream->getChannelCount();
     const SINT frames = numFrames;
+    if (!m_isClkRef) {
+        // A second output: the samples the engine left in the FIFO
+        const int wanted = static_cast<int>(frames) * channels;
+        int got = 0;
+        if (m_pFifo) {
+            got = m_pFifo->read(pOutput, std::min(wanted, m_pFifo->readAvailable()));
+        }
+        if (got < wanted) {
+            std::fill(pOutput + got, pOutput + wanted, 0.0f);
+            ++m_fifoUnderflows;
+        }
+        return oboe::DataCallbackResult::Continue;
+    }
 
     const auto started = std::chrono::steady_clock::now();
     m_pSoundManager->processUnderflowHappened(frames);

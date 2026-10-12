@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "soundio/sounddevice.h"
+#include "util/fifo.h"
 
 /// The host API name of the Android sound output in the sound preferences.
 extern const QString kOboeHostApi;
@@ -25,7 +26,17 @@ class SoundDeviceOboe : public SoundDevice,
                         public oboe::AudioStreamDataCallback,
                         public oboe::AudioStreamErrorCallback {
   public:
-    SoundDeviceOboe(UserSettingsPointer config, SoundManager* sm);
+    /// `routeKey` "": the output Android routes media to (follows plugging);
+    /// else one output by its AudioRouter key ("usb:...", "bt:...") for the
+    /// audio router (Marko, 12.10.2026: MASTER and HEADPHONES on any output)
+    SoundDeviceOboe(UserSettingsPointer config,
+            SoundManager* sm,
+            const QString& routeKey = QString(),
+            const QString& label = QString());
+    /// The phone's outputs now: {key, label} (AudioRouter.java)
+    static QList<QPair<QString, QString>> androidOutputs();
+    /// Goes up whenever an output comes or goes
+    static int androidOutputsVersion();
     ~SoundDeviceOboe() override;
 
     SoundDeviceStatus open(bool isClkRefDevice, int syncBuffers) override;
@@ -51,6 +62,13 @@ class SoundDeviceOboe : public SoundDevice,
     // Guards m_pStream against open/close/reopen from different threads
     mutable QMutex m_streamMutex;
     std::shared_ptr<oboe::AudioStream> m_pStream;
+    QString m_routeKey;
+    // Not the clock reference (the headphones on a second output): the
+    // engine's samples come through this FIFO, written by writeProcess() on
+    // the clock device's callback, read by this device's own callback
+    bool m_isClkRef = true;
+    std::unique_ptr<FIFO<CSAMPLE>> m_pFifo;
+    int m_fifoUnderflows = 0;
     int m_outputChannels;
     QString m_lastError;
     std::atomic<bool> m_closing;

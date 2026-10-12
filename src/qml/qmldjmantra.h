@@ -11,6 +11,7 @@
 #include "track/track_decl.h"
 
 class QTimer;
+class SoundManager;
 
 namespace mixxx {
 namespace qml {
@@ -106,6 +107,21 @@ class QmlDJMantra : public QObject {
     /// {cpu, gpu}: the app's CPU use in % of all the cores (since the last
     /// call) and the GPU's load in % from the driver; -1 when not known
     Q_INVOKABLE QVariantMap usage();
+    /// The audio router (Marko, 12.10.2026): the phone's outputs now,
+    /// [{key, label}] ("" = the phone's default route, follows plugging)
+    Q_INVOKABLE QVariantList audioOutputs() const;
+    /// Goes up whenever an output is plugged in or out
+    Q_INVOKABLE int audioOutputsVersion() const;
+    /// {master, headphones}: the keys the two destinations go to ("none":
+    /// headphones off)
+    Q_INVOKABLE QVariantMap audioRoute() const;
+    /// MASTER and HEADPHONES to these outputs (keys from audioOutputs(),
+    /// headphones "none" or the master's key: no separate headphones);
+    /// "" on success, else the error
+    Q_INVOKABLE QString setAudioRoute(const QString& master, const QString& headphones);
+    /// A [DJMantra] setting (auto cue on / off ...), remembered
+    Q_INVOKABLE QVariant setting(const QString& name, const QVariant& fallback) const;
+    Q_INVOKABLE void setSetting(const QString& name, const QVariant& value);
     /// Whether the system bars are on screen now
     Q_INVOKABLE bool barsVisible() const;
 
@@ -119,6 +135,9 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE void log(const QString& text) const;
 
     static QmlDJMantra* create(QQmlEngine* pQmlEngine, QJSEngine* pJsEngine);
+    static inline void registerSoundManager(std::shared_ptr<SoundManager> pSoundManager) {
+        s_pSoundManager = std::move(pSoundManager);
+    }
     static inline void registerUserSettings(UserSettingsPointer pConfig) {
         s_pUserSettings = std::move(pConfig);
     }
@@ -137,6 +156,7 @@ class QmlDJMantra : public QObject {
     void lookUpGenre(const QString& group, TrackPointer pTrack);
 
     static inline UserSettingsPointer s_pUserSettings = nullptr;
+    static inline std::shared_ptr<SoundManager> s_pSoundManager;
     const UserSettingsPointer m_pConfig;
     int m_insets[4] = {0, 0, 0, 0};
     int m_cornerRadius = 0;

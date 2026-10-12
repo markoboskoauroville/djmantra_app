@@ -90,6 +90,7 @@ QmlApplication::QmlApplication(
     QmlPlayerManagerProxy::registerPlayerManager(pCoreServices->getPlayerManager());
     QmlConfigProxy::registerUserSettings(pCoreServices->getSettings());
     QmlDJMantra::registerUserSettings(pCoreServices->getSettings());
+    QmlDJMantra::registerSoundManager(pCoreServices->getSoundManager());
     QmlLibraryProxy::registerLibrary(pCoreServices->getLibrary());
 
     loadQml(m_mainFilePath);
@@ -110,6 +111,7 @@ QmlApplication::~QmlApplication() {
     QmlPlayerManagerProxy::registerPlayerManager(nullptr);
     QmlConfigProxy::registerUserSettings(nullptr);
     QmlDJMantra::registerUserSettings(nullptr);
+    QmlDJMantra::registerSoundManager(nullptr);
     QmlLibraryProxy::registerLibrary(nullptr);
     QmlDlgPreferencesProxy::s_pInstance->deleteLater();
 }

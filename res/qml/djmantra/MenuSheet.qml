@@ -8,6 +8,7 @@ Rectangle {
 
     signal library()
     signal wheel()
+    signal settings()
     signal done()
 
     color: "#8c000000"
@@ -42,6 +43,13 @@ Rectangle {
                 text: qsTr("Version %1").arg(Mixxx.DJMantra.version)
                 color: Style.subText
                 font.pixelSize: 13
+            }
+            DButton {
+                objectName: "menuSettings"
+                width: parent.width
+                height: 52
+                text: qsTr("SETTINGS: AUTO CUE, AUDIO OUTPUTS")
+                onClicked: root.settings()
             }
             DButton {
                 width: parent.width

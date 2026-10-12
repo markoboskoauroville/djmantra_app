@@ -29,6 +29,11 @@
 #include "library/library.h"
 #include "library/trackcollectionmanager.h"
 #include "mixer/playerinfo.h"
+#include "soundio/soundmanager.h"
+#include "soundio/soundmanagerconfig.h"
+#ifdef __OBOE__
+#include "soundio/sounddeviceoboe.h"
+#endif
 #include "qml/asyncimageprovider.h"
 #include "qml/qmllibraryproxy.h"
 #include "moc_qmldjmantra.cpp"
@@ -288,6 +293,135 @@ QVariantMap QmlDJMantra::usage() {
     result[QStringLiteral("cpu")] = cpu;
     result[QStringLiteral("gpu")] = m_gpuSource.isEmpty() ? -1 : gpuLoadFrom(m_gpuSource);
     return result;
+}
+
+namespace {
+
+const QString kDefaultOutputName = QStringLiteral("android-default-output");
+const QString kRoutedPrefix = QStringLiteral("android-out:");
+
+QString keyOfDevice(const SoundDeviceId& id) {
+    return id.name.startsWith(kRoutedPrefix) ? id.name.mid(kRoutedPrefix.size()) : QString();
+}
+
+} // namespace
+
+QVariantList QmlDJMantra::audioOutputs() const {
+    QVariantList result;
+    QVariantMap phone;
+    phone[QStringLiteral("key")] = QString();
+    phone[QStringLiteral("label")] = tr("Phone default (follows plugging in)");
+    result.append(phone);
+#ifdef __OBOE__
+    for (const auto& output : SoundDeviceOboe::androidOutputs()) {
+        QVariantMap entry;
+        entry[QStringLiteral("key")] = output.first;
+        entry[QStringLiteral("label")] = output.second;
+        result.append(entry);
+    }
+#endif
+    return result;
+}
+
+int QmlDJMantra::audioOutputsVersion() const {
+#ifdef __OBOE__
+    return SoundDeviceOboe::androidOutputsVersion();
+#else
+    return 0;
+#endif
+}
+
+QVariantMap QmlDJMantra::audioRoute() const {
+    QVariantMap result;
+    result[QStringLiteral("master")] = QString();
+    result[QStringLiteral("headphones")] = QStringLiteral("none");
+    if (!s_pSoundManager) {
+        return result;
+    }
+    const auto outputs = s_pSoundManager->getConfig().getOutputs();
+    for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+        if (it.value().getType() == AudioPathType::Main) {
+            result[QStringLiteral("master")] = keyOfDevice(it.key());
+        } else if (it.value().getType() == AudioPathType::Headphones) {
+            result[QStringLiteral("headphones")] = keyOfDevice(it.key());
+        }
+    }
+    return result;
+}
+
+QString QmlDJMantra::setAudioRoute(const QString& master, const QString& headphones) {
+    if (!s_pSoundManager) {
+        return tr("No sound");
+    }
+    // the outputs plugged in since the start are known only after a new look
+    s_pSoundManager->clearAndQueryDevices();
+#ifdef __OBOE__
+    const auto devices = s_pSoundManager->getDeviceList(kOboeHostApi, true, false);
+#else
+    const auto devices = s_pSoundManager->getDeviceList(
+            s_pSoundManager->getConfig().getAPI(), true, false);
+#endif
+    const auto findDevice = [&devices](const QString& key) -> SoundDevicePointer {
+        const QString name = key.isEmpty() ? kDefaultOutputName : kRoutedPrefix + key;
+        for (const auto& pDevice : devices) {
+            if (pDevice->getDeviceId().name == name) {
+                return pDevice;
+            }
+        }
+        return nullptr;
+    };
+    const auto pMaster = findDevice(master);
+    if (!pMaster) {
+        return tr("The master output is not connected");
+    }
+    SoundManagerConfig config = s_pSoundManager->getConfig();
+    config.clearOutputs();
+    config.addOutput(pMaster->getDeviceId(),
+            AudioOutput(AudioPathType::Main, 0, mixxx::audio::ChannelCount::stereo(), 0));
+    if (headphones != QStringLiteral("none") && headphones != master) {
+        const auto pHeadphones = findDevice(headphones);
+        if (!pHeadphones) {
+            return tr("The headphones output is not connected");
+        }
+        config.addOutput(pHeadphones->getDeviceId(),
+                AudioOutput(AudioPathType::Headphones, 0, mixxx::audio::ChannelCount::stereo(), 0));
+    }
+    const SoundDeviceStatus status = s_pSoundManager->setConfig(config);
+    qInfo().noquote() << "Quick: audio route master ->" << (master.isEmpty() ? "phone default" : master);
+    qInfo().noquote() << "Quick: audio route headphones ->"
+                      << (headphones == QStringLiteral("none") || headphones == master
+                                         ? QStringLiteral("none")
+                                         : (headphones.isEmpty() ? QStringLiteral("phone default")
+                                                                 : headphones));
+    if (status != SoundDeviceStatus::Ok) {
+        return tr("The outputs could not be opened: %1").arg(s_pSoundManager->getLastErrorMessage(status));
+    }
+    return QString();
+}
+
+QVariant QmlDJMantra::setting(const QString& name, const QVariant& fallback) const {
+    if (!m_pConfig) {
+        return fallback;
+    }
+    const ConfigKey key(QStringLiteral("[DJMantra]"), name);
+    if (!m_pConfig->exists(key)) {
+        return fallback;
+    }
+    const QString value = m_pConfig->getValueString(key);
+    if (fallback.typeId() == QMetaType::Bool) {
+        return value == QStringLiteral("1") || value == QStringLiteral("true");
+    }
+    return value;
+}
+
+void QmlDJMantra::setSetting(const QString& name, const QVariant& value) {
+    if (!m_pConfig) {
+        return;
+    }
+    m_pConfig->setValue(ConfigKey(QStringLiteral("[DJMantra]"), name),
+            value.typeId() == QMetaType::Bool ? QString(value.toBool() ? "1" : "0")
+                                              : value.toString());
+    m_pConfig->save();
 }
 
 bool QmlDJMantra::barsVisible() const {
