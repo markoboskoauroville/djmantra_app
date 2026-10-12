@@ -25,3 +25,15 @@ Media volume 0 (night).
 | 2d | Menu (logo) | menu | LIBRARY, CAMELOT WHEEL, BACK TO THE CLASSIC SCREEN (`q2-menu-hole.png`). **Header says "DJ Mantra 2.5.6"**: that looks like Mixxx's version, the app is 0.5.0. The LIBRARY button starts at y≈96, 5 px under the hole: tight but clear. No Settings in this menu | PASS (version text wrong) |
 | 2e | Library | folders | "Folders" with ← back: Music, Download, **Music again** (listed twice) (`q2-library-hole.png`) | FAIL (duplicate) |
 | 2f | Camelot wheel (badge tap) | wheel | Wheel with 8A outlined green, 5B pink, three explanation lines in green/orange/red (`q2-camelot-hole.png`). **The title "Camelot wheel" runs under the camera hole** (the hole sits on "…eel") | **FAIL (hole)** |
+| 3a | Counter tap TIME → BARS | switches, bar.beat moves | Switches to `83.1  -95.1  4/4` and counts (90.1 → 119.4 over the round). **TIME mode never moves** (1d). Deck 2 stayed TIME `0:00/0:00/-0:00` all the time | PASS (BARS) / FAIL (TIME) |
+| 3b | SYNC deck 2 | BPM 116 → 120, button lit | 120.0, SYNC lit pink. The key badge changed 5B → 12B (no keylock, the pitch moves: right) (`q3-sync2-xfader-left-hole.png`) | PASS |
+| 3c | Crossfader left → right | moves | Handle follows the drag both ways | PASS |
+| 3d | Volume fader deck 1 drag down | moves | Handle went down to the middle | PASS |
+| 3e | Knob drag up / double tap | turns / back to the middle | Turned clockwise, double tap → back to 12 o'clock (`q3-controls`, `q3-knob-dbl`). **The knob labels sit halfway between two knobs** (GAIN between knob 1 and 2 … FILTER above the headphone button), so it is not clear which knob a label names | PASS / labels unclear |
+| 3f | PFL (headphones) deck 1 | lights | Lit blue | PASS |
+| 3g | CUE deck 2 (held 1.5 s, released) | cue play, back to cue and stop | Deck 2 stopped at the cue, orange CUE marker on the waveform (`q3-cue2-after`, `q3-zoom-before`) | PASS |
+| 3h | PLAY deck 1 | pause / play | Pauses and plays. **▶ draws fine; the pause glyph is the tofu** (two boxes) | PASS / icon FAIL |
+| 3i | Hot cue pad 1 deck 1 | set, pad lit | Pad turned green (`q3-pad1-hole.png`) | PASS |
+| 3j | Waveform zoom + (deck 1, twice) | beat lines further apart | **No change**: beat lines ~87 px apart before and after (`q3-zoom-before`, `q3-zoom-plus`) | **FAIL** |
+| 3k | Taps answered at once | yes | Every tap and drag answered within the 1–2 s screenshot delay; nothing ignored | PASS |
+| 4 | CPU, both decks, waveforms tab | lower than classic (126/117/123 %) | **37.0 / 32.5 / 55.5 %CPU** (`cpu-quick-waveforms.txt`). `dumpsys gfxinfo` sees 0 frames: Qt Quick draws on its own surface that HWUI does not count, so no frame times from there (`gfxinfo-quick.txt`) | PASS (about a third of the classic CPU) |
