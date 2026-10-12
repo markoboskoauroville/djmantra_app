@@ -28,6 +28,48 @@ public final class GenreLookup {
 
     /// The genre ("Deep House"), or "" when MusicBrainz knows none
     public static String lookup(String fullArtist, String fullTitle) {
+        String genre = musicBrainz(fullArtist, fullTitle);
+        if (genre.isEmpty()) {
+            // round 20: MusicBrainz knew 2 of 6 songs; Deezer's public catalogue
+            // (official API, no key) knows many more electronic releases
+            genre = deezer(firstArtist(fullArtist), baseTitle(fullTitle));
+        }
+        return genre;
+    }
+
+    // Deezer: the track found by artist and title, its album's genres
+    static String deezer(String artist, String title) {
+        try {
+            String query = "track:\"" + clean(title) + "\"";
+            if (!artist.isEmpty()) {
+                query = "artist:\"" + clean(artist) + "\" " + query;
+            }
+            JSONObject found = getJson("https://api.deezer.com/search?limit=3&q="
+                    + URLEncoder.encode(query, "UTF-8"));
+            JSONArray tracks = found.optJSONArray("data");
+            if (tracks == null || tracks.length() == 0) {
+                Log.i(TAG, "GenreLookup: Deezer has no track for " + artist + " - " + title);
+                return "";
+            }
+            JSONObject album = tracks.getJSONObject(0).optJSONObject("album");
+            if (album == null) {
+                return "";
+            }
+            JSONObject full = getJson("https://api.deezer.com/album/" + album.optLong("id"));
+            JSONObject genres = full.optJSONObject("genres");
+            JSONArray data = genres != null ? genres.optJSONArray("data") : null;
+            String genre = data != null && data.length() > 0
+                    ? data.getJSONObject(0).optString("name", "") : "";
+            Log.i(TAG, "GenreLookup: Deezer " + artist + " - " + title + ": "
+                    + (genre.isEmpty() ? "none" : genre));
+            return genre;
+        } catch (Throwable error) {
+            Log.w(TAG, "GenreLookup: Deezer failed for " + artist + " - " + title + ": " + error);
+            return "";
+        }
+    }
+
+    private static String musicBrainz(String fullArtist, String fullTitle) {
         // Round 18: "Jakatta, PROFF - American Dream - PROFF Interpretation"
         // was not found: the first artist only, the title without its mix name
         final String artist = firstArtist(fullArtist);
@@ -140,6 +182,30 @@ public final class GenreLookup {
             titled.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
         }
         return titled.toString();
+    }
+
+    private static synchronized JSONObject getJson(String url) throws Exception {
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        try {
+            connection.setRequestProperty("User-Agent", AGENT);
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setConnectTimeout(8000);
+            connection.setReadTimeout(8000);
+            int status = connection.getResponseCode();
+            if (status != 200) {
+                throw new Exception("HTTP " + status);
+            }
+            InputStream in = connection.getInputStream();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buffer = new byte[8192];
+            int n;
+            while ((n = in.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+            }
+            return new JSONObject(out.toString("UTF-8"));
+        } finally {
+            connection.disconnect();
+        }
     }
 
     private static synchronized JSONObject get(String path) throws Exception {

@@ -243,6 +243,21 @@ Rectangle {
         width: parent.width
         clip: true
         model: songs
+        // the empty space under the songs: a tap brings Android's navigation
+        // bar, as anywhere else empty (round 20: the list swallowed the tap)
+        footer: MouseArea {
+            property bool barWasShown: false
+
+            width: list.width
+            height: Math.max(0, list.height - songs.count * 56 - header.height)
+            onPressed: barWasShown = Mixxx.DJMantra.barsVisible()
+            onClicked: {
+                if (!barWasShown) {
+                    Mixxx.DJMantra.log("show the navigation bar");
+                    Mixxx.DJMantra.showBars();
+                }
+            }
+        }
 
         delegate: Rectangle {
             id: row

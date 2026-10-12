@@ -403,6 +403,12 @@ Window {
         onTriggered: window.logMap()
     }
 
+    Connections {
+        // the tap map again when the bars come or go (round 20)
+        target: Mixxx.DJMantra
+        function onInsetsChanged() { mapTimer.restart(); }
+    }
+
     onWidthChanged: mapTimer.restart()
     onHeightChanged: mapTimer.restart()
     onPageChanged: mapTimer.restart()

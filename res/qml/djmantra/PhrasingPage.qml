@@ -177,7 +177,7 @@ Item {
                                 anchors.centerIn: parent
                                 text: led.index + 1
                                 color: led.lit ? Style.inkOnAccent : Style.subText
-                                font.pixelSize: Math.min(18, led.height * 0.35)
+                                font.pixelSize: Math.min(18, led.height * 0.35, led.width * 0.32)
                                 font.bold: true
                                 opacity: 0.8
                             }

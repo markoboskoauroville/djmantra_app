@@ -19,9 +19,21 @@ Rectangle {
     property string group
     property color deckColor: Style.deck1
     property var sections: []
+    // the play position, 10 times a second (round 20: CPU ~75 % of a core:
+    // the overviews' play line moved with every engine update, ~47 a second,
+    // so the whole window was drawn again and again)
+    property real shownPos: 0
+
+    Timer {
+        interval: 100
+        repeat: true
+        running: root.visible
+        triggeredOnStart: true
+        onTriggered: root.shownPos = Math.max(0, Math.min(1, position.value))
+    }
     // the index of the next section change after the play position (-1: none)
     readonly property int next: {
-        const p = position.value;
+        const p = root.shownPos;
         for (let i = 0; i < sections.length; ++i) {
             if (sections[i] > p + 0.0005)
                 return i;
@@ -90,7 +102,7 @@ Rectangle {
     Rectangle {
         // the part already played, dimmed
         visible: loaded.value > 0
-        width: Math.max(0, Math.min(1, position.value)) * root.width
+        width: root.shownPos * root.width
         height: root.height
         color: "#99000000"
         z: 3
@@ -98,7 +110,7 @@ Rectangle {
 
     Rectangle {
         visible: loaded.value > 0
-        x: Math.max(0, Math.min(1, position.value)) * root.width - 1.5
+        x: root.shownPos * root.width - 1.5
         width: 3
         height: root.height
         color: "#ffffff"
