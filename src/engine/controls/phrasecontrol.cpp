@@ -38,6 +38,7 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
           m_pSectionBeatsLeft(
                   std::make_unique<ControlObject>(ConfigKey(group, "section_beats_left"))),
           m_pSectionFound(std::make_unique<ControlObject>(ConfigKey(group, "section_found"))),
+          m_pSectionBeat(std::make_unique<ControlObject>(ConfigKey(group, "section_beat"))),
           m_pSectionJump(std::make_unique<ControlPushButton>(ConfigKey(group, "section_jump"))),
           m_pSectionCount(std::make_unique<ControlObject>(ConfigKey(group, "section_count"))) {
     m_pSectionCount->setReadOnly();
@@ -52,6 +53,8 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
     m_pSectionBeatsLeft->setReadOnly();
     m_pSectionBeatsLeft->forceSet(-1);
     m_pSectionFound->setReadOnly();
+    m_pSectionBeat->setReadOnly();
+    m_pSectionBeat->forceSet(-1);
     m_pPhraseAnchor->set(-1);
     connect(m_pSetOne.get(), &ControlObject::valueChanged, this, &PhraseControl::slotSetOne);
     connect(m_pJump.get(), &ControlObject::valueChanged, this, &PhraseControl::slotJump);
@@ -275,9 +278,36 @@ mixxx::audio::FramePos PhraseControl::nextSection(const mixxx::BeatsPointer& pBe
     return best;
 }
 
+// static
+mixxx::audio::FramePos PhraseControl::prevSection(const mixxx::BeatsPointer& pBeats,
+        mixxx::audio::FramePos position,
+        const QList<mixxx::audio::FramePos>& boundaries) {
+    if (!position.isValid()) {
+        return mixxx::audio::kInvalidFramePos;
+    }
+    double halfBeat = 0;
+    if (pBeats) {
+        mixxx::audio::FramePos prev;
+        mixxx::audio::FramePos next;
+        if (pBeats->findPrevNextBeats(position, &prev, &next, true) && prev.isValid() &&
+                next.isValid()) {
+            halfBeat = (next - prev) / 2;
+        }
+    }
+    mixxx::audio::FramePos best = mixxx::audio::kInvalidFramePos;
+    for (const auto& boundary : boundaries) {
+        if (boundary.isValid() && boundary <= position + halfBeat &&
+                (!best.isValid() || boundary > best)) {
+            best = boundary;
+        }
+    }
+    return best;
+}
+
 void PhraseControl::updateSection(mixxx::audio::FramePos position) {
     const mixxx::BeatsPointer pBeats = m_pBeats;
     if (!pBeats || m_beat < 0) {
+        m_pSectionBeat->forceSet(-1);
         m_pSectionBeatsLeft->forceSet(-1);
         m_pSectionFound->forceSet(0);
         m_nextSection = -1.0;
@@ -292,6 +322,17 @@ void PhraseControl::updateSection(mixxx::audio::FramePos position) {
         if (samplePos >= 0) {
             boundaries.append(mixxx::audio::FramePos::fromEngineSamplePos(samplePos));
         }
+    }
+    // The beats since the section started (the song's "1" before the first)
+    int sectionBeat = m_beatNumber;
+    const auto start = prevSection(pBeats, position, boundaries);
+    int startNumber;
+    if (start.isValid() &&
+            beatNumber(pBeats, anchor(), pBeats->findClosestBeat(start), &startNumber)) {
+        sectionBeat = std::max(0, m_beatNumber - startNumber);
+    }
+    if (m_pSectionBeat->get() != sectionBeat) {
+        m_pSectionBeat->forceSet(sectionBeat);
     }
     auto target = nextSection(pBeats, position, boundaries);
     const bool found = target.isValid();

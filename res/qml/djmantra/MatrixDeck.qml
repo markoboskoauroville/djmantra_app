@@ -48,6 +48,7 @@ Item {
     Mixxx.ControlProxy { id: found; group: root.group; key: "section_found" }
     Mixxx.ControlProxy { id: perBar; group: root.group; key: "beats_per_bar" }
     Mixxx.ControlProxy { id: number; group: root.group; key: "beat_number" }
+    Mixxx.ControlProxy { id: sectionBeat; group: root.group; key: "section_beat" }
     Mixxx.ControlProxy { id: position; group: root.group; key: "playposition"; maxRate: 4 }
     Mixxx.ControlProxy { id: duration; group: root.group; key: "duration" }
     Mixxx.ControlProxy { id: length; group: root.group; key: "phrase_length" }
@@ -176,7 +177,11 @@ Item {
     readonly property string remaining: loaded
             ? "-" + Mixxx.DJMantra.formatTime(Math.max(0, 1 - Math.max(0, position.value)) * Math.max(0, duration.value))
             : "-:--"
-    readonly property string barBeat: loaded && beat.value >= 0 ? Mixxx.DJMantra.barBeat(number.value, perBar.value) : "-.-"
+    // bar.beat from the start of the current section: 1.1 at every section
+    // (Marko, 12.10.2026); before the first one, from the song's "1"
+    readonly property string barBeat: loaded && beat.value >= 0
+            ? Mixxx.DJMantra.barBeat(sectionBeat.value >= 0 ? sectionBeat.value : number.value, perBar.value)
+            : "-.-"
     // ONE countdown: to the next phrase / section change ("|": to the end)
     readonly property string countdown: loaded && beatsLeft.value >= 0
             ? Mixxx.DJMantra.barsBeatsLeft(beatsLeft.value, perBar.value) + (found.value > 0 ? "" : "|")

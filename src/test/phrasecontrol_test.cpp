@@ -101,6 +101,22 @@ TEST(PhraseControlTest, nextSectionIsTheFirstBoundaryAhead) {
     EXPECT_FALSE(PhraseControl::nextSection(pBeats, inBeat(40), boundaries).isValid());
 }
 
+TEST(PhraseControlTest, prevSectionIsTheOneThePositionIsIn) {
+    const auto pBeats = grid();
+    const QList<FramePos> boundaries = {FramePos(kFirst + 32 * kBeat),
+            FramePos(kFirst + 16 * kBeat),
+            mixxx::audio::kInvalidFramePos};
+    // before the first section: none (the counter runs from the song's "1")
+    EXPECT_FALSE(PhraseControl::prevSection(pBeats, inBeat(5), boundaries).isValid());
+    // on a section start and inside it: that one
+    EXPECT_EQ(FramePos(kFirst + 16 * kBeat),
+            PhraseControl::prevSection(pBeats, FramePos(kFirst + 16 * kBeat), boundaries));
+    EXPECT_EQ(FramePos(kFirst + 16 * kBeat),
+            PhraseControl::prevSection(pBeats, inBeat(20), boundaries));
+    EXPECT_EQ(FramePos(kFirst + 32 * kBeat),
+            PhraseControl::prevSection(pBeats, inBeat(40), boundaries));
+}
+
 TEST(PhraseControlTest, sectionsWhereTheArrangementChanges) {
     // 16 bars without bass, 16 with, 16 without the highs, 16 as before
     QList<std::array<double, 3>> bars;

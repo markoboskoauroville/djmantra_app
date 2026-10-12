@@ -66,6 +66,13 @@ class PhraseControl : public EngineControl {
             mixxx::audio::FramePos position,
             const QList<mixxx::audio::FramePos>& boundaries);
 
+    /// The start of the section `position` is in: the last of `boundaries`
+    /// at or before it (a start up to half a beat ahead counts as reached).
+    /// Invalid before the first one.
+    static mixxx::audio::FramePos prevSection(const mixxx::BeatsPointer& pBeats,
+            mixxx::audio::FramePos position,
+            const QList<mixxx::audio::FramePos>& boundaries);
+
     /// The cue controls are made after this control: EngineBuffer calls
     /// this once they exist.
     void connectCues();
@@ -103,6 +110,10 @@ class PhraseControl : public EngineControl {
     std::unique_ptr<ControlObject> m_pBeatUnit;
     std::unique_ptr<ControlObject> m_pSectionBeatsLeft;
     std::unique_ptr<ControlObject> m_pSectionFound;
+    // Beats since the current section started (0 on its first beat; from
+    // the track's "1" before the first section): the matrix's bar.beat
+    // starts at 1.1 on every section (Marko, 12.10.2026)
+    std::unique_ptr<ControlObject> m_pSectionBeat;
     std::unique_ptr<ControlPushButton> m_pSectionJump;
     // How many sections the detection found (-1: not yet): the interface
     // reads them (djmantra::publishedSections) when this changes
