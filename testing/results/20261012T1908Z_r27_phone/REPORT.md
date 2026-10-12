@@ -27,3 +27,7 @@ Build: run 38291801689, commit a972af4. Started on Marko's "go" (12.10.2026 ~21:
 - Open again: in the Music folder ← goes UP to Folders (not closed); at the top ← closes: `browse closed`, nothing loaded. Fine (one ← per folder level).
 - Landscape hold on deck 2's overview: `scrub [Channel2] zoomed from 323.19 s` ... `ended at 323.66 s`, again no zoom window visible (`p4_land_hold.png`).
 - Portrait afterwards unchanged: Songs / Phrasing / Mixer / Keys, crossfader (`p4_portrait.png`). Auto-rotate given back (`user-rotation free`).
+
+## Stopped by Marko after part 4 (12.10.2026 ~21:18 local)
+- Part 5 (CPU) had started: both decks playing (Aktysia + Alba, peak 0.62-0.74, xruns 0); Songs tab 9.0 %, then the app's CPU read 0 % on Phrasing / Mixer / Keys (the app was no longer running in front: someone was using the phone, the volume panel had opened). Void, not a result.
+- Marko: "stop testing". Parts 5-9 NOT TESTED. Screen stay-awake switched off; rotation is free.
