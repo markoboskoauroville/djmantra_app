@@ -84,6 +84,8 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE void hideBars();
     /// Shows them (a tap on the app's empty space); the next touch hides them
     Q_INVOKABLE void showBars();
+    /// Whether the system bars are on screen now
+    Q_INVOKABLE bool barsVisible() const;
 
     /// The detected section starts of the deck's track, fractions 0..1 of the
     /// track (empty until the detection ran; section_count tells when)

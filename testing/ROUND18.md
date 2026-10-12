@@ -36,12 +36,17 @@ section so I can clearly see how the timeline is approaching that section ... cl
   down from the line between them; frequency colours; the play line in the middle. + / − zoom both decks together.
 - Scrolls smoothly while playing? CPU in `top` with this tab open vs the Songs tab.
 
-## 5. Full screen
-- After start and after coming back from another app (home, then DJ Mantra again): no status bar, no navigation bar.
-- A swipe up from the bottom edge brings the 3-button bar; it hides again by itself (~4 s) or on the next touch.
-- A tap on an empty spot (no button: e.g. a header's text, the space between the matrix and the overviews) brings the
-  bar (log `Quick: show the system bars`, `WindowBridge: showing the system bars`); the next touch anywhere hides it.
-- The app makes room while the bar is there and takes the whole screen back after.
+## 5. Full screen (Marko: "running on top of everything, even the status line ... tap on the empty space ... invites
+the navigation bar ... interact with any element ... it disappears")
+- After start and after coming back from another app (home, then DJ Mantra again): no status bar, no navigation bar;
+  the app fills the whole screen, around the camera hole. Screenshot.
+- A tap on an empty spot (no button: e.g. a header's text, the gap between the matrix and the overviews) brings the
+  NAVIGATION bar only (the status bar stays hidden). Log `Quick: show the navigation bar`, `WindowBridge: showing the
+  navigation bar`, then `WindowBridge: bars shown`.
+- With the bar there: a press on any button (it works as usual) hides the bar at once; a tap on the empty space hides
+  it too (and does not bring it back). Unused, it hides by itself after ~4 s.
+- A swipe up from the bottom edge still brings the bars (Android's own gesture); the next touch hides them.
+- While the bar is there the app makes room for it (nothing under it), then takes the whole screen back.
 
 ## 6. Keys tab: the Camelot wheel big
 - The wheel fills the page's width (no help text under it); KEY MATCH and − / + for both decks below it.

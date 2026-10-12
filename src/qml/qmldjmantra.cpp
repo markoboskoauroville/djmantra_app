@@ -184,6 +184,14 @@ void QmlDJMantra::showBars() {
 #endif
 }
 
+bool QmlDJMantra::barsVisible() const {
+#if defined(Q_OS_ANDROID)
+    return QJniObject::callStaticMethod<jboolean>("com/djmantra/app/WindowBridge", "visible", "()Z");
+#else
+    return false;
+#endif
+}
+
 QVariantList QmlDJMantra::sections(const QString& group) const {
     QVariantList result;
     for (const double fraction : djmantra::publishedSections(group)) {

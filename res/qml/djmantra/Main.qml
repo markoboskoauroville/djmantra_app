@@ -62,10 +62,17 @@ Window {
 
         MouseArea {
             // a tap on the empty space (no button there) brings Android's
-            // navigation bar back; the next touch hides it (round 18, Marko)
+            // navigation bar back; the next touch anywhere hides it (round 18,
+            // Marko). A tap on the empty space while the bar is there only
+            // hides it (the press did), it does not bring it back.
+            property bool barWasShown: false
+
             anchors.fill: parent
+            onPressed: barWasShown = Mixxx.DJMantra.barsVisible()
             onClicked: {
-                Mixxx.DJMantra.log("show the system bars");
+                if (barWasShown)
+                    return;
+                Mixxx.DJMantra.log("show the navigation bar");
                 Mixxx.DJMantra.showBars();
             }
         }

@@ -47,7 +47,7 @@ STUB = {
                     " function waveformGain(g, l) { return 0; }\n function isPlaying(g) { return false; }\n"
                     " function freeDeck() { return \"[Channel1]\"; }\n function noteLoaded(g) {}\n"
                     " function musicRoots() { return []; }\n function listFolder(f) { return []; }\n"
-                    " function hideBars() {}\n function showBars() {}\n function sections(g) { return []; }\n function setQuickInterface(on) {}\n"
+                    " function hideBars() {}\n function showBars() {}\n function barsVisible() { return false; }\n function sections(g) { return []; }\n function setQuickInterface(on) {}\n"
                     " function quickInterface() { return true; }\n function log(t) {}\n}\n",
 }
 

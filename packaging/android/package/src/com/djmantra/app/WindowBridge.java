@@ -81,8 +81,9 @@ public final class WindowBridge {
         activity.runOnUiThread(() -> {
             WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
-                Log.i(TAG, "WindowBridge: showing the system bars");
-                controller.show(WindowInsets.Type.systemBars());
+                // the navigation bar only: the status bar stays hidden
+                Log.i(TAG, "WindowBridge: showing the navigation bar");
+                controller.show(WindowInsets.Type.navigationBars());
                 sShownSince = 0;
             }
         });
