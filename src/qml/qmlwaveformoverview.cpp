@@ -1,6 +1,7 @@
 #include "qml/qmlwaveformoverview.h"
 
 #include <algorithm>
+#include <vector>
 
 #include "mixer/basetrackplayer.h"
 #include "moc_qmlwaveformoverview.cpp"
@@ -143,23 +144,30 @@ void QmlWaveformOverview::paint(QPainter* pPainter) {
     const int nextCompletion = actualCompletion + completionIncrement;
 
     const Channels channels = m_channels;
-    // DJ Mantra: the loudest point of the song fills the height
+    // DJ Mantra: the song's loud parts fill the height (round 18, Marko: "the
+    // waveform needs to be much bigger"): the 97th percentile of the drawn
+    // values reaches the top, the few peaks above it are clipped
     double gain = 1.0;
     if (m_normalize) {
-        int peak = 0;
-        for (int i = 0; i + 1 < waveformCompletion && i + 1 < dataSize; ++i) {
+        std::vector<int> values;
+        values.reserve(std::max(0, waveformCompletion));
+        for (int i = 0; i < waveformCompletion && i < dataSize; ++i) {
             if (m_renderer == Renderer::Filtered) {
-                peak = std::max({peak,
-                        static_cast<int>(pWaveform->getLow(i)),
+                values.push_back(std::max({static_cast<int>(pWaveform->getLow(i)),
                         static_cast<int>(pWaveform->getMid(i) * 1.5),
-                        static_cast<int>(pWaveform->getHigh(i) * 2)});
+                        static_cast<int>(pWaveform->getHigh(i) * 2)}));
             } else {
-                peak = std::max(peak, static_cast<int>(pWaveform->getAll(i)));
+                values.push_back(pWaveform->getAll(i));
             }
         }
-        if (peak > 0) {
-            gain = std::min(4.0, 0.95 * kDesiredChannelHeight / peak);
+        if (!values.empty()) {
+            const auto nth = values.begin() + static_cast<std::ptrdiff_t>(values.size() * 97 / 100);
+            std::nth_element(values.begin(), nth, values.end());
+            if (*nth > 0) {
+                gain = std::min(6.0, kDesiredChannelHeight / *nth);
+            }
         }
+        pPainter->setClipRect(boundingRect());
     }
     pPainter->save();
 

@@ -17,12 +17,19 @@ Requests: testing/results/20261012T0737Z_r17_phone/REPORT.md.
   / `none`, nothing shown. The phone needs internet. (MusicBrainz' official web service, one request a second.)
   Report a few songs: genre found? sensible?
 
-## 3. Overview waveforms: contrast and sections
-- Both overviews: the whole song in frequency colours (bass red, mids green, highs blue) on near-black, the loudest
-  part filling the height; quiet parts (breaks) visibly lower.
-- Sections: alternating lighter bands with a yellow line at each section start, as soon as `Sections: [ChannelN] ...`
-  is in the log. Do the yellow lines sit where the music changes (listen at 2-3 of them; JUMP lands on the next one)?
-- The played part dimmed, the play position a white line, the deck colour at the left edge. Tap / drag seeks.
+## 3. Overview waveforms: big, sections framed (Marko, 12.10.2026, during the build)
+Marko: "the waveform needs to be much bigger and the section colors more contrasty ... make vertical line between each
+section so I can clearly see how the timeline is approaching that section ... clearly see the changes in arrangements".
+- Same strip size as round 17. The waveform grows from the bottom and fills the strip: the loud parts reach the top
+  (the 97th percentile of the song does), breaks visibly lower.
+- Layers: highs light blue, mids green, bass red on top: a bass going out / coming back shows as the red appearing or
+  vanishing.
+- Sections: contrasting bands, blue / black alternating, framed by a white vertical line at each change (as soon as
+  `Sections: [ChannelN] ...` is in the log). The NEXT change after the play position is a thick yellow line; when the
+  play line passes it, that line turns white and the following one turns yellow.
+- Do the frames sit where the arrangement changes (listen at 2-3; JUMP lands on the yellow one)? Is the white play
+  line easy to follow towards the yellow one? Screenshot both decks playing.
+- The played part dimmed, the play position a white line. Tap / drag seeks.
 
 ## 4. Big scrolling waveform (Phrasing tab)
 - Tab 2 "Phrasing": top half of the page: both decks' scrolling waveforms, big, half each: deck 1 grows up and deck 2
