@@ -17,6 +17,8 @@ struct SettingsActions {
     std::function<void()> advanced;   // every setting (Mixxx's preferences)
     bool gpu = false;                 // waveforms and meters drawn on the GPU (test)
     std::function<void(bool)> setGpu; // after the next start
+    bool quick = false;                 // the new interface (Qt Quick, GPU)
+    std::function<void(bool)> setQuick; // after the next start
 };
 
 /// DJ Mantra's settings in the Android style, after djay's (Marko's

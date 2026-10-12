@@ -58,7 +58,17 @@ int runMixxx(MixxxApplication* pApp, const CmdlineArgs& args) {
 
     int exitCode;
 #ifdef MIXXX_USE_QML
-    if (args.isQml()) {
+    bool quick = args.isQml();
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: the Qt Quick interface (drawn by the GPU) when chosen in
+    // Settings ("New interface"); the classic one otherwise
+    quick = quick ||
+            pCoreServices->getSettings()->getValue(
+                    ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("quick_ui")),
+                    false);
+    qInfo() << "Interface:" << (quick ? "Qt Quick (GPU)" : "classic (widgets)");
+#endif
+    if (quick) {
         mixxx::qml::QmlApplication qmlApplication(pApp, pCoreServices);
         exitCode = pApp->exec();
     } else

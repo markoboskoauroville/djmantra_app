@@ -1954,6 +1954,10 @@ if(ANDROID)
     # Manifest (name DJ Mantra, icon), Java helpers (Storage Access Framework,
     # MIDI) and the resources in assets/res, assembled in the build tree
     QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/android-package"
+    # The Qt Quick interface (res/qml, DJ Mantra's in res/qml/djmantra) is read
+    # from the resources at run time: androiddeployqt scans it for the Qt
+    # Quick modules to put into the APK (QtQuick, Window, Shapes ...)
+    QT_QML_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/res/qml"
   )
   # Without a resource folder the app finds no skin and crashes at start
   # (phone test run #31). Re-staged on every build.
@@ -3107,6 +3111,7 @@ if(QML)
     src/qml/qmlcuesmodel.cpp
     src/qml/qmlcontrolproxy.cpp
     src/qml/qmlconfigproxy.cpp
+    src/qml/qmldjmantra.cpp
     src/qml/qmldlgpreferencesproxy.cpp
     src/qml/qmleffectmanifestparametersmodel.cpp
     src/qml/qmleffectsmanagerproxy.cpp

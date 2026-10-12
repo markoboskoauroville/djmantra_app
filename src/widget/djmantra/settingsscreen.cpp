@@ -83,6 +83,18 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
         });
     }
 
+    auto* pQuick = addSwitchRow(tr("New interface (GPU)"),
+            tr("DJ Mantra's new screen, drawn completely by the graphics chip: smoother "
+               "waveforms, less battery. Close and open the app to switch."));
+    pQuick->setChecked(actions.quick);
+    if (actions.setQuick) {
+        const auto setQuick = actions.setQuick;
+        connect(pQuick, &QAbstractButton::toggled, this, [setQuick](bool on) {
+            setQuick(on);
+            qInfo().noquote() << "Settings new interface" << on;
+        });
+    }
+
     auto* pGpu = addSwitchRow(tr("Draw on the GPU (test)"),
             tr("Waveforms on the graphics chip. Still being tuned: it can make the "
                "screen slow. After a restart."));
