@@ -14,8 +14,10 @@ its analysis files, `rekordbox_phrases.py`).
 - 4 double / half (e.g. Lotus Heart 90 vs 181.8): metrical level.
 
 ## Key: 79 identical (55 %), 27 relative major / minor, 19 a fifth away (Camelot +-1), 19 other
-- The app uses Mixxx's default QM key detector. **Catch 2: the weaker key detector**; Mixxx also has
-  KeyFinder (in the app, not the default). To test: KeyFinder on the same songs.
+- The app uses Mixxx's default QM key detector. **Catch 2: the weaker key detector.** Measured against
+  rekordbox (same key): QM 55 % (58 % with full overlap), Essentia bgate / shaath / edma 71-73 %,
+  **KeyFinder 78 %** (117 of 150; 20 a fifth away, 5 relative, 8 other; Mac run, keyfinder_keys.json).
+  Fix: KeyFinder is the default key detector from V6 (it is already in the app).
 
 ## Beat grid (78 songs with the same BPM and a constant rekordbox grid)
 - rekordbox's beat line sits on the kick's onset (median -6 ms, 10 songs with a clear kick).

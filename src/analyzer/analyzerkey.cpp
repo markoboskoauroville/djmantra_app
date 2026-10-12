@@ -15,11 +15,13 @@
 // static
 QList<mixxx::AnalyzerPluginInfo> AnalyzerKey::availablePlugins() {
     QList<mixxx::AnalyzerPluginInfo> analyzers;
-    // First one below is the default
-    analyzers.push_back(mixxx::AnalyzerQueenMaryKey::pluginInfo());
+    // First one below is the default. DJ Mantra: KeyFinder first. Against
+    // rekordbox 7 on Marko's 150 test songs (testing/sections/REKORDBOX_COMPARE.md)
+    // KeyFinder found the same key in 78 %, Queen Mary in 55 %.
 #if defined __KEYFINDER__
     analyzers.push_back(mixxx::AnalyzerKeyFinder::pluginInfo());
 #endif
+    analyzers.push_back(mixxx::AnalyzerQueenMaryKey::pluginInfo());
     return analyzers;
 }
 
