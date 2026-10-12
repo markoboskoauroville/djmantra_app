@@ -262,11 +262,17 @@ def deck_counter(n, align="left"):
 
 def counter(n, align="left"):
     """Marko's deck counter (11.10.2026, v2): one line that a tap switches
-    between the time and the bars and beats; the key next to it."""
+    between the time and the bars and beats. It has the line to itself (round
+    12: the key next to it cut its text); the key is on the artist line."""
+    return hbox(deck_counter(n, align), policy="me,min")
+
+
+def artist_key(n, align="left"):
+    """The artist line with the deck's key at its end (towards the middle)."""
     if align == "left":
-        return hbox(deck_counter(n, "left"), hspace(8), key_label(n, "left"), spacer(),
+        return hbox(track_prop(n, "artist", "ArtistText"), hspace(6), key_label(n, "right"),
                     policy="me,min")
-    return hbox(spacer(), key_label(n, "right"), hspace(8), deck_counter(n, "right"),
+    return hbox(key_label(n, "left"), hspace(6), track_prop(n, "artist", "ArtistText", "right"),
                 policy="me,min")
 
 
@@ -505,7 +511,7 @@ def pads(n, column=True):
 
 def header_deck_landscape(n):
     text = vbox(
-        track_prop(n, "artist", "ArtistText", "left" if n == 1 else "right"),
+        artist_key(n, "left" if n == 1 else "right"),
         track_prop(n, "title", "TitleText", "left" if n == 1 else "right"),
         counter(n, "left" if n == 1 else "right"),
         overview(n, 22),
@@ -517,12 +523,12 @@ def header_deck_landscape(n):
 
 def header_deck_portrait(n):
     if n == 1:
-        text = vbox(track_prop(n, "artist", "ArtistText"),
+        text = vbox(artist_key(n, "left"),
                     track_prop(n, "title", "TitleText"), counter(n, "left"), policy="me,min")
         top = hbox(cover(n, "58f,58f", "58,58", "HeaderCover"), hspace(6), text,
                    policy="me,min")
     else:
-        text = vbox(track_prop(n, "artist", "ArtistText", "right"),
+        text = vbox(artist_key(n, "right"),
                     track_prop(n, "title", "TitleText", "right"), counter(n, "right"),
                     policy="me,min")
         top = hbox(text, hspace(6), cover(n, "58f,58f", "58,58", "HeaderCover"),
@@ -782,8 +788,8 @@ def one_deck_view():
         return vbox(label(caption, "OneDeckCaption", align="left"), value, policy="me,min")
     info = vbox(fact("TITLE", track_prop(1, "title", "OneDeckTitle")),
                 fact("ARTIST", track_prop(1, "artist", "OneDeckArtist")),
-                hbox(fact("BPM", bpm(1, "left")), hspace(12), counter(1, "left"),
-                     policy="me,min"),
+                hbox(fact("BPM", bpm(1, "left")), hspace(12), fact("KEY", key_label(1, "left")),
+                     hspace(12), counter(1, "left"), policy="me,min"),
                 policy="me,min")
     top = hbox(cover(1, "104f,104f", "104,104", "OneDeckCover"), hspace(12), info,
                vbox(library_button(32), vstretch(), policy="min,me"),

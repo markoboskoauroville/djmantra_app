@@ -1,7 +1,7 @@
 #include "widget/djmantra/wdeckcounter.h"
 
 #include <QMouseEvent>
-#include <QPainter>
+#include <QResizeEvent>
 #include <algorithm>
 #include <cmath>
 
@@ -55,34 +55,47 @@ QString WDeckCounter::timeText(double elapsed, double remaining) {
     const auto format = [](double seconds) {
         return Duration::formatTime(std::max(0.0, seconds), Duration::Precision::SECONDS);
     };
-    return format(elapsed) + QStringLiteral(" / ") + format(elapsed + remaining) +
-            QStringLiteral(" / -") + format(remaining);
+    return format(elapsed) + QChar('/') + format(elapsed + remaining) +
+            QStringLiteral("/-") + format(remaining);
 }
 
 QSize WDeckCounter::minimumSizeHint() const {
     return QSize(fontMetrics().height() * 3, QLabel::minimumSizeHint().height());
 }
 
-void WDeckCounter::paintEvent(QPaintEvent*) {
-    QPainter painter(this);
-    const QRect box = contentsRect();
-    QFont font = this->font();
-    const QString shown = text();
-    // Shrink until it fits (not below 7 px)
-    for (int size = QFontInfo(font).pixelSize(); size > 7; --size) {
-        font.setPixelSize(size);
-        if (QFontMetrics(font).horizontalAdvance(shown) <= box.width()) {
+void WDeckCounter::resizeEvent(QResizeEvent* pEvent) {
+    WLabel::resizeEvent(pEvent);
+    fitFont();
+}
+
+void WDeckCounter::fitFont() {
+    if (m_skinFontSize <= 0) {
+        // The skin's size, before any of ours
+        m_skinFontSize = QFontInfo(font()).pixelSize();
+    }
+    // The longest text of the mode (Android's fonts: digits all as wide)
+    const QString longest = m_bars ? QStringLiteral("888.8  -88.8|  4/4")
+                                   : QStringLiteral("88:88/88:88/-88:88");
+    const int width = contentsRect().width();
+    QFont probe = font();
+    int size = m_skinFontSize;
+    for (; size > 8; --size) {
+        probe.setPixelSize(size);
+        if (QFontMetrics(probe).horizontalAdvance(longest) <= width) {
             break;
         }
     }
-    painter.setFont(font);
-    painter.setPen(palette().color(foregroundRole()));
-    painter.drawText(box, static_cast<int>(alignment()) | Qt::AlignVCenter, shown);
+    if (size != m_fittedSize) {
+        m_fittedSize = size;
+        // A style sheet of this widget: keeps the skin's colour and weight
+        setStyleSheet(QStringLiteral("font-size: %1px;").arg(size));
+    }
 }
 
 void WDeckCounter::mousePressEvent(QMouseEvent* pEvent) {
     if (pEvent->button() == Qt::LeftButton) {
         m_bars = !m_bars;
+        fitFont();
         slotUpdate();
     }
 }
@@ -103,9 +116,11 @@ void WDeckCounter::slotUpdate() {
     QString text = barBeat(static_cast<int>(m_pBeatNumber->get()), beatsPerBar);
     const int left = static_cast<int>(m_pSectionBeatsLeft->get());
     if (left >= 0) {
-        text += (m_pSectionFound->get() > 0 ? QStringLiteral("  next ")
-                                            : QStringLiteral("  end "));
-        text += barsBeatsLeft(left, beatsPerBar);
+        // To the next section; "|": to the end of the track (no section ahead)
+        text += QStringLiteral("  ") + barsBeatsLeft(left, beatsPerBar);
+        if (m_pSectionFound->get() <= 0) {
+            text += QChar('|');
+        }
     }
     setText(text + QStringLiteral("  ") + signature);
 }

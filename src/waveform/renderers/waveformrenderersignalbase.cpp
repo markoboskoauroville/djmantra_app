@@ -175,6 +175,12 @@ void WaveformRendererSignalBase::getGains(float* pAllGain,
         float* pMidGain,
         float* pHighGain) {
     WaveformWidgetFactory* factory = WaveformWidgetFactory::instance();
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: the waveform keeps its size whatever the track's gain
+    // compensation (ReplayGain): loud songs were drawn at a quarter of the
+    // box (round 12, A142)
+    applyCompensation = false;
+#endif
     if (pAllGain) {
         *pAllGain = static_cast<CSAMPLE_GAIN>(m_waveformRenderer->getGain(applyCompensation)) *
                 static_cast<CSAMPLE_GAIN>(factory->getVisualGain(WaveformWidgetFactory::All));

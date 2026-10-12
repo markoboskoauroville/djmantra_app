@@ -129,6 +129,11 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
 <TrackProperty>
   <ObjectName>ArtistText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -137,6 +142,15 @@
   <Elide>right</Elide>
   <Channel>1</Channel>
 </TrackProperty>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
+<Key>
+  <ObjectName>KeyDeck1</ObjectName>
+  <Group>[Channel1]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>right</Alignment>
+  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
+</Key>
+</Children></WidgetGroup>
 <TrackProperty>
   <ObjectName>TitleText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -156,15 +170,6 @@
   <Alignment>left</Alignment>
   <Channel>1</Channel>
 </DeckCounter>
-<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
-<Key>
-  <ObjectName>KeyDeck1</ObjectName>
-  <Group>[Channel1]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
-</Key>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -219,6 +224,19 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<Key>
+  <ObjectName>KeyDeck2</ObjectName>
+  <Group>[Channel2]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
+</Key>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
 <TrackProperty>
   <ObjectName>ArtistText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -227,6 +245,7 @@
   <Elide>right</Elide>
   <Channel>2</Channel>
 </TrackProperty>
+</Children></WidgetGroup>
 <TrackProperty>
   <ObjectName>TitleText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -240,15 +259,6 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<Key>
-  <ObjectName>KeyDeck2</ObjectName>
-  <Group>[Channel2]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
-  <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
-</Key>
-<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <DeckCounter>
   <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
@@ -2653,6 +2663,11 @@
 <SizePolicy>me,max</SizePolicy>
 
 <Children>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
 <TrackProperty>
   <ObjectName>ArtistText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -2661,6 +2676,15 @@
   <Elide>right</Elide>
   <Channel>1</Channel>
 </TrackProperty>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
+<Key>
+  <ObjectName>KeyDeck1</ObjectName>
+  <Group>[Channel1]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>right</Alignment>
+  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
+</Key>
+</Children></WidgetGroup>
 <TrackProperty>
   <ObjectName>TitleText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -2680,15 +2704,6 @@
   <Alignment>left</Alignment>
   <Channel>1</Channel>
 </DeckCounter>
-<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
-<Key>
-  <ObjectName>KeyDeck1</ObjectName>
-  <Group>[Channel1]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
-</Key>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
 <Overview>
   <ObjectName>Overview</ObjectName>
@@ -2773,6 +2788,19 @@
 <SizePolicy>me,max</SizePolicy>
 
 <Children>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<Key>
+  <ObjectName>KeyDeck2</ObjectName>
+  <Group>[Channel2]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
+</Key>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
 <TrackProperty>
   <ObjectName>ArtistText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -2781,6 +2809,7 @@
   <Elide>right</Elide>
   <Channel>2</Channel>
 </TrackProperty>
+</Children></WidgetGroup>
 <TrackProperty>
   <ObjectName>TitleText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -2794,15 +2823,6 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<Key>
-  <ObjectName>KeyDeck2</ObjectName>
-  <Group>[Channel2]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
-  <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
-</Key>
-<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <DeckCounter>
   <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
@@ -5537,6 +5557,21 @@
 </Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
+<Layout>vertical</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<Label><ObjectName>OneDeckCaption</ObjectName><Text>KEY</Text><Alignment>left</Alignment></Label>
+<Key>
+  <ObjectName>KeyDeck1</ObjectName>
+  <Group>[Channel1]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
+</Key>
+</Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
+<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
@@ -5547,15 +5582,6 @@
   <Alignment>left</Alignment>
   <Channel>1</Channel>
 </DeckCounter>
-<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
-<Key>
-  <ObjectName>KeyDeck1</ObjectName>
-  <Group>[Channel1]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
-</Key>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -5776,6 +5802,21 @@
 </Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
+<Layout>vertical</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<Label><ObjectName>OneDeckCaption</ObjectName><Text>KEY</Text><Alignment>left</Alignment></Label>
+<Key>
+  <ObjectName>KeyDeck1</ObjectName>
+  <Group>[Channel1]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
+</Key>
+</Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
+<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
@@ -5786,15 +5827,6 @@
   <Alignment>left</Alignment>
   <Channel>1</Channel>
 </DeckCounter>
-<WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
-<Key>
-  <ObjectName>KeyDeck1</ObjectName>
-  <Group>[Channel1]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
-</Key>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>

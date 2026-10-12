@@ -15,6 +15,7 @@ import android.graphics.Insets;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.DisplayCutout;
 import android.view.View;
 import android.view.Window;
@@ -31,6 +32,8 @@ public final class WindowBridge {
     private static long sShownSince = 0;
     // left, top, right, bottom in pixels: read from the Qt thread
     private static volatile int[] sInsets = new int[] {0, 0, 0, 0};
+    private static boolean sErrorLogged = false;
+    private static final String TAG = "DJMantra";
 
     public static void immersive(Context context) {
         if (!(context instanceof Activity)) {
@@ -38,6 +41,7 @@ public final class WindowBridge {
         }
         final Activity activity = (Activity) context;
         activity.runOnUiThread(() -> {
+            Log.i(TAG, "WindowBridge: hiding the system bars");
             Window window = activity.getWindow();
             if (Build.VERSION.SDK_INT >= 30) {
                 // The app draws edge to edge (Android 15 does so anyway) and
@@ -82,8 +86,18 @@ public final class WindowBridge {
         decor.postDelayed(new Runnable() {
             @Override
             public void run() {
-                update(window, decor);
-                decor.postDelayed(this, 300);
+                // Round 12 (0a52eb0): the bars stayed over the app; whatever
+                // goes wrong in one pass, the watch goes on (and says why)
+                try {
+                    update(window, decor);
+                } catch (Throwable error) {
+                    if (!sErrorLogged) {
+                        sErrorLogged = true;
+                        Log.e(TAG, "WindowBridge: insets update failed", error);
+                    }
+                } finally {
+                    decor.postDelayed(this, 300);
+                }
             }
         }, 300);
     }
@@ -106,19 +120,35 @@ public final class WindowBridge {
         // that edge's band. A hole in the middle of the top edge (the Nothing
         // phones, most phones): no band, the skin's top row keeps its middle
         // free (logo left, key badge right).
-        Insets cutout = insets.getInsetsIgnoringVisibility(WindowInsets.Type.displayCutout());
-        int cutTop = cutout.top;
-        DisplayCutout shape = insets.getDisplayCutout();
-        if (shape != null && cutTop > 0) {
-            Rect hole = shape.getBoundingRectTop();
-            int width = decor.getWidth();
-            if (!hole.isEmpty() && width > 0 && hole.left >= width * 3 / 8
-                    && hole.right <= width * 5 / 8) {
-                cutTop = 0;
+        Insets cutout = Insets.NONE;
+        int cutTop = 0;
+        try {
+            cutout = insets.getInsets(WindowInsets.Type.displayCutout());
+            cutTop = cutout.top;
+            DisplayCutout shape = insets.getDisplayCutout();
+            if (shape != null && cutTop > 0) {
+                Rect hole = shape.getBoundingRectTop();
+                int width = decor.getWidth();
+                if (hole != null && !hole.isEmpty() && width > 0
+                        && hole.left >= width * 3 / 8 && hole.right <= width * 5 / 8) {
+                    cutTop = 0;
+                }
             }
+        } catch (Throwable error) {
+            if (!sErrorLogged) {
+                sErrorLogged = true;
+                Log.e(TAG, "WindowBridge: display cutout unknown", error);
+            }
+            cutout = Insets.NONE;
+            cutTop = 0;
         }
-        sInsets = new int[] {Math.max(bars.left, cutout.left), Math.max(bars.top, cutTop),
+        int[] next = new int[] {Math.max(bars.left, cutout.left), Math.max(bars.top, cutTop),
                 Math.max(bars.right, cutout.right), Math.max(bars.bottom, cutout.bottom)};
+        if (!java.util.Arrays.equals(next, sInsets)) {
+            Log.i(TAG, "WindowBridge: bars " + (visible ? "shown" : "hidden") + ", insets "
+                    + java.util.Arrays.toString(next) + " (cutout " + cutout + ")");
+        }
+        sInsets = next;
         if (!visible) {
             sShownSince = 0;
             return;
