@@ -24,3 +24,13 @@ The phone was awake but the notification shade was pulled down over the app (foc
 ## Paused after part 3 (12.10.2026 ~18:55 local)
 - During part 4 the phone turned upright and back, then Firefox came to the front: Marko is using the phone. My taps would land in his apps, so testing stopped. DJ Mantra was force-stopped (it was still playing deck 2 on the speaker) and the screen's stay-awake switched off.
 - Part 4 (CPU) and part 5 (genre match) NOT TESTED yet; they resume when Marko says "continue" or leaves the phone with DJ Mantra.
+
+## Stopped again before part 4 (12.10.2026 ~19:50 local): Marko's request
+Resumed on Marko's word (via the builder) with run 38281839012 (a9c3991, the clock), portrait; the first taps loaded nothing (no `load` line, the list was not where expected). Then Marko asked, verbatim:
+
+> "please inform the cloud that 2 dots between the clock should be static, not blinking, please"
+
+### Shaped for the builder
+1. The clock's colon (the 2 dots between HH and MM) is always lit: static, no blinking.
+
+Parts 4 (CPU), 5 (genre match), 6 (clock) NOT TESTED: they run on the build with the static colon.
