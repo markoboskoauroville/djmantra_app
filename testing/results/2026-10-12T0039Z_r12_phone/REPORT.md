@@ -76,6 +76,41 @@ No port scan from the earlier session was left running; it died with that sessio
 The watcher (`tools/android/watch_host.sh ~/djmantra-watch/r12 192.168.1.30:38589`) has been running since 00:39:59 UTC.
 Its output is copied to `host/watch/` at the end of the round.
 
+## Marko's new request (12.10.2026, 03:05): lay the interface out around the selfie camera hole, no clipped text
+
+> "Pay attention on a camera, selfie camera hole. User interface part are under this selfie camera and they have hole
+> in it. You need to spread the user interface around this hole. Hole is giving the problem. And you also need to in
+> the screenshot look carefully if some text is going out of its display size, that's not allowed or acceptable behavior."
+
+**The hole on this phone** (Nothing A142, 1084×2412, portrait), from `adb shell dumpsys window`:
+`mDisplayCutout=DisplayCutout{insets=Rect(0, 126 - 0, 0) … boundingRect … Rect(454, 0 - 540, 126)}`,
+`cutoutSpec={M540.2,33C524.1,33…`. So it is a round hole centred at x≈540, starting at y=33 (≈ x 511–571, y 31–91),
+and Android asks apps to keep the top **126 px** (the cutout inset) clear. Screenshots never show the hole.
+`cutout-overlay-top.png` draws it (red box) and the 126 px line (yellow) over `02-mixer-both.png`:
+
+- **The hole sits on the key badge, right on "8A" and the "c" of "clash".** A reading under the hole is a reading with a hole in it.
+- The whole top strip (dj logo, key badge) is inside the 126 px cutout band. The artist line touches its edge.
+- The app draws full screen (`main window ready, full screen: true size QSize(413, 919)` = the whole glass) and does not
+  pad for `displayCutout()` insets.
+
+**What to change** (manifest `modules/system-bars.md`): the top row keeps out of the hole. Either the whole
+interface starts below the cutout inset (126 px here; ask Qt/Android for it at run time, never a constant, since it
+moves on rotation and is different on every phone), or the top row is split into a left part and a right part with
+the hole's width free between them (logo + badge left of x≈500, the rest right of x≈580). In landscape the hole is on
+a side and the same rule applies to that side.
+
+**Text going out of its box (not acceptable), seen in this round's screenshots:**
+
+| where | what is seen | screenshot |
+|---|---|---|
+| deck 1 header, TIME mode | `0:31 / 5:56 / -5:2` — the end of the remaining time is cut by the key "8A" | `02-mixer-both.png`, `cutout-overlay-top.png` |
+| deck 2 header, TIME mode | `04 / 5:11 / -5:06` — the start ("0:") is cut off | same |
+| deck 1 header, BARS mode | `101.1  next -77.` — cut by the key | step 3 screenshots |
+| deck 2 artist | `Maxim Sheremetev, C…` — ellipsis, stays inside its box (allowed, but the line could use the space the key badge leaves) | `02-mixer-both.png` |
+
+Probably the same fix for all three: the time/bars label needs a minimum width for its longest text (`-10:00`,
+`999.4  next -99.4`), or a smaller font, and the key label must not take its space.
+
 ## Round 12 steps
 
 Build: Android run 38188934192 of b1f26f9 (same app code as fbb6ceb + d594f12), `djmantra-arm64-v8a.apk`,
@@ -89,3 +124,5 @@ sha256 `02633b30f6e0a9aaac0217e7704e9398ffdbdb17aec4ea22f2f53ee0bef64e6a`, insta
 | 2c | Waveforms tab | smooth, right colours, fill their box | Both decks scroll; red/pink/blue colours, red play line in the middle, beat lines: `02-waveforms.png`, `02-waveforms-b.png`. Addis (deck 1) fills only ~20 % of its box width, Dune ~60 %. Could be the song's level, not a bug: compare in step 3 with the CPU renderer | PASS (look at the width) |
 | 2d | One Deck | layout right | dj logo → ONE DECK: cover, title/artist/BPM, time, key 8A, full-width waveform, ⏮ ⏸ ⏭, CUE, CONTINUOUS (green), Files/Queue/History: `02-onedeck.png`, menu `02-menu.png` | PASS |
 | 2e | Deck header time | `1:23 / 5:40 / -4:17` | **Cut off on both decks:** deck 1 `0:44 / 5:56 / -5:` (end clipped by the key), deck 2 `18 / 5:11 / -4:53` (the start "0:" is clipped) | FAIL (cosmetic) |
+| 3a | CPU, both decks, GPU on | (measure) | pid 9292, waveforms tab: **92.3 / 89.5 / 70.5 %CPU**; mixer tab: 85.1 / 78.5 / 60.0 %CPU (`cpu-gpu.txt`, measured with `top -p PID`, because `grep djmantra` also matched the grep's own shell). gfxinfo: 23 frames, 90th percentile 250 ms | (measured) |
+| 3b | Settings → "Draw on the GPU" off | Settings opens | **Not reached yet.** From the waveforms tab, the dj logo did not open the menu (5 tries over ~1 min), and a tab tap was ignored too. A minute later the mixer tab responded and the menu opened from there, but a tap on "Settings" / its gear closed the menu without opening Settings (twice, 03:04–03:06). Then the logo stopped opening the menu again. uiautomator showed no hidden dialog. Paused here: Marko stopped the round before the restart for the camera hole request | BLOCKED |
