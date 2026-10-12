@@ -25,7 +25,7 @@ have: songs on USB drives that keep playing when the stick is pulled, folders th
 the library while their drive is unplugged, and beat lights on the controller in every pad
 mode for lining up phrases.
 
-> **Status: test builds.** Version **0.5.0** is the first one for phones. Every build of
+> **Status: test builds.** Versions count V1, V2, V3 ... (one up for every build that goes to the phone). Every build of
 > `main` starts on an Android emulator in CI and must run with sound and reach its main window
 > before it becomes the download above. Testing on real phones (Pixel 7) with the Mix Ultra
 > starts now; results go to [`testing/results/`](testing/results/).
@@ -33,14 +33,14 @@ mode for lining up phrases.
 ## Download and install
 
 1. On the phone, open **[Releases → android-latest](../../releases/tag/android-latest)** and
-   download `DJMantra-0.5.0-…-phone-arm64.apk` (Pixel 7 and other 64-bit ARM phones).
+   download `DJMantra-V<N>-…-phone-arm64.apk` (Pixel 7 and other 64-bit ARM phones).
 2. Open the file and allow installing apps from this source.
 3. DJ Mantra runs in landscape and full screen. First start (about 10 seconds, once per new
    version): DJ Mantra installs its skins and
    controller mappings, then asks for **All files access** (to play music from USB drives) and
    **Nearby devices** (to find the Mix Ultra over Bluetooth).
 
-With a computer: `adb install -r DJMantra-0.5.0-…-phone-arm64.apk`. Test builds are signed with
+With a computer: `adb install -r DJMantra-V<N>-…-phone-arm64.apk`. Test builds are signed with
 a public test key, so each new one installs over the previous one and keeps the library.
 
 ## Features

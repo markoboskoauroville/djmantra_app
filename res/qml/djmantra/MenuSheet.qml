@@ -40,7 +40,7 @@ Rectangle {
             spacing: 8
 
             Text {
-                text: qsTr("Version %1").arg(Mixxx.DJMantra.version)
+                text: Mixxx.DJMantra.version
                 color: Style.subText
                 font.pixelSize: 13
             }
@@ -62,21 +62,6 @@ Rectangle {
                 height: 52
                 text: qsTr("CAMELOT WHEEL")
                 onClicked: root.wheel()
-            }
-            DButton {
-                id: classic
-
-                property bool chosen: false
-
-                width: parent.width
-                height: 52
-                text: chosen ? qsTr("Classic screen at the next start: close and open the app")
-                             : qsTr("BACK TO THE CLASSIC SCREEN")
-                fontSize: 13
-                onClicked: {
-                    Mixxx.DJMantra.setQuickInterface(false);
-                    chosen = true;
-                }
             }
         }
     }

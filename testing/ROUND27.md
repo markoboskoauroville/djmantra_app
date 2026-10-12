@@ -1,6 +1,6 @@
 # Round 27 (rules: testing/PROTOCOL.md: this order, push + one-line message after each part, "round 27 finished")
 
-Build: the green Android run of the newest commit with this file. Start only when Marko says so (he is using the
+Build: V1 (the green Android run of the newest commit with this file). Start only when Marko says so (he is using the
 phone). Grep once per part: `adb logcat -d | grep -E "Quick:|WindowBridge|GenreLookup|Sound:"`.
 
 ## 0. Smoke (10 s): `Quick: interface ready`, no `qml` error, `Sound output open ... (clock)`, frame rate -> 60 Hz.
@@ -41,3 +41,9 @@ orientations.
   confirms).
 - Pad mode buttons: HOT CUE = Songs, LOOP = Phrasing, FX = Mixer, NEURAL MIX = Keys (`controller: page N`), on
   either deck; the pads still work in the controller's mode.
+
+## 9. Version and the classic screen gone (new)
+- Menu: the version reads "V1". The APK is named DJMantra-V1-...; `adb shell dumpsys package com.djmantra.app |
+  grep version`: versionName=V1, versionCode=6.
+- No "BACK TO THE CLASSIC SCREEN" in the menu; the app always starts the new interface (`Interface: Qt Quick (GPU)`),
+  even if an old setting chose the classic one. The APK has no assets/res/skins.

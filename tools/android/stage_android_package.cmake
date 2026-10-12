@@ -16,7 +16,8 @@ file(COPY "${SOURCE_DIR}/packaging/android/package/" DESTINATION "${PACKAGE_DIR}
 set(_res "${PACKAGE_DIR}/assets/res")
 file(REMOVE_RECURSE "${_res}")
 file(MAKE_DIRECTORY "${_res}")
-foreach(_dir skins controllers effects fonts keyboard qml)
+# no skins: the classic (widget) interface is gone from the app (12.10.2026)
+foreach(_dir controllers effects fonts keyboard qml)
   if(EXISTS "${SOURCE_DIR}/res/${_dir}")
     # Files the APK tools would drop (hidden files) are left out
     file(COPY "${SOURCE_DIR}/res/${_dir}" DESTINATION "${_res}" PATTERN ".*" EXCLUDE)

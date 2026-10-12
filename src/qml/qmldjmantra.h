@@ -133,9 +133,6 @@ class QmlDJMantra : public QObject {
     /// The detected section starts of the deck's track, fractions 0..1 of the
     /// track (empty until the detection ran; section_count tells when)
     Q_INVOKABLE QVariantList sections(const QString& group) const;
-    /// The interface at the next start: true = this one (Qt Quick, GPU)
-    Q_INVOKABLE void setQuickInterface(bool on);
-    Q_INVOKABLE bool quickInterface() const;
     /// Writes a line to the app's log (the phone tests read it)
     Q_INVOKABLE void log(const QString& text) const;
 
