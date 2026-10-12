@@ -38,8 +38,8 @@ QString resultText(oboe::Result result) {
 } // namespace
 
 // static
-QList<QPair<QString, QString>> SoundDeviceOboe::androidOutputs() {
-    QList<QPair<QString, QString>> outputs;
+QList<SoundDeviceOboe::AndroidOutput> SoundDeviceOboe::androidOutputs() {
+    QList<AndroidOutput> outputs;
 #if defined(Q_OS_ANDROID)
     const QJniObject array = QJniObject::callStaticObjectMethod(
             "com/djmantra/app/AudioRouter",
@@ -56,7 +56,8 @@ QList<QPair<QString, QString>> SoundDeviceOboe::androidOutputs() {
         const QJniObject item(env->GetObjectArrayElement(jArray, i));
         const QStringList parts = item.toString().split(QChar('|'));
         if (parts.size() >= 2) {
-            outputs.append({parts[0], parts[1]});
+            const int channels = parts.size() >= 3 ? std::max(2, parts[2].toInt()) : 2;
+            outputs.append({parts[0], parts[1], channels - channels % 2});
         }
     }
 #endif
@@ -75,7 +76,8 @@ int SoundDeviceOboe::androidOutputsVersion() {
 SoundDeviceOboe::SoundDeviceOboe(UserSettingsPointer config,
         SoundManager* sm,
         const QString& routeKey,
-        const QString& label)
+        const QString& label,
+        int channels)
         : SoundDevice(config, sm),
           m_routeKey(routeKey),
           m_outputChannels(2),
@@ -92,7 +94,9 @@ SoundDeviceOboe::SoundDeviceOboe(UserSettingsPointer config,
         m_strDisplayName = label;
     }
     m_hostAPI = kOboeHostApi;
-    m_numOutputChannels = mixxx::audio::ChannelCount::stereo();
+    // a multi-channel interface: every stereo pair can be a destination
+    m_numOutputChannels = mixxx::audio::ChannelCount(
+            static_cast<mixxx::audio::ChannelCount::value_t>(std::max(2, channels)));
     m_numInputChannels = mixxx::audio::ChannelCount();
     m_sampleRate = kDefaultSampleRate;
 }

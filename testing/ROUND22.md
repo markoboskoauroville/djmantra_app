@@ -33,6 +33,12 @@ source"; Marko: "when the deck in the headphones goes on air, the headphones swi
 - With a second output connected (wired headphones or Bluetooth or USB): MASTER = speaker (or USB), HEADPHONES = the
   other → APPLY: `Sound output open: <label> (second output)`; the master mix on the first, the pre-listen deck (PFL)
   on the second at the same time. Bluetooth shows the 200 ms warning.
+- MULTI-CHANNEL (Marko: "listen on channels 1 and 2 and preview on 3 and 4, or vice versa"): with a 4-channel USB
+  interface (the Mix Ultra: master out + headphones out), choose it for BOTH: under each a "channels 1-2 / 3-4" row
+  appears; MASTER 1-2, HEADPHONES 3-4 → APPLY: `Quick: audio route master -> usb:... channels 1-2`, `headphones ->
+  usb:... channels 3-4`, `Sound output open: ... (clock)` with 4 channels; the mix on the master out, the pre-listen
+  in the interface's headphones. Then swapped (MASTER 3-4, HEADPHONES 1-2): the other way round. Report the
+  interface's channel count from the list (log `AudioRouter`) if it shows only 1-2.
 - Restart the app with the second output still connected: the route is kept. Restart with it unplugged: the app
   falls back to the phone's default (log `Sound: a routed output is not connected, back to the phone's default`)
   and plays.

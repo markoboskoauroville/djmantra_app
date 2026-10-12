@@ -270,8 +270,8 @@ void SoundManager::queryDevices() {
     // HEADPHONES on another)
     m_devices.append(SoundDevicePointer(new SoundDeviceOboe(m_pConfig, this)));
     for (const auto& output : SoundDeviceOboe::androidOutputs()) {
-        m_devices.append(SoundDevicePointer(
-                new SoundDeviceOboe(m_pConfig, this, output.first, output.second)));
+        m_devices.append(SoundDevicePointer(new SoundDeviceOboe(
+                m_pConfig, this, output.key, output.label, output.channels)));
     }
 #endif
     queryDevicesMixxx();

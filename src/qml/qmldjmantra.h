@@ -112,13 +112,18 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE QVariantList audioOutputs() const;
     /// Goes up whenever an output is plugged in or out
     Q_INVOKABLE int audioOutputsVersion() const;
-    /// {master, headphones}: the keys the two destinations go to ("none":
-    /// headphones off)
+    /// {master, masterPair, headphones, headphonesPair}: the outputs the two
+    /// destinations go to ("none": headphones off) and their stereo pairs
+    /// (0 = channels 1-2, 1 = 3-4 ...)
     Q_INVOKABLE QVariantMap audioRoute() const;
-    /// MASTER and HEADPHONES to these outputs (keys from audioOutputs(),
-    /// headphones "none" or the master's key: no separate headphones);
-    /// "" on success, else the error
-    Q_INVOKABLE QString setAudioRoute(const QString& master, const QString& headphones);
+    /// MASTER and HEADPHONES to these outputs and stereo pairs (a 4-channel
+    /// interface: master 1-2, headphones 3-4, or the other way); headphones
+    /// "none" or the same output and pair: no separate headphones. "" on
+    /// success, else the error
+    Q_INVOKABLE QString setAudioRoute(const QString& master,
+            int masterPair,
+            const QString& headphones,
+            int headphonesPair);
     /// A [DJMantra] setting (auto cue on / off ...), remembered
     Q_INVOKABLE QVariant setting(const QString& name, const QVariant& fallback) const;
     Q_INVOKABLE void setSetting(const QString& name, const QVariant& value);

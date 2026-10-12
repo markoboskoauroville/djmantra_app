@@ -32,9 +32,15 @@ class SoundDeviceOboe : public SoundDevice,
     SoundDeviceOboe(UserSettingsPointer config,
             SoundManager* sm,
             const QString& routeKey = QString(),
-            const QString& label = QString());
-    /// The phone's outputs now: {key, label} (AudioRouter.java)
-    static QList<QPair<QString, QString>> androidOutputs();
+            const QString& label = QString(),
+            int channels = 2);
+    struct AndroidOutput {
+        QString key;
+        QString label;
+        int channels; // a multi-channel interface: stereo pairs 1-2, 3-4 ...
+    };
+    /// The phone's outputs now (AudioRouter.java)
+    static QList<AndroidOutput> androidOutputs();
     /// Goes up whenever an output comes or goes
     static int androidOutputsVersion();
     ~SoundDeviceOboe() override;

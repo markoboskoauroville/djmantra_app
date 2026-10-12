@@ -4,7 +4,9 @@ import QtQuick 2.12
 
 // Settings (Marko, 12.10.2026): automatic pre-listen, and the audio router:
 // MASTER and HEADPHONES each to any output the phone has now (speaker, wired,
-// USB interface, Bluetooth ...), the list following what is plugged in.
+// USB interface, Bluetooth ...), the list following what is plugged in; on a
+// multi-channel interface each to any stereo pair (1-2, 3-4 ...): master on
+// 1-2 and pre-listen on 3-4 of the same interface, or the other way round.
 Rectangle {
     id: root
 
@@ -12,6 +14,16 @@ Rectangle {
     property var outputs: []
     property string master: ""
     property string headphones: "none"
+    property int masterPair: 0     // 0 = channels 1-2, 1 = 3-4 ...
+    property int headphonesPair: 0
+
+    function channelsOf(key) {
+        for (const o of outputs) {
+            if (o.key === key)
+                return o.channels || 2;
+        }
+        return 2;
+    }
     property string status: ""
     property int seenVersion: -1
     signal done()
@@ -27,6 +39,8 @@ Rectangle {
         const route = Mixxx.DJMantra.audioRoute();
         master = route.master;
         headphones = route.headphones;
+        masterPair = route.masterPair || 0;
+        headphonesPair = route.headphonesPair || 0;
         refresh();
     }
 
@@ -124,10 +138,52 @@ Rectangle {
                             fontSize: 13
                             lit: (destination.modelData.dest === "master" ? root.master : root.headphones) === modelData.key
                             onClicked: {
-                                if (destination.modelData.dest === "master")
+                                if (destination.modelData.dest === "master") {
                                     root.master = modelData.key;
-                                else
+                                    root.masterPair = 0;
+                                } else {
                                     root.headphones = modelData.key;
+                                    // the same interface: the next free pair
+                                    root.headphonesPair = modelData.key === root.master
+                                            && root.channelsOf(modelData.key) > 2 ? 1 : 0;
+                                }
+                            }
+                        }
+                    }
+
+                    Row {
+                        // the stereo pair on a multi-channel interface
+                        readonly property string chosen: destination.modelData.dest === "master" ? root.master : root.headphones
+                        readonly property int pairs: chosen === "none" ? 1 : Math.floor(root.channelsOf(chosen) / 2)
+
+                        visible: pairs > 1
+                        spacing: 6
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: qsTr("channels")
+                            color: Style.subText
+                            font.pixelSize: 13
+                        }
+
+                        Repeater {
+                            model: parent.pairs
+
+                            delegate: DButton {
+                                required property int index
+
+                                objectName: "pair_" + destination.modelData.dest + "_" + (index + 1)
+                                width: 64
+                                height: 36
+                                text: (2 * index + 1) + "-" + (2 * index + 2)
+                                fontSize: 13
+                                lit: (destination.modelData.dest === "master" ? root.masterPair : root.headphonesPair) === index
+                                onClicked: {
+                                    if (destination.modelData.dest === "master")
+                                        root.masterPair = index;
+                                    else
+                                        root.headphonesPair = index;
+                                }
                             }
                         }
                     }
@@ -151,11 +207,14 @@ Rectangle {
                 lit: true
                 onClicked: {
                     root.status = qsTr("switching ...");
-                    const error = Mixxx.DJMantra.setAudioRoute(root.master, root.headphones);
+                    const error = Mixxx.DJMantra.setAudioRoute(root.master, root.masterPair,
+                            root.headphones, root.headphonesPair);
                     root.status = error === "" ? qsTr("Done.") : error;
                     const route = Mixxx.DJMantra.audioRoute();
                     root.master = route.master;
                     root.headphones = route.headphones;
+                    root.masterPair = route.masterPair || 0;
+                    root.headphonesPair = route.headphonesPair || 0;
                 }
             }
 
