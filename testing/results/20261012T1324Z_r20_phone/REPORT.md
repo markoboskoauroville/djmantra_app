@@ -6,3 +6,11 @@ Build: run 38253413748, commit bd59c40. Started by the tester's own build watche
 - Ready in 6 s: `Quick: interface ready 413x919`, no qml error, `Quick: insets 0 0 0 0 corner 50`.
 - `Sound buffer: 3072 of 4096 frames` (asked: about 3072).
 - `p0_start.png`: full screen; the matrix and overview edges are already yellow for both decks.
+
+## Part 1: transport - PASS
+- Loaded Let Me In (deck 1) and Lions (deck 2) (meant 3 Sense and Addis: the list had scrolled under the finger, see part 6).
+- PLAY deck 1: `button [Channel1],play 1`. Deck 2 PLAY while deck 1 plays: `align [Channel2] to beat 8 ...`, `button [Channel2],play armed (aligned start)`, `beat launch [Channel2] on beat 8`. Pause: `play 0`. All as asked.
+- SYNC logs the new value: deck 2's SYNC was on from the last session, the first press turned it off (`sync_enabled 0`), the second on (`sync_enabled 1`), each with `sync [Channel2]: deck 1 122.00 bpm, deck 2 122.00 bpm`.
+- CUE: `button [Channel1],cue_default pressed`.
+- AUTO PHASE: off, deck 2 moved to beat 3 → one beat behind (`p1_off.png`: deck 1 on a white 1, deck 2 on 2); on → `auto phase: [Channel2] (beat 4) to the other deck's beat`, both on 4 (`p1_on.png`). A first try (LED 5) logged no correction within 5 s: probably landed in phase already.
+- Drops: 30 s, both playing, SYNC on, while the analysis in advance was running: xruns 0, late 0, slowest 2.4-3.4 ms.
