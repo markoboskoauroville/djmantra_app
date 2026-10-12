@@ -68,7 +68,7 @@ TEST(CamelotTest, keyMatchShift) {
                 const auto chromatic = toKey(deck);
                 const auto shifted = KeyUtils::scaleKeySteps(chromatic, shift);
                 EXPECT_EQ(text(code(to, major)), text(fromKey(shifted)))
-                        << text(deck) << " > " << to;
+                        << text(deck).toStdString() << " > " << to;
             }
         }
     }
