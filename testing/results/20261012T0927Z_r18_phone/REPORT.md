@@ -21,3 +21,15 @@ Build: Android run 38227433624, commit 302b570. adb over 127.0.0.1:5555 (phoneli
 | 3 | beat launch (big LED) | stopped deck 2: press LED 1, it blinks, starts on deck 1's beat | LED 1 yellow while armed, `Quick: beat launch [Channel2] on beat 1`; afterwards both decks on cell 11 (03_phr_launched.png) | PASS |
 | 3 | jump (big LED) | playing deck: jumps to that beat in time | deck 1 LED 9 pressed: before both on 11, after deck 1 on 8 / deck 2 on 12 (03_phr_after_jump.png): it moved. No log line for a jump: suggest `Quick: jump [ChannelN] to beat M` | PASS |
 | 3 | easy to hit at 32 | Marko: "big so I can jump easily" at 32 | 32: cells ~115 × 50 px = **~44 × 19 dp**, below a 48 dp finger target; the scrolling waveform above takes ~480 px (03_phr_32.png). Suggest: at 32 give the LEDs the waveform's room (or two decks × 4 rows at ≥ 40 dp) | FAIL |
+| 4 | full screen | no bars after start and after home → back | `dumpsys window`: `navigationBars visible=false`, `statusBars visible=false`, both times | PASS |
+| 4 | tap on empty space | the navigation bar only | tap on deck 1's title: `Quick: show the navigation bar`, `WindowBridge: showing the navigation bar`; `navigationBars visible=true`, `statusBars visible=false` | PASS |
+| 4 | the bar hides again | 2nd tap on empty space hides; any press hides; unused ~4 s hides | **never hides**: a 2nd tap logs `Quick: show the navigation bar` again (no hide line ever); 6 s and 16 s later still `navigationBars visible=true`; a press on the menu button works (`Quick: menu`) but the bar stays | FAIL |
+| 4 | room for the bar | nothing under the bar (system-bars.md) | landscape (04_landscape.png): the 3 buttons sit over the app's right edge: + / − zoom, the Keys tab label, the CPU meter, the last LED column under them. The app does not make room because it never sees the bar as visible | FAIL |
+| 4 | tabs | Songs / Phrasing / Mixer / Keys | four tabs, Phrasing second, all switch (00_start.png, 02_*, 03_*) | PASS |
+| 4 | landscape | layout | decks left, Phrasing right (04_landscape.png). Phrasing LEDs in landscape: 4 rows × 8 per deck about 20 px tall, numbers unreadable. The scrolling waveform shows diagonal lines across its top right (zig-zag, right after the rotation) | FAIL |
+| 4 | swipe up from the bottom | bars come, next touch hides | not tested: the bar was already stuck on screen | — |
+
+Tester's guess at the cause (for the builder, not verified in code): the app's "bar visible" state never turns true. If
+WindowBridge still decides with `insets.isVisible(WindowInsets.Type.systemBars())`, that is true only when status AND
+navigation bars are both visible; showing the navigation bar alone leaves it false. `isVisible(navigationBars()) ||
+isVisible(statusBars())` would see it, and with it the 4 s hide, the touch-to-hide and the room-making would run.
