@@ -115,3 +115,47 @@ What this asks for:
   glance whether the phrases are in step, and where in the phrase each deck is.
 - The waveform matters less to him than these lights ("I remove waveform as such").
 - The same lights on the controller (the slicer's LED algorithm).
+
+## Marko, 06:45: the redesign, one build, then one full test
+
+> "Since hot cues and looping I'm not using, please remove that from my application, the code and user interface. I am
+> working with section and I also need to jump to the next section button. So we're going to call— everything will be
+> around Camelot wheels, sections, and we need to make this, uh, very high quality and high-end. Section detection and
+> jumping and counting and seeing in which phrase beats I am. So reorganize the user interface to have multiple tools
+> for the same workflow. Also add different automatic transition which we can call halaf automatic. So when I'm mixing
+> from one song to the other, if I say Automatic EQ, then you're going to move EQ buttons automatically in transition of
+> the song. You know how it's done. First we replace bass, then high, then middle. Also, there will be a HitBlend
+> algorithm. When this is selected in the automatic transition, it means As I'm mixing, the tempo is changed gradually
+> to incoming song. This is also done with DJ Pro. You need to see how it's done. Tempo Blend. So this app will fit my
+> style of mixing and music I'm mixing, which is actually organic house, and we don't do many tricks. We don't do tricks
+> at all. We just need to make like this and also Matching sync match per minutes, that's okay. We need to do also
+> button, uh, key match, so upcoming song will be shifted to match the key. And when I deselect it, come, it just jumps
+> back to its original key. And also there will be a shift of key button, same as in DJ Pro. Read the manual of DJ Pro
+> to see how It deals with the key manipulation and key matching. Let's do that."
+
+> "So there will be a user interface without any waveforms, only mixing with running lights. We need to build that.
+> Instead of cue, which was now cue selection, we remove that. These are running lights for every beat. And when I
+> press stop on, let's say, deck 2, and then on this view I select beat 1, it starts to play from beat 1 in sync with
+> the current song. That's the thing. Let's change user interface. And the workflow needs to fit my own. Build new
+> version before testing. Same, upgrade is the now paramount and then testing everything at once. Because testing
+> multiple times same thing, it eats my credits and I don't have much credits."
+
+### What he asks for (the next build; 1e5fa8b is NOT tested)
+
+1. **Remove hot cues and loops**, from the code and the interface.
+2. **Everything around the Camelot wheel and sections**, high quality:
+   - section detection, a "jump to the next section" button, the countdown to the next section;
+   - the phrase lights showing which beat of the phrase each deck is on.
+3. **An interface without waveforms**, mixing by the running lights only. The CUE pads become the 8 running lights
+   (one per beat). **Stop deck 2, tap beat 1 of its lights → it starts from its phrase beat 1, in sync with the playing song.**
+4. **Automatic transitions** ("halaf automatic" in the dictation; probably "half automatic", i.e. semi-automatic),
+   chosen per mix:
+   - **Automatic EQ**: during the transition the EQs move by themselves. Bass is swapped first, then highs, then mids.
+   - **Tempo Blend** ("HitBlend" in the dictation): during the mix the tempo moves gradually to the incoming song's,
+     as in djay Pro's Tempo Blend.
+   Organic house: no tricks, smooth long blends.
+5. **Key**, as in djay Pro (read its manual on key matching and key shifting):
+   - **Key Match** button: the incoming song is shifted to match the key; switched off, it jumps back to its original key;
+   - **Key Shift** button (up/down by steps), as in djay Pro;
+   - SYNC (BPM match) stays as it is.
+6. **One build, then one full test.** Testing the same things round after round costs Marko credits he does not have.
