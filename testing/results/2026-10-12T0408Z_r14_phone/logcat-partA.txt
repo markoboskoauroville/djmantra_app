@@ -1,0 +1,6 @@
+10-12 06:10:30.822 27577 27577 I DJMantra: WindowBridge: hiding the system bars
+10-12 06:10:44.591 27577 27598 I DJMantra: info [Main] Menu: Settings tapped
+10-12 06:10:44.608 27577 27598 I DJMantra: info [Main] Settings screen open QRect(0,0 413x919) visible true
+10-12 06:10:44.641 27577 27577 I DJMantra: WindowBridge: hiding the system bars
+10-12 06:11:19.782  2206  2206 D SatelliteModemInterface: Binding to com.mediatek.satellite.service
+10-12 06:11:19.786  2206  2206 E SatelliteModemInterface: Error binding to the satellite service. Retrying in 54042 ms.
