@@ -78,4 +78,9 @@ Its output is copied to `host/watch/` at the end of the round.
 
 ## Round 12 steps
 
-(filled in as the round runs)
+Build: Android run 38188934192 of b1f26f9 (same app code as fbb6ceb + d594f12), `djmantra-arm64-v8a.apk`,
+sha256 `02633b30f6e0a9aaac0217e7704e9398ffdbdb17aec4ea22f2f53ee0bef64e6a`, installed with `adb install -r` at 02:56.
+
+| # | what | expected | what happened | pass/fail |
+|---|---|---|---|---|
+| 1 | GPU at start | "Android: drawing on the GPU (OpenGL ES)", no crash | `02:57:11.467 Android: drawing on the GPU (OpenGL ES)`; `Waveforms: GPU (all-shader) instead of the saved type 10`. No "OpenGL driver version" line was logged. Crash buffer empty. `gpu-log.txt`, `01-start.png` | PASS |
