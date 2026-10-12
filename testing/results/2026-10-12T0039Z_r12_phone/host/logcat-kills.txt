@@ -1,0 +1,150 @@
+10-12 02:16:02.973 I/ActivityManager( 1551): Process PhantomProcessRecord {dc062d5 16886:19657:python3/u0a245} died
+10-12 02:16:02.975 I/ActivityManager( 1551): Process PhantomProcessRecord {ec52aea 16875:19657:bash/u0a245} died
+10-12 02:16:03.024 I/ActivityManager( 1551): Process PhantomProcessRecord {802c1db 16885:19657:timeout/u0a245} died
+10-12 02:16:16.974 I/ActivityManager( 1551): Process PhantomProcessRecord {2098335 26087:19657:claude/u0a245} died
+10-12 02:16:16.984 I/ActivityManager( 1551): Process PhantomProcessRecord {40533ca 7034:19657:adb/u0a245} died
+10-12 02:16:17.000 I/ActivityManager( 1551): Process PhantomProcessRecord {43ac93b 26070:19657:proot/u0a245} died
+10-12 02:16:40.740 I/ActivityManager( 1551): Process PhantomProcessRecord {50b6d22 20522:19657:cat/u0a245} died
+10-12 02:16:40.787 I/ActivityManager( 1551): Process PhantomProcessRecord {b6a03b3 20497:19657:bash/u0a245} died
+10-12 02:16:42.156 I/lowmemorykiller(  459): Kill 'org.mozilla.firefox:tab_disable_art_image_38' (16238), uid 10111, oom_score_adj 990 to free 73288kB rss, 27044kB swap; reason: device is not responding
+10-12 02:19:03.303 I/ActivityManager( 1551): Process PhantomProcessRecord {d9f6662 21062:19657:bash/u0a245} died
+10-12 02:19:03.303 I/ActivityManager( 1551): Process PhantomProcessRecord {fdca3f3 21069:19657:termux-api/u0a245} died
+10-12 02:19:03.313 I/ActivityManager( 1551): Process PhantomProcessRecord {bd808b0 21060:19657:timeout/u0a245} died
+10-12 02:19:37.361 I/ActivityManager( 1551): Process PhantomProcessRecord {c34de85 21118:19657:sleep/u0a245} died
+10-12 02:19:45.179 I/ActivityManager( 1551): Process PhantomProcessRecord {d92498 21263:19657:termux-api/u0a245} died
+10-12 02:19:45.182 I/ActivityManager( 1551): Process PhantomProcessRecord {b2b14f1 21260:19657:sh/u0a245} died
+10-12 02:19:45.196 I/ActivityManager( 1551): Process PhantomProcessRecord {51f88d6 21265:19657:app_process/u0a245} died
+10-12 02:19:45.237 I/ActivityManager( 1551): Process PhantomProcessRecord {b635c62 21258:19657:timeout/u0a245} died
+10-12 02:19:45.298 I/ActivityManager( 1551): Process PhantomProcessRecord {f33eeb0 21261:19657:termux-api/u0a245} died
+10-12 02:19:45.302 I/ActivityManager( 1551): Process PhantomProcessRecord {7f67129 21259:19657:sh/u0a245} died
+10-12 02:19:45.317 I/ActivityManager( 1551): Process PhantomProcessRecord {91edcae 21264:19657:app_process/u0a245} died
+10-12 02:19:45.346 I/ActivityManager( 1551): Process PhantomProcessRecord {5f52a4f 21257:19657:timeout/u0a245} died
+10-12 02:20:23.787 I/ActivityManager( 1551): Process PhantomProcessRecord {c5977a5 21244:19657:sleep/u0a245} died
+10-12 02:20:26.136 I/ActivityManager( 1551): Process PhantomProcessRecord {547751b 21029:19657:bash/u0a245} died
+10-12 02:21:47.820 I/lowmemorykiller(  459): Kill 'com.google.android.gms.unstable' (12313), uid 10138, oom_score_adj 975 to free 93008kB rss, 44984kB swap; reason: device is not responding
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {6b4bd 19704:19657:bash/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19704,bash,0,Trimming phantom processes,3644]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {51abab2 19725:19657:runsvdir/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19725,runsvdir,0,Trimming phantom processes,2696]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {8efea03 19726:19657:runsv/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19726,runsv,0,Trimming phantom processes,2576]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {8c5bd80 19727:19657:runsv/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19727,runsv,0,Trimming phantom processes,2576]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {ceedfb9 19728:19657:runsv/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19728,runsv,0,Trimming phantom processes,2536]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {bf5cffe 19729:19657:svlogd/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19729,svlogd,0,Trimming phantom processes,2668]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {97d235f 19730:19657:svlogd/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19730,svlogd,0,Trimming phantom processes,2592]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {58931ac 19731:19657:svlogd/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19731,svlogd,0,Trimming phantom processes,2616]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {f94be75 28511:19657:bash/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,28511,bash,0,Trimming phantom processes,2996]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {7daee0a 28533:19657:bash/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,28533,bash,0,Trimming phantom processes,3220]
+10-12 02:23:23.524 I/ActivityManager( 1551): Process PhantomProcessRecord {27a967b 27865:19657:bash/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {62dbc98 27839:19657:timeout/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {67fccf1 27840:19657:timeout/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {51abab2 19725:19657:runsvdir/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {bf5cffe 19729:19657:svlogd/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {8efea03 19726:19657:runsv/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {8c5bd80 19727:19657:runsv/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {58931ac 19731:19657:svlogd/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {6b4bd 19704:19657:bash/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {841e0d6 27860:19657:bash/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {ceedfb9 19728:19657:runsv/u0a245} died
+10-12 02:23:23.526 I/ActivityManager( 1551): Process PhantomProcessRecord {97d235f 19730:19657:svlogd/u0a245} died
+10-12 02:23:23.526 I/ActivityManager( 1551): Process PhantomProcessRecord {f94be75 28511:19657:bash/u0a245} died
+10-12 02:23:23.526 I/ActivityManager( 1551): Process PhantomProcessRecord {2121f57 27828:19657:bash/u0a245} died
+10-12 02:23:23.528 I/ActivityManager( 1551): Process PhantomProcessRecord {7daee0a 28533:19657:bash/u0a245} died
+10-12 02:23:23.530 I/ActivityManager( 1551): Process PhantomProcessRecord {b8e0a44 27832:19657:bash/u0a245} died
+10-12 02:23:23.532 I/ActivityManager( 1551): Process PhantomProcessRecord {733472d 27835:19657:timeout/u0a245} died
+10-12 02:23:23.534 I/ActivityManager( 1551): Process PhantomProcessRecord {a533462 27825:19657:bash/u0a245} died
+10-12 02:23:23.544 I/ActivityManager( 1551): Process PhantomProcessRecord {52f59f3 27849:19657:timeout/u0a245} died
+10-12 02:23:23.560 I/ActivityManager( 1551): Process PhantomProcessRecord {78386b0 28550:19657:python/u0a245} died
+10-12 02:23:23.562 I/ActivityManager( 1551): Process PhantomProcessRecord {22a2929 27833:19657:bash/u0a245} died
+10-12 02:23:23.563 I/ActivityManager( 1551): Process PhantomProcessRecord {33434ae 27843:19657:timeout/u0a245} died
+10-12 02:23:23.564 I/ActivityManager( 1551): Process PhantomProcessRecord {1dba24f 27848:19657:timeout/u0a245} died
+10-12 02:23:23.575 I/ActivityManager( 1551): Process PhantomProcessRecord {e125ddc 27837:19657:bash/u0a245} died
+10-12 02:23:23.575 I/ActivityManager( 1551): Process PhantomProcessRecord {a932ee5 27841:19657:bash/u0a245} died
+10-12 02:23:23.584 I/ActivityManager( 1551): Process PhantomProcessRecord {312edba 27846:19657:timeout/u0a245} died
+10-12 02:23:23.601 I/ActivityManager( 1551): Process PhantomProcessRecord {b5a146b 27838:19657:bash/u0a245} died
+10-12 02:23:23.610 I/ActivityManager( 1551): Process PhantomProcessRecord {d557bc8 27853:19657:timeout/u0a245} died
+10-12 02:23:23.622 I/ActivityManager( 1551): Process PhantomProcessRecord {dccd461 27842:19657:bash/u0a245} died
+10-12 02:23:23.633 I/ActivityManager( 1551): Process PhantomProcessRecord {cf22b86 27867:19657:timeout/u0a245} died
+10-12 02:23:23.638 I/ActivityManager( 1551): Process PhantomProcessRecord {c038c47 27857:19657:bash/u0a245} died
+10-12 02:23:23.642 I/ActivityManager( 1551): Process PhantomProcessRecord {82a8c74 27859:19657:timeout/u0a245} died
+10-12 02:23:23.645 I/ActivityManager( 1551): Process PhantomProcessRecord {6a1559d 27850:19657:bash/u0a245} died
+10-12 02:23:23.685 I/ActivityManager( 1551): Process PhantomProcessRecord {e2a5e3 27866:19657:bash/u0a245} died
+10-12 02:23:23.687 I/ActivityManager( 1551): Process PhantomProcessRecord {f9dfbe0 27863:19657:bash/u0a245} died
+10-12 02:23:23.728 I/ActivityManager( 1551): Process PhantomProcessRecord {842ae99 21736:19657:seq/u0a245} died
+10-12 02:23:23.731 I/ActivityManager( 1551): Process PhantomProcessRecord {8ed255e 21738:19657:sort/u0a245} died
+10-12 02:23:23.733 I/ActivityManager( 1551): Process PhantomProcessRecord {30fbd3f 21735:19657:bash/u0a245} died
+10-12 02:23:23.734 I/ActivityManager( 1551): Process PhantomProcessRecord {716f60c 21737:19657:xargs/u0a245} died
+10-12 02:23:25.099 I/ActivityManager( 1551): Process PhantomProcessRecord {a62244b 20362:19657:claude/u0a245} died
+10-12 02:23:25.106 I/ActivityManager( 1551): Process PhantomProcessRecord {fda7e28 21626:19657:adb/u0a245} died
+10-12 02:23:25.119 I/ActivityManager( 1551): Process PhantomProcessRecord {d681741 20345:19657:proot/u0a245} died
+10-12 02:27:01.504 I/ActivityManager( 1551): Killing 9882:com.google.android.apps.walletnfcrel/u0a363 (adj 975): empty #33
+10-12 02:27:01.505 I/am_kill ( 1551): [0,9882,com.google.android.apps.walletnfcrel,975,empty #33,81152]
+10-12 02:27:02.537 I/ActivityManager( 1551): Killing 12452:com.google.android.projection.gearhead:car/u0a120 (adj 975): empty #33
+10-12 02:27:02.538 I/am_kill ( 1551): [0,12452,com.google.android.projection.gearhead:car,975,empty #33,76700]
+10-12 02:27:03.049 I/ActivityManager( 1551): Killing 12739:com.google.android.apps.gcs/u0a291 (adj 975): empty #33
+10-12 02:27:03.049 I/am_kill ( 1551): [0,12739,com.google.android.apps.gcs,975,empty #33,79036]
+10-12 02:27:03.795 I/ActivityManager( 1551): Killing 12762:com.android.traceur/u0a107 (adj 975): empty #33
+10-12 02:27:03.796 I/am_kill ( 1551): [0,12762,com.android.traceur,975,empty #33,75260]
+10-12 02:27:26.206 I/ActivityManager( 1551): Process com.djmantra.app (pid 17017) has died: cch CRE 
+10-12 02:31:33.355 I/ActivityManager( 1551): Killing 12797:com.google.android.marvin.talkback/u0a173 (adj 975): empty #33
+10-12 02:31:33.356 I/am_kill ( 1551): [0,12797,com.google.android.marvin.talkback,975,empty #33,78604]
+10-12 02:32:32.634 I/ActivityManager( 1551): Process PhantomProcessRecord {c877779 28126:19657:bash/u0a245} died
+10-12 02:33:18.568 I/ActivityManager( 1551): Killing 12411:com.google.android.apps.maps/u0a161 (adj 975): empty #33
+10-12 02:33:18.569 I/am_kill ( 1551): [0,12411,com.google.android.apps.maps,975,empty #33,88104]
+10-12 02:33:26.236 I/ActivityManager( 1551): Process PhantomProcessRecord {bf8c9ba 29233:19657:python3/u0a245} died
+10-12 02:33:26.245 I/ActivityManager( 1551): Process PhantomProcessRecord {640c06b 29232:19657:bash/u0a245} died
+10-12 02:33:31.829 I/ActivityManager( 1551): Killing 12955:com.android.calllogbackup/u0a65 (adj 985): empty #33
+10-12 02:33:31.831 I/am_kill ( 1551): [0,12955,com.android.calllogbackup,985,empty #33,75456]
+10-12 02:33:32.104 I/ActivityManager( 1551): Killing 13195:com.google.android.deskclock/u0a143 (adj 985): empty #33
+10-12 02:33:32.105 I/am_kill ( 1551): [0,13195,com.google.android.deskclock,985,empty #33,79552]
+10-12 02:33:34.872 I/lowmemorykiller(  459): Kill 'org.mozilla.firefox:gpu_disable_art_image_' (28864), uid 10111, oom_score_adj 990 to free 76444kB rss, 27136kB swap; reason: device is in direct reclaim and low on memory
+10-12 02:33:34.976 I/lowmemorykiller(  459): Kill 'org.mozilla.firefox:crashhelper_disable_art_image_' (28851), uid 10111, oom_score_adj 990 to free 76408kB rss, 27640kB swap; reason: low watermark is breached and swap is low (374060kB < 838860kB)
+10-12 02:33:35.244 I/ActivityManager( 1551): Killing 13221:com.google.android.apps.nbu.files/u0a125 (adj 985): empty #33
+10-12 02:33:35.245 I/am_kill ( 1551): [0,13221,com.google.android.apps.nbu.files,985,empty #33,79292]
+10-12 02:33:36.157 I/ActivityManager( 1551): Process PhantomProcessRecord {da42c01 29758:19657:app_process/u0a245} died
+10-12 02:33:36.167 I/ActivityManager( 1551): Process PhantomProcessRecord {e153aa6 29757:19657:app_process/u0a245} died
+10-12 02:33:36.203 I/ActivityManager( 1551): Process PhantomProcessRecord {45b9200 29752:19657:termux-api/u0a245} died
+10-12 02:33:36.205 I/ActivityManager( 1551): Process PhantomProcessRecord {d795a39 29747:19657:termux-api/u0a245} died
+10-12 02:33:36.206 I/ActivityManager( 1551): Process PhantomProcessRecord {73ef87e 29744:19657:bash/u0a245} died
+10-12 02:33:36.207 I/ActivityManager( 1551): Process PhantomProcessRecord {4fa61df 29743:19657:sh/u0a245} died
+10-12 02:33:36.251 I/ActivityManager( 1551): Process PhantomProcessRecord {9e7ce2c 29742:19657:timeout/u0a245} died
+10-12 02:33:36.252 I/ActivityManager( 1551): Process PhantomProcessRecord {a8c60f5 29741:19657:timeout/u0a245} died
+10-12 02:33:40.004 I/ActivityManager( 1551): Process PhantomProcessRecord {3a2bc13 29119:19657:sh/u0a245} died
+10-12 02:33:40.004 I/ActivityManager( 1551): Process PhantomProcessRecord {b4a0e50 29122:19657:termux-api/u0a245} died
+10-12 02:33:40.010 I/ActivityManager( 1551): Process PhantomProcessRecord {c4a849 29117:19657:timeout/u0a245} died
+10-12 02:33:45.928 I/ActivityManager( 1551): Killing 13273:hr.spar.app/u0a346 (adj 975): empty #33
+10-12 02:33:45.930 I/am_kill ( 1551): [0,13273,hr.spar.app,975,empty #33,84152]
+10-12 02:33:46.930 I/ActivityManager( 1551): Killing 13378:com.google.android.apps.youtube.creator/u0a237 (adj 975): empty #33
+10-12 02:33:46.931 I/am_kill ( 1551): [0,13378,com.google.android.apps.youtube.creator,975,empty #33,77568]
+10-12 02:33:46.932 I/ActivityManager( 1551): Killing 12849:com.google.android.apps.restore/u0a129 (adj 975): empty #34
+10-12 02:33:46.932 I/am_kill ( 1551): [0,12849,com.google.android.apps.restore,975,empty #34,80652]
+10-12 02:33:49.119 I/ActivityManager( 1551): Killing 7048:com.android.externalstorage/u0a73 (adj 985): empty #33
+10-12 02:33:49.121 I/am_kill ( 1551): [0,7048,com.android.externalstorage,985,empty #33,73988]
+10-12 02:33:49.122 I/ActivityManager( 1551): Killing 15548:com.facebook.katana/u0a232 (adj 985): empty #34
+10-12 02:33:49.122 I/am_kill ( 1551): [0,15548,com.facebook.katana,985,empty #34,139356]
+10-12 02:33:49.124 I/ActivityManager( 1551): Killing 15202:com.google.android.webview:webview_service/u0a163 (adj 985): empty #35
+10-12 02:33:49.124 I/am_kill ( 1551): [0,15202,com.google.android.webview:webview_service,985,empty #35,76460]
+10-12 02:33:49.139 I/ActivityManager( 1551): Killing 15710:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a280i13 (adj 975): empty #33
+10-12 02:33:49.142 I/am_kill ( 1551): [0,15710,com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0,975,empty #33,74164]
+10-12 02:33:49.309 I/ActivityManager( 1551): Killing 11883:com.google.android.apps.photos/u0a172 (adj 985): empty #33
+10-12 02:33:49.310 I/am_kill ( 1551): [0,11883,com.google.android.apps.photos,985,empty #33,87780]
+10-12 02:33:49.312 I/ActivityManager( 1551): Killing 15488:com.comuto/u0a280 (adj 985): empty #34
+10-12 02:33:49.313 I/am_kill ( 1551): [0,15488,com.comuto,985,empty #34,101696]
+10-12 02:33:49.504 I/ActivityManager( 1551): Killing 17141:com.nothing.camera/u0a183 (adj 975): empty #33
+10-12 02:33:49.505 I/am_kill ( 1551): [0,17141,com.nothing.camera,975,empty #33,101596]
+10-12 02:33:50.139 I/ActivityManager( 1551): Killing 15150:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a153i12 (adj 975): empty #33
+10-12 02:33:50.140 I/am_kill ( 1551): [0,15150,com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0,975,empty #33,74396]
+10-12 02:33:51.270 I/ActivityManager( 1551): Killing 14959:com.google.android.gm/u0a153 (adj 975): empty #33
+10-12 02:33:51.271 I/am_kill ( 1551): [0,14959,com.google.android.gm,975,empty #33,106952]
+10-12 02:33:51.378 I/ActivityManager( 1551): Killing 29874:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a153i14 (adj 0): isolated not needed
+10-12 02:33:51.379 I/am_kill ( 1551): [0,29874,com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0,0,isolated not needed,0]
+10-12 02:33:52.333 I/lowmemorykiller(  459): Kill 'org.mozilla.firefox:tab_disable_art_image_38' (28895), uid 10111, oom_score_adj 990 to free 74744kB rss, 27120kB swap; reason: low watermark is breached
+10-12 02:37:54.194 I/ActivityManager( 1551): Process PhantomProcessRecord {6155165 30481:19657:python3/u0a245} died
+10-12 02:37:54.196 I/ActivityManager( 1551): Process PhantomProcessRecord {efe9e3a 30480:19657:sh/u0a245} died

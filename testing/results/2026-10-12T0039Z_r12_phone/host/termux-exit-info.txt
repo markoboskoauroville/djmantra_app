@@ -1,0 +1,68 @@
+ACTIVITY MANAGER PROCESS EXIT INFO (dumpsys activity exit-info)
+Last Timestamp of Persistence Into Persistent Storage: 2026-10-12 02:31:48.230
+  package: com.termux
+    Historical Process Exit for uid=10245
+        ApplicationExitInfo #0:
+          timestamp=2026-10-11 18:23:15.754 pid=11145 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=0,00 description=too many empty state=empty trace=null
+        ApplicationExitInfo #1:
+          timestamp=2026-10-10 16:11:59.528 pid=21888 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=3 (LOW_MEMORY) subreason=0 (UNKNOWN) status=0
+          importance=400 pss=0,00 rss=72MB description=null state=empty trace=null
+        ApplicationExitInfo #2:
+          timestamp=2026-10-09 21:30:34.950 pid=15853 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=76MB description=too many empty state=empty trace=null
+        ApplicationExitInfo #3:
+          timestamp=2026-10-09 06:04:24.581 pid=16117 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=0,00 description=too many empty state=empty trace=null
+        ApplicationExitInfo #4:
+          timestamp=2026-10-08 09:07:25.692 pid=27832 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=78MB description=too many empty state=empty trace=null
+        ApplicationExitInfo #5:
+          timestamp=2026-10-08 03:02:56.796 pid=17434 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=80MB description=too many empty state=empty trace=null
+        ApplicationExitInfo #6:
+          timestamp=2026-10-06 07:00:15.246 pid=13559 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=0,00 description=too many empty state=empty trace=null
+        ApplicationExitInfo #7:
+          timestamp=2026-10-05 16:22:58.229 pid=31904 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=2 (SIGNALED) subreason=0 (UNKNOWN) status=9
+          importance=400 pss=0,00 rss=114MB description=null state=empty trace=null
+        ApplicationExitInfo #8:
+          timestamp=2026-10-05 07:47:09.188 pid=14276 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=77MB description=too many empty state=empty trace=null
+        ApplicationExitInfo #9:
+          timestamp=2026-10-02 12:34:21.365 pid=7765 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=10 (USER REQUESTED) subreason=22 (REMOVE TASK) status=0
+          importance=400 pss=0,00 rss=77MB description=remove task state=empty trace=null
+        ApplicationExitInfo #10:
+          timestamp=2026-10-02 12:20:42.787 pid=25162 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=3 (LOW_MEMORY) subreason=0 (UNKNOWN) status=0
+          importance=400 pss=0,00 rss=124MB description=null state=empty trace=null
+        ApplicationExitInfo #11:
+          timestamp=2026-10-01 04:57:21.109 pid=13470 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=0,00 description=too many empty state=empty trace=null
+        ApplicationExitInfo #12:
+          timestamp=2026-09-29 17:43:45.878 pid=9992 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=0,00 description=too many empty state=empty trace=null
+        ApplicationExitInfo #13:
+          timestamp=2026-09-29 13:26:15.689 pid=27038 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=3 (LOW_MEMORY) subreason=0 (UNKNOWN) status=0
+          importance=400 pss=0,00 rss=95MB description=null state=empty trace=null
+        ApplicationExitInfo #14:
+          timestamp=2026-09-29 07:27:33.653 pid=14641 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=80MB description=too many empty state=empty trace=null
+        ApplicationExitInfo #15:
+          timestamp=2026-09-28 08:41:35.716 pid=21248 realUid=10245 packageUid=10245 definingUid=10245 user=0
+          process=com.termux reason=13 (OTHER KILLS BY SYSTEM) subreason=3 (TOO MANY EMPTY PROCS) status=0
+          importance=400 pss=0,00 rss=82MB description=too many empty state=empty trace=null
