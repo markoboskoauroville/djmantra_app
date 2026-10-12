@@ -31,3 +31,16 @@ Build: run 38253413748, commit bd59c40. Started by the tester's own build watche
 ## Part 4: colours - PASS
 - Both decks yellow (`p3_32beats.png`, `p4_armed_a.png`): SYNC / PLAY when on, the matrix's time left and bar.beat, its running lights, the Phrasing LEDs, the key labels (and genre) under the titles, the overviews' edge, the Keys tab rows `1 5A` / `2 7A` (`p4_keys.png`). No deck is green or blue any more. (The overviews' waveforms keep their sound colours; the Camelot wheel keeps its key colours; the CPU meter stays green: none of these is a deck colour.)
 - White marked states: the matrix countdown (right) is white; a lit beat 1 of a bar (cell 25 on deck 1) is white; a stopped deck's armed LED 1 is solid white (`p4_armed_a/b.png`), then `beat launch [Channel2] on beat 1` at deck 1's next phrase. Readable against the yellow.
+
+## Part 5: screen - FAIL (two small items; the rest PASS)
+- Full screen after start and after home → back. Corners (`Quick: insets 0 0 0 0 corner 50`): the menu button (66,21) and the meter (904..1019, 37..100) sit inside the 131 px rounded corners; the meter shows `C 8%` / `G --` fully.
+- Navigation bar (checked by the pixel at the bottom edge and the log):
+  - tap on the empty strip at the top (right of the key badge): bar comes, `bars shown, insets [0, 0, 0, 126]`, `Quick: insets 0 0 0 48`, the app makes room (`p5_bar_shown.png`). PASS
+  - a press on a button (8/16 BEATS) while shown: `hiding the system bars`, `bars hidden` in 2 s. PASS
+  - an empty tap while shown: hides. PASS
+  - unused: hides after 4.2 s. PASS
+  - swipe up from the bottom edge: bars come (status bar too), the app stays in front; the next touch hides them. PASS
+  - **FAIL: a tap on the empty part of the song list (the Folders view below Download, 540,1700) does NOT bring the bar.** Only the top strip does. Marko's "tap on empty space" means any empty space.
+  - Tester's own mistake, kept as a warning for later rounds: with the bar shown the tabs move up 126 px, but the tab map is not re-logged, so a tap at the old tab position hits the bar's Recents / Home. Please re-log the map after an insets change.
+- Landscape (rotated with `settings put system user_rotation 1`): the bar sits on the right, `insets [126, 0, 126, 0]`, `Quick: insets 48 0 48 0`: it covers nothing; +/−, the tabs and the meter stay clear (`p5_land_bar.png`).
+- **FAIL (small): landscape Phrasing at 16 BEATS (`p5_land_phr.png`): the two decks' LEDs are side by side, but the two-digit numbers run together ("10111213141516"): the cells are too narrow for their digits.** Smaller font or fewer cells per row in landscape.
