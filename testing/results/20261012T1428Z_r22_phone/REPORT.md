@@ -34,3 +34,10 @@ Round 21 was skipped at the builder's request (its fixes are in this build).
 - Deck 1 PLAY (fader up, crossfader middle), deck 2 loaded and stopped: `auto cue: headphones to [Channel2]` at once; Mixer: deck 2's 🎧 lit, deck 1's off (`p4_deck1_on.png`).
 - Deck 2 started (both on air, crossfader middle): no change. Crossfader full right (deck 1 cut): `auto cue: headphones to [Channel1]` (`p4_xf_right.png`). Back to the middle: no change. Deck 2 stopped: `headphones to [Channel2]`.
 - Menu → SETTINGS: AUTO CUE: `auto cue off` (`p4_off.png`); crossfader right and back, deck 2 started and stopped: no switch. Restart: still off (`p4_after_restart.png`). On again: `auto cue on`.
+
+## Part 5: audio router - FAIL (partly untested: nothing was plugged into the phone)
+- Menu → SETTINGS: AUTO CUE, MASTER (the dance floor), HEADPHONES (pre-listen), APPLY (`p5_settings.png`, `p5_scroll1/2.png`).
+- **FAIL: the lists show only "Phone default (follows plugging in)" (MASTER) and "Off" / "Phone default" (HEADPHONES). No "speaker" entry**, although the start log says `AudioRouter: 9 output(s) added` (Android's `dumpsys audio` shows earpiece and speaker). ROUND22 expected "Phone default, the speaker, and whatever is plugged in". Please log each output the router sees (`AudioRouter: <id> <type> <name> <channels>`) and show the speaker.
+- MASTER = Phone default, HEADPHONES = Off → APPLY: `Sound output closed`, `Sound output open: "Phone audio output ..." (clock) 48000 Hz, 2 channels`, `audio route master -> phone default channels 1-2`, `audio route headphones -> none`; the page says "Done."; a song played afterwards (peak 0.32, xruns 0, late 0).
+- NOT TESTED (needs Marko to plug something in): the list changing on plug / unplug, a second output (wired / Bluetooth / USB) with the 200 ms warning, MULTI-CHANNEL 1-2 / 3-4 on the Mix Ultra, the route kept / fallback after a restart, 2 minutes on the second output.
+- Tester slip (no app fault): with the page scrolled, a tap meant for ← hit the AUTO CUE switch (off), switched back on at once (`auto cue on`). ← scrolls away with the page; a fixed header would avoid that.
