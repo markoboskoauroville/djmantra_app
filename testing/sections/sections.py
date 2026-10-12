@@ -66,7 +66,7 @@ def band(mag, lo, hi):
 # ---------- beat grid ----------
 
 def beat_grid(onset, n_frames):
-    """Constant tempo (electronic music): every BPM 100-140 in 0.05 steps with
+    """Constant tempo (electronic music): every BPM 80-160 in 0.05 steps with
     the best of 24 phases, then +-0.1 BPM in 0.005 steps and 1/4-frame phase."""
     def fit(bpm, phases):
         period = 60 * FPS / bpm
@@ -78,7 +78,7 @@ def beat_grid(onset, n_frames):
                 best = (v, ph)
         return best
     coarse = lambda period: np.linspace(0, period, 24, endpoint=False)
-    scores = [(fit(b, coarse)[0], b) for b in np.arange(100, 140, 0.05)]
+    scores = [(fit(b, coarse)[0], b) for b in np.arange(80, 160, 0.05)]
     bpm0 = max(scores)[1]
     best = (-1, bpm0, 0)
     for bpm in np.arange(bpm0 - 0.1, bpm0 + 0.1, 0.005):
