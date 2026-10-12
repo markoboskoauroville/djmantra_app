@@ -5,6 +5,7 @@
 #include "control/controlpushbutton.h"
 #include <algorithm>
 #include "moc_phrasecontrol.cpp"
+#include "engine/controls/sectiondetector.h"
 #include "track/track.h"
 
 namespace {
@@ -83,6 +84,22 @@ void PhraseControl::connectCues() {
 }
 
 void PhraseControl::trackLoaded(TrackPointer pNewTrack) {
+    std::atomic_store(&m_pSections, std::shared_ptr<const QList<mixxx::audio::FramePos>>());
+    // The detection reads the waveform on the main thread
+    QMetaObject::invokeMethod(
+            this,
+            [this, pNewTrack] {
+                disconnect(m_waveformConnection);
+                m_pSectionTrack = pNewTrack;
+                if (pNewTrack) {
+                    m_waveformConnection = connect(pNewTrack.get(),
+                            &Track::waveformUpdated,
+                            this,
+                            &PhraseControl::slotDetectSections);
+                }
+                slotDetectSections();
+            },
+            Qt::QueuedConnection);
     // A new track starts with an automatic anchor
     m_pPhraseAnchor->set(-1);
     m_position = mixxx::audio::kInvalidFramePos;
@@ -95,6 +112,35 @@ void PhraseControl::trackBeatsUpdated(mixxx::BeatsPointer pBeats) {
     m_nextBeat = mixxx::audio::kInvalidFramePos;
     m_beat = -1;
     m_pBeatInPhrase->forceSet(-1);
+}
+
+void PhraseControl::slotDetectSections() {
+    const TrackPointer pTrack = m_pSectionTrack;
+    if (!pTrack) {
+        return;
+    }
+    const ConstWaveformPointer pWaveform = pTrack->getWaveform();
+    const mixxx::BeatsPointer pBeats = pTrack->getBeats();
+    if (!pWaveform || !pBeats || !m_pTrackSamples || m_pTrackSamples->get() <= 0) {
+        return;
+    }
+    const auto end = mixxx::audio::FramePos::fromEngineSamplePos(m_pTrackSamples->get());
+    const auto sections = djmantra::detectSections(*pWaveform,
+            pBeats,
+            anchor(),
+            static_cast<int>(m_pBeatsPerBar->get()),
+            end);
+    if (sections.isEmpty() && pWaveform->getCompletion() < pWaveform->getDataSize()) {
+        return; // not analysed yet: waveformUpdated comes again
+    }
+    std::atomic_store(&m_pSections,
+            std::make_shared<const QList<mixxx::audio::FramePos>>(sections));
+    QStringList at;
+    for (const auto& position : sections) {
+        at << QString::number(position.value() / pTrack->getSampleRate(), 'f', 1);
+    }
+    qInfo().noquote() << "Sections:" << getGroup() << sections.size() << "changes, at"
+                      << at.join(QStringLiteral(" s, ")) << "s";
 }
 
 void PhraseControl::slotParametersChanged(double) {
@@ -200,6 +246,9 @@ void PhraseControl::updateSection(mixxx::audio::FramePos position) {
         return;
     }
     QList<mixxx::audio::FramePos> boundaries;
+    if (const auto pSections = std::atomic_load(&m_pSections)) {
+        boundaries = *pSections;
+    }
     for (const auto& pCue : m_sectionCues) {
         const double samplePos = pCue->get();
         if (samplePos >= 0) {

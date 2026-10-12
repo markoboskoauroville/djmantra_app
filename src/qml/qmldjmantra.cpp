@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QtDebug>
 #include <algorithm>
+#include <vector>
 #include <cmath>
 
 #if defined(Q_OS_ANDROID)
@@ -116,6 +117,16 @@ QString QmlDJMantra::camelot(double keyValue) const {
     return code.isValid() ? djmantra::camelot::text(code) : QString();
 }
 
+QString QmlDJMantra::musicalName(const QString& code) const {
+    if (code.size() < 2) {
+        return QString();
+    }
+    djmantra::camelot::Code c;
+    c.number = code.left(code.size() - 1).toInt();
+    c.major = code.endsWith(QChar('B'));
+    return djmantra::camelot::musicalName(c);
+}
+
 QVariantMap QmlDJMantra::keyMatch(double fromKey, double toKey) const {
     const auto from = codeOf(fromKey);
     const auto to = codeOf(toKey);
@@ -148,22 +159,35 @@ double QmlDJMantra::waveformGain(const QString& group, int length) const {
     Q_UNUSED(length);
     const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
     if (!pTrack) {
-        return 1.0;
+        return 0.0;
     }
     const ConstWaveformPointer pWaveform = pTrack->getWaveform();
-    if (!pWaveform) {
-        return 1.0;
+    if (!pWaveform || pWaveform->getCompletion() < pWaveform->getDataSize()) {
+        return 0.0; // not analysed yet: QML asks again
     }
+    // The GPU waveform's height is |(low, mid, high)| / sqrt(3), well below
+    // the overall peak: scale its 95th percentile to 80 % of the lane
+    // (round 14: data peaks ~110 of 255, the lanes 5-15 % full)
     const int size = pWaveform->getDataSize();
-    int loudest = 0;
+    std::vector<int> histogram(256, 0);
     for (int i = 0; i < size; ++i) {
-        loudest = std::max(loudest, static_cast<int>(pWaveform->getAll(i)));
+        const double l = pWaveform->getLow(i);
+        const double m = pWaveform->getMid(i);
+        const double h = pWaveform->getHigh(i);
+        const int magnitude = std::min(255, static_cast<int>(std::sqrt((l * l + m * m + h * h) / 3.0)));
+        histogram[magnitude]++;
     }
-    if (loudest < 8) {
-        return 1.0; // silence, or not analysed yet
+    int level = 255;
+    int above = 0;
+    while (level > 0 && above + histogram[level] <= size / 20) {
+        above += histogram[level];
+        --level;
     }
-    const double gain = std::clamp(0.9 * 255.0 / loudest, 1.0, 20.0);
-    qInfo().noquote() << "Quick: waveform gain" << group << gain << "(loudest" << loudest
+    if (level < 4) {
+        return 1.0; // silence
+    }
+    const double gain = std::clamp(0.8 * 255.0 / level, 1.0, 12.0);
+    qInfo().noquote() << "Quick: waveform gain" << group << gain << "(95 % level" << level
                       << "of" << size << "points)";
     return gain;
 }
@@ -173,13 +197,45 @@ bool QmlDJMantra::isPlaying(const QString& group) const {
     return play.valid() && play.get() > 0;
 }
 
+QString QmlDJMantra::freeDeck() const {
+    const QString deck1 = QStringLiteral("[Channel1]");
+    const QString deck2 = QStringLiteral("[Channel2]");
+    const bool playing1 = isPlaying(deck1);
+    const bool playing2 = isPlaying(deck2);
+    QString deck;
+    if (playing1 != playing2) {
+        deck = playing1 ? deck2 : deck1;
+    } else if (!playing1) {
+        deck = m_lastLoaded == deck1 ? deck2 : deck1;
+    } else {
+        // Both play: the one heard less (volume and crossfader side)
+        const auto get = [](const QString& group, const QString& item) {
+            ControlProxy proxy(group, item, nullptr, ControlFlag::NoAssertIfMissing);
+            return proxy.valid() ? proxy.get() : 0.0;
+        };
+        const double fader = get(QStringLiteral("[Master]"), QStringLiteral("crossfader"));
+        const double level1 = get(deck1, QStringLiteral("volume")) * (fader <= 0 ? 1.0 : 1.0 - fader);
+        const double level2 = get(deck2, QStringLiteral("volume")) * (fader >= 0 ? 1.0 : 1.0 + fader);
+        deck = level1 <= level2 ? deck1 : deck2;
+    }
+    qInfo().noquote() << "Quick: free deck" << deck << "(playing" << playing1 << playing2 << ")";
+    return deck;
+}
+
+void QmlDJMantra::noteLoaded(const QString& group) {
+    m_lastLoaded = group;
+}
+
 QVariantList QmlDJMantra::musicRoots() const {
     QVariantList roots;
     QStringList paths;
 #if defined(Q_OS_ANDROID)
+    // (not QStandardPaths' MusicLocation: on Android that is a second "Music",
+    // the app's own folder; round 14 listed Music twice)
     paths << QStringLiteral("/sdcard/Music") << QStringLiteral("/sdcard/Download");
-#endif
+#else
     paths << QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+#endif
     QStringList seen;
     for (const QString& path : std::as_const(paths)) {
         // /sdcard/Music and /storage/emulated/0/Music are one folder

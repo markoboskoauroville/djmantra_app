@@ -41,6 +41,7 @@ Rectangle {
         }
         Mixxx.DJMantra.log("load " + group + " " + path);
         Mixxx.PlayerManager.getPlayer(group).loadTrackFromLocation(path, false);
+        Mixxx.DJMantra.noteLoaded(group);
         pendingPath = "";
         done();
     }
@@ -122,27 +123,18 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 6
                 visible: !row.modelData.isFolder
 
+                // One LOAD: onto the deck whose cover was tapped, or the free deck
+                // (Marko, 12.10.2026: "load to free deck", as djay)
                 DButton {
-                    visible: root.deck === "" || root.deck === "[Channel1]"
-                    width: 60
+                    width: 72
                     height: 40
-                    text: "LOAD 1"
+                    text: root.deck === "[Channel1]" ? "LOAD 1" : root.deck === "[Channel2]" ? "LOAD 2" : "LOAD"
                     fontSize: 12
-                    onColor: Style.deck1
-                    onClicked: root.load(row.modelData.path, "[Channel1]", false)
-                }
-
-                DButton {
-                    visible: root.deck === "" || root.deck === "[Channel2]"
-                    width: 60
-                    height: 40
-                    text: "LOAD 2"
-                    fontSize: 12
-                    onColor: Style.deck2
-                    onClicked: root.load(row.modelData.path, "[Channel2]", false)
+                    onColor: Style.accent
+                    onClicked: root.load(row.modelData.path,
+                            root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false)
                 }
             }
 

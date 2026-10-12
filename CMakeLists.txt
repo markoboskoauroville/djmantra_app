@@ -915,6 +915,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/engine/controls/bpmcontrol.cpp
   src/engine/controls/clockcontrol.cpp
   src/engine/controls/phrasecontrol.cpp
+  src/engine/controls/sectiondetector.cpp
   src/engine/controls/cuecontrol.cpp
   src/engine/controls/enginecontrol.cpp
   src/engine/controls/keycontrol.cpp

@@ -33,9 +33,9 @@ class ControlPushButton;
 ///   beat_unit        its lower number: 2, 4 (default), 8 or 16
 ///   section_beats_left  beats from the current beat to the next section
 ///                    (read-only), -1 without beats
-///   section_found    1: section_beats_left counts to a section start (intro
-///                    / outro markers, hot cues); 0: to the end of the track
-///                    (no section found after the play position)
+///   section_found    1: section_beats_left counts to a section start (a
+///                    change found in the arrangement, intro / outro
+///                    markers, hot cues); 0: to the end of the track
 ///
 /// Counted on the beat grid itself, so beat maps and tempo changes work.
 class PhraseControl : public EngineControl {
@@ -77,6 +77,9 @@ class PhraseControl : public EngineControl {
             int phraseLength);
 
   private slots:
+    /// Finds the arrangement changes once the track's waveform is complete
+    /// (main thread)
+    void slotDetectSections();
     void slotSetOne(double value);
     void slotJump(double value);
     void slotParametersChanged(double);
@@ -99,6 +102,12 @@ class PhraseControl : public EngineControl {
     std::unique_ptr<ControlProxy> m_pTrackSamples;
     // Section starts: intro / outro markers and hot cues
     std::vector<std::unique_ptr<ControlProxy>> m_sectionCues;
+    // Section starts found in the arrangement: written by the main thread,
+    // read by the engine (atomic shared_ptr)
+    std::shared_ptr<const QList<mixxx::audio::FramePos>> m_pSections;
+    // Main thread only
+    TrackPointer m_pSectionTrack;
+    QMetaObject::Connection m_waveformConnection;
 
     mixxx::BeatsPointer m_pBeats;
     mixxx::audio::FramePos m_position;

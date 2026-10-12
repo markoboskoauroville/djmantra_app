@@ -412,6 +412,11 @@ bool WaveformWidgetFactory::setConfig(UserSettingsPointer config) {
     }
 
     bool zoomSync = m_config->getValue(ConfigKey("[Waveform]", "ZoomSynchronization"), m_zoomSync);
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: both decks always at the same zoom, so the two waveforms
+    // compare like one track (Marko, 12.10.2026)
+    zoomSync = true;
+#endif
     setZoomSync(zoomSync);
 
     int beatGridAlpha = m_config->getValue(ConfigKey("[Waveform]", "beatGridAlpha"), m_beatGridAlpha);

@@ -1,4 +1,5 @@
 #include "engine/controls/phrasecontrol.h"
+#include "engine/controls/sectiondetector.h"
 
 #include <gtest/gtest.h>
 
@@ -98,6 +99,40 @@ TEST(PhraseControlTest, nextSectionIsTheFirstBoundaryAhead) {
     EXPECT_EQ(FramePos(kFirst + 32 * kBeat),
             PhraseControl::nextSection(pBeats, FramePos(kFirst + 16 * kBeat), boundaries));
     EXPECT_FALSE(PhraseControl::nextSection(pBeats, inBeat(40), boundaries).isValid());
+}
+
+TEST(PhraseControlTest, sectionsWhereTheArrangementChanges) {
+    // 16 bars without bass, 16 with, 16 without the highs, 16 as before
+    QList<std::array<double, 3>> bars;
+    for (int i = 0; i < 16; ++i) {
+        bars.append({10, 80, 60});
+    }
+    for (int i = 0; i < 16; ++i) {
+        bars.append({120, 80, 60});
+    }
+    for (int i = 0; i < 16; ++i) {
+        bars.append({120, 80, 5});
+    }
+    for (int i = 0; i < 16; ++i) {
+        bars.append({120, 80, 5});
+    }
+    EXPECT_EQ(QList<int>({16, 32}), djmantra::sectionBars(bars, 0));
+    // Small changes are not sections
+    QList<std::array<double, 3>> steady;
+    for (int i = 0; i < 32; ++i) {
+        steady.append({100.0 + (i % 3), 80, 60});
+    }
+    EXPECT_TRUE(djmantra::sectionBars(steady, 0).isEmpty());
+    // Phrases counted from "1": with bar 0 being bar -2 of the song, a change at
+    // index 18 (bar 16) is found, one at index 16 (bar 14) is not a phrase start
+    QList<std::array<double, 3>> shifted;
+    for (int i = 0; i < 18; ++i) {
+        shifted.append({10, 80, 60});
+    }
+    for (int i = 0; i < 18; ++i) {
+        shifted.append({120, 80, 60});
+    }
+    EXPECT_EQ(QList<int>({18}), djmantra::sectionBars(shifted, 2));
 }
 
 TEST(PhraseControlTest, anchorSlightlyOffTheGridSnaps) {
