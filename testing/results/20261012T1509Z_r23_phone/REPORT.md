@@ -52,3 +52,30 @@ NEXT loaded Aktysia, Alba, American Dream, Amulet, Astral Voyage, Beautiful Plac
 - Found: 4 of the 5 looked-up / known songs (round 22: 1 of 5). No HTTP errors.
 - **Problem: the genre comes in Croatian** ("Elektronička glazba" = "Electronic music"): Deezer answers in the phone's language (the A142 runs en_CZ / hr_HR). Send `Accept-Language: en` (or Deezer's `lang=en`) so it reads "Electronic". Also very general: three different songs all "Electronic"; MusicBrainz' "House" is more useful when it exists.
 - The strict `artist:"..." track:"..."` search found 0 every time; the plain search found them. The plain one could go first.
+
+## Part 7: AUTOMIX EQ log - PASS
+AUTOMIX + EQ on, both playing, crossfader from full left to full right in 20 steps over ~10 s:
+```
+automix eq 5%:  out hi 1.00 mid 1.00 low 1.00 | in hi 0.13 mid 0.25 low 0.00
+automix eq 15%: out hi 1.00 mid 1.00 low 1.00 | in hi 0.17 mid 0.25 low 0.00
+automix eq 25%: out hi 1.00 mid 1.00 low 1.00 | in hi 0.36 mid 0.31 low 0.00
+automix eq 35%: out hi 1.00 mid 1.00 low 1.00 | in hi 0.72 mid 0.50 low 0.00
+automix eq 45%: out hi 1.00 mid 1.00 low 1.00 | in hi 1.00 mid 0.81 low 0.00
+automix eq 55%: out hi 1.00 mid 0.80 low 0.00 | in hi 1.00 mid 1.00 low 1.00
+automix eq 65%: out hi 0.72 mid 0.50 low 0.00 | in hi 1.00 mid 1.00 low 1.00
+automix eq 75%: out hi 0.34 mid 0.31 low 0.00 | in hi 1.00 mid 1.00 low 1.00
+automix eq 85%: out hi 0.17 mid 0.25 low 0.00 | in hi 1.00 mid 1.00 low 1.00
+automix eq 95%: out hi 0.13 mid 0.25 low 0.00 | in hi 1.00 mid 1.00 low 1.00
+automix: [Channel2] is the outgoing deck      (at full right: the roles change)
+```
+- Outgoing low 1.00 up to 45 %, the lows swap between 45 and 55 %, the incoming hi rises before its mid (0.72 vs 0.50 at 35 %), the outgoing side mirrors it. No value stuck, no band at 0 on both decks. As specified.
+- The log comes at 5, 15, ... 95 % (10 lines, not 11 at 0, 10, ... 100): the swap itself (50 %) is never in the log. Fine for checking; a line at 50 % would show the middle of the swap.
+- By ear: not judged (Marko).
+
+## Round 23 finished: 6 pass, 2 fail
+Pass: 0 smoke, 1 transport, 2 sliders and knobs, 5 audio router (phone alone: speaker listed, two outputs play, fixed header), 6 genre (4 of 5), 7 AUTOMIX EQ log.
+Fail, ranked:
+1. CUE after a play-from-cue + pause does not return to the cued beat (the deck stays where it paused). The builder already pushed a fix (302ab51) during this round.
+2. CPU: Songs 52 %, Keys 49 % (fixed), but Phrasing 76 % and Mixer 75 % of one core. On Phrasing the render thread (QtThread) is 20.6 % vs 5.6 % on Songs; `Controller` 8 % on every tab with no controller attached.
+Notes: genre comes in Croatian ("Elektronička glazba") from Deezer: ask in English; the strict Deezer search never finds anything, the plain one does.
+Not tested: the router with a plugged-in output (Mix Ultra / Bluetooth): needs Marko.
