@@ -38,6 +38,15 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   turning the monitor off: `settings put global settings_enable_monitor_phantom_procs false` (done
   02:45 CEST; undo: true). `tools/android/watch_host.sh` logs kills/memory during rounds.
   To do: cut DJ Mantra's memory.
+- **New interface in Qt Quick (GPU)**, 12.10 (Marko: "Yes, I want it"): `res/qml/djmantra/*.qml` +
+  `src/qml/qmldjmantra.*` (Mixxx.DJMantra: insets, Camelot, folders, waveform gain, interface switch).
+  Start: Settings -> "New interface (GPU)" ([DJMantra],quick_ui) or `--qml`; menu -> back to classic.
+  Round 13 (d2dbddb): loads, all controls answer, CPU 32-55 % vs 126 % classic. Fixes in 43e3538 (time
+  from playposition x duration, drawn pause icon, waveform gain, zoom via waveform_zoom, overlays below
+  the hole, library confirm, landscape layout). Round 14 (`testing/ROUND14.md`) sent 04:10 UTC.
+  Still missing in it: pad modes, recording, controller mapping, native settings, One Deck.
+- Open: waveform data looks low (5-25 % in every renderer and the overview): ROUND14 C measures the
+  real loudness. Classic: Qt full screen off on Android (bars fight), StartInFullscreen forced false.
 - Pushing to the branch cancels the Android run in progress: wait until the phone has its APK.
 - Pushing to `main` (android-latest) was blocked by the auto-mode classifier: needs Marko's OK.
 - The 7-day limit is at warning (resets 2026-10-15 01:00 UTC): keep this file current.
