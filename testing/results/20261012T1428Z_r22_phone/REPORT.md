@@ -15,3 +15,11 @@ Round 21 was skipped at the builder's request (its fixes are in this build).
 ## Part 2: sliders and knobs - PASS
 - Crossfader full left and back (deck 2 cut: headphones stayed on deck 2, right by the AUTO CUE rule).
 - HIGH deck 1, slow drag 150 px down: pointer counter-clockwise, ring dims (lower); double tap: back. The neutral position is still drawn at ~4-5 o'clock (round 20 question).
+
+## Part 3: LEDs and cueing - PASS (one note)
+- Deck 2 stopped (deck 1 playing), Phrasing LED 3: `cue [Channel2] at beat 3`; the deck went there, the LED turned solid white (asked: a white frame), nothing started (`p3_cued.png`; matrix 49.3).
+- PLAY: `start [Channel2] from the cued beat 3 with the other deck's beat 3`, `play armed (aligned start)`, `beat launch [Channel2] on beat 3`; both rows lit on the same cell afterwards (`p3_started.png`).
+- Deck 2 stopped, LED 5: `cue [Channel2] at beat 5` → 60.1 (bar 60 beat 1 = phrase beat 5); CUE: `cue_default pressed`, still 60.1 (`p3_c1.png`, `p3_c2.png`). PASS
+- Both stopped, LED 5, PLAY: `button [Channel2],play 1`: started at once (no aligned wait), as asked.
+- **Note:** after that start, a pause and CUE, the deck stood at 59.2 (`p3_state.png`), 3 beats BEFORE the cued 60.1. Either the cue point moved with the start or CUE went somewhere else; please check which.
+- Playing deck jumps: unchanged from round 20 (not repeated).
