@@ -54,7 +54,25 @@ public final class GenreLookup {
                 Log.i(TAG, "GenreLookup: Deezer has no track for " + artist + " - " + title);
                 return "";
             }
-            JSONObject album = tracks.getJSONObject(0).optJSONObject("album");
+            // round 25: "Addis" got "Classical" from a wrong match: the first
+            // track whose artist shares a word with ours, and the match logged
+            JSONObject match = null;
+            for (int i = 0; i < tracks.length() && match == null; i++) {
+                JSONObject track = tracks.getJSONObject(i);
+                JSONObject who = track.optJSONObject("artist");
+                if (artist.isEmpty() || (who != null && sameArtist(artist, who.optString("name", "")))) {
+                    match = track;
+                }
+            }
+            if (match == null) {
+                Log.i(TAG, "GenreLookup: Deezer has no track by " + artist + " for " + title);
+                return "";
+            }
+            JSONObject matchArtist = match.optJSONObject("artist");
+            JSONObject album = match.optJSONObject("album");
+            Log.i(TAG, "GenreLookup: Deezer match: " + (matchArtist == null ? "?" : matchArtist.optString("name", ""))
+                    + " - " + match.optString("title", "") + " (album "
+                    + (album == null ? "?" : album.optString("title", "")) + ")");
             if (album == null) {
                 return "";
             }
@@ -72,8 +90,19 @@ public final class GenreLookup {
         }
     }
 
+    /// true when the two artist names share a word of 3+ letters
+    private static boolean sameArtist(String ours, String theirs) {
+        String a = ours.toLowerCase(java.util.Locale.ROOT);
+        for (String word : theirs.toLowerCase(java.util.Locale.ROOT).split("[^\\p{L}\\p{N}]+")) {
+            if (word.length() >= 3 && a.contains(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static JSONArray deezerSearch(String query) throws Exception {
-        String url = "https://api.deezer.com/search?limit=3&q=" + URLEncoder.encode(query, "UTF-8");
+        String url = "https://api.deezer.com/search?limit=10&q=" + URLEncoder.encode(query, "UTF-8");
         JSONObject found = getJson(url);
         JSONArray data = found.optJSONArray("data");
         Log.i(TAG, "GenreLookup: Deezer " + url + " -> " + (data == null ? "no data: "

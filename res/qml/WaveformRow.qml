@@ -51,6 +51,9 @@ Item {
 
             group: root.group
             key: "playposition"
+            // DJ Mantra round 25: the engine moves it with every audio buffer;
+            // the screen draws 60 frames a second, more is wasted work
+            maxRate: 60
         }
 
         Mixxx.ControlProxy {
