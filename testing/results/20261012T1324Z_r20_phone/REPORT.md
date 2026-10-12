@@ -75,3 +75,18 @@ Fail, ranked:
 5. Landscape Phrasing at 16: two-digit LED numbers run together.
 Notes: EQ knobs at rest point to ~4-5 o'clock; 2 songs re-analysed after a restart; 187.3 BPM (double time) for Yshai Afterman; the list scrolled under the finger once during the analysis; re-log the tap map after an insets change.
 Not tested: by ear (groove continuity of jumps, crossfader sound).
+
+## Marko's new requests (12.10.2026, after round 20, verbatim)
+
+> "I want to add feature to this app, automatic pre-fader listening. It means if I'm listening to deck 2 on the headphones, pre-listen, pre-fader listening, and then in the moment I play the deck, when it goes out online, then automatically the pre-listen button is swapped. then number 1 comes to the headphones. Same feature has a DJ Pro from Algorithm, so you can research in manual and see how it works. And we need to build the audio router inside the settings so it can show all connected audio devices. So if I have Bluetooth headphones and audio interface at the same time, I can route output and headphones. So we have 2 destinations which can go to multiple outputs, any, any output of, of registered inside Android, Bluetooth, USB, whatever is there. It, it must be there to route"
+
+### Shaped for the builder
+1. **Automatic pre-listen (headphone cue) swap.** While deck 2 is in the headphones (its pre-listen / PFL on) and goes on air (Marko plays it / brings it to the master), the headphones switch by themselves to the other deck: deck 2's pre-listen off, deck 1's on. And the other way round. One headphone deck at a time. On by default, with an on/off in the settings. Log every swap (`Quick: auto cue: headphones to [ChannelN]`).
+2. **Research first:** "djay Pro" by Algoriddim has this (Marko: "research in manual and see how it works"): when exactly it swaps (on PLAY, or when the crossfader / fader brings the deck on air), and what happens with both decks on air. Copy that behaviour and write it into ROUND21.md.
+3. **Audio router in the settings.** A page listing every audio output Android has right now (built-in speaker, wired, USB audio interface, Bluetooth headphones, ...), refreshed when a device is plugged in or out.
+4. **Two destinations, MASTER and HEADPHONES, each routable to any of those outputs** (for example: master to the USB interface, headphones to the Bluetooth headphones), both at once. The choice is remembered, and comes back when the device reconnects.
+
+### Tester findings (suggestions)
+- Today the Mixer tab has one headphone button per deck (`p2_mixer` in round 19, the 🎧 under FILTER). The swap belongs to those buttons' state.
+- Audio today: one Oboe output (`SoundDeviceOboe - Sound buffer: 3072 of 4096 frames`). Two destinations on two devices means two Oboe streams, each opened with its own device id (`AudioManager.getDevices(GET_DEVICES_OUTPUTS)` lists them; `AudioDeviceCallback` reports plug in / out). Bluetooth (A2DP) adds ~150-250 ms of latency: fine for headphones, not in sync with the master on another device; say so in the router.
+- To test it I need: a USB audio interface or Bluetooth headphones connected to the phone (Marko), and the logs `Quick: audio route master -> <device>`, `headphones -> <device>`.
