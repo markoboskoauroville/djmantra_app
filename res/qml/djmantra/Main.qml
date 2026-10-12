@@ -27,6 +27,72 @@ Window {
     readonly property bool landscape: width > height
     property string overlay: "" // "", "menu"
     property string libraryDeck: ""
+    // the song list in front (the controller's BROWSE, a cover tap in
+    // landscape); the tab to go back to when a song is loaded
+    property bool browsing: false
+    property int pageBefore: 0
+
+    function openBrowser(deckGroup) {
+        if (!browsing) {
+            pageBefore = page;
+            browsing = true;
+        }
+        if (deckGroup !== undefined)
+            libraryDeck = deckGroup;
+        page = 0;
+        Mixxx.DJMantra.log("browse open" + (libraryDeck !== "" ? " for " + libraryDeck : ""));
+    }
+
+    function closeBrowser() {
+        if (!browsing)
+            return;
+        browsing = false;
+        page = pageBefore;
+        Mixxx.DJMantra.log("browse closed");
+    }
+
+    // The Mix Ultra (Marko, 12.10.2026): BROWSE brings the song list in front,
+    // the pad mode buttons choose the tabs (res/controllers/...Mix-Ultra-script.js)
+    Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "page"
+        onValueChanged: if (value >= 1 && value <= 4) {
+            Mixxx.DJMantra.log("controller: page " + value);
+            window.browsing = false;
+            window.page = value - 1;
+        }
+    }
+    Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "browse_move"
+        onValueChanged: if (value !== 0) {
+            if (!window.browsing)
+                window.openBrowser();
+            else
+                playlistPage.moveSelection(value);
+        }
+    }
+    Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "browse_press"
+        onValueChanged: if (value > 0) {
+            if (!window.browsing)
+                window.openBrowser();
+            else
+                playlistPage.activate("");
+        }
+    }
+    Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "browse_back"
+        onValueChanged: if (value > 0 && window.browsing) playlistPage.back()
+    }
+    Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "load"
+        onValueChanged: if (value >= 1) {
+            const group = "[Channel" + Math.round(value) + "]";
+            if (!window.browsing)
+                window.openBrowser(group);
+            else
+                playlistPage.activate(group);
+        }
+    }
     // the songs played in this session (path -> true): dimmed in the list,
     // skipped by NEXT
     property var playedSongs: ({})
@@ -185,8 +251,12 @@ Window {
             anchors.top: topBar.bottom
             anchors.left: parent.left
             anchors.leftMargin: Style.gap
-            width: window.landscape ? parent.width * 0.55 - 2 * Style.gap : parent.width - 2 * Style.gap
+            // landscape (Marko, 12.10.2026): only the decks, over the whole
+            // width; the song list comes in front when browsing
+            width: parent.width - 2 * Style.gap
             spacing: Style.gap
+            // landscape: the height left for the matrix and the overviews
+            readonly property real room: parent.height - topBar.height - Style.gap * 7 - 56 - 44 - 38
 
             Row {
                 id: headers
@@ -201,8 +271,12 @@ Window {
                     group: "[Channel1]"
                     deckColor: Style.deck1
                     onCoverTapped: {
-                        window.libraryDeck = "[Channel1]";
-                        window.page = 0;
+                        if (window.landscape)
+                            window.openBrowser("[Channel1]");
+                        else {
+                            window.libraryDeck = "[Channel1]";
+                            window.page = 0;
+                        }
                     }
                 }
 
@@ -214,8 +288,12 @@ Window {
                     mirrored: true
                     deckColor: Style.deck2
                     onCoverTapped: {
-                        window.libraryDeck = "[Channel2]";
-                        window.page = 0;
+                        if (window.landscape)
+                            window.openBrowser("[Channel2]");
+                        else {
+                            window.libraryDeck = "[Channel2]";
+                            window.page = 0;
+                        }
                     }
                 }
             }
@@ -260,7 +338,7 @@ Window {
 
                 objectName: "matrix"
                 width: parent.width
-                height: 84
+                height: window.landscape ? Math.max(84, decks.room * 0.5) : 84
                 decks: [matrix1.info, matrix2.info]
                 onCellTapped: (deck, cell) => (deck === 0 ? matrix1 : matrix2).tap(cell)
             }
@@ -268,7 +346,7 @@ Window {
             Overview {
                 objectName: "overview1"
                 width: parent.width
-                height: 26
+                height: window.landscape ? Math.max(26, decks.room * 0.25) : 26
                 group: "[Channel1]"
                 deckColor: Style.deck1
             }
@@ -276,7 +354,7 @@ Window {
             Overview {
                 objectName: "overview2"
                 width: parent.width
-                height: 26
+                height: window.landscape ? Math.max(26, decks.room * 0.25) : 26
                 group: "[Channel2]"
                 deckColor: Style.deck2
             }
@@ -306,14 +384,23 @@ Window {
             anchors.top: window.landscape ? topBar.bottom : decks.bottom
             anchors.topMargin: Style.gap
             anchors.bottom: parent.bottom
-            anchors.left: window.landscape ? decks.right : parent.left
-            anchors.leftMargin: window.landscape ? Style.gap : 0
+            anchors.left: parent.left
             anchors.right: parent.right
+            // landscape: only while browsing, in front of the decks
+            visible: !window.landscape || window.browsing
+            z: window.landscape ? 5 : 0
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.topMargin: -Style.gap
+                visible: window.landscape
+                color: Style.background
+            }
 
             Item {
                 objectName: "page"
                 anchors.top: parent.top
-                anchors.bottom: crossfader.top
+                anchors.bottom: window.landscape ? parent.bottom : crossfader.top
                 anchors.bottomMargin: Style.gap
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -323,17 +410,21 @@ Window {
 
                     objectName: "playlist"
                     played: window.playedSongs
+                    closable: window.browsing
                     anchors.fill: parent
                     visible: window.page === 0
                     deck: window.libraryDeck
-                    onDone: window.libraryDeck = "" // loaded: the next song to the free deck
+                    onDone: {
+                        window.libraryDeck = ""; // loaded: the next song to the free deck
+                        window.closeBrowser();
+                    }
                 }
 
                 // round 22: ~80 % CPU on every tab: a hidden tab costs nothing
                 // now, it is only made while it is shown
                 Loader {
                     anchors.fill: parent
-                    active: window.page === 1
+                    active: window.page === 1 && rest.visible
                     visible: active
 
                     sourceComponent: PhrasingPage {
@@ -345,7 +436,7 @@ Window {
 
                 Loader {
                     anchors.fill: parent
-                    active: window.page === 2
+                    active: window.page === 2 && rest.visible
                     visible: active
 
                     sourceComponent: MixerPage {}
@@ -353,7 +444,7 @@ Window {
 
                 Loader {
                     anchors.fill: parent
-                    active: window.page === 3
+                    active: window.page === 3 && rest.visible
                     visible: active
 
                     sourceComponent: Item {
@@ -397,6 +488,7 @@ Window {
                 id: crossfader
 
                 objectName: "crossfader"
+                visible: !window.landscape
                 anchors.bottom: nav.top
                 anchors.bottomMargin: Style.gap
                 anchors.left: parent.left
@@ -412,6 +504,7 @@ Window {
             NavBar {
                 id: nav
 
+                visible: !window.landscape
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right

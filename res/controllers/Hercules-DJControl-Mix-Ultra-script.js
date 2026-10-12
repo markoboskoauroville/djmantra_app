@@ -250,7 +250,8 @@ MixUltra.shiftSync = function(channel, control, value, status, group) {
 
 MixUltra.load = function(channel, control, value, status, group) {
     if (value > 0) {
-        engine.setValue(group, "LoadSelectedTrack", 1);
+        // the highlighted song of the app's list onto this deck
+        MixUltra.tellApp("load", group === "[Channel2]" ? 2 : 1);
     }
 };
 
@@ -272,9 +273,23 @@ MixUltra.shiftPfl = function(channel, control, value, status, group) {
     }
 };
 
+// DJ Mantra (Marko, 12.10.2026): the pad mode buttons also choose the app's tabs at the bottom:
+// HOT CUE = Songs, LOOP = Phrasing, FX = Mixer, NEURAL MIX = Keys. The controller still switches
+// its own pad mode (it does so itself), so the pads are read in that mode as before.
+MixUltra.PAGE_BUTTONS = {0x0F: 1, 0x10: 2, 0x11: 3, 0x12: 4};
+
+// A pulse on one of the app's [DJMantra] controls (back to 0: the same value twice still counts)
+MixUltra.tellApp = function(key, value) {
+    engine.setValue("[DJMantra]", key, value);
+    engine.setValue("[DJMantra]", key, 0);
+};
+
 MixUltra.modeButton = function(channel, control, value, status, group) {
     if (value === 0) {
         return;
+    }
+    if (MixUltra.PAGE_BUTTONS[control]) {
+        MixUltra.tellApp("page", MixUltra.PAGE_BUTTONS[control]);
     }
     var deck = MixUltra.deckOf(status);
     var mode = MixUltra.MODE_BUTTONS[control];
@@ -328,24 +343,27 @@ MixUltra.jogSeek = function(channel, control, value, status, group) {
 
 // --- Browser and global -----------------------------------------------------------------------
 
+// DJ Mantra (Marko, 12.10.2026): BROWSE brings the app's song list in front; turning moves
+// the highlighted song, a press loads it onto the free deck (a folder opens), SHIFT + press goes
+// up a folder; a deck's LOAD loads it onto that deck. Loading closes the list again.
 MixUltra.browse = function(channel, control, value, status, group) {
-    engine.setValue("[Library]", "MoveVertical", MixUltra.ticks(value));
+    MixUltra.tellApp("browse_move", MixUltra.ticks(value));
 };
 
 MixUltra.shiftBrowse = function(channel, control, value, status, group) {
-    // SHIFT + turn: move in the sidebar (Folders, playlists, ...)
-    engine.setValue("[Library]", "MoveFocus", MixUltra.ticks(value) > 0 ? 1 : -1);
+    // SHIFT + turn: ten songs at a time
+    MixUltra.tellApp("browse_move", MixUltra.ticks(value) * 10);
 };
 
 MixUltra.browsePress = function(channel, control, value, status, group) {
     if (value > 0) {
-        engine.setValue("[Library]", "GoToItem", 1);
+        MixUltra.tellApp("browse_press", 1);
     }
 };
 
 MixUltra.shiftBrowsePress = function(channel, control, value, status, group) {
     if (value > 0) {
-        engine.setValue("[Library]", "MoveFocusForward", 1);
+        MixUltra.tellApp("browse_back", 1);
     }
 };
 

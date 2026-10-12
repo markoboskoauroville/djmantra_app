@@ -27,16 +27,27 @@ Rectangle {
         maxRate: 20
     }
 
-    Rectangle {
+    // Round 26 (Marko's screenshot: a black spike in the meter): a rounded
+    // gradient rectangle of changing height drew broken on the phone's GPU.
+    // Now the gradient bar keeps its full height, and a clip shows its
+    // bottom part, as high as the level
+    Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        height: parent.height * Math.max(0, Math.min(1, level.value))
-        radius: 2
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: peak.value > 0 ? Style.fire : Style.air }
-            GradientStop { position: 0.35; color: Style.earth }
-            GradientStop { position: 1.0; color: "#3f8a45" }
+        height: Math.round(parent.height * Math.max(0, Math.min(1, level.value)))
+        visible: height > 0
+        clip: true
+
+        Rectangle {
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: root.height
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: peak.value > 0 ? Style.fire : Style.air }
+                GradientStop { position: 0.35; color: Style.earth }
+                GradientStop { position: 1.0; color: "#3f8a45" }
+            }
         }
     }
 }

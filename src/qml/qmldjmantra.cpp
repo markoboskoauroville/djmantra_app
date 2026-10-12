@@ -16,6 +16,7 @@
 #include <unistd.h>
 #endif
 #include <algorithm>
+#include <memory>
 #include <vector>
 #include <cmath>
 
@@ -24,6 +25,7 @@
 #include <QJniObject>
 #endif
 
+#include "control/controlobject.h"
 #include "control/controlproxy.h"
 #include "engine/controls/sectiondetector.h"
 #include "library/library.h"
@@ -62,6 +64,24 @@ djmantra::camelot::Code codeOf(double keyValue) {
 }
 
 } // namespace
+
+namespace {
+// The controller's bridge to the Qt Quick interface (Marko, 12.10.2026: the
+// Mix Ultra's BROWSE opens the song list, its pad mode buttons choose the tabs)
+std::vector<std::unique_ptr<ControlObject>> s_controllerControls;
+} // namespace
+
+// static
+void QmlDJMantra::registerUserSettings(UserSettingsPointer pConfig) {
+    s_controllerControls.clear();
+    if (pConfig) {
+        for (const char* key : {"browse_move", "browse_press", "browse_back", "load", "page"}) {
+            s_controllerControls.push_back(std::make_unique<ControlObject>(
+                    ConfigKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(key))));
+        }
+    }
+    s_pUserSettings = std::move(pConfig);
+}
 
 QmlDJMantra::QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent)
         : QObject(pParent),

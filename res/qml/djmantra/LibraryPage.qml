@@ -167,6 +167,40 @@ Rectangle {
 
     property string pendingPath: ""
     property string pendingGroup: ""
+    // in front of the decks (browsing): ← closes it at the top level too
+    property bool closable: false
+
+    // The controller (Marko, 12.10.2026): its BROWSE knob moves a highlighted
+    // row, a press or a deck's LOAD takes it
+    property bool controllerSelect: false
+
+    function moveSelection(steps) {
+        if (songs.count === 0)
+            return;
+        controllerSelect = true;
+        const index = list.currentIndex < 0 ? 0 : list.currentIndex + steps;
+        list.currentIndex = Math.max(0, Math.min(songs.count - 1, index));
+        list.positionViewAtIndex(list.currentIndex, ListView.Contain);
+    }
+
+    // a press (group "": the free deck, or the deck whose cover was tapped)
+    // or a deck's LOAD: a folder opens, a song loads (a playing deck: the same
+    // press again confirms)
+    function activate(group) {
+        if (list.currentIndex < 0 || list.currentIndex >= songs.count) {
+            moveSelection(0);
+            return;
+        }
+        const item = songs.get(list.currentIndex);
+        if (item.isFolder) {
+            Mixxx.DJMantra.log("controller: open folder " + item.path);
+            folder = item.path;
+            return;
+        }
+        const target = group !== "" ? group : deck !== "" ? deck : Mixxx.DJMantra.freeDeck();
+        Mixxx.DJMantra.log("controller: load " + item.path + " onto " + target);
+        load(item.path, target, pendingPath === item.path && pendingGroup === target);
+    }
 
     function load(path, group, sure) {
         if (!sure && Mixxx.DJMantra.isPlaying(group)) {
@@ -195,7 +229,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 8
             anchors.verticalCenter: parent.verticalCenter
-            visible: root.folder !== ""
+            visible: root.folder !== "" || root.closable
             width: visible ? 52 : 0
             height: 40
             text: "\u2190"
@@ -309,9 +343,14 @@ Rectangle {
             required property string cover
             readonly property bool wasPlayed: !isFolder && root.played[path] === true
 
+            required property int index
+
             width: list.width
             height: 56
-            color: rowArea.pressed ? Style.pressed : "transparent"
+            color: rowArea.pressed ? Style.pressed
+                    : root.controllerSelect && index === list.currentIndex ? Style.surface : "transparent"
+            border.color: root.controllerSelect && index === list.currentIndex ? Style.accent : "transparent"
+            border.width: 2
 
             Rectangle {
                 // the cover (DJ Pro style), a note while there is none

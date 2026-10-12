@@ -143,9 +143,10 @@ class QmlDJMantra : public QObject {
     static inline void registerSoundManager(std::shared_ptr<SoundManager> pSoundManager) {
         s_pSoundManager = std::move(pSoundManager);
     }
-    static inline void registerUserSettings(UserSettingsPointer pConfig) {
-        s_pUserSettings = std::move(pConfig);
-    }
+    /// Also makes (or, with nullptr, removes) the [DJMantra] controls the
+    /// controller mapping drives: browse_move, browse_press, browse_back,
+    /// load (deck number), page (1-4); each a pulse back to 0
+    static void registerUserSettings(UserSettingsPointer pConfig);
 
   signals:
     void insetsChanged();
