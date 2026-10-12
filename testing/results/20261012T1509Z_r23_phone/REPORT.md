@@ -34,3 +34,10 @@ Top threads (`top -H`):
 So the Phrasing tab's cost is drawing: the scrolling waveform (repainted every frame) and the LEDs; the Mixer tab likely the two level meters and knob rings repainting every frame. Songs and Keys are inside the 32-55 % target now.
 - `Controller` at 8 % on every tab: a controller-script thread busy with no controller attached? Worth a look.
 - Every tab still works after switching back and forth (`tab_1/2/3.png`: LEDs lit, meters moving, wheel with keys). Audio: xruns 0, late 0, slowest 4.3 ms.
+
+## Part 5: audio router - PASS (what the phone alone allows); plug-in parts NOT TESTED
+- Settings now logs `Quick: audio output speaker:A142|Phone speaker|2`: the list shows "Phone default (follows plugging in)" and "Phone speaker" for MASTER, and Off / Phone default / Phone speaker for HEADPHONES (`p5_settings.png`). Only the speaker is reported (nothing else is plugged in). Round 22 fail fixed.
+- The ← stays at the top while the page scrolls (`p5_scrolled.png`). Fixed.
+- MASTER = Phone speaker, HEADPHONES = Phone default → APPLY: `Sound output open: "Phone audio output ..." (second output)` and `Sound output open: "Phone speaker" (clock)`, both 48000 Hz 2 ch, device 3; `audio route master -> speaker:A142 channels 1-2`, `headphones -> phone default channels 1-2`; sound, xruns 0, late 0, slowest 3.9 ms.
+- Put back to MASTER = Phone default, HEADPHONES = Off (`audio route master -> phone default`, `headphones -> none`), so the pre-listen does not also play on the speaker.
+- NOT TESTED (needs Marko to plug something in): the list growing on plug-in, MASTER on a USB / Bluetooth output, channels 3-4 on the Mix Ultra, unplug fallback.
