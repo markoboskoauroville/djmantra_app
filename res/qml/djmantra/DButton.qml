@@ -19,6 +19,7 @@ Rectangle {
     property string icon: ""
     signal clicked()
     signal pressedDown()
+    signal releasedUp()
 
     radius: Style.radius
     color: area.pressed ? Style.pressed : (lit ? litColor : Style.tile)
@@ -108,10 +109,12 @@ Rectangle {
         onReleased: {
             if (root.key !== "" && root.mode === "push")
                 control.value = 0;
+            root.releasedUp();
         }
         onCanceled: {
             if (root.key !== "" && root.mode === "push")
                 control.value = 0;
+            root.releasedUp();
         }
         onClicked: root.clicked()
     }

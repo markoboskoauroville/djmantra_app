@@ -52,8 +52,38 @@ Row {
         fontSize: 12
         group: root.group
         key: "cue_default"
-        mode: "push"
+        mode: "" // round 23: pressed here, see below
         litColor: Style.orange
+        // Round 23: paused after play-from-cue, Mixxx's cue mode SET a new
+        // cue where the deck paused. Now: paused away from the cue, CUE goes
+        // back to it (and stays); playing, or paused on the cue, CUE works
+        // as on a CDJ (back to the cue / preview while held).
+        property bool held: false
+        onPressedDown: {
+            const away = playControl.value <= 0 && cuePoint.value >= 0 && trackSamples.value > 0 &&
+                    Math.abs(cuePosition.value * trackSamples.value - cuePoint.value) > 2048;
+            if (away) {
+                cueGoto.value = 1;
+                cueGoto.value = 0;
+                Mixxx.DJMantra.log("button " + root.group + ",cue: back to the cue point");
+            } else {
+                held = true;
+                cueDefault.value = 1;
+                Mixxx.DJMantra.log("button " + root.group + ",cue_default pressed");
+            }
+        }
+        onReleasedUp: {
+            if (held) {
+                held = false;
+                cueDefault.value = 0;
+            }
+        }
+
+        Mixxx.ControlProxy { id: cueDefault; group: root.group; key: "cue_default" }
+        Mixxx.ControlProxy { id: cueGoto; group: root.group; key: "cue_gotoandstop" }
+        Mixxx.ControlProxy { id: cuePoint; group: root.group; key: "cue_point" }
+        Mixxx.ControlProxy { id: cuePosition; group: root.group; key: "playposition" }
+        Mixxx.ControlProxy { id: trackSamples; group: root.group; key: "track_samples" }
     }
 
     DButton {
