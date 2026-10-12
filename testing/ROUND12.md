@@ -23,3 +23,18 @@ Songs: `tools/android/fetch_test_songs.sh --dest /sdcard/Music` (69 MP3s, skips 
 8. **No "Mixxx" on screen** (d594f12): on every screen visited, `adb shell uiautomator dump /sdcard/ui.xml && adb shell grep -c -i mixxx /sdcard/ui.xml`
    (Qt widgets may not show in the dump: then look at the screenshots). Press Android's back while a deck plays:
    the box must say "Exit DJ Mantra?". Settings → About may say "Mixxx" only in the Engine line (licence credit).
+
+## Before the round: why Claude Code breaks down while DJ Mantra runs (Marko, 12.10.2026)
+
+Claude Code (Termux) and DJ Mantra run on the same phone. Suspects: Android's phantom process killer
+(kills Termux's child processes, like Claude Code, when many run or they use CPU) and the low memory
+killer (kills background apps while a heavy app is in front). To find out:
+
+1. `termux-wake-lock` (Termux keeps running with the screen off or another app in front).
+2. In a second Termux session (swipe from the left → NEW SESSION):
+   `tools/android/watch_host.sh ~/djmantra-watch/r12 $SERIAL` — leave it running for the whole round.
+3. Start Claude Code with `claude --debug` from now on (its log goes to `~/.claude/debug/`).
+4. After the round (or after a breakdown): copy `~/djmantra-watch/r12/` and the newest file of
+   `~/.claude/debug/` into `$OUT/host/`, and the end of the session transcript
+   (`ls -t ~/.claude/projects/*/*.jsonl | head -1`, last 200 lines) as `$OUT/host/transcript-tail.jsonl`.
+   Report in REPORT.md: did Termux / node die, when, and the lines of `kills.log` at that time.
