@@ -455,6 +455,14 @@ Window {
         onTriggered: window.logMap()
     }
 
+    Timer {
+        // round 24: the map logged 1.5 s after the start was ~100 px off (the
+        // bars were still going away): once more when the start has settled
+        interval: 6000
+        running: true
+        onTriggered: window.logMap()
+    }
+
     Connections {
         // the tap map again when the bars come or go (round 20)
         target: Mixxx.DJMantra
