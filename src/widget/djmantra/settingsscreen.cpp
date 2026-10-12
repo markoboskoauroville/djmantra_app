@@ -1,5 +1,7 @@
 #include "widget/djmantra/settingsscreen.h"
 
+#include "widget/djmantra/camelot.h"
+
 #include <QDesktopServices>
 #include <QEvent>
 #include <QHBoxLayout>
@@ -84,6 +86,10 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
     addSection(tr("Settings"));
     addRow(icons::kSound, tr("Sound"), tr("Output, latency"), actions.sound);
     addRow(icons::kNote, tr("Library"), tr("Song folders"), actions.library);
+    addRow(icons::kInfo,
+            tr("Camelot wheel"),
+            tr("Which keys mix well: 8A, 9A, 8B ..."),
+            [this] { camelot::showWheelScreen(m_pWindow); });
     addRow(icons::kController,
             tr("Virtual controller"),
             tr("Choose what each button, fader and knob does"),

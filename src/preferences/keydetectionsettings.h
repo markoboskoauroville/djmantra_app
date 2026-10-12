@@ -39,7 +39,7 @@ class KeyDetectionSettings {
 
     // TODO(rryan): Enum
     DEFINE_PREFERENCE_HELPERS(KeyNotation, QString,
-                              KEY_CONFIG_KEY, KEY_NOTATION, KEY_NOTATION_TRADITIONAL);
+                              KEY_CONFIG_KEY, KEY_NOTATION, KEY_NOTATION_LANCELOT);
 
     QString getCustomKeyNotation(mixxx::track::io::key::ChromaticKey key) {
         return m_pConfig->getValue<QString>(ConfigKey(KEY_CONFIG_KEY,

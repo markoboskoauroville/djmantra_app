@@ -530,6 +530,14 @@ def header_deck_portrait(n):
     return vbox(top, vspace(4), overview(n, 22), policy="me,max")
 
 
+def key_match(size="118f,34f"):
+    # Camelot: the two decks' keys, green / amber / red; a tap opens the wheel
+    return """<KeyMatch>
+  <ObjectName>KeyMatch</ObjectName>
+  <Size>%s</Size>
+</KeyMatch>""" % size
+
+
 def library_button(size=40):
     # the menu sheet (djay's): Library, Controller, REC, Settings
     return button("[DJMantra],show_menu", "LibraryButton", "", "%df,%df" % (size, size),
@@ -651,7 +659,8 @@ def stack(pages, current_key=None):
 
 def performance_landscape():
     header = hbox(header_deck_landscape(1), hspace(12),
-                  vbox(vstretch(), library_button(34), vstretch(), policy="min,me"),
+                  vbox(vstretch(), hbox(spacer(), library_button(34), spacer(), policy="me,min"),
+                       vspace(4), key_match(), vstretch(), policy="min,me"),
                   hspace(12), header_deck_landscape(2),
                   name="TopBar", policy="me,max")
 
@@ -680,7 +689,8 @@ def performance_landscape():
 
 
 def performance_portrait():
-    header = vbox(hbox(spacer(), library_button(32), spacer(), policy="me,min"),
+    header = vbox(hbox(spacer(), library_button(32), hspace(10), key_match(), spacer(),
+                       policy="me,min"),
                   hbox(header_deck_portrait(1), hspace(14), header_deck_portrait(2),
                        policy="me,min"),
                   name="TopBar", policy="me,max")
@@ -838,7 +848,9 @@ def skin_xml():
         "[DJMantra],d2_fx": "0", "[DJMantra],d2_sampler": "0",
     }
     # Elapsed and remaining, m:ss only (Marko, 11.10.2026: "only minutes and seconds")
-    persist = {"[Controls],ShowDurationRemaining": "2", "[Controls],TimeFormat": "1"}
+    persist = {"[Controls],ShowDurationRemaining": "2", "[Controls],TimeFormat": "1",
+               # Keys in Camelot notation everywhere (8A, 5B; Mixxx calls it Lancelot)
+               "[Library],key_notation": "3"}
     # kept between starts: One Deck's continuous play / stop after current
     kept = {"[DJMantra],one_deck_continuous": "1"}
     attr_xml = "\n".join('      <attribute config_key="%s" persist="true">%s</attribute>' % kv

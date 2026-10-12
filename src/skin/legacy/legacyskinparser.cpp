@@ -57,6 +57,7 @@
 #include "widget/wnumber.h"
 #include "widget/wnumberdb.h"
 #include "widget/wnumberpos.h"
+#include "widget/djmantra/camelot.h"
 #include "widget/djmantra/wdeckcounter.h"
 #include "widget/wnumberrate.h"
 #include "widget/woverview.h"
@@ -563,6 +564,11 @@ QList<QWidget*> LegacySkinParser::parseNode(const QDomElement& node) {
         result = wrapWidget(parseNumberPos(node));
     } else if (nodeName == "DeckCounter") {
         result = wrapWidget(parseDeckCounter(node));
+    } else if (nodeName == "KeyMatch") {
+        // DJ Mantra: the Camelot match of the two decks' keys
+        auto* pBadge = new djmantra::camelot::KeyMatchBadge(m_pParent);
+        setupWidget(node, pBadge);
+        result = wrapWidget(pBadge);
     } else if (nodeName == "Number" || nodeName == "NumberBpm") {
         // NumberBpm is deprecated, and is now the same as a Number
         result = wrapWidget(parseLabelWidget<WNumber>(node));

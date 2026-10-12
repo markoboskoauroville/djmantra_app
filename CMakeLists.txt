@@ -1223,6 +1223,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/library/djmantra/trackpicker.cpp
   src/widget/djmantra/mantraui.cpp
   src/widget/djmantra/settingsscreen.cpp
+  src/widget/djmantra/camelot.cpp
   src/widget/djmantra/wdeckcounter.cpp
   src/util/androidwindow.cpp
   src/util/bundledresources.cpp
@@ -2371,6 +2372,7 @@ if(BUILD_TESTING)
     src/test/folderfeature_test.cpp
     src/test/externalcontent_test.cpp
     src/test/phrasecontrol_test.cpp
+    src/test/camelot_test.cpp
     src/test/androidmidicontroller_test.cpp
     src/test/bundledresources_test.cpp
     src/test/starrating_test.cpp
