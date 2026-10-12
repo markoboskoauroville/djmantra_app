@@ -237,6 +237,7 @@ EngineBuffer::EngineBuffer(const QString& group,
     // Create the cue controller
     m_pCueControl = new CueControl(group, pConfig);
     addControl(m_pCueControl);
+    m_pPhraseControl->connectCues();
 
     connect(m_pLoopingControl,
             &LoopingControl::loopReset,

@@ -5,7 +5,7 @@
 #include "control/controlobject.h"
 #include "test/signalpathtest.h"
 #include "track/beats.h"
-#include "widget/djmantra/wbarbeat.h"
+#include "widget/djmantra/wdeckcounter.h"
 
 using mixxx::audio::FramePos;
 
@@ -68,16 +68,35 @@ TEST(PhraseControlTest, beatNumberFromTheAnchor) {
 }
 
 TEST(PhraseControlTest, barBeatAsInAbleton) {
-    EXPECT_EQ(QStringLiteral("1.1"), WBarBeat::barBeat(0, 4));
-    EXPECT_EQ(QStringLiteral("1.4"), WBarBeat::barBeat(3, 4));
-    EXPECT_EQ(QStringLiteral("2.1"), WBarBeat::barBeat(4, 4));
-    EXPECT_EQ(QStringLiteral("17.3"), WBarBeat::barBeat(66, 4));
-    EXPECT_EQ(QStringLiteral("3.2"), WBarBeat::barBeat(7, 3));
-    EXPECT_EQ(QStringLiteral("2.6"), WBarBeat::barBeat(11, 6));
+    EXPECT_EQ(QStringLiteral("1.1"), WDeckCounter::barBeat(0, 4));
+    EXPECT_EQ(QStringLiteral("1.4"), WDeckCounter::barBeat(3, 4));
+    EXPECT_EQ(QStringLiteral("2.1"), WDeckCounter::barBeat(4, 4));
+    EXPECT_EQ(QStringLiteral("17.3"), WDeckCounter::barBeat(66, 4));
+    EXPECT_EQ(QStringLiteral("3.2"), WDeckCounter::barBeat(7, 3));
+    EXPECT_EQ(QStringLiteral("2.6"), WDeckCounter::barBeat(11, 6));
     // Before "1": bar 0, then -1
-    EXPECT_EQ(QStringLiteral("0.4"), WBarBeat::barBeat(-1, 4));
-    EXPECT_EQ(QStringLiteral("0.1"), WBarBeat::barBeat(-4, 4));
-    EXPECT_EQ(QStringLiteral("-1.4"), WBarBeat::barBeat(-5, 4));
+    EXPECT_EQ(QStringLiteral("0.4"), WDeckCounter::barBeat(-1, 4));
+    EXPECT_EQ(QStringLiteral("0.1"), WDeckCounter::barBeat(-4, 4));
+    EXPECT_EQ(QStringLiteral("-1.4"), WDeckCounter::barBeat(-5, 4));
+    // Left to the next section
+    EXPECT_EQ(QStringLiteral("-6.2"), WDeckCounter::barsBeatsLeft(26, 4));
+    EXPECT_EQ(QStringLiteral("-0.0"), WDeckCounter::barsBeatsLeft(0, 4));
+    EXPECT_EQ(QStringLiteral("-2.1"), WDeckCounter::barsBeatsLeft(7, 3));
+    EXPECT_EQ(QStringLiteral("1:23 / 5:40 / -4:17"), WDeckCounter::timeText(83.4, 256.9));
+}
+
+TEST(PhraseControlTest, nextSectionIsTheFirstBoundaryAhead) {
+    const auto pBeats = grid();
+    const QList<FramePos> boundaries = {FramePos(kFirst + 32 * kBeat),
+            FramePos(kFirst + 16 * kBeat),
+            mixxx::audio::kInvalidFramePos,
+            FramePos(kFirst + 4 * kBeat)};
+    EXPECT_EQ(FramePos(kFirst + 16 * kBeat),
+            PhraseControl::nextSection(pBeats, inBeat(5), boundaries));
+    // On a section start (or just after it): the following one
+    EXPECT_EQ(FramePos(kFirst + 32 * kBeat),
+            PhraseControl::nextSection(pBeats, FramePos(kFirst + 16 * kBeat), boundaries));
+    EXPECT_FALSE(PhraseControl::nextSection(pBeats, inBeat(40), boundaries).isValid());
 }
 
 TEST(PhraseControlTest, anchorSlightlyOffTheGridSnaps) {

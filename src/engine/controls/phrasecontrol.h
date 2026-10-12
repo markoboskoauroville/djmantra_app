@@ -1,6 +1,9 @@
 #pragma once
 
+#include <QList>
+#include <QStringList>
 #include <memory>
+#include <vector>
 
 #include "audio/frame.h"
 #include "engine/controls/enginecontrol.h"
@@ -28,6 +31,11 @@ class ControlPushButton;
 ///                    beats_per_bar it gives Ableton's bar.beat counter.
 ///   beats_per_bar    the time signature's upper number, 1..16 (default 4)
 ///   beat_unit        its lower number: 2, 4 (default), 8 or 16
+///   section_beats_left  beats from the current beat to the next section
+///                    (read-only), -1 without beats
+///   section_found    1: section_beats_left counts to a section start (intro
+///                    / outro markers, hot cues); 0: to the end of the track
+///                    (no section found after the play position)
 ///
 /// Counted on the beat grid itself, so beat maps and tempo changes work.
 class PhraseControl : public EngineControl {
@@ -47,6 +55,17 @@ class PhraseControl : public EngineControl {
             mixxx::audio::FramePos position,
             int* pNumber);
 
+    /// The start of the next section after `position`: the first of
+    /// `boundaries` (frames, in any order; invalid ones are skipped) that is
+    /// more than half a beat ahead. Invalid if none.
+    static mixxx::audio::FramePos nextSection(const mixxx::BeatsPointer& pBeats,
+            mixxx::audio::FramePos position,
+            const QList<mixxx::audio::FramePos>& boundaries);
+
+    /// The cue controls are made after this control: EngineBuffer calls
+    /// this once they exist.
+    void connectCues();
+
     /// Called with the play position after every buffer (like ClockControl).
     void updatePosition(mixxx::audio::FramePos position);
 
@@ -64,6 +83,7 @@ class PhraseControl : public EngineControl {
 
   private:
     mixxx::audio::FramePos anchor() const;
+    void updateSection(mixxx::audio::FramePos position);
 
     std::unique_ptr<ControlObject> m_pBeatInPhrase;
     std::unique_ptr<ControlObject> m_pPhraseLength;
@@ -73,7 +93,12 @@ class PhraseControl : public EngineControl {
     std::unique_ptr<ControlObject> m_pBeatNumber;
     std::unique_ptr<ControlObject> m_pBeatsPerBar;
     std::unique_ptr<ControlObject> m_pBeatUnit;
+    std::unique_ptr<ControlObject> m_pSectionBeatsLeft;
+    std::unique_ptr<ControlObject> m_pSectionFound;
     std::unique_ptr<ControlProxy> m_pCuePoint;
+    std::unique_ptr<ControlProxy> m_pTrackSamples;
+    // Section starts: intro / outro markers and hot cues
+    std::vector<std::unique_ptr<ControlProxy>> m_sectionCues;
 
     mixxx::BeatsPointer m_pBeats;
     mixxx::audio::FramePos m_position;

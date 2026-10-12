@@ -139,21 +139,16 @@
   <Channel>1</Channel>
 </TrackProperty>
 <WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<BarBeat>
-  <ObjectName>BarBeatText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>left</Alignment>
   <Channel>1</Channel>
-</BarBeat>
+</DeckCounter>
 <WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck1</ObjectName>
@@ -163,14 +158,6 @@
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-</Children></WidgetGroup>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Channel>1</Channel>
-  <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
-</NumberPos>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -242,11 +229,6 @@
   <Channel>2</Channel>
 </TrackProperty>
 <WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
@@ -260,20 +242,12 @@
   <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
 </Key>
 <WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
-<BarBeat>
-  <ObjectName>BarBeatText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>right</Alignment>
   <Channel>2</Channel>
-</BarBeat>
-</Children></WidgetGroup>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
-  <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
-  <Channel>2</Channel>
-  <Connection><ConfigKey>[Channel2],playposition</ConfigKey></Connection>
-</NumberPos>
+</DeckCounter>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
@@ -2689,21 +2663,16 @@
   <Channel>1</Channel>
 </TrackProperty>
 <WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<BarBeat>
-  <ObjectName>BarBeatText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>left</Alignment>
   <Channel>1</Channel>
-</BarBeat>
+</DeckCounter>
 <WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck1</ObjectName>
@@ -2713,14 +2682,6 @@
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-</Children></WidgetGroup>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Channel>1</Channel>
-  <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
-</NumberPos>
 </Children></WidgetGroup>
 <Overview>
   <ObjectName>Overview</ObjectName>
@@ -2809,11 +2770,6 @@
   <Channel>2</Channel>
 </TrackProperty>
 <WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
@@ -2827,20 +2783,12 @@
   <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
 </Key>
 <WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
-<BarBeat>
-  <ObjectName>BarBeatText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>right</Alignment>
   <Channel>2</Channel>
-</BarBeat>
-</Children></WidgetGroup>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
-  <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
-  <Channel>2</Channel>
-  <Connection><ConfigKey>[Channel2],playposition</ConfigKey></Connection>
-</NumberPos>
+</DeckCounter>
 </Children></WidgetGroup>
 <Overview>
   <ObjectName>Overview</ObjectName>
@@ -5569,21 +5517,16 @@
 </Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<BarBeat>
-  <ObjectName>BarBeatText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>left</Alignment>
   <Channel>1</Channel>
-</BarBeat>
+</DeckCounter>
 <WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck1</ObjectName>
@@ -5593,14 +5536,6 @@
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-</Children></WidgetGroup>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Channel>1</Channel>
-  <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
-</NumberPos>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -5821,21 +5756,16 @@
 </Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
-<Layout>vertical</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
-<WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<BarBeat>
-  <ObjectName>BarBeatText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>left</Alignment>
   <Channel>1</Channel>
-</BarBeat>
+</DeckCounter>
 <WidgetGroup><Layout>horizontal</Layout><Size>8f,0min</Size></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck1</ObjectName>
@@ -5845,14 +5775,6 @@
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-</Children></WidgetGroup>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Channel>1</Channel>
-  <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
-</NumberPos>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>

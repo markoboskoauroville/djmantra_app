@@ -250,27 +250,24 @@ def time_remaining(n, align="right"):
 </NumberPos>""" % (align, n, grp(n))
 
 
-def bar_beat(n, align="left"):
-    # Ableton's bar.beat with the time signature, e.g. "17.3  4/4"
-    return """<BarBeat>
-  <ObjectName>BarBeatText</ObjectName>
+def deck_counter(n, align="left"):
+    # A tap: TIME (1:23 / 5:40 / -4:17) <-> BARS & BEATS (17.3  next -6.2  4/4)
+    return """<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>%s</Alignment>
   <Channel>%d</Channel>
-</BarBeat>""" % (align, n)
+</DeckCounter>""" % (align, n)
 
 
 def counter(n, align="left"):
-    """Marko's deck counter (11.10.2026), as in Ableton Live: on top bar.beat,
-    the time signature and the key; under it only the time, elapsed and
-    remaining (m:ss  -m:ss)."""
+    """Marko's deck counter (11.10.2026, v2): one line that a tap switches
+    between the time and the bars and beats; the key next to it."""
     if align == "left":
-        top = hbox(bar_beat(n, "left"), hspace(8), key_label(n, "left"), spacer(),
-                   policy="me,min")
-    else:
-        top = hbox(spacer(), key_label(n, "right"), hspace(8), bar_beat(n, "right"),
-                   policy="me,min")
-    return vbox(top, time_remaining(n, align), policy="me,min")
+        return hbox(deck_counter(n, "left"), hspace(8), key_label(n, "left"), spacer(),
+                    policy="me,min")
+    return hbox(spacer(), key_label(n, "right"), hspace(8), deck_counter(n, "right"),
+                policy="me,min")
 
 
 def key_label(n, align="right"):
@@ -913,7 +910,7 @@ WWidget, WLabel, QLabel { color: %(WHITE)s; font-family: "Roboto", "Open Sans", 
 #TimeText { color: %(WHITE)s; font-size: 15px; }
 #KeyDeck1 { color: %(GREEN)s; font-size: 13px; }
 #KeyDeck2 { color: %(MAGENTA)s; font-size: 13px; }
-#BarBeatText { color: %(WHITE)s; font-size: 15px; font-weight: bold; }
+#CounterText { color: %(WHITE)s; font-size: 14px; font-weight: bold; }
 #BpmText { color: %(WHITE)s; font-size: 20px; }
 #BpmCaption, #KnobLabel { color: %(GREY)s; font-size: 11px; font-weight: bold; }
 #KnobLabel { qproperty-alignment: AlignCenter; }

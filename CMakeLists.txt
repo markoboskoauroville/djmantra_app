@@ -1223,7 +1223,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/library/djmantra/trackpicker.cpp
   src/widget/djmantra/mantraui.cpp
   src/widget/djmantra/settingsscreen.cpp
-  src/widget/djmantra/wbarbeat.cpp
+  src/widget/djmantra/wdeckcounter.cpp
   src/util/androidwindow.cpp
   src/util/bundledresources.cpp
   src/util/uitestprobe.cpp

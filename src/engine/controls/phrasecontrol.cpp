@@ -3,12 +3,15 @@
 #include "control/controlobject.h"
 #include "control/controlproxy.h"
 #include "control/controlpushbutton.h"
+#include <algorithm>
 #include "moc_phrasecontrol.cpp"
 #include "track/track.h"
 
 namespace {
 
 constexpr int kDefaultPhraseLength = 8;
+// Hot cues that count as section starts (the pads show 8)
+constexpr int kSectionHotcues = 16;
 
 int validLength(double value) {
     const int length = static_cast<int>(value);
@@ -28,7 +31,9 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
           m_pBeatNumber(std::make_unique<ControlObject>(ConfigKey(group, "beat_number"))),
           m_pBeatsPerBar(std::make_unique<ControlObject>(ConfigKey(group, "beats_per_bar"))),
           m_pBeatUnit(std::make_unique<ControlObject>(ConfigKey(group, "beat_unit"))),
-          m_pCuePoint(std::make_unique<ControlProxy>(group, "cue_point", this)) {
+          m_pSectionBeatsLeft(
+                  std::make_unique<ControlObject>(ConfigKey(group, "section_beats_left"))),
+          m_pSectionFound(std::make_unique<ControlObject>(ConfigKey(group, "section_found"))) {
     m_pBeatInPhrase->setReadOnly();
     m_pBeatInPhrase->forceSet(-1);
     m_pPhraseLength->set(kDefaultPhraseLength);
@@ -36,6 +41,9 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
     // 4/4 until the time signature is detected per track
     m_pBeatsPerBar->set(4);
     m_pBeatUnit->set(4);
+    m_pSectionBeatsLeft->setReadOnly();
+    m_pSectionBeatsLeft->forceSet(-1);
+    m_pSectionFound->setReadOnly();
     m_pPhraseAnchor->set(-1);
     connect(m_pSetOne.get(), &ControlObject::valueChanged, this, &PhraseControl::slotSetOne);
     connect(m_pJump.get(), &ControlObject::valueChanged, this, &PhraseControl::slotJump);
@@ -47,10 +55,32 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
             &ControlObject::valueChanged,
             this,
             &PhraseControl::slotParametersChanged);
-    m_pCuePoint->connectValueChanged(this, &PhraseControl::slotParametersChanged);
 }
 
 PhraseControl::~PhraseControl() = default;
+
+void PhraseControl::connectCues() {
+    if (m_pCuePoint) {
+        return;
+    }
+    const QString group = getGroup();
+    m_pCuePoint = std::make_unique<ControlProxy>(
+            group, "cue_point", this, ControlFlag::AllowMissingOrInvalid);
+    m_pCuePoint->connectValueChanged(this, &PhraseControl::slotParametersChanged);
+    m_pTrackSamples = std::make_unique<ControlProxy>(
+            group, "track_samples", this, ControlFlag::AllowMissingOrInvalid);
+    QStringList names = {QStringLiteral("intro_start_position"),
+            QStringLiteral("intro_end_position"),
+            QStringLiteral("outro_start_position"),
+            QStringLiteral("outro_end_position")};
+    for (int i = 1; i <= kSectionHotcues; ++i) {
+        names << QStringLiteral("hotcue_%1_position").arg(i);
+    }
+    for (const auto& name : names) {
+        m_sectionCues.push_back(std::make_unique<ControlProxy>(
+                group, name, this, ControlFlag::AllowMissingOrInvalid));
+    }
+}
 
 void PhraseControl::trackLoaded(TrackPointer pNewTrack) {
     // A new track starts with an automatic anchor
@@ -82,7 +112,9 @@ mixxx::audio::FramePos PhraseControl::anchor() const {
     if (userAnchor.isValid() && userAnchor >= mixxx::audio::kStartFramePos) {
         return userAnchor;
     }
-    const auto cue = mixxx::audio::FramePos::fromEngineSamplePosMaybeInvalid(m_pCuePoint->get());
+    const auto cue = m_pCuePoint
+            ? mixxx::audio::FramePos::fromEngineSamplePosMaybeInvalid(m_pCuePoint->get())
+            : mixxx::audio::kInvalidFramePos;
     if (cue.isValid() && cue >= mixxx::audio::kStartFramePos) {
         return cue;
     }
@@ -133,6 +165,68 @@ int PhraseControl::beatInPhrase(const mixxx::BeatsPointer& pBeats,
     return ((n % phraseLength) + phraseLength) % phraseLength;
 }
 
+// static
+mixxx::audio::FramePos PhraseControl::nextSection(const mixxx::BeatsPointer& pBeats,
+        mixxx::audio::FramePos position,
+        const QList<mixxx::audio::FramePos>& boundaries) {
+    if (!position.isValid()) {
+        return mixxx::audio::kInvalidFramePos;
+    }
+    // A section that starts on the current beat (or just behind it) is not the next one
+    double halfBeat = 0;
+    if (pBeats) {
+        mixxx::audio::FramePos prev;
+        mixxx::audio::FramePos next;
+        if (pBeats->findPrevNextBeats(position, &prev, &next, true) && prev.isValid() &&
+                next.isValid()) {
+            halfBeat = (next - prev) / 2;
+        }
+    }
+    mixxx::audio::FramePos best = mixxx::audio::kInvalidFramePos;
+    for (const auto& boundary : boundaries) {
+        if (boundary.isValid() && boundary > position + halfBeat &&
+                (!best.isValid() || boundary < best)) {
+            best = boundary;
+        }
+    }
+    return best;
+}
+
+void PhraseControl::updateSection(mixxx::audio::FramePos position) {
+    const mixxx::BeatsPointer pBeats = m_pBeats;
+    if (!pBeats || m_beat < 0) {
+        m_pSectionBeatsLeft->forceSet(-1);
+        m_pSectionFound->forceSet(0);
+        return;
+    }
+    QList<mixxx::audio::FramePos> boundaries;
+    for (const auto& pCue : m_sectionCues) {
+        const double samplePos = pCue->get();
+        if (samplePos >= 0) {
+            boundaries.append(mixxx::audio::FramePos::fromEngineSamplePos(samplePos));
+        }
+    }
+    auto target = nextSection(pBeats, position, boundaries);
+    const bool found = target.isValid();
+    if (!found && m_pTrackSamples && m_pTrackSamples->get() > 0) {
+        // The last beat of the track
+        target = pBeats->findPrevBeat(
+                mixxx::audio::FramePos::fromEngineSamplePos(m_pTrackSamples->get()));
+    }
+    int left = -1;
+    int targetNumber;
+    if (target.isValid() &&
+            beatNumber(pBeats, anchor(), pBeats->findClosestBeat(target), &targetNumber)) {
+        left = std::max(0, targetNumber - m_beatNumber);
+    }
+    if (m_pSectionBeatsLeft->get() != left) {
+        m_pSectionBeatsLeft->forceSet(left);
+    }
+    if (m_pSectionFound->get() != (found ? 1 : 0)) {
+        m_pSectionFound->forceSet(found ? 1 : 0);
+    }
+}
+
 void PhraseControl::updatePosition(mixxx::audio::FramePos position) {
     m_position = position;
     const mixxx::BeatsPointer pBeats = m_pBeats;
@@ -140,6 +234,7 @@ void PhraseControl::updatePosition(mixxx::audio::FramePos position) {
         if (m_beat != -1) {
             m_beat = -1;
             m_pBeatInPhrase->forceSet(-1);
+            updateSection(position);
         }
         return;
     }
@@ -172,6 +267,8 @@ void PhraseControl::updatePosition(mixxx::audio::FramePos position) {
         m_beat = beat;
         m_pBeatInPhrase->forceSet(beat);
     }
+    // Once per beat (the same beat returned early above)
+    updateSection(position);
 }
 
 void PhraseControl::slotSetOne(double value) {

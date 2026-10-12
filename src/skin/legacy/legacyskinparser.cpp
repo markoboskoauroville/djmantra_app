@@ -57,7 +57,7 @@
 #include "widget/wnumber.h"
 #include "widget/wnumberdb.h"
 #include "widget/wnumberpos.h"
-#include "widget/djmantra/wbarbeat.h"
+#include "widget/djmantra/wdeckcounter.h"
 #include "widget/wnumberrate.h"
 #include "widget/woverview.h"
 #include "widget/wpixmapstore.h"
@@ -561,8 +561,8 @@ QList<QWidget*> LegacySkinParser::parseNode(const QDomElement& node) {
         result = wrapWidget(parseRateRange(node));
     } else if (nodeName == "NumberPos") {
         result = wrapWidget(parseNumberPos(node));
-    } else if (nodeName == "BarBeat") {
-        result = wrapWidget(parseBarBeat(node));
+    } else if (nodeName == "DeckCounter") {
+        result = wrapWidget(parseDeckCounter(node));
     } else if (nodeName == "Number" || nodeName == "NumberBpm") {
         // NumberBpm is deprecated, and is now the same as a Number
         result = wrapWidget(parseLabelWidget<WNumber>(node));
@@ -1272,9 +1272,9 @@ QWidget* LegacySkinParser::parseNumberPos(const QDomElement& node) {
     return p;
 }
 
-QWidget* LegacySkinParser::parseBarBeat(const QDomElement& node) {
+QWidget* LegacySkinParser::parseDeckCounter(const QDomElement& node) {
     QString group = lookupNodeGroup(node);
-    WBarBeat* p = new WBarBeat(group, m_pParent);
+    WDeckCounter* p = new WDeckCounter(group, m_pParent);
     setupLabelWidget(node, p);
     return p;
 }
