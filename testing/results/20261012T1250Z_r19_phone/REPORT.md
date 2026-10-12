@@ -25,3 +25,11 @@ Build: run 38233904582, commit 1a724b3. Started on Marko's word ("please start t
 - HIGH knob deck 1: a drag DOWN turned it clockwise (up). Check the direction: on DJ apps a drag down turns a knob down. Double tap: back to centre; its LED ring follows.
 - The meters between the faders do not change with the fader or the crossfader (pre-fader). Fine if intended.
 - The Mixer tab emits no `Quick: map` lines (tapped by screen coordinates).
+
+## Part 3: LEDs - FAIL (only the size at 32; everything else PASS)
+- 32 BEATS (`p3_32beats.png`): each LED cell ~97 device px high (~37 logical; pitch ~115 px). Up from 19 dp in round 18, but under the asked ~46 logical / ~120 device px. The waveforms shrink to one thin strip as asked. 8 and 16 BEATS (`p3_8beats.png`, `p3_16beats.png`) fine.
+  The tap map is not re-emitted when the beat count changes (only `led1_1..8` from the 8-beat layout); I tapped by coordinates.
+- Quantized jumps, AUTO PHASE off, deck 2 playing: LED 1 pressed 3 times in a row → 3 x `jump [Channel2] to beat 1 on the next beat` (round 19's bug fixed). Then 32, 4, 1 → each logged. xruns stayed 1, late 0, slowest 4.3-7.1 ms. The yellow frame was not caught on a screenshot (screencap is slower than a beat). Continuity of the groove: not by ear.
+- Switching 8 → 16 → 32 with AUTO PHASE on moved deck 2 by itself (`auto phase: [Channel2] (beat 10) ...`, `align ... beat 27`): aligned in 8 was not aligned in 32. Probably right; Marko to confirm he wants the beat count switch to move a deck.
+- Launch on a stopped deck (32 BEATS): LED 1 turns yellow at once (`p3_launch.png`), the deck starts on deck 1's next phrase start: `beat launch [Channel2] on beat 1` (logged at the launch, ~16 s later, nothing at the press).
+- Matrix: time left counts down (-1:51 → -1:09 ...), 8 / 16 / 32 cells shown.
