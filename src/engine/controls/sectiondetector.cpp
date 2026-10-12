@@ -63,67 +63,357 @@ QList<int> sectionBars(const QList<std::array<double, 3>>& energies,
     return result;
 }
 
+namespace {
+
+using Bands = std::array<double, 3>;
+
+// Mean of points [from, to) (indices clamped; at least one point)
+Bands spanMean(const std::vector<Bands>& points, double from, double to) {
+    const int size = static_cast<int>(points.size());
+    const int a = std::clamp(static_cast<int>(std::round(from)), 0, size - 1);
+    const int b = std::clamp(static_cast<int>(std::round(to)), a + 1, size);
+    Bands sum{0, 0, 0};
+    for (int i = a; i < b; ++i) {
+        for (int c = 0; c < 3; ++c) {
+            sum[c] += points[i][c];
+        }
+    }
+    for (int c = 0; c < 3; ++c) {
+        sum[c] /= (b - a);
+    }
+    return sum;
+}
+
+double medianOf(std::vector<double> v) {
+    if (v.empty()) {
+        return 0;
+    }
+    std::sort(v.begin(), v.end());
+    const size_t n = v.size();
+    return n % 2 ? v[n / 2] : 0.5 * (v[n / 2 - 1] + v[n / 2]);
+}
+
+// numpy.percentile (linear)
+double percentileOf(std::vector<double> v, double p) {
+    if (v.empty()) {
+        return 0;
+    }
+    std::sort(v.begin(), v.end());
+    const double pos = (v.size() - 1) * p / 100.0;
+    const size_t lo = static_cast<size_t>(std::floor(pos));
+    const size_t hi = std::min(v.size() - 1, lo + 1);
+    return v[lo] + (v[hi] - v[lo]) * (pos - lo);
+}
+
+// Foote's checkerboard kernel (Gaussian tapered) along the diagonal, >= 0,
+// normalised to a peak of 1
+std::vector<double> checkerNovelty(const std::vector<std::vector<double>>& ssm, int half) {
+    const int n = static_cast<int>(ssm.size());
+    std::vector<double> g(2 * half);
+    for (int i = 0; i < 2 * half; ++i) {
+        const double x = -1.5 + 3.0 * i / (2 * half - 1);
+        g[i] = std::exp(-0.5 * x * x);
+    }
+    std::vector<double> nov(n, 0);
+    double peak = 0;
+    for (int i = 0; i < n; ++i) {
+        double sum = 0;
+        for (int r = 0; r < 2 * half; ++r) {
+            const int row = std::clamp(i - half + r, 0, n - 1);
+            for (int k = 0; k < 2 * half; ++k) {
+                const int col = std::clamp(i - half + k, 0, n - 1);
+                const double sign = (r < half) == (k < half) ? 1.0 : -1.0;
+                sum += g[r] * g[k] * sign * ssm[row][col];
+            }
+        }
+        nov[i] = std::max(0.0, sum);
+        peak = std::max(peak, nov[i]);
+    }
+    for (auto& v : nov) {
+        v /= peak + 1e-9;
+    }
+    return nov;
+}
+
+} // namespace
+
+QList<int> sectionBeatsV2(const std::vector<std::array<double, 3>>& points,
+        const std::vector<double>& beats,
+        int beatsPerBar) {
+    QList<int> result;
+    if (beatsPerBar < 1) {
+        beatsPerBar = 4;
+    }
+    if (points.empty() || beats.size() < static_cast<size_t>(16 * beatsPerBar)) {
+        return result;
+    }
+    const auto logBands = [](const Bands& b) {
+        return Bands{std::log1p(b[0]), std::log1p(b[1]), std::log1p(b[2])};
+    };
+    // 1. The downbeat: the beat phase with the largest bar-to-bar band change
+    int downbeat = 0;
+    double bestChange = -1;
+    for (int p = 0; p < beatsPerBar; ++p) {
+        double change = 0;
+        Bands previous{};
+        bool first = true;
+        for (size_t i = p; i + beatsPerBar < beats.size(); i += beatsPerBar) {
+            const Bands now = logBands(spanMean(points, beats[i], beats[i + beatsPerBar]));
+            if (!first) {
+                for (int c = 0; c < 3; ++c) {
+                    change += std::fabs(now[c] - previous[c]);
+                }
+            }
+            previous = now;
+            first = false;
+        }
+        if (change > bestChange) {
+            bestChange = change;
+            downbeat = p;
+        }
+    }
+    std::vector<int> barBeat; // the beat index each bar starts on
+    for (size_t i = downbeat; i + beatsPerBar < beats.size(); i += beatsPerBar) {
+        barBeat.push_back(static_cast<int>(i));
+    }
+    const int nb = static_cast<int>(barBeat.size());
+    if (nb < 16) {
+        return result;
+    }
+    // 2. Per bar: the bands (0..230 per band's peak), their quarters, the kick
+    std::vector<Bands> b3(nb);
+    std::vector<std::array<double, 12>> quarters(nb);
+    std::vector<double> pulse(nb);
+    Bands peak{1e-9, 1e-9, 1e-9};
+    for (int k = 0; k < nb; ++k) {
+        const double from = beats[barBeat[k]];
+        const double to = beats[barBeat[k] + beatsPerBar];
+        b3[k] = spanMean(points, from, to);
+        double pulseSum = 0;
+        for (int q = 0; q < 4; ++q) {
+            const double qa = from + (to - from) * q / 4;
+            const double qb = from + (to - from) * (q + 1) / 4;
+            const Bands m = logBands(spanMean(points, qa, qb));
+            for (int c = 0; c < 3; ++c) {
+                quarters[k][q * 3 + c] = m[c];
+            }
+            // the low band's peak at the head of this quarter over its median
+            const int a = std::clamp(static_cast<int>(qa), 0, static_cast<int>(points.size()) - 1);
+            const int b = std::clamp(static_cast<int>(qb), a + 1, static_cast<int>(points.size()));
+            std::vector<double> seg;
+            for (int i = a; i < b; ++i) {
+                seg.push_back(points[i][0]);
+            }
+            const int headSize = std::max(1, static_cast<int>(seg.size()) / 4);
+            const double head = *std::max_element(seg.begin(), seg.begin() + headSize);
+            const double top = *std::max_element(seg.begin(), seg.end());
+            pulseSum += (head - medianOf(seg)) / (top + 1e-9);
+        }
+        pulse[k] = pulseSum / 4;
+        for (int c = 0; c < 3; ++c) {
+            peak[c] = std::max(peak[c], b3[k][c]);
+        }
+    }
+    for (auto& b : b3) {
+        for (int c = 0; c < 3; ++c) {
+            b[c] = 230 * b[c] / peak[c];
+        }
+    }
+    std::vector<double> kickRaw(nb);
+    for (int k = 0; k < nb; ++k) {
+        kickRaw[k] = pulse[k] * b3[k][0];
+    }
+    const double p90 = percentileOf(kickRaw, 90) + 1e-9;
+    std::vector<bool> on(nb);
+    bool state = kickRaw[0] / p90 > 0.5;
+    for (int k = 0; k < nb; ++k) {
+        const double v = std::clamp(kickRaw[k] / p90, 0.0, 1.5);
+        if (state && v < 0.35) {
+            state = false;
+        } else if (!state && v > 0.6) {
+            state = true;
+        }
+        on[k] = state;
+    }
+    for (int i = 0; i < nb;) { // a 1-bar state is a fill
+        int j = i;
+        while (j < nb && on[j] == on[i]) {
+            ++j;
+        }
+        if (j - i < 2 && i > 0) {
+            for (int k = i; k < j; ++k) {
+                on[k] = on[i - 1];
+            }
+        }
+        i = j;
+    }
+    std::vector<double> kickChange(nb, 0), bandChange(nb, 0), change(nb, 0);
+    for (int k = 1; k < nb; ++k) {
+        kickChange[k] = on[k] != on[k - 1] ? 1 : 0;
+        for (int c = 0; c < 3; ++c) {
+            change[k] += std::fabs(std::log1p(b3[k][c]) - std::log1p(b3[k - 1][c]));
+        }
+    }
+    for (int k = 4; k < nb - 4; ++k) {
+        for (int c = 0; c < 3; ++c) {
+            double before = 0;
+            double after = 0;
+            for (int i = 0; i < 4; ++i) {
+                before += b3[k - 4 + i][c] / 4;
+                after += b3[k + i][c] / 4;
+            }
+            bandChange[k] = std::max(bandChange[k],
+                    std::fabs(std::log((after + kFloor) / (before + kFloor))));
+        }
+    }
+    // 3. The phrase "1": the 8-bar offset where the kick and the bands change most
+    int phase = 0;
+    double bestVote = -1;
+    for (int o = 0; o < 8; ++o) {
+        double kicks = 0;
+        double sum = 0;
+        int count = 0;
+        for (int k = o; k < nb; k += 8) {
+            kicks += kickChange[k];
+            sum += change[k];
+            ++count;
+        }
+        const double vote = 2.0 * kicks + (count ? sum / count : 0);
+        if (vote > bestVote) {
+            bestVote = vote;
+            phase = o;
+        }
+    }
+    // 4. Novelty: the bars' self-similarity (bands + rhythm), z-scored, cosine
+    constexpr int kDims = 15;
+    std::vector<std::array<double, kDims>> f(nb);
+    for (int k = 0; k < nb; ++k) {
+        for (int c = 0; c < 3; ++c) {
+            f[k][c] = 3 * std::log1p(b3[k][c]);
+        }
+        for (int i = 0; i < 12; ++i) {
+            f[k][3 + i] = quarters[k][i];
+        }
+    }
+    for (int d = 0; d < kDims; ++d) {
+        double mean = 0;
+        for (int k = 0; k < nb; ++k) {
+            mean += f[k][d] / nb;
+        }
+        double var = 0;
+        for (int k = 0; k < nb; ++k) {
+            var += (f[k][d] - mean) * (f[k][d] - mean) / nb;
+        }
+        const double sd = std::sqrt(var) + 1e-6;
+        for (int k = 0; k < nb; ++k) {
+            f[k][d] = (f[k][d] - mean) / sd;
+        }
+    }
+    for (auto& row : f) {
+        double norm = 0;
+        for (double v : row) {
+            norm += v * v;
+        }
+        norm = std::sqrt(norm) + 1e-9;
+        for (double& v : row) {
+            v /= norm;
+        }
+    }
+    std::vector<std::vector<double>> ssm(nb, std::vector<double>(nb));
+    for (int i = 0; i < nb; ++i) {
+        for (int j = 0; j < nb; ++j) {
+            double dot = 0;
+            for (int d = 0; d < kDims; ++d) {
+                dot += f[i][d] * f[j][d];
+            }
+            ssm[i][j] = dot;
+        }
+    }
+    const auto nov4 = checkerNovelty(ssm, 4);
+    const auto nov8 = checkerNovelty(ssm, 8);
+    // 5. The score per bar, weighted to the phrase grid
+    std::vector<double> nov(nb), bc(nb), score(nb);
+    for (int k = 0; k < nb; ++k) {
+        nov[k] = 0.5 * nov4[k] + 0.5 * nov8[k];
+        bc[k] = std::max(0.0, bandChange[k] - 0.3);
+        const int rel = ((k - phase) % 8 + 8) % 8;
+        const double grid = rel == 0 ? 1.0 : rel == 4 ? 0.75 : 0.35;
+        score[k] = (nov[k] + 0.6 * kickChange[k] + 0.8 * bc[k]) * grid;
+    }
+    const double median = medianOf(score);
+    std::vector<double> deviation(nb);
+    for (int k = 0; k < nb; ++k) {
+        deviation[k] = std::fabs(score[k] - median);
+    }
+    const double threshold = median + 1.5 * medianOf(deviation) + 0.15;
+    std::vector<int> order(nb);
+    for (int k = 0; k < nb; ++k) {
+        order[k] = k;
+    }
+    std::stable_sort(order.begin(), order.end(), [&](int a, int b) { return score[a] > score[b]; });
+    std::vector<int> peaks;
+    for (int k : order) {
+        if (score[k] < threshold || k < 4 || k > nb - 4) {
+            continue;
+        }
+        if (std::all_of(peaks.begin(), peaks.end(), [k](int p) { return std::abs(k - p) >= 8; })) {
+            peaks.push_back(k);
+        }
+    }
+    for (int k = 4; k < nb; ++k) {
+        const int rel = ((k - phase) % 8 + 8) % 8;
+        if (kickChange[k] > 0 && (rel == 0 || rel == 4) &&
+                std::all_of(peaks.begin(), peaks.end(), [k](int p) { return std::abs(k - p) >= 4; })) {
+            peaks.push_back(k);
+        }
+    }
+    std::sort(peaks.begin(), peaks.end());
+    for (int k : peaks) {
+        const bool kick = kickChange[std::max(0, k - 1)] > 0 || kickChange[k] > 0 ||
+                (k + 1 < nb && kickChange[k + 1] > 0);
+        if (kick || nov[k] >= 0.5 || bc[k] >= 0.35) {
+            result.append(barBeat[k]);
+        }
+    }
+    return result;
+}
+
 QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         const mixxx::BeatsPointer& pBeats,
         mixxx::audio::FramePos one,
         int beatsPerBar,
         mixxx::audio::FramePos trackEnd) {
+    Q_UNUSED(one); // v2 finds the downbeat and the phrase "1" itself
     QList<mixxx::audio::FramePos> result;
     const int size = waveform.getDataSize();
     const double ratio = waveform.getAudioVisualRatio();
-    if (!pBeats || !one.isValid() || !trackEnd.isValid() || size <= 0 || ratio <= 0 ||
+    if (!pBeats || !trackEnd.isValid() || size <= 1 || ratio <= 0 ||
             waveform.getCompletion() < size) {
         return result;
     }
-    if (beatsPerBar < 1) {
-        beatsPerBar = 4;
+    // The waveform's points, both channels (even and odd) as one
+    std::vector<std::array<double, 3>> points(size / 2);
+    for (int k = 0; k < size / 2; ++k) {
+        points[k] = {(waveform.getLow(2 * k) + waveform.getLow(2 * k + 1)) / 2.0,
+                (waveform.getMid(2 * k) + waveform.getMid(2 * k + 1)) / 2.0,
+                (waveform.getHigh(2 * k) + waveform.getHigh(2 * k + 1)) / 2.0};
     }
-    // The bar starts: every beat counted from "1" that begins a bar
-    QList<mixxx::audio::FramePos> barStarts;
-    int firstBarNumber = 0;
+    // Every beat of the grid, in frames and in points
+    std::vector<mixxx::audio::FramePos> beatFrames;
+    std::vector<double> beats;
     auto beat = pBeats->firstBeat();
     int guard = 0;
     while (beat.isValid() && beat < trackEnd && guard++ < 100000) {
-        int number;
-        if (PhraseControl::beatNumber(pBeats, one, beat, &number) &&
-                ((number % beatsPerBar) + beatsPerBar) % beatsPerBar == 0) {
-            if (barStarts.isEmpty()) {
-                firstBarNumber = static_cast<int>(
-                        std::floor(static_cast<double>(number) / beatsPerBar));
-            }
-            barStarts.append(beat);
-        }
+        beatFrames.push_back(beat);
+        beats.push_back(beat.value() / ratio);
         const auto next = pBeats->findNextBeat(beat + 1);
         if (!next.isValid() || next <= beat) {
             break;
         }
         beat = next;
     }
-    if (barStarts.size() < 3 * kPhraseBars) {
-        return result;
-    }
-    barStarts.append(trackEnd);
-    // Mean low / mid / high per bar (both channels: even and odd points)
-    QList<std::array<double, 3>> energies;
-    for (int b = 0; b + 1 < barStarts.size(); ++b) {
-        const int from = std::clamp(
-                2 * static_cast<int>(barStarts[b].value() / ratio), 0, size - 1);
-        const int to = std::clamp(
-                2 * static_cast<int>(barStarts[b + 1].value() / ratio), from + 1, size);
-        std::array<double, 3> sum{0, 0, 0};
-        for (int i = from; i < to; ++i) {
-            sum[0] += waveform.getLow(i);
-            sum[1] += waveform.getMid(i);
-            sum[2] += waveform.getHigh(i);
-        }
-        const double count = std::max(1, to - from);
-        energies.append({sum[0] / count, sum[1] / count, sum[2] / count});
-    }
-    // Bar numbers: phrase boundaries are multiples of 4 counted from "1"
-    // energies[i] is bar firstBarNumber + i; a phrase starts where that is a multiple of 4
-    const QList<int> bars = sectionBars(energies, -firstBarNumber);
-    for (int bar : bars) {
-        result.append(barStarts[bar]);
+    for (int index : sectionBeatsV2(points, beats, beatsPerBar)) {
+        result.append(beatFrames[index]);
     }
     return result;
 }
