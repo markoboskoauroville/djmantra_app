@@ -13,6 +13,76 @@ Rectangle {
     property string folder: ""
     property string deck: "" // a deck's cover was tapped: onto that deck
     property var entries: folder === "" ? Mixxx.DJMantra.musicRoots() : Mixxx.DJMantra.listFolder(folder)
+    // DJ Pro style (Marko, round 19): cover, title, artist, BPM, key; a tap
+    // on a column header sorts by it (again: the other way round)
+    property string sortKey: ""
+    property bool sortUp: true
+    property int filled: 0
+
+    ListModel { id: songs }
+
+    onEntriesChanged: {
+        songs.clear();
+        for (const e of entries)
+            songs.append({name: e.name, path: e.path, isFolder: root.folder === "" || e.isFolder === true, artist: "", title: e.name,
+                          bpm: 0.0, key: "", cover: "", known: root.folder === "" || e.isFolder === true});
+        filled = 0;
+        filler.restart();
+    }
+
+    Timer {
+        // the details a few songs at a time, so the list never freezes (the
+        // first time a song is read its tags go into the library)
+        id: filler
+
+        interval: 30
+        repeat: true
+        onTriggered: {
+            let done = 0;
+            while (root.filled < songs.count && done < 4) {
+                const row = songs.get(root.filled);
+                if (!row.known) {
+                    const i = Mixxx.DJMantra.songInfo(row.path);
+                    songs.set(root.filled, {artist: i.artist || "", title: i.title || row.name,
+                                           bpm: i.bpm || 0, key: i.key || "", cover: i.cover || "", known: true});
+                    ++done;
+                }
+                ++root.filled;
+            }
+            if (root.filled >= songs.count) {
+                stop();
+                if (root.sortKey !== "")
+                    root.sortBy(root.sortKey, root.sortUp);
+            }
+        }
+    }
+
+    function sortBy(key, up) {
+        sortKey = key;
+        sortUp = up;
+        const rows = [];
+        for (let i = 0; i < songs.count; ++i) {
+            const r = songs.get(i);
+            rows.push({name: r.name, path: r.path, isFolder: r.isFolder, artist: r.artist, title: r.title,
+                       bpm: r.bpm, key: r.key, cover: r.cover, known: r.known});
+        }
+        // Camelot keys in wheel order: 1A 1B 2A ... 12B
+        const keyRank = (k) => k === "" ? 99 : parseInt(k) * 2 + (k.endsWith("B") ? 1 : 0);
+        const value = (r) => key === "bpm" ? (r.bpm > 0 ? r.bpm : 1e9)
+                : key === "key" ? keyRank(r.key)
+                : String(r[key]).toLowerCase();
+        rows.sort((a, b) => {
+            if (a.isFolder !== b.isFolder)
+                return a.isFolder ? -1 : 1;
+            const va = value(a), vb = value(b);
+            const c = va < vb ? -1 : va > vb ? 1 : 0;
+            return up ? c : -c;
+        });
+        songs.clear();
+        for (const r of rows)
+            songs.append(r);
+        Mixxx.DJMantra.log("songs sorted by " + key + (up ? " up" : " down"));
+    }
     signal done()
 
     color: Style.background
@@ -96,61 +166,154 @@ Rectangle {
         }
     }
 
+    Row {
+        // the column headers: a tap sorts by that column, again reverses
+        id: header
+
+        anchors.top: bar.bottom
+        width: parent.width
+        height: 32
+        visible: root.folder !== ""
+
+        Repeater {
+            model: [{key: "title", label: qsTr("TITLE"), w: 0.40}, {key: "artist", label: qsTr("ARTIST"), w: 0.30},
+                    {key: "bpm", label: qsTr("BPM"), w: 0.15}, {key: "key", label: qsTr("KEY"), w: 0.15}]
+
+            delegate: Rectangle {
+                id: column
+
+                required property var modelData
+
+                objectName: "sort_" + modelData.key
+                width: header.width * modelData.w
+                height: header.height
+                color: area.pressed ? Style.pressed : Style.background
+
+                Text {
+                    anchors.centerIn: parent
+                    text: column.modelData.label + (root.sortKey === column.modelData.key ? (root.sortUp ? " \u25B2" : " \u25BC") : "")
+                    color: root.sortKey === column.modelData.key ? Style.accent : Style.subText
+                    font.pixelSize: 12
+                    font.bold: true
+                }
+
+                MouseArea {
+                    id: area
+
+                    anchors.fill: parent
+                    onClicked: root.sortBy(column.modelData.key,
+                            root.sortKey === column.modelData.key ? !root.sortUp : true)
+                }
+            }
+        }
+    }
+
     ListView {
         id: list
 
-        anchors.top: bar.bottom
+        anchors.top: header.visible ? header.bottom : bar.bottom
         anchors.bottom: parent.bottom
         width: parent.width
         clip: true
-        model: root.entries
+        model: songs
 
         delegate: Rectangle {
             id: row
 
-            required property var modelData
+            required property string name
+            required property string path
+            required property bool isFolder
+            required property string artist
+            required property string title
+            required property real bpm
+            required property string key
+            required property string cover
 
             width: list.width
-            height: 52
+            height: 56
             color: rowArea.pressed ? Style.pressed : "transparent"
 
-            Text {
-                // the glyph on the left, as the horoscope app's lists
-                id: glyph
+            Rectangle {
+                // the cover (DJ Pro style), a note while there is none
+                id: art
 
                 anchors.left: parent.left
-                anchors.leftMargin: 14
+                anchors.leftMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
-                width: 28
-                text: row.modelData.isFolder ? "\uD83D\uDCC1" : "\u266B"
-                color: row.modelData.isFolder ? Style.accent : Style.text
-                font.pixelSize: 20
+                width: 44
+                height: 44
+                radius: 6
+                color: Style.tile
+                clip: true
+
+                Image {
+                    anchors.fill: parent
+                    visible: !row.isFolder && row.cover !== ""
+                    source: row.isFolder ? "" : row.cover
+                    sourceSize.width: 88
+                    sourceSize.height: 88
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                }
+
+                Text {
+                    anchors.centerIn: parent
+                    visible: row.isFolder || row.cover === ""
+                    text: row.isFolder ? "\uD83D\uDCC1" : "\u266B"
+                    color: row.isFolder ? Style.accent : Style.subText
+                    font.pixelSize: 20
+                }
             }
 
             Column {
-                anchors.left: glyph.right
-                anchors.leftMargin: 10
-                anchors.right: parent.right
-                anchors.rightMargin: 12
+                // title over artist, as wide as the TITLE and ARTIST columns
+                anchors.left: art.right
+                anchors.leftMargin: 8
+                anchors.right: bpmText.left
+                anchors.rightMargin: 6
                 anchors.verticalCenter: parent.verticalCenter
 
                 Text {
                     width: parent.width
-                    text: row.modelData.name
+                    text: row.isFolder ? row.name : row.title
                     color: Style.text
-                    font.pixelSize: 16
+                    font.pixelSize: 15
                     font.bold: true
                     elide: Text.ElideRight
                 }
 
                 Text {
                     width: parent.width
-                    text: row.modelData.isFolder ? qsTr("Folder")
-                            : row.modelData.path.substring(row.modelData.path.lastIndexOf(".") + 1).toUpperCase()
+                    text: row.isFolder ? qsTr("Folder") : row.artist
                     color: Style.subText
                     font.pixelSize: 13
                     elide: Text.ElideRight
                 }
+            }
+
+            Text {
+                id: bpmText
+
+                anchors.right: keyText.left
+                anchors.verticalCenter: parent.verticalCenter
+                width: list.width * 0.15
+                horizontalAlignment: Text.AlignHCenter
+                text: !row.isFolder && row.bpm > 0 ? row.bpm.toFixed(1) : ""
+                color: Style.text
+                font.pixelSize: 14
+            }
+
+            Text {
+                id: keyText
+
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                width: list.width * 0.15
+                horizontalAlignment: Text.AlignHCenter
+                text: row.isFolder ? "" : row.key
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
             }
 
             MouseArea {
@@ -158,11 +321,10 @@ Rectangle {
 
                 anchors.fill: parent
                 onClicked: {
-                    if (row.modelData.isFolder)
-                        root.folder = row.modelData.path;
+                    if (row.isFolder)
+                        root.folder = row.path;
                     else
-                        root.load(row.modelData.path,
-                                root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false);
+                        root.load(row.path, root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false);
                 }
             }
 

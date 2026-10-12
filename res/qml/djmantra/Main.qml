@@ -207,6 +207,7 @@ Window {
                     height: 44
                     group: "[Channel1]"
                     deckColor: Style.deck1
+                    matrixDeck: matrix1
                 }
 
                 DeckControls {
@@ -215,6 +216,7 @@ Window {
                     group: "[Channel2]"
                     deckColor: Style.deck2
                     mirrored: true
+                    matrixDeck: matrix2
                 }
             }
 

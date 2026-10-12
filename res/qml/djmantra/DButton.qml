@@ -18,6 +18,7 @@ Rectangle {
     // glyph (round 13: the pause sign was tofu; round 16b: JUMP's too)
     property string icon: ""
     signal clicked()
+    signal pressedDown()
 
     radius: Style.radius
     color: area.pressed ? Style.pressed : (lit ? litColor : Style.tile)
@@ -90,6 +91,7 @@ Rectangle {
 
         anchors.fill: parent
         onPressed: {
+            root.pressedDown();
             if (root.key !== "" && root.mode === "push")
                 control.value = 1;
             // toggles act on the press (round 17: Marko's PLAY "doesn't work":

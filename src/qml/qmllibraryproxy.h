@@ -26,6 +26,10 @@ class QmlLibraryProxy : public QObject {
     static void registerLibrary(std::shared_ptr<Library> pLibrary) {
         s_pLibrary = std::move(pLibrary);
     }
+    /// DJ Mantra: the library for the song list's details
+    static std::shared_ptr<Library> library() {
+        return s_pLibrary;
+    }
 
   private:
     static inline std::shared_ptr<Library> s_pLibrary;

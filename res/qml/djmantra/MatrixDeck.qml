@@ -49,6 +49,8 @@ Item {
     Mixxx.ControlProxy { id: quantize; group: root.group; key: "quantize" }
     Mixxx.ControlProxy { id: otherPlay; group: root.otherGroup; key: "play" }
     Mixxx.ControlProxy {
+        id: otherBeat
+
         group: root.otherGroup
         key: "beat_in_phrase"
         onValueChanged: {
@@ -59,6 +61,20 @@ Item {
                 play.value = 1;
             }
         }
+    }
+
+    // Align with the other deck (Marko, round 19: "if I'm pressing play on
+    // beat 7 and beat 8 is playing of the current song, align it perfectly"):
+    // on the other deck's next beat this deck plays the SAME beat of its
+    // phrase. Playing: a seamless jump on the next beat; stopped: it goes to
+    // that beat and starts with it. False when the other deck is not playing.
+    function align() {
+        if (!loaded || otherPlay.value <= 0 || otherBeat.value < 0)
+            return false;
+        const target = (Math.floor(otherBeat.value) + 1) % cells;
+        Mixxx.DJMantra.log("align " + root.group + " to beat " + (target + 1) + " with the other deck");
+        tap(target);
+        return true;
     }
 
     function tap(index) {

@@ -26,10 +26,15 @@
 
 #include "control/controlproxy.h"
 #include "engine/controls/sectiondetector.h"
+#include "library/library.h"
+#include "library/trackcollectionmanager.h"
 #include "mixer/playerinfo.h"
+#include "qml/asyncimageprovider.h"
+#include "qml/qmllibraryproxy.h"
 #include "moc_qmldjmantra.cpp"
 #include "sources/soundsourceproxy.h"
 #include "track/keyutils.h"
+#include "track/trackref.h"
 #include "track/track.h"
 #include "waveform/waveform.h"
 #include "util/duration.h"
@@ -477,6 +482,28 @@ QVariantList QmlDJMantra::listFolder(const QString& folder) const {
         }
     }
     return folders + songs;
+}
+
+QVariantMap QmlDJMantra::songInfo(const QString& path) const {
+    QVariantMap info;
+    const auto pLibrary = QmlLibraryProxy::library();
+    if (!pLibrary) {
+        return info;
+    }
+    const TrackPointer pTrack = pLibrary->trackCollectionManager()->getOrAddTrack(
+            TrackRef::fromFilePath(path));
+    if (!pTrack) {
+        return info;
+    }
+    info[QStringLiteral("artist")] = pTrack->getArtist();
+    info[QStringLiteral("title")] = pTrack->getTitle();
+    info[QStringLiteral("bpm")] = pTrack->getBpm() > 0 ? pTrack->getBpm() : 0.0;
+    const auto code = djmantra::camelot::fromKey(pTrack->getKey());
+    info[QStringLiteral("key")] = code.isValid() ? djmantra::camelot::text(code) : QString();
+    info[QStringLiteral("cover")] = pTrack->getCoverInfo().hasImage()
+            ? AsyncImageProvider::trackLocationToCoverArtUrl(pTrack->getLocation()).toString()
+            : QString();
+    return info;
 }
 
 void QmlDJMantra::setQuickInterface(bool on) {

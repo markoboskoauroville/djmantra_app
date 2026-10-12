@@ -3,18 +3,21 @@ import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
 // A deck's player controls (Marko, 12.10.2026, the redesign): SYNC, CUE,
-// PLAY and JUMP (to the next section). Deck 2 mirrored: PLAY in the middle.
+// PLAY (aligned start) and ALIGN (held: the next section). Deck 2 mirrored.
 Row {
     id: root
 
     property string group
     property color deckColor: Style.deck1
     property bool mirrored: false
+    property var matrixDeck // its MatrixDeck (align, beat launch)
     readonly property int deck: group === "[Channel2]" ? 2 : 1
 
     spacing: 4
     layoutDirection: mirrored ? Qt.RightToLeft : Qt.LeftToRight
 
+    Mixxx.ControlProxy { id: playControl; group: root.group; key: "play" }
+    Mixxx.ControlProxy { id: sectionJump; group: root.group; key: "section_jump" }
     Mixxx.ControlProxy { id: bpm1; group: "[Channel1]"; key: "bpm" }
     Mixxx.ControlProxy { id: bpm2; group: "[Channel2]"; key: "bpm" }
 
@@ -52,25 +55,58 @@ Row {
     }
 
     DButton {
+        // PLAY: a stopped deck starts aligned with the playing one, on its
+        // next beat, the same beat of the phrase (round 19); pause as usual
         objectName: "play" + root.deck
         width: (root.width - 3 * root.spacing) * 0.32
         height: root.height
         icon: lit ? "pause" : "play"
         fontSize: 20
-        group: root.group
-        key: "play"
+        lit: playControl.value > 0
         litColor: root.deckColor
+        onPressedDown: {
+            if (playControl.value > 0) {
+                playControl.value = 0;
+            } else if (!(root.matrixDeck && root.matrixDeck.align())) {
+                playControl.value = 1;
+            }
+            Mixxx.DJMantra.log("button " + root.group + ",play " + playControl.value);
+        }
     }
 
     DButton {
-        // to the next section, in time
+        // ALIGN (round 19, Marko: "this button ... needs to change the
+        // function"): a tap aligns this deck's phrase with the other deck's on
+        // the next beat, seamless; held (0.6 s): the next section, in time
         objectName: "jump" + root.deck
         width: (root.width - 3 * root.spacing) * 0.22
         height: root.height
         icon: "next"
-        group: root.group
-        key: "section_jump"
-        mode: "push"
         litColor: Style.accent
+        lit: holdTimer.held
+        onPressedDown: holdTimer.restart()
+        onClicked: {
+            if (holdTimer.held) {
+                holdTimer.held = false;
+                return;
+            }
+            holdTimer.stop();
+            if (root.matrixDeck)
+                root.matrixDeck.align();
+        }
+
+        Timer {
+            id: holdTimer
+
+            property bool held: false
+
+            interval: 600
+            onTriggered: {
+                held = true;
+                Mixxx.DJMantra.log("next section " + root.group);
+                sectionJump.value = 1;
+                sectionJump.value = 0;
+            }
+        }
     }
 }

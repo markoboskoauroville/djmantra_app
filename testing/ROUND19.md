@@ -7,8 +7,15 @@ Build: the green Android run of the newest commit with this file. Fixes for roun
 ## 0. Smoke (10 s)
 - Install, start: `Quick: interface ready`, not black, no `qml` error.
 
-## 1. Transport
+## 1. Transport (PLAY now starts ALIGNED, round 19)
 - PLAY / pause both decks on the press (log `Quick: button [ChannelN],play 1/0`), sound.
+- Aligned start (Marko: "if I'm pressing play on beat 7 and beat 8 is playing of the current song, align it
+  perfectly"): deck 1 playing, deck 2 stopped: press deck 2's PLAY at any moment: log `Quick: align [Channel2] to
+  beat N with the other deck`; deck 2 starts on deck 1's NEXT beat, on the same beat of the phrase (the matrix's
+  lit cells one above the other at once). Try it 5 times at random moments: always together?
+- ALIGN (the ▸| button, new): both playing, phrases off by some beats: tap deck 2's ▸|: on the next beat deck 2
+  jumps (seamless) to the same beat as deck 1 (`Quick: align ...`). Held 0.6 s: the next section as before
+  (`Quick: next section ...`, the button lights).
 - SYNC on deck 2 (new log, 0.4 s after the press): `Quick: sync [Channel2]: deck 1 X bpm, deck 2 X bpm`: equal?
 - CUE. Marko's own PLAY presses if he is there.
 - DROPS (Marko's screen recording 11:52: ~4 drops a second, 10-60 ms each): both decks playing, SYNC on, 60 s on the
@@ -45,8 +52,12 @@ Build: the green Android run of the newest commit with this file. Fixes for roun
 - The meter top right, half its old size: `C nn%` / `G nn%` (or `--`), both numbers fully visible; values on the
   Songs and the Phrasing tab.
 
-## 5. Library
-- A tap loads onto the free deck; cover tap then a song: that deck (quick check).
+## 5. Library (DJ Pro style, round 19)
+- In a folder: per song the cover (a note while none), the title, the artist, the BPM and the Camelot key; the details
+  fill in within a few seconds (first time: the tags are read into the library). Column headers TITLE / ARTIST / BPM
+  / KEY: a tap sorts by it (yellow, ▲), again reverses (▼); log `Quick: songs sorted by ...`; folders stay on top.
+  BPM sorts by number, KEY in wheel order (1A 1B 2A ...). Screenshot.
+- A tap on a song loads onto the free deck; cover tap then a song: that deck.
 
 ## 6. Specific features
 - JUMP (round 18 FAIL: went to the song's end): with a section ahead it lands on the yellow line

@@ -84,6 +84,9 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE QVariantList musicRoots() const;
     /// Folders and songs in `folder`: [{name, path, isFolder}], folders first
     Q_INVOKABLE QVariantList listFolder(const QString& folder) const;
+    /// A song's {artist, title, bpm, key (Camelot), cover (image URL or "")}:
+    /// from the library, the file added to it (tags read) when new
+    Q_INVOKABLE QVariantMap songInfo(const QString& path) const;
 
     /// Hides the status and navigation bars again
     Q_INVOKABLE void hideBars();

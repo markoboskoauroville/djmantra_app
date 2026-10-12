@@ -46,7 +46,7 @@ STUB = {
                     " function barBeat(n, p) { return \"1.1\"; }\n function barsBeatsLeft(b, p) { return \"-0.0\"; }\n"
                     " function waveformGain(g, l) { return 0; }\n function isPlaying(g) { return false; }\n"
                     " function freeDeck() { return \"[Channel1]\"; }\n function noteLoaded(g) {}\n"
-                    " function musicRoots() { return []; }\n function listFolder(f) { return []; }\n"
+                    " function musicRoots() { return []; }\n function listFolder(f) { return [{name: \"a\", path: \"/m/a.mp3\", isFolder: false}]; }\n function songInfo(p) { return ({artist: \"Artist\", title: \"Title\", bpm: 124, key: \"8A\", cover: \"\"}); }\n"
                     " function hideBars() {}\n function showBars() {}\n function barsVisible() { return false; }\n function usage() { return ({cpu: 34, gpu: -1}); }\n function sections(g) { return []; }\n function setQuickInterface(on) {}\n"
                     " function quickInterface() { return true; }\n function log(t) {}\n}\n",
 }
