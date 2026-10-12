@@ -139,7 +139,8 @@ Window {
 
         MatrixDisplay {
             // the OXI E16's dot-matrix display (Marko, 12.10.2026): each
-            // deck's title, key and BPM, section countdown and phrase beat
+            // deck's bar.beat, countdown to the next phrase / section change and
+            // the phrase running lights, deck 1 over deck 2
             id: matrix
 
             objectName: "matrix"
@@ -149,11 +150,8 @@ Window {
             anchors.right: parent.right
             anchors.leftMargin: Style.gap
             anchors.rightMargin: Style.gap
-            height: 72
-            left: matrix1.lines
-            right: matrix2.lines
-            leftBeat: matrix1.phraseBeat
-            rightBeat: matrix2.phraseBeat
+            height: 62
+            decks: [matrix1.info, matrix2.info]
         }
 
         Loader {

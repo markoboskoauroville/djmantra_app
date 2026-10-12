@@ -52,16 +52,15 @@ interface and the Mix Ultra's pad modes. Not to be tested; noted for the next bu
   15 separate dots around it, lit from the bottom left up to the value in the knob's colour, the rest dim. An EQ
   knob at the top (0 dB) shows the full ring; at the bottom (kill) no dot; FILTER in the middle about half.
   Turn each knob slowly: the dots follow without jumps. Screenshot with each knob at a different value.
-- Dot-matrix display under the deck headers (the phrase bar is gone, the matrix has it): dark glass, a grid of square dots (unlit ones
-  faintly visible), a pixel font. Left half deck 1, right half deck 2, three lines each:
-  1. artist - title, running through when longer than its half (no deck loaded: NO TRACK);
-  2. Camelot key in the deck colour, then the BPM (e.g. `8A 124.0`);
-  3. section countdown in yellow and the beat in the phrase `B1`…`B8` in the deck colour.
-  Check: readable on the phone at arm's length? Text not cut at the halves' edge? Updates while playing? CPU in
-  `top` with both decks playing, compared with round 13 (32–55 %). Screenshot portrait and landscape.
-- Phrase running lights inside the matrix (Marko: "a led running lights for phrasing inside matrix display"):
-  under the text, two rows of 8 LED cells made of the matrix's own dots, deck 1 above deck 2. The current beat's
-  cell lights in the deck colour and runs left to right with the music; beat 1's cell lights yellow (dim it is a
-  faint brown, so the "1" is findable even unlit). Line 3's `B1`…`B8` equals the lit cell, and the small phrase
-  squares beside the covers light the same step. Synced decks aligned on the phrase: both yellow cells light
-  together, one above the other. Video of 2 phrases (16 beats) with both decks playing.
+- Dot-matrix display under the deck headers (the phrase bar is gone, the matrix has it): dark glass, a grid of
+  square dots (unlit ones faintly visible), a pixel font. Its job (Marko), per deck, deck 1 above deck 2:
+  1. left: the deck number (dim) and the current BAR.BEAT in the deck colour (e.g. `17.3`), counting with the music;
+     it equals the deck counter in BARS mode;
+  2. right: ONE countdown in yellow to the next phrase / section change (e.g. `-6.2`; `|` after it: to the end);
+  3. under them, the RUNNING LIGHTS: 8 LED cells made of the matrix's own dots across the width. The current beat's
+     cell lights in the deck colour and runs left to right; beat 1's cell lights yellow (unlit it is a faint brown).
+     The small phrase squares beside the covers light the same step.
+  No title, artist, key or BPM in the matrix (they are in the headers and the Camelot badge). No deck loaded: `-.-`.
+  Check: synced decks aligned on the phrase: both yellow cells light together, one above the other, and both
+  countdowns reach -0.0 / jump together. Readable at arm's length? Video of 2 phrases (16 beats), both decks playing;
+  CPU in `top` vs round 13 (32-55 %). Screenshot portrait and landscape.

@@ -3,31 +3,23 @@ import QtQuick 2.12
 
 // A dot-matrix display, as on the OXI E16 (Marko, 12.10.2026): dark glass, a
 // grid of square pixels, a 5x7 pixel font, lit dots in the accent colours,
-// the unlit ones faintly visible. Two halves (deck 1 left, deck 2 right),
-// three lines each; a line is a list of {text, color} pieces. A piece with
-// scroll: true runs through its room when it is too long (the titles).
-// Below the text, the phrase running lights (Marko, 12.10.2026): both decks'
-// 8 steps as LED cells of the same pixels, deck 1 over deck 2, so both "1"s
-// lining up reads at a glance. Beat 1 lights in the accent colour.
+// the unlit ones faintly visible. Its job (Marko): per deck, the current bar
+// and beat (17.3), ONE countdown to the next phrase / section change (-6.2)
+// and the running lights of the 8-beat phrase, LED cells of the same pixels.
+// Deck 1 over deck 2, so the numbers and the lights compare at a glance.
 Canvas {
     id: root
 
-    property var left: []   // [[{text, color, scroll}], line 2, line 3]
-    property var right: []
-    property int leftBeat: -1  // 0..7, -1: none
-    property int rightBeat: -1
-    property color leftColor: Style.deck1
-    property color rightColor: Style.deck2
-    property int scrollStep: 0
-    readonly property int lines: 3
-    readonly property int rowsPerLine: 8 // 7 dots + 1 gap
+    // [{number, barBeat, countdown, beat (0..7, -1: none), color}] per deck
+    property var decks: []
     readonly property int cellRows: 3 // a phrase LED cell is 3 dots high
-    readonly property int textRows: lines * rowsPerLine + 1
-    readonly property int totalRows: textRows + 2 * (cellRows + 1)
+    readonly property int deckRows: 1 + 7 + 1 + cellRows // gap, numbers, gap, cells
+    readonly property int totalRows: 2 * deckRows + 1
     readonly property real pitch: height / totalRows
     readonly property int columns: Math.floor(width / pitch)
+    readonly property color glass: "#04060e"
+    readonly property color unlit: "#121735"
 
-    // 5x7 font: 7 rows of 5 bits per glyph
     readonly property var glyphs: ({
         "0": [14,17,19,21,25,17,14], "1": [4,12,4,4,4,4,14], "2": [14,17,1,2,4,8,31],
         "3": [31,2,4,2,1,17,14], "4": [2,6,10,18,31,2,2], "5": [31,16,30,1,1,17,14],
@@ -52,21 +44,7 @@ Canvas {
         return g !== undefined ? g : glyphs["?"];
     }
 
-    Timer {
-        // the titles run through when they are longer than their room
-        interval: 160
-        repeat: true
-        running: root.visible
-        onTriggered: {
-            root.scrollStep += 1;
-            root.requestPaint();
-        }
-    }
-
-    onLeftBeatChanged: requestPaint()
-    onRightBeatChanged: requestPaint()
-    onLeftChanged: requestPaint()
-    onRightChanged: requestPaint()
+    onDecksChanged: requestPaint()
     onWidthChanged: requestPaint()
     onHeightChanged: requestPaint()
 
@@ -75,71 +53,54 @@ Canvas {
         ctx.reset();
         const p = pitch;
         const dot = p * 0.78;
-        // dark glass
-        ctx.fillStyle = "#04060e";
+        ctx.fillStyle = glass;
         ctx.fillRect(0, 0, width, height);
-        const rows = totalRows;
-        // the lit pixels of this frame: "x,y" -> colour
-        const lit = {};
-        const half = Math.floor(columns / 2);
-        const drawHalf = (lineSet, startColumn, room) => {
-            for (let l = 0; l < Math.min(lines, lineSet.length); ++l) {
-                let column = startColumn + 1;
-                const top = 1 + l * rowsPerLine;
-                for (const piece of lineSet[l]) {
-                    let text = String(piece.text);
-                    let pieceRoom = startColumn + room - 1 - column;
-                    let shift = 0;
-                    const textColumns = text.length * 6;
-                    if (piece.scroll && textColumns > pieceRoom) {
-                        const loop = textColumns + 6;
-                        shift = scrollStep % loop;
-                        text = text + "   " + text;
+        const lit = {}; // "x,y" -> colour
+        const text = (string, column, top, color) => {
+            for (let i = 0; i < string.length; ++i) {
+                const g = glyph(string[i]);
+                for (let gx = 0; gx < 5; ++gx) {
+                    const x = column + i * 6 + gx;
+                    if (x < 0 || x >= columns)
+                        continue;
+                    for (let gy = 0; gy < 7; ++gy) {
+                        if (g[gy] & (16 >> gx))
+                            lit[x + "," + (top + gy)] = color;
                     }
-                    for (let i = 0; i < text.length; ++i) {
-                        const g = glyph(text[i]);
-                        for (let gx = 0; gx < 5; ++gx) {
-                            const x = column + i * 6 + gx - shift;
-                            if (x < column || x >= startColumn + room - 1 || x < startColumn + 1)
-                                continue;
-                            for (let gy = 0; gy < 7; ++gy) {
-                                if (g[gy] & (16 >> gx))
-                                    lit[x + "," + (top + gy)] = piece.color;
-                            }
-                        }
-                    }
-                    column += piece.scroll ? pieceRoom + 1 : textColumns;
                 }
             }
         };
-        drawHalf(left, 0, half);
-        drawHalf(right, half, columns - half);
-        // the phrase running lights: 8 cells across the whole width per deck
+        const textWidth = (string) => string.length * 6 - 1;
+        // the phrase cells under the numbers, across the whole width
         const cellGap = 2;
-        const cellWidth = Math.floor((columns - 2 - 7 * cellGap) / 8);
-        const firstColumn = Math.floor((columns - (8 * cellWidth + 7 * cellGap)) / 2);
+        const cellRoom = columns - 2;
+        const cellWidth = Math.max(2, Math.floor((cellRoom - 7 * cellGap) / 8));
+        const firstCell = Math.floor((columns - (8 * cellWidth + 7 * cellGap)) / 2);
         const dimCell = "#252d5c";
         const dimFirst = "#4a4326";
-        const drawCells = (beatNow, color, top) => {
+        for (let d = 0; d < Math.min(2, decks.length); ++d) {
+            const deck = decks[d];
+            const top = d * deckRows;
+            // deck number and bar.beat, left; the countdown, right
+            text(String(deck.number), 1, top + 1, Qt.darker(deck.color, 1.6));
+            text(deck.barBeat, 8, top + 1, deck.color);
+            text(deck.countdown, columns - 1 - textWidth(deck.countdown), top + 1, Style.accent);
+            // the running lights, under the numbers
+            const cellTop = top + 1 + 7 + 1;
             for (let c = 0; c < 8; ++c) {
-                const on = c === beatNow;
-                const fill = on ? (c === 0 ? Style.accent : color) : (c === 0 ? dimFirst : dimCell);
+                const on = c === deck.beat;
+                const fill = on ? (c === 0 ? Style.accent : deck.color) : (c === 0 ? dimFirst : dimCell);
                 for (let dx = 0; dx < cellWidth; ++dx)
                     for (let dy = 0; dy < cellRows; ++dy)
-                        lit[(firstColumn + c * (cellWidth + cellGap) + dx) + "," + (top + dy)] = fill;
+                        lit[(firstCell + c * (cellWidth + cellGap) + dx) + "," + (cellTop + dy)] = fill;
             }
-        };
-        drawCells(leftBeat, leftColor, textRows);
-        drawCells(rightBeat, rightColor, textRows + cellRows + 1);
-        for (let y = 0; y < rows; ++y) {
+        }
+        for (let y = 0; y < totalRows; ++y) {
             for (let x = 0; x < columns; ++x) {
                 const c = lit[x + "," + y];
-                ctx.fillStyle = c !== undefined ? c : "#121735";
+                ctx.fillStyle = c !== undefined ? c : unlit;
                 ctx.fillRect(x * p + (p - dot) / 2, y * p + (p - dot) / 2, dot, dot);
             }
         }
-        // the gap between the halves
-        ctx.fillStyle = "#04060e";
-        ctx.fillRect(half * p - p * 0.2, 0, p * 0.4, textRows * p);
     }
 }
