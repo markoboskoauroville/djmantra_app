@@ -8,3 +8,7 @@ Build: run 38291801689, commit a972af4. Started on Marko's "go" (12.10.2026 ~21:
 
 ## Part 1: transport - PASS
 - 3 Sense (tap) / Addis (NEXT). `play 1`, `auto cue ... [Channel2]`, `align [Channel2] at beat 6`, `start ... from the cued beat 6 ...`, `beat launch ... on beat 6`. 30 s both playing: xruns 0, late 0, slowest 2.3-4.2 ms.
+
+## Part 2: Mixer tab - PASS
+- Both decks playing, Mixer, portrait (`p2_mixer.png`): the two VU meters between the faders rise and fall in 4 frames 0.25 s apart, green into yellow at the top; no black wedge or spike anywhere.
+- Crossfader full left with deck 2 in the headphones (auto cue had put it there, Marko's case): 2 more frames, the same, no spike (`p2_mixer_xf_left.png`). Crossfader back to the middle.
