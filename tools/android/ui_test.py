@@ -142,6 +142,7 @@ class UiTest:
         self.results = []
         self.tested = set()
         self.map = None
+        self.died = False
 
     # -- helpers -----------------------------------------------------------
 
@@ -172,7 +173,17 @@ class UiTest:
                 return values
             time.sleep(0.5)
 
+    def app_alive(self):
+        return bool(self.dev.shell("pidof %s" % PACKAGE).strip())
+
     def record(self, orientation, page, widget, action, values, ok, note=""):
+        if not ok and not note and not self.app_alive():
+            # round 11: every test after the pads failed; was the app still there?
+            note = "APP NOT RUNNING"
+            if not self.died:
+                self.died = True
+                with open(os.path.join(self.out, "crash.txt"), "w") as f:
+                    f.write(self.dev.adb("logcat", "-d", "-b", "crash") or "")
         self.results.append(dict(orientation=orientation, page=page, type=widget["type"],
                                  name=widget["name"], key=widget["key"], action=action,
                                  values=values[:6], result="pass" if ok else "FAIL", note=note))
@@ -236,10 +247,12 @@ class UiTest:
             vertical = w["h"] > w["w"]
             span = (w["h"] if vertical else w["w"]) // 4
             if vertical:
-                self.swipe(x, y, x, y - span)
+                # down first: a channel fader starts at the top, where dragging up
+                # changes nothing (portrait volume FAIL in every round up to 11)
+                self.swipe(x, y, x, y + span)
                 time.sleep(1.0)
                 values = self.control_changed(key, before)
-                self.swipe(x, y - span, x, y)
+                self.swipe(x, y + span, x, y)
             else:
                 self.swipe(x, y, x + span, y)
                 time.sleep(1.0)
@@ -261,6 +274,13 @@ class UiTest:
         if item in TOGGLES and values:
             self.tap(x, y)
             time.sleep(0.8)
+        mode = re.match(r"d(\d)_(loop|fx|sampler)$", item)
+        if mode and key.startswith("[DJMantra]"):
+            # back to HOT CUE, or the hot cue pads tested next are not on screen
+            hot = [v for v in self.map[3] if v["key"] == "[DJMantra],d%s_hotcue" % mode.group(1)]
+            if hot:
+                self.tap(*self.center(hot[0]))
+                time.sleep(0.8)
         if item.startswith("load_deck"):
             # the load button opens the song picker over the whole screen (f7d3886); close it with Back,
             # or every later tap lands in the picker (round 10, 10.10.2026: 57 of 62 false FAILs)
@@ -330,7 +350,13 @@ class UiTest:
         time.sleep(12)
         self.wait_map(0, timeout=40)
         for orientation in ("portrait", "landscape"):
+            if self.died:
+                print("The app is not running: stopped the test (crash.txt)")
+                break
             self.run_orientation(orientation)
+            # kept after each orientation (round 11 was stopped half way: no log at all)
+            with open(os.path.join(self.out, "log.txt"), "w") as f:
+                f.write(self.dev.all_log())
         self.dev.shell("settings put system accelerometer_rotation 1")
         self.dev.fresh()
         log = self.dev.all_log()
