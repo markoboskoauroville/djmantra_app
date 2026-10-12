@@ -37,3 +37,9 @@ Media volume 0 (night).
 | 3j | Waveform zoom + (deck 1, twice) | beat lines further apart | **No change**: beat lines ~87 px apart before and after (`q3-zoom-before`, `q3-zoom-plus`) | **FAIL** |
 | 3k | Taps answered at once | yes | Every tap and drag answered within the 1–2 s screenshot delay; nothing ignored | PASS |
 | 4 | CPU, both decks, waveforms tab | lower than classic (126/117/123 %) | **37.0 / 32.5 / 55.5 %CPU** (`cpu-quick-waveforms.txt`). `dumpsys gfxinfo` sees 0 frames: Qt Quick draws on its own surface that HWUI does not count, so no frame times from there (`gfxinfo-quick.txt`) | PASS (about a third of the classic CPU) |
+| 5a | Library → Music | songs with LOAD 1 / LOAD 2 | Folders ganesha, Motiv Recordings, then the songs, each with LOAD 1 and LOAD 2. Long titles end in "…" inside their box (`q5-music-hole.png`) | PASS |
+| 5b | LOAD 1 (Alba) | loads, back to the decks | `Quick: load [Channel1] /sdcard/Music/Alba.mp3`. Back to the deck screen by itself. Analysed within ~8 s: 122.0 BPM, key 5A, badge "12B > 5A clash" (`q5-load1`, `q5-load1-analysed`) | PASS |
+| 5c | LOAD 2 (Amulet) while deck 2 **plays** | (a live deck should be protected) | `Quick: load [Channel2] /sdcard/Music/Amulet.mp3`: **it replaced Dune while Dune was playing, without a question**. In a set that stops the music on air (`q5-load2-hole.png`). Suggest: refuse or ask when the deck plays | **FAIL (risk)** |
+| 5d | ← in the library | Music → Folders → decks | Music → Folders → deck screen (`q5-arrow-back`, `q5-arrow-back2`) | PASS |
+| 5e | Android back in the library | back to the decks | Folders → deck screen (`q5-android-back`) | PASS |
+| 5f | Library remembers the folder | (nice to have) | Opens at Folders every time, not in Music | note |
