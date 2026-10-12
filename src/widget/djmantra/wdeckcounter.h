@@ -5,7 +5,7 @@
 class ControlProxy;
 
 /// DJ Mantra's deck counter (Marko, 11.10.2026). A tap switches between:
-///   TIME            elapsed / length / remaining, m:ss only: "1:23 / 5:40 / -4:17"
+///   TIME            elapsed / length / remaining, m:ss only: "1:23 / 5:40 / -4:16"
 ///   BARS & BEATS    Ableton's bar.beat, the bars and beats left to the next
 ///                   section (or to the end when no section is found) and
 ///                   the time signature: "17.3  next -6.2  4/4"
@@ -20,7 +20,7 @@ class WDeckCounter : public WLabel {
     static QString barBeat(int number, int beatsPerBar);
     /// `beats` left as "-bars.beats", e.g. 26 beats in 4/4: "-6.2"
     static QString barsBeatsLeft(int beats, int beatsPerBar);
-    /// "1:23 / 5:40 / -4:17"
+    /// "1:23 / 5:40 / -4:16"
     static QString timeText(double elapsed, double remaining);
 
     bool showsBars() const {

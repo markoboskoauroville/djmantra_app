@@ -82,7 +82,8 @@ TEST(PhraseControlTest, barBeatAsInAbleton) {
     EXPECT_EQ(QStringLiteral("-6.2"), WDeckCounter::barsBeatsLeft(26, 4));
     EXPECT_EQ(QStringLiteral("-0.0"), WDeckCounter::barsBeatsLeft(0, 4));
     EXPECT_EQ(QStringLiteral("-2.1"), WDeckCounter::barsBeatsLeft(7, 3));
-    EXPECT_EQ(QStringLiteral("1:23 / 5:40 / -4:17"), WDeckCounter::timeText(83.4, 256.9));
+    // Whole seconds, cut off like the other time displays
+    EXPECT_EQ(QStringLiteral("1:23 / 5:40 / -4:16"), WDeckCounter::timeText(83.4, 256.9));
 }
 
 TEST(PhraseControlTest, nextSectionIsTheFirstBoundaryAhead) {
