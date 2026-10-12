@@ -45,7 +45,7 @@ Rectangle {
     color: "#05070f"
     clip: true
 
-    Mixxx.ControlProxy { id: position; group: root.group; key: "playposition" }
+    Mixxx.ControlProxy { id: position; group: root.group; key: "playposition"; maxRate: 10 }
     Mixxx.ControlProxy { id: loaded; group: root.group; key: "track_loaded" }
     Mixxx.ControlProxy {
         group: root.group

@@ -88,7 +88,7 @@ Row {
         Mixxx.ControlProxy { id: cueDefault; group: root.group; key: "cue_default" }
         Mixxx.ControlProxy { id: cueGoto; group: root.group; key: "cue_gotoandstop" }
         Mixxx.ControlProxy { id: cuePoint; group: root.group; key: "cue_point" }
-        Mixxx.ControlProxy { id: cuePosition; group: root.group; key: "playposition" }
+        Mixxx.ControlProxy { id: cuePosition; group: root.group; key: "playposition"; maxRate: 4 }
         Mixxx.ControlProxy { id: trackSamples; group: root.group; key: "track_samples" }
         Mixxx.ControlProxy { id: cueDuration; group: root.group; key: "duration" }
     }

@@ -48,7 +48,7 @@ Item {
     Mixxx.ControlProxy { id: found; group: root.group; key: "section_found" }
     Mixxx.ControlProxy { id: perBar; group: root.group; key: "beats_per_bar" }
     Mixxx.ControlProxy { id: number; group: root.group; key: "beat_number" }
-    Mixxx.ControlProxy { id: position; group: root.group; key: "playposition" }
+    Mixxx.ControlProxy { id: position; group: root.group; key: "playposition"; maxRate: 4 }
     Mixxx.ControlProxy { id: duration; group: root.group; key: "duration" }
     Mixxx.ControlProxy { id: length; group: root.group; key: "phrase_length" }
     Mixxx.ControlProxy {

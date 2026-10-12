@@ -35,7 +35,7 @@ STUB = {
                             " property int renderer\n property color colorHigh\n property color colorMid\n"
                             " property color colorLow\n property bool normalize\n}\n",
     "ControlProxy.qml": "import QtQuick 2.12\nQtObject {\n property string group\n property string key\n"
-                        " property real value: 0\n property real parameter: 0\n}\n",
+                        " property real value: 0\n property real parameter: 0\n property int maxRate: 0\n}\n",
     "PlayerManager.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
                          " function getPlayer(group) { return null; }\n}\n",
     "DJMantra.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
