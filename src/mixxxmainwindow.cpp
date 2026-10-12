@@ -173,11 +173,11 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
                 m_pCoreServices->getSettings()->setValue(gpuKey, on);
                 m_pCoreServices->getSettings()->save();
             };
-            const ConfigKey quickKey("[DJMantra]", "quick_ui");
-            actions.quick = m_pCoreServices->getSettings()->getValue(quickKey, false);
-            actions.setQuick = [this, quickKey](bool on) {
+            const ConfigKey classicKey("[DJMantra]", "classic_ui");
+            actions.quick = !m_pCoreServices->getSettings()->getValue(classicKey, false);
+            actions.setQuick = [this, classicKey](bool on) {
                 // Read at the start (main.cpp)
-                m_pCoreServices->getSettings()->setValue(quickKey, on);
+                m_pCoreServices->getSettings()->setValue(classicKey, !on);
                 m_pCoreServices->getSettings()->save();
             };
             new djmantra::SettingsScreen(screenParent(), actions);

@@ -60,11 +60,12 @@ int runMixxx(MixxxApplication* pApp, const CmdlineArgs& args) {
 #ifdef MIXXX_USE_QML
     bool quick = args.isQml();
 #ifdef __ANDROID_PORT__
-    // DJ Mantra: the Qt Quick interface (drawn by the GPU) when chosen in
-    // Settings ("New interface"); the classic one otherwise
+    // DJ Mantra: the Qt Quick interface (drawn by the GPU) by default; the
+    // classic one only when chosen (Settings "New interface" off, or the menu).
+    // A new key, so an old stored quick_ui=false does not keep the classic one.
     quick = quick ||
-            pCoreServices->getSettings()->getValue(
-                    ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("quick_ui")),
+            !pCoreServices->getSettings()->getValue(
+                    ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("classic_ui")),
                     false);
     qInfo() << "Interface:" << (quick ? "Qt Quick (GPU)" : "classic (widgets)");
 #endif

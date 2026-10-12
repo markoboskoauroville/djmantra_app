@@ -60,7 +60,8 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   To do: cut DJ Mantra's memory.
 - **New interface in Qt Quick (GPU)**, 12.10 (Marko: "Yes, I want it"): `res/qml/djmantra/*.qml` +
   `src/qml/qmldjmantra.*` (Mixxx.DJMantra: insets, Camelot, folders, waveform gain, interface switch).
-  Start: Settings -> "New interface (GPU)" ([DJMantra],quick_ui) or `--qml`; menu -> back to classic.
+  The default since 12.10 (Marko: "make new interface default"): ([DJMantra],classic_ui) false; the old
+  quick_ui key is ignored. Settings -> "New interface (GPU)" off or menu -> classic sets classic_ui true.
   Round 13 (d2dbddb): loads, all controls answer, CPU 32-55 % vs 126 % classic. Fixes in 43e3538 (time
   from playposition x duration, drawn pause icon, waveform gain, zoom via waveform_zoom, overlays below
   the hole, library confirm, landscape layout). Round 14 (`testing/ROUND14.md`) sent 04:10 UTC.

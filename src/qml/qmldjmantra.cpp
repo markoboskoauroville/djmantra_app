@@ -32,7 +32,8 @@ namespace qml {
 
 namespace {
 
-const ConfigKey kQuickKey(QStringLiteral("[DJMantra]"), QStringLiteral("quick_ui"));
+// The classic interface only when chosen: the Qt Quick one is the default
+const ConfigKey kClassicKey(QStringLiteral("[DJMantra]"), QStringLiteral("classic_ui"));
 
 djmantra::camelot::Code codeOf(double keyValue) {
     return djmantra::camelot::fromKey(KeyUtils::keyFromNumericValue(keyValue));
@@ -283,14 +284,14 @@ QVariantList QmlDJMantra::listFolder(const QString& folder) const {
 
 void QmlDJMantra::setQuickInterface(bool on) {
     if (m_pConfig) {
-        m_pConfig->setValue(kQuickKey, on);
+        m_pConfig->setValue(kClassicKey, !on);
         m_pConfig->save();
     }
     qInfo() << "Quick: interface at the next start:" << (on ? "Qt Quick" : "classic");
 }
 
 bool QmlDJMantra::quickInterface() const {
-    return m_pConfig && m_pConfig->getValue(kQuickKey, false);
+    return !m_pConfig || !m_pConfig->getValue(kClassicKey, false);
 }
 
 void QmlDJMantra::log(const QString& text) const {
