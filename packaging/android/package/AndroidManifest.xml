@@ -11,6 +11,8 @@
     <!-- DJ Mantra's permissions, written here: qt_add_android_permission()
          in CMake did not reach the APK (the "All files access" switch was
          greyed out and Bluetooth scans failed on the phones). -->
+    <!-- The genre of a song without one, from MusicBrainz (GenreLookup.java) -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- Music on USB drives and SD cards through plain file paths -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"

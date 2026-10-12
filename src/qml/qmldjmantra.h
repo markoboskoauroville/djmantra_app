@@ -2,10 +2,12 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QSet>
 #include <QVariantList>
 #include <QVariantMap>
 
 #include "preferences/usersettings.h"
+#include "track/track_decl.h"
 
 class QTimer;
 
@@ -80,6 +82,12 @@ class QmlDJMantra : public QObject {
 
     /// Hides the status and navigation bars again
     Q_INVOKABLE void hideBars();
+    /// Shows them (a tap on the app's empty space); the next touch hides them
+    Q_INVOKABLE void showBars();
+
+    /// The detected section starts of the deck's track, fractions 0..1 of the
+    /// track (empty until the detection ran; section_count tells when)
+    Q_INVOKABLE QVariantList sections(const QString& group) const;
     /// The interface at the next start: true = this one (Qt Quick, GPU)
     Q_INVOKABLE void setQuickInterface(bool on);
     Q_INVOKABLE bool quickInterface() const;
@@ -94,13 +102,19 @@ class QmlDJMantra : public QObject {
   signals:
     void insetsChanged();
 
+  protected:
+    bool eventFilter(QObject* pObject, QEvent* pEvent) override;
+
   private:
     void followInsets();
+    /// A song without a genre: MusicBrainz is asked (Android, GenreLookup.java)
+    void lookUpGenre(const QString& group, TrackPointer pTrack);
 
     static inline UserSettingsPointer s_pUserSettings = nullptr;
     const UserSettingsPointer m_pConfig;
     int m_insets[4] = {0, 0, 0, 0};
     QString m_lastLoaded;
+    QSet<QString> m_genreAsked; // per file, once a run
 };
 
 } // namespace qml

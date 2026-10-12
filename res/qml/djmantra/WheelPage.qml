@@ -74,10 +74,14 @@ Rectangle {
         id: wheel
 
         anchors.top: bar.bottom
-        anchors.topMargin: 12
+        anchors.topMargin: root.embedded ? 4 : 12
         anchors.horizontalCenter: parent.horizontalCenter
-        width: Math.min(parent.width - 24, parent.height - bar.height - 220)
+        // embedded (Keys tab): as big as the page allows, no help text (round
+        // 18, Marko: "the Camelot wheel ... needs to be big")
+        width: root.embedded ? Math.min(parent.width - 8, parent.height - 8)
+                : Math.min(parent.width - 24, parent.height - bar.height - 220)
         height: width
+        onWidthChanged: requestPaint()
 
         readonly property color wheelBg: "#111833"
         readonly property color line: Style.line
@@ -187,6 +191,7 @@ Rectangle {
     }
 
     Column {
+        visible: !root.embedded
         anchors.top: wheel.bottom
         anchors.topMargin: 12
         anchors.left: parent.left

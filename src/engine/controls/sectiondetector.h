@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QList>
+#include <QString>
 #include <array>
 
 #include "audio/frame.h"
@@ -36,5 +37,11 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         mixxx::audio::FramePos one,
         int beatsPerBar,
         mixxx::audio::FramePos trackEnd);
+
+/// The detected section starts of each deck's track, as fractions of the
+/// track (0..1), for the interface's overview (round 18: "sections need to
+/// be clearly seen"). Written by PhraseControl, read by the Qt Quick UI.
+void publishSections(const QString& group, const QList<double>& fractions);
+QList<double> publishedSections(const QString& group);
 
 } // namespace djmantra

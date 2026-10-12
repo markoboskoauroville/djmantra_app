@@ -23,6 +23,9 @@ class QmlWaveformOverview : public QQuickPaintedItem {
     Q_PROPERTY(QColor colorHigh MEMBER m_colorHigh NOTIFY colorHighChanged)
     Q_PROPERTY(QColor colorMid MEMBER m_colorMid NOTIFY colorMidChanged)
     Q_PROPERTY(QColor colorLow MEMBER m_colorLow NOTIFY colorLowChanged)
+    /// DJ Mantra (round 18: "the contrast is not good"): the song's loudest
+    /// point fills the height, so quiet and loud parts stand apart
+    Q_PROPERTY(bool normalize MEMBER m_normalize NOTIFY normalizeChanged)
     QML_NAMED_ELEMENT(WaveformOverview)
 
   public:
@@ -66,6 +69,7 @@ class QmlWaveformOverview : public QQuickPaintedItem {
     void colorHighChanged(const QColor& color);
     void colorMidChanged(const QColor& color);
     void colorLowChanged(const QColor& color);
+    void normalizeChanged(bool normalize);
 
   private:
     void setCurrentTrack(TrackPointer pTrack);
@@ -86,6 +90,7 @@ class QmlWaveformOverview : public QQuickPaintedItem {
     QColor m_colorHigh;
     QColor m_colorMid;
     QColor m_colorLow;
+    bool m_normalize = false;
 };
 
 } // namespace qml

@@ -2,7 +2,8 @@ import "."
 import QtQuick 2.12
 
 // The bottom navigation of the horoscope app: icon + label, the selected one
-// yellow. Pages: SONGS (the playlist), MIXER, KEYS (Camelot wheel, key match).
+// yellow. Pages: SONGS (the playlist), PHRASING (big waveforms and beat
+// LEDs), MIXER, KEYS (Camelot wheel, key match).
 Rectangle {
     id: root
 
@@ -16,7 +17,7 @@ Rectangle {
         anchors.fill: parent
 
         Repeater {
-            model: [qsTr("Songs"), qsTr("Mixer"), qsTr("Keys")]
+            model: [qsTr("Songs"), qsTr("Phrasing"), qsTr("Mixer"), qsTr("Keys")]
 
             delegate: Item {
                 id: tab
@@ -26,7 +27,7 @@ Rectangle {
                 readonly property color tint: root.current === index ? Style.accent : Style.subText
 
                 objectName: "tab" + index
-                width: root.width / 3
+                width: root.width / 4
                 height: root.height
 
                 Item {
@@ -40,7 +41,7 @@ Rectangle {
                     anchors.topMargin: 8
 
                     Row {
-                        visible: tab.index === 1
+                        visible: tab.index === 2
                         anchors.centerIn: parent
                         spacing: 4
                         Repeater {
@@ -58,7 +59,7 @@ Rectangle {
 
                     Rectangle {
                         // the wheel
-                        visible: tab.index === 2
+                        visible: tab.index === 3
                         anchors.centerIn: parent
                         width: 18
                         height: 18
@@ -75,6 +76,22 @@ Rectangle {
                             color: "transparent"
                             border.color: tab.tint
                             border.width: 1.5
+                        }
+                    }
+
+                    Grid {
+                        // phrasing: 2 rows of 4 LEDs, the first yellow
+                        visible: tab.index === 1
+                        anchors.centerIn: parent
+                        columns: 4
+                        spacing: 2
+                        Repeater {
+                            model: 8
+                            delegate: Rectangle {
+                                required property int index
+                                width: 4; height: 6; radius: 1
+                                color: index === 0 ? Style.accent : tab.tint
+                            }
                         }
                     }
 

@@ -92,6 +92,12 @@ Rectangle {
         onPressed: {
             if (root.key !== "" && root.mode === "push")
                 control.value = 1;
+            // toggles act on the press (round 17: Marko's PLAY "doesn't work":
+            // a finger that slides a little lost the click)
+            if (root.key !== "" && root.mode === "toggle") {
+                control.value = control.value > 0 ? 0 : 1;
+                Mixxx.DJMantra.log("button " + root.group + "," + root.key + " " + control.value);
+            }
         }
         onReleased: {
             if (root.key !== "" && root.mode === "push")
@@ -101,10 +107,6 @@ Rectangle {
             if (root.key !== "" && root.mode === "push")
                 control.value = 0;
         }
-        onClicked: {
-            if (root.key !== "" && root.mode === "toggle")
-                control.value = control.value > 0 ? 0 : 1;
-            root.clicked();
-        }
+        onClicked: root.clicked()
     }
 }

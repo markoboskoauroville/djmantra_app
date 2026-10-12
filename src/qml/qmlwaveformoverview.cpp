@@ -1,5 +1,7 @@
 #include "qml/qmlwaveformoverview.h"
 
+#include <algorithm>
+
 #include "mixer/basetrackplayer.h"
 #include "moc_qmlwaveformoverview.cpp"
 
@@ -141,6 +143,24 @@ void QmlWaveformOverview::paint(QPainter* pPainter) {
     const int nextCompletion = actualCompletion + completionIncrement;
 
     const Channels channels = m_channels;
+    // DJ Mantra: the loudest point of the song fills the height
+    double gain = 1.0;
+    if (m_normalize) {
+        int peak = 0;
+        for (int i = 0; i + 1 < waveformCompletion && i + 1 < dataSize; ++i) {
+            if (m_renderer == Renderer::Filtered) {
+                peak = std::max({peak,
+                        static_cast<int>(pWaveform->getLow(i)),
+                        static_cast<int>(pWaveform->getMid(i) * 1.5),
+                        static_cast<int>(pWaveform->getHigh(i) * 2)});
+            } else {
+                peak = std::max(peak, static_cast<int>(pWaveform->getAll(i)));
+            }
+        }
+        if (peak > 0) {
+            gain = std::min(4.0, 0.95 * kDesiredChannelHeight / peak);
+        }
+    }
     pPainter->save();
 
     switch (channels) {
@@ -149,18 +169,18 @@ void QmlWaveformOverview::paint(QPainter* pPainter) {
         // Set the y axis to half the height of the item
         pPainter->translate(0.0, height());
         // Set the x axis to half the height of the item
-        pPainter->scale(width() / desiredWidth, height() / kDesiredChannelHeight);
+        pPainter->scale(width() / desiredWidth, gain * height() / kDesiredChannelHeight);
         break;
     case static_cast<int>(ChannelFlag::RightChannel):
         // Set the x axis to half the height of the item
-        pPainter->scale(width() / desiredWidth, height() / kDesiredChannelHeight);
+        pPainter->scale(width() / desiredWidth, gain * height() / kDesiredChannelHeight);
         break;
     default:
         // Draw both channels.
         // Set the y axis to half the height of the item
         pPainter->translate(0.0, height() / 2);
         // Set the x axis to half the height of the item
-        pPainter->scale(width() / desiredWidth, height() / (2 * kDesiredChannelHeight));
+        pPainter->scale(width() / desiredWidth, gain * height() / (2 * kDesiredChannelHeight));
     }
 
     Renderer renderer = m_renderer;

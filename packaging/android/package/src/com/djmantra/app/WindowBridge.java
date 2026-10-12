@@ -32,6 +32,7 @@ public final class WindowBridge {
     private static long sShownSince = 0;
     // left, top, right, bottom in pixels: read from the Qt thread
     private static volatile int[] sInsets = new int[] {0, 0, 0, 0};
+    private static volatile boolean sVisible = false;
     private static boolean sErrorLogged = false;
     private static final String TAG = "DJMantra";
 
@@ -67,6 +68,29 @@ public final class WindowBridge {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
             }
         });
+    }
+
+    /// The bars back on a tap on the empty part of the app (Marko, round 18:
+    /// "tapping on empty space with no buttons will invite this navigation");
+    /// the next touch (or SHOW_MS) hides them again
+    public static void show(Context context) {
+        if (!(context instanceof Activity) || Build.VERSION.SDK_INT < 30) {
+            return;
+        }
+        final Activity activity = (Activity) context;
+        activity.runOnUiThread(() -> {
+            WindowInsetsController controller = activity.getWindow().getInsetsController();
+            if (controller != null) {
+                Log.i(TAG, "WindowBridge: showing the system bars");
+                controller.show(WindowInsets.Type.systemBars());
+                sShownSince = 0;
+            }
+        });
+    }
+
+    /// Whether the system bars are on screen (from the last watch pass)
+    public static boolean visible() {
+        return sVisible;
     }
 
     /// The room the visible system bars and the camera hole take: left, top,
@@ -132,6 +156,7 @@ public final class WindowBridge {
         // not the animated value (round 10: the margins went to 0 while the
         // bar was still on screen)
         final boolean visible = insets.isVisible(WindowInsets.Type.systemBars());
+        sVisible = visible;
         Insets bars = visible
                 ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
                 : Insets.NONE;

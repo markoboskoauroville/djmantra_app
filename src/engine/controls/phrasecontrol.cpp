@@ -37,7 +37,10 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
           m_pSectionBeatsLeft(
                   std::make_unique<ControlObject>(ConfigKey(group, "section_beats_left"))),
           m_pSectionFound(std::make_unique<ControlObject>(ConfigKey(group, "section_found"))),
-          m_pSectionJump(std::make_unique<ControlPushButton>(ConfigKey(group, "section_jump"))) {
+          m_pSectionJump(std::make_unique<ControlPushButton>(ConfigKey(group, "section_jump"))),
+          m_pSectionCount(std::make_unique<ControlObject>(ConfigKey(group, "section_count"))) {
+    m_pSectionCount->setReadOnly();
+    m_pSectionCount->forceSet(-1);
     m_pBeatInPhrase->setReadOnly();
     m_pBeatInPhrase->forceSet(-1);
     m_pPhraseLength->set(kDefaultPhraseLength);
@@ -94,6 +97,8 @@ void PhraseControl::connectCues() {
 
 void PhraseControl::trackLoaded(TrackPointer pNewTrack) {
     std::atomic_store(&m_pSections, std::shared_ptr<const QList<mixxx::audio::FramePos>>());
+    djmantra::publishSections(getGroup(), {});
+    m_pSectionCount->forceSet(-1);
     // The detection reads the waveform on the main thread
     QMetaObject::invokeMethod(
             this,
@@ -144,6 +149,12 @@ void PhraseControl::slotDetectSections() {
     }
     std::atomic_store(&m_pSections,
             std::make_shared<const QList<mixxx::audio::FramePos>>(sections));
+    QList<double> fractions;
+    for (const auto& position : sections) {
+        fractions.append(end.value() > 0 ? position.value() / end.value() : 0.0);
+    }
+    djmantra::publishSections(getGroup(), fractions);
+    m_pSectionCount->forceSet(sections.size());
     QStringList at;
     for (const auto& position : sections) {
         at << QString::number(position.value() / pTrack->getSampleRate(), 'f', 1);

@@ -23,7 +23,7 @@ Window {
     color: Style.background
     title: "DJ Mantra"
 
-    property int page: 0 // 0 songs (the playlist), 1 mixer, 2 keys (Camelot wheel, key match)
+    property int page: 0 // 0 songs (the playlist), 1 phrasing, 2 mixer, 3 keys (Camelot wheel, key match)
     readonly property bool landscape: width > height
     property string overlay: "" // "", "menu"
     property string libraryDeck: ""
@@ -58,6 +58,16 @@ Window {
             // Android's back: closes what is open, never the app
             event.accepted = true;
             window.overlay = "";
+        }
+
+        MouseArea {
+            // a tap on the empty space (no button there) brings Android's
+            // navigation bar back; the next touch hides it (round 18, Marko)
+            anchors.fill: parent
+            onClicked: {
+                Mixxx.DJMantra.log("show the system bars");
+                Mixxx.DJMantra.showBars();
+            }
         }
 
         Item {
@@ -117,7 +127,7 @@ Window {
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
-                onWheelRequested: window.page = 2
+                onWheelRequested: window.page = 3
             }
         }
 
@@ -248,14 +258,22 @@ Window {
                     onDone: window.libraryDeck = "" // loaded: the next song to the free deck
                 }
 
-                MixerPage {
+                PhrasingPage {
+                    objectName: "phrasing"
                     anchors.fill: parent
                     visible: window.page === 1
+                    deck1: matrix1
+                    deck2: matrix2
+                }
+
+                MixerPage {
+                    anchors.fill: parent
+                    visible: window.page === 2
                 }
 
                 Item {
                     anchors.fill: parent
-                    visible: window.page === 2
+                    visible: window.page === 3
 
                     WheelPage {
                         anchors.top: parent.top
@@ -340,7 +358,7 @@ Window {
                 window.overlay = "";
             }
             onWheel: {
-                window.page = 2;
+                window.page = 3;
                 window.overlay = "";
             }
             onDone: window.overlay = ""

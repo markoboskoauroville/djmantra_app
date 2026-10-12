@@ -104,6 +104,9 @@ class PhraseControl : public EngineControl {
     std::unique_ptr<ControlObject> m_pSectionBeatsLeft;
     std::unique_ptr<ControlObject> m_pSectionFound;
     std::unique_ptr<ControlPushButton> m_pSectionJump;
+    // How many sections the detection found (-1: not yet): the interface
+    // reads them (djmantra::publishedSections) when this changes
+    std::unique_ptr<ControlObject> m_pSectionCount;
     std::unique_ptr<ControlProxy> m_pPlay;
     // The next section start found by updateSection() (engine sample pos,
     // -1 none): read by slotSectionJump() on the main thread

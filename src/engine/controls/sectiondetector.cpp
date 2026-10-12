@@ -1,5 +1,7 @@
 #include "engine/controls/sectiondetector.h"
 
+#include <QHash>
+#include <QMutex>
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -124,6 +126,23 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         result.append(barStarts[bar]);
     }
     return result;
+}
+
+namespace {
+
+QMutex s_sectionsMutex;
+QHash<QString, QList<double>> s_sections;
+
+} // namespace
+
+void publishSections(const QString& group, const QList<double>& fractions) {
+    const QMutexLocker locker(&s_sectionsMutex);
+    s_sections.insert(group, fractions);
+}
+
+QList<double> publishedSections(const QString& group) {
+    const QMutexLocker locker(&s_sectionsMutex);
+    return s_sections.value(group);
 }
 
 } // namespace djmantra

@@ -2,7 +2,7 @@ import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// One deck in the dot-matrix display: what it shows (elapsed time, bar.beat,
+// One deck in the dot-matrix display: what it shows (time left, bar.beat,
 // the countdown to the next phrase / section change, the beat in the phrase)
 // and the beat launch on its running lights (Marko, 12.10.2026; before the
 // redesign the 8 beat pads). A tap on cell N:
@@ -65,15 +65,18 @@ Item {
     readonly property int cells: length.value >= 2 ? Math.round(length.value) : 8
     // the beat in the phrase, 0 = beat 1; -1: none
     readonly property int phraseBeat: loaded && beat.value >= 0 ? Math.floor(beat.value) % cells : -1
-    readonly property string elapsed: loaded
-            ? Mixxx.DJMantra.formatTime(Math.max(0, position.value) * Math.max(0, duration.value)) : "-:--"
+    // the time left in the song, counting down (round 18, Marko: "I need time
+    // until the end of the song ... it needs to go backwards")
+    readonly property string remaining: loaded
+            ? "-" + Mixxx.DJMantra.formatTime(Math.max(0, 1 - Math.max(0, position.value)) * Math.max(0, duration.value))
+            : "-:--"
     readonly property string barBeat: loaded && beat.value >= 0 ? Mixxx.DJMantra.barBeat(number.value, perBar.value) : "-.-"
     // ONE countdown: to the next phrase / section change ("|": to the end)
     readonly property string countdown: loaded && beatsLeft.value >= 0
             ? Mixxx.DJMantra.barsBeatsLeft(beatsLeft.value, perBar.value) + (found.value > 0 ? "" : "|")
             : "-.-"
     readonly property var info: ({
-        elapsed: elapsed,
+        remaining: remaining,
         barBeat: barBeat,
         countdown: countdown,
         beat: phraseBeat,

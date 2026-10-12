@@ -5,8 +5,10 @@
 #include <QGuiApplication>
 #include <QScreen>
 #include <QStandardPaths>
+#include <QPointer>
 #include <QTimer>
 #include <QtDebug>
+#include <thread>
 #include <algorithm>
 #include <vector>
 #include <cmath>
@@ -17,6 +19,7 @@
 #endif
 
 #include "control/controlproxy.h"
+#include "engine/controls/sectiondetector.h"
 #include "mixer/playerinfo.h"
 #include "moc_qmldjmantra.cpp"
 #include "sources/soundsourceproxy.h"
@@ -49,6 +52,74 @@ QmlDJMantra::QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent)
     auto* pTimer = new QTimer(this);
     connect(pTimer, &QTimer::timeout, this, &QmlDJMantra::followInsets);
     pTimer->start(300);
+    // Full screen (round 18): the bars hide again when the app comes back
+    // from another one, and on any touch while they are shown
+    connect(qApp, &QGuiApplication::applicationStateChanged, this, [this](Qt::ApplicationState state) {
+        if (state == Qt::ApplicationActive) {
+            hideBars();
+        }
+    });
+    qApp->installEventFilter(this);
+    // A song without a genre: looked up online (round 18)
+    connect(&PlayerInfo::instance(),
+            &PlayerInfo::trackChanged,
+            this,
+            [this](const QString& group, TrackPointer pNewTrack, TrackPointer) {
+                lookUpGenre(group, pNewTrack);
+            });
+#endif
+}
+
+bool QmlDJMantra::eventFilter(QObject* pObject, QEvent* pEvent) {
+#if defined(Q_OS_ANDROID)
+    if ((pEvent->type() == QEvent::TouchBegin || pEvent->type() == QEvent::MouseButtonPress) &&
+            pObject->isWindowType() &&
+            QJniObject::callStaticMethod<jboolean>(
+                    "com/djmantra/app/WindowBridge", "visible", "()Z")) {
+        hideBars();
+    }
+#endif
+    return QObject::eventFilter(pObject, pEvent);
+}
+
+void QmlDJMantra::lookUpGenre(const QString& group, TrackPointer pTrack) {
+#if defined(Q_OS_ANDROID)
+    if (!pTrack || !pTrack->getGenre().trimmed().isEmpty()) {
+        return;
+    }
+    const QString title = pTrack->getTitle().trimmed();
+    const QString artist = pTrack->getArtist().trimmed();
+    const QString location = pTrack->getLocation();
+    if (title.isEmpty() || m_genreAsked.contains(location)) {
+        return;
+    }
+    m_genreAsked.insert(location);
+    qInfo() << "Quick: looking up the genre of" << group << artist << "-" << title;
+    QPointer<QmlDJMantra> pThis(this);
+    std::thread([pThis, pTrack, artist, title] {
+        const QJniObject result = QJniObject::callStaticObjectMethod(
+                "com/djmantra/app/GenreLookup",
+                "lookup",
+                "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+                QJniObject::fromString(artist).object<jstring>(),
+                QJniObject::fromString(title).object<jstring>());
+        const QString genre = result.isValid() ? result.toString().trimmed() : QString();
+        if (genre.isEmpty() || !pThis) {
+            return;
+        }
+        QMetaObject::invokeMethod(
+                pThis.data(),
+                [pTrack, genre] {
+                    if (pTrack->getGenre().trimmed().isEmpty()) {
+                        pTrack->updateGenre(genre);
+                        qInfo() << "Quick: genre" << pTrack->getTitle() << ":" << genre;
+                    }
+                },
+                Qt::QueuedConnection);
+    }).detach();
+#else
+    Q_UNUSED(group);
+    Q_UNUSED(pTrack);
 #endif
 }
 
@@ -102,6 +173,23 @@ void QmlDJMantra::followInsets() {
         emit insetsChanged();
     }
 #endif
+}
+
+void QmlDJMantra::showBars() {
+#if defined(Q_OS_ANDROID)
+    QJniObject::callStaticMethod<void>("com/djmantra/app/WindowBridge",
+            "show",
+            "(Landroid/content/Context;)V",
+            QNativeInterface::QAndroidApplication::context().object());
+#endif
+}
+
+QVariantList QmlDJMantra::sections(const QString& group) const {
+    QVariantList result;
+    for (const double fraction : djmantra::publishedSections(group)) {
+        result.append(fraction);
+    }
+    return result;
 }
 
 void QmlDJMantra::hideBars() {

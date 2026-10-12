@@ -5,7 +5,7 @@ import QtQuick 2.12
 // a grid of square pixels, a 5x7 pixel font, lit dots in the accent colours,
 // the unlit ones faintly visible. The ONLY phrase lights of the interface.
 // Per deck, deck 1 over deck 2 so both compare at a glance:
-//   elapsed time | bar.beat (deck colour) | countdown to the next phrase /
+//   time left in the song | bar.beat (deck colour) | countdown to the next phrase /
 //   section change (yellow)
 //   the running lights: one LED cell per beat of the phrase (8 / 16 / 32),
 //   bars set apart, beat 1 yellow. A tap on a cell launches that beat
@@ -13,7 +13,7 @@ import QtQuick 2.12
 Canvas {
     id: root
 
-    // [{elapsed, barBeat, countdown, beat, cells, armed, color}] per deck
+    // [{remaining, barBeat, countdown, beat, cells, armed, color}] per deck
     property var decks: []
     property bool blink: false
     readonly property int cellRows: 4
@@ -135,7 +135,7 @@ Canvas {
         for (let d = 0; d < Math.min(2, decks.length); ++d) {
             const deck = decks[d];
             const top = d * deckRows;
-            text(deck.elapsed, 1, top + 1, String(Style.subText));
+            text(deck.remaining, 1, top + 1, String(Style.text));
             text(deck.barBeat, Math.floor((columns - textWidth(deck.barBeat)) / 2), top + 1, deck.color);
             text(deck.countdown, columns - 1 - textWidth(deck.countdown), top + 1, String(Style.accent));
             const layout = cellColumns(deck.cells);
