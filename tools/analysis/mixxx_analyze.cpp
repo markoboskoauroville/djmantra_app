@@ -200,6 +200,10 @@ int main(int argc, char** argv) {
     beatHelper.init(window, step, [&](double* w) { results.push_back(df.processTimeDomain(w)); });
     // key
     GetKeyMode::Config kc(sr, 440);
+    // experiments (the app uses the defaults): KEY_OVERLAP, KEY_HPCP, KEY_MEDIAN
+    if (getenv("KEY_OVERLAP")) kc.frameOverlapFactor = atoi(getenv("KEY_OVERLAP"));
+    if (getenv("KEY_HPCP")) kc.hpcpAverage = atof(getenv("KEY_HPCP"));
+    if (getenv("KEY_MEDIAN")) kc.medianAverage = atof(getenv("KEY_MEDIAN"));
     GetKeyMode keyMode(kc);
     std::vector<std::pair<int, double>> keys;
     long long frame = 0;
