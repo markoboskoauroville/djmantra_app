@@ -64,6 +64,15 @@ Neither DJ Mantra nor the low-memory killer killed Claude Code directly.
   write a scan or loop as one process per item (use one Python process with asyncio).
 - Close Firefox tabs and other heavy apps before a DJ Mantra round. With 78 % of swap used, everything is slow.
 
+### Fix applied (Marko approved it, 12.10.2026 02:45 CEST)
+
+```
+adb shell settings put global settings_enable_monitor_phantom_procs false   → rc 0
+adb shell settings get global settings_enable_monitor_phantom_procs         → false
+```
+To undo it: the same `settings put` command with `true`. `max_phantom_processes` was not changed (still the default).
+No port scan from the earlier session was left running; it died with that session at 02:23.
+
 The watcher (`tools/android/watch_host.sh ~/djmantra-watch/r12 192.168.1.30:38589`) has been running since 00:39:59 UTC.
 Its output is copied to `host/watch/` at the end of the round.
 
