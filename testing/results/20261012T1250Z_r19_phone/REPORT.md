@@ -33,3 +33,23 @@ Build: run 38233904582, commit 1a724b3. Started on Marko's word ("please start t
 - Switching 8 → 16 → 32 with AUTO PHASE on moved deck 2 by itself (`auto phase: [Channel2] (beat 10) ...`, `align ... beat 27`): aligned in 8 was not aligned in 32. Probably right; Marko to confirm he wants the beat count switch to move a deck.
 - Launch on a stopped deck (32 BEATS): LED 1 turns yellow at once (`p3_launch.png`), the deck starts on deck 1's next phrase start: `beat launch [Channel2] on beat 1` (logged at the launch, ~16 s later, nothing at the press).
 - Matrix: time left counts down (-1:51 → -1:09 ...), 8 / 16 / 32 cells shown.
+
+## Part 4: screen - STOPPED (partial)
+- After home → back: full screen. Tap on empty space: `WindowBridge: bars shown, insets [0, 0, 0, 126]`, `Quick: insets 0 0 0 48 corner 50`; the app makes room: the tabs sit above the bar (`p4_bars.png`). The bar hid by itself within ~6 s (`p4_after6s.png`), but no `WindowBridge: bars hidden` line was logged.
+- Then Termux came to the front (Marko watching), so the button-press / second-tap / swipe-up checks did not reach the app. Not judged.
+- Parts 4 (rest), 5, 6, 7 not tested: Marko asked for new features (below), testing stopped.
+
+## Marko's new requests (12.10.2026, ~15:05, verbatim)
+
+> "Please change the color scheme, both player side same color, not different color schemes. And automating BPM scanning of the current songs shown in a playlist, that must happen automatically in advance. And not only the BPM, also the key update, and then test."
+
+### Shaped for the builder
+1. **One color for both decks.** Deck 1 and deck 2 look the same everywhere: SYNC / PLAY buttons, the matrix numbers and cells, the overviews, the Phrasing LEDs, the key labels, the Keys tab rows. No green-left / blue-right.
+2. **BPM analysed in advance, automatically.** Every song shown in the open folder / playlist gets its BPM analysed in the background without being loaded onto a deck, as soon as the folder is shown; the BPM column fills in by itself.
+3. **Key analysed in advance too.** Same for the key: the KEY column (Camelot) fills in for every song shown, without loading it.
+4. Then round 20: test it.
+
+### Tester findings (suggestions, from round 19 on the phone)
+- Today deck 1 is green and deck 2 blue (`p1_aligned.png`, `p3_32beats.png`): play/sync buttons, matrix time / position digits, overviews, LED highlight, key text under the title, Keys tab rows 1 / 2.
+- In `Music` (`p1_aligned.png`, sorted by BPM): 3 Sense, Addis, Aktysia, Alba, American Dream, Amulet show BPM + key; One for the Road, Open Up Your Eyes, One Last Call, Pieces show neither: those come only from tags / earlier analysis. The analysis has to run on the songs in the list (one or two at a time, low priority, so playback does not drop: round 19 part 1 had xruns flat, late 0), and its results go into the library so they stay for next time.
+- Sorting by BPM / KEY puts songs without values last; with the analysis in advance it becomes complete.
