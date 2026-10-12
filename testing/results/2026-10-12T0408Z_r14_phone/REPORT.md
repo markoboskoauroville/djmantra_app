@@ -76,3 +76,26 @@ ticks, colours from a `Theme`; `Vg.kt` is the drawing interface, `AndroidVg.kt` 
 7. Both: waveforms narrow (data peaks at 109/255; classic ~30 %, new ~5–15 % of the lane).
 8. New: library lists "Music" twice.
 9. New: landscape and loudness (C) still to test on the next build.
+
+## Marko, 06:27: phrase LEDs, the horoscope style, and which build to test
+
+> "add phrasing of 8 just next to the artwork, which is basically tiny squares, 4 at the top, 4 at the bottom on both
+> decks, and they are just lighting up for each beat in the 8-bit phrase. We have also this logic already built in
+> inside the slicer. They're the same LED Algorithm. Build this, update, and then test. Don't test the next version,
+> test this one with new interface. And make interface same as my horoscope, the same style of interface, make it here."
+
+So: **round 15 is not run on a1b044e.** The build to test is the one that also has the phrase LEDs and the
+horoscope style, in the new interface.
+
+- **Phrase LEDs:** next to each deck's artwork, 8 tiny squares, 4 on top and 4 under them. Beat 1–8 of the 8-beat
+  phrase lights its square, the same LED logic as the slicer's.
+- **Horoscope style** (Donnie Horoscope, `astro_dos`; screenshots in branch `phone-reports`, `manual/01-start.png`,
+  `manual/08-planets.png`; colours in `modern/Vg.kt` `Theme.NIGHT`):
+  - background `#0B1026` (deep navy); cards `#151C3D` / `#1F2850` with rounded corners;
+  - ink `#EEF0FF`, secondary text `#9AA3C7`, lines `#6B76A8`;
+  - one accent `#FFD54A` (yellow): the primary button is filled yellow with dark text `#1A1A1A`, the other buttons
+    are navy cards with white text;
+  - section titles in the yellow accent;
+  - list rows: glyph left, title + grey second line, value right;
+  - a bottom navigation bar of icon + label tabs, the selected one in yellow;
+  - element colours fire `#FF6B5E`, earth `#6CCB72`, air `#F2D35B`, water `#5AA2F0`; tinted ring bands at alpha `0x38`.
