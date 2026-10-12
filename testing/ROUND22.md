@@ -20,6 +20,15 @@ Grep once per part: `adb logcat -d | grep -E "Quick:|SoundDeviceOboe|AudioRouter
 - PLAY without a cued beat: as before (the other deck's next beat, same phrase beat).
 - PLAYING deck: a press jumps on the next beat (seamless), as before. 32 BEATS LEDs as round 20.
 
+## 3b. NEXT (the ▸| button beside PLAY, new) and PLAYED songs (Marko, round 22 screenshot)
+- Songs tab, a folder open (sorted any way). Deck 2 stopped: tap deck 2's ▸|: the first song AFTER deck 2's song in the
+  list as shown, not played in this session and not on deck 1, loads onto deck 2 (log `Quick: next [Channel2]: load
+  ...`); again: the next one. On a PLAYING deck nothing loads (`... the deck is playing, nothing loaded`). Held 0.6 s:
+  the next section, as before.
+- Every song that starts playing is marked played for this session (`Quick: played in this set: <path>`): in the list
+  its title gets a ✓ and title and artist turn dim; NEXT skips it. Screenshot of the list with 2-3 played songs.
+- Restart the app: the marks are gone (they belong to the set, the session).
+
 ## 4. AUTO CUE (new; djay Pro's "Auto select": "automatically selects the deck that isn't playing as your pre-cue
 source"; Marko: "when the deck in the headphones goes on air, the headphones switch to the other deck")
 - The rule: a deck is ON AIR when it plays, its volume is up and the crossfader does not cut it (deck 1: crossfader

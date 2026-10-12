@@ -27,6 +27,17 @@ Window {
     readonly property bool landscape: width > height
     property string overlay: "" // "", "menu"
     property string libraryDeck: ""
+    // the songs played in this session (path -> true): dimmed in the list,
+    // skipped by NEXT
+    property var playedSongs: ({})
+    function markPlayed(path) {
+        if (path === "" || playedSongs[path])
+            return;
+        const next = Object.assign({}, playedSongs);
+        next[path] = true;
+        playedSongs = next;
+        Mixxx.DJMantra.log("played in this set: " + path);
+    }
 
     function logMap() {
         // the phone tests tap by these (device pixels)
@@ -208,6 +219,7 @@ Window {
                     group: "[Channel1]"
                     deckColor: Style.deck1
                     matrixDeck: matrix1
+                    playlist: playlistPage
                 }
 
                 DeckControls {
@@ -217,6 +229,7 @@ Window {
                     deckColor: Style.deck2
                     mirrored: true
                     matrixDeck: matrix2
+                    playlist: playlistPage
                 }
             }
 
@@ -256,10 +269,22 @@ Window {
             }
         }
 
-        MatrixDeck { id: matrix1; group: "[Channel1]"; deckColor: Style.deck1 }
+        MatrixDeck {
+            id: matrix1
+
+            group: "[Channel1]"
+            deckColor: Style.deck1
+            onStarted: (path) => window.markPlayed(path)
+        }
         AutoPhase { id: autoPhase; deck1: matrix1; deck2: matrix2 }
         AutoCue { id: autoCueMode }
-        MatrixDeck { id: matrix2; group: "[Channel2]"; deckColor: Style.deck2 }
+        MatrixDeck {
+            id: matrix2
+
+            group: "[Channel2]"
+            deckColor: Style.deck2
+            onStarted: (path) => window.markPlayed(path)
+        }
 
         Item {
             // the rest: the playlist, the mixer or the keys; the crossfader; the tabs
@@ -281,7 +306,10 @@ Window {
                 anchors.right: parent.right
 
                 LibraryPage {
+                    id: playlistPage
+
                     objectName: "playlist"
+                    played: window.playedSongs
                     anchors.fill: parent
                     visible: window.page === 0
                     deck: window.libraryDeck

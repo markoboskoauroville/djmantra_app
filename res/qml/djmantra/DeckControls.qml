@@ -3,7 +3,8 @@ import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
 // A deck's player controls (Marko, 12.10.2026, the redesign): SYNC, CUE,
-// PLAY (aligned start) and ALIGN (held: the next section). Deck 2 mirrored.
+// PLAY (aligned start) and NEXT (the next unplayed song of the list onto this
+// deck; held: the next section). Deck 2 mirrored.
 Row {
     id: root
 
@@ -11,6 +12,7 @@ Row {
     property color deckColor: Style.deck1
     property bool mirrored: false
     property var matrixDeck // its MatrixDeck (align, beat launch)
+    property var playlist   // the song list (LibraryPage): the next unplayed song
     readonly property int deck: group === "[Channel2]" ? 2 : 1
 
     spacing: 4
@@ -78,10 +80,10 @@ Row {
     }
 
     DButton {
-        // ALIGN (round 19, Marko: "this button ... needs to change the
-        // function"): a tap aligns this deck's phrase with the other deck's on
-        // the next beat, seamless; held (0.6 s): the next section, in time
-        objectName: "jump" + root.deck
+        // NEXT (Marko, round 22: "next to the play button ... loads in the
+        // current deck the next unplayed song" of the list shown); held
+        // (0.6 s): the next section, in time. (Aligning is AUTO PHASE's job.)
+        objectName: "next" + root.deck
         width: (root.width - 3 * root.spacing) * 0.22
         height: root.height
         icon: "next"
@@ -94,8 +96,17 @@ Row {
                 return;
             }
             holdTimer.stop();
-            if (root.matrixDeck)
-                root.matrixDeck.align();
+            if (playControl.value > 0) {
+                // never replace the song that is playing
+                Mixxx.DJMantra.log("next " + root.group + ": the deck is playing, nothing loaded");
+                return;
+            }
+            const path = root.playlist ? root.playlist.nextUnplayed(root.group) : "";
+            if (path === "") {
+                Mixxx.DJMantra.log("next " + root.group + ": no unplayed song in the list");
+                return;
+            }
+            root.playlist.loadOnto(path, root.group);
         }
 
         Timer {

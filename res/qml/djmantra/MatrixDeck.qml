@@ -18,6 +18,8 @@ Item {
     property var player: Mixxx.PlayerManager.getPlayer(group)
     readonly property bool loaded: player ? player.isLoaded : false
     property int armedBeat: -1
+    // the deck started playing its song (the session marks it played)
+    signal started(string path)
     // a jump on a playing deck, waiting for the next beat
     property int queuedBeat: -1
 
@@ -48,7 +50,13 @@ Item {
 
         group: root.group
         key: "play"
-        onValueChanged: if (value > 0) root.cuedBeat = -1
+        onValueChanged: {
+            if (value > 0) {
+                root.cuedBeat = -1;
+                root.started(root.loaded && root.player
+                        ? decodeURIComponent(String(root.player.trackLocationUrl).replace(/^file:\/\//, "")) : "");
+            }
+        }
     }
     Mixxx.ControlProxy { id: jump; group: root.group; key: "phrase_jump" }
     Mixxx.ControlProxy { id: sync; group: root.group; key: "sync_enabled" }

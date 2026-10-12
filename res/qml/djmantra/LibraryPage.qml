@@ -15,6 +15,9 @@ Rectangle {
     property var entries: folder === "" ? Mixxx.DJMantra.musicRoots() : Mixxx.DJMantra.listFolder(folder)
     // DJ Pro style (Marko, round 19): cover, title, artist, BPM, key; a tap
     // on a column header sorts by it (again: the other way round)
+    // the songs played in this session (Marko, round 22: "mark played songs
+    // ... so the user doesn't play the same song twice"): path -> true
+    property var played: ({})
     property string sortKey: ""
     property bool sortUp: true
     property int filled: 0
@@ -81,6 +84,40 @@ Rectangle {
                     root.sortBy(root.sortKey, root.sortUp);
             }
         }
+    }
+
+    // the deck's song now (its file path), "" if none
+    function pathOnDeck(group) {
+        const player = Mixxx.PlayerManager.getPlayer(group);
+        if (!player || !player.isLoaded)
+            return "";
+        return decodeURIComponent(String(player.trackLocationUrl).replace(/^file:\/\//, ""));
+    }
+
+    // NEXT on a deck: the first song after the deck's song in the list as shown
+    // (sorted), not played in this session and not on a deck, from the top again
+    function nextUnplayed(group) {
+        const here = pathOnDeck(group);
+        const other = pathOnDeck(group === "[Channel1]" ? "[Channel2]" : "[Channel1]");
+        let start = 0;
+        for (let i = 0; i < songs.count; ++i) {
+            if (songs.get(i).path === here) {
+                start = i + 1;
+                break;
+            }
+        }
+        for (let k = 0; k < songs.count; ++k) {
+            const r = songs.get((start + k) % songs.count);
+            if (!r.isFolder && !played[r.path] && r.path !== here && r.path !== other)
+                return r.path;
+        }
+        return "";
+    }
+
+    function loadOnto(path, group) {
+        Mixxx.DJMantra.log("next " + group + ": load " + path);
+        Mixxx.PlayerManager.getPlayer(group).loadTrackFromLocation(path, false);
+        Mixxx.DJMantra.noteLoaded(group);
     }
 
     function sortBy(key, up) {
@@ -270,6 +307,7 @@ Rectangle {
             required property real bpm
             required property string key
             required property string cover
+            readonly property bool wasPlayed: !isFolder && root.played[path] === true
 
             width: list.width
             height: 56
@@ -317,8 +355,9 @@ Rectangle {
 
                 Text {
                     width: parent.width
-                    text: row.isFolder ? row.name : row.title
-                    color: Style.text
+                    // played in this set: dimmed, with a tick
+                    text: (row.wasPlayed ? "\u2713 " : "") + (row.isFolder ? row.name : row.title)
+                    color: row.wasPlayed ? Style.line : Style.text
                     font.pixelSize: 15
                     font.bold: true
                     elide: Text.ElideRight
@@ -327,7 +366,7 @@ Rectangle {
                 Text {
                     width: parent.width
                     text: row.isFolder ? qsTr("Folder") : row.artist
-                    color: Style.subText
+                    color: row.wasPlayed ? Style.line : Style.subText
                     font.pixelSize: 13
                     elide: Text.ElideRight
                 }
