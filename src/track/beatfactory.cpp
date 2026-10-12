@@ -82,7 +82,6 @@ mixxx::BeatsPointer BeatFactory::makePreferredBeats(
         if (firstBeat.isValid() &&
                 !BeatUtils::followsOneTempo(constantRegions, constBPM, firstBeat, sampleRate)) {
             // DJ Mantra: the tempo drifts (a live drummer): a beat map
-            qInfo() << "Beats: the tempo is not constant, a beat map instead of a grid";
             return mixxx::Beats::fromBeatPositions(
                     sampleRate, BeatUtils::getBeats(constantRegions), subVersion);
         }

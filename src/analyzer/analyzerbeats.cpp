@@ -1,5 +1,6 @@
 #include "analyzer/analyzerbeats.h"
 
+#include <QFileInfo>
 #include <QHash>
 #include <QString>
 #include <QVector>
@@ -251,14 +252,18 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
     // the grid moved by half a beat (right on 74 of 78 songs).
     if (pBeats && pBeats->hasConstantTempo()) {
         if (const auto* pQm = dynamic_cast<const mixxx::AnalyzerQueenMaryBeats*>(m_pPlugin.get())) {
-            pBeats = onTheBeat(pBeats, *pQm);
+            pBeats = onTheBeat(pBeats, *pQm, QFileInfo(pTrack->getLocation()).fileName());
         }
+    } else if (pBeats) {
+        qInfo().noquote() << QStringLiteral("Beats: %1\tthe tempo is not constant, a beat map")
+                                     .arg(QFileInfo(pTrack->getLocation()).fileName());
     }
     pTrack->trySetBeats(pBeats);
 }
 
 mixxx::BeatsPointer AnalyzerBeats::onTheBeat(const mixxx::BeatsPointer& pBeats,
-        const mixxx::AnalyzerQueenMaryBeats& plugin) const {
+        const mixxx::AnalyzerQueenMaryBeats& plugin,
+        const QString& fileName) const {
     const std::vector<double>& onsets = plugin.kickOnsets();
     const int step = plugin.stepSizeFrames();
     const int window = plugin.windowSize();
@@ -302,7 +307,10 @@ mixxx::BeatsPointer AnalyzerBeats::onTheBeat(const mixxx::BeatsPointer& pBeats,
     }
     const mixxx::Bpm bpm = pBeats->getBpmInRange(
             mixxx::audio::kStartFramePos, mixxx::audio::FramePos(end));
-    qInfo() << "Beats: the grid moved half a beat onto the kick" << onBeat << "->" << offBeat;
+    qInfo().noquote() << QStringLiteral("Beats: %1\tthe grid moved half a beat onto the kick %2 -> %3")
+                                 .arg(fileName)
+                                 .arg(onBeat)
+                                 .arg(offBeat);
     return mixxx::Beats::fromConstTempo(m_sampleRate,
             mixxx::audio::FramePos(moved).toNearestFrameBoundary(),
             bpm,

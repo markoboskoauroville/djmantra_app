@@ -41,7 +41,8 @@ class AnalyzerBeats : public Analyzer {
     /// DJ Mantra: the grid moved by half a beat when the off-beat lines up
     /// with the kick better than the grid does
     mixxx::BeatsPointer onTheBeat(const mixxx::BeatsPointer& pBeats,
-            const mixxx::AnalyzerQueenMaryBeats& plugin) const;
+            const mixxx::AnalyzerQueenMaryBeats& plugin,
+            const QString& fileName) const;
     const bool m_enforceBpmDetection;
     QString m_pluginId;
     bool m_bPreferencesReanalyzeOldBpm;
