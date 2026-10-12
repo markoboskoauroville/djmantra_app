@@ -79,6 +79,13 @@ mixxx::BeatsPointer BeatFactory::makePreferredBeats(
         mixxx::audio::FramePos firstBeat = mixxx::audio::kStartFramePos;
         const mixxx::Bpm constBPM = BeatUtils::makeConstBpm(
                 constantRegions, sampleRate, &firstBeat);
+        if (firstBeat.isValid() &&
+                !BeatUtils::followsOneTempo(constantRegions, constBPM, firstBeat, sampleRate)) {
+            // DJ Mantra: the tempo drifts (a live drummer): a beat map
+            qInfo() << "Beats: the tempo is not constant, a beat map instead of a grid";
+            return mixxx::Beats::fromBeatPositions(
+                    sampleRate, BeatUtils::getBeats(constantRegions), subVersion);
+        }
         if (firstBeat.isValid()) {
             firstBeat = BeatUtils::adjustPhase(firstBeat, constBPM, sampleRate, beats);
             auto pGrid = mixxx::Beats::fromConstTempo(

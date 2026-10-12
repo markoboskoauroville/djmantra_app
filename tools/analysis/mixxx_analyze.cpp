@@ -249,5 +249,15 @@ int main(int argc, char** argv) {
     if (keys.size() == 1) key = keys[0].first;
     else for (auto& [k, v] : hist) if (v > best) { best = v; key = k; }
     printf("%.4f %.4f %d %s\n", bpm, first / sr, key, kKeyNames[key]);
+    // BEATS=1: the ironed beat map too (Mixxx BeatUtils::getBeats, "assume constant tempo" off),
+    // one line "B <seconds>" per beat, and the regions "G <first s> <beat length s>"
+    if (getenv("BEATS")) {
+        for (size_t i = 0; i + 1 < regions.size(); ++i) {
+            printf("G %.4f %.5f\n", regions[i].firstBeat / sr, regions[i].beatLength / sr);
+            for (double b = regions[i].firstBeat; b < regions[i + 1].firstBeat - 100; b += regions[i].beatLength) {
+                printf("B %.4f\n", b / sr);
+            }
+        }
+    }
     return 0;
 }
