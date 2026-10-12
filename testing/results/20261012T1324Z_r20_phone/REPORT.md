@@ -53,3 +53,25 @@ Build: run 38253413748, commit bd59c40. Started by the tester's own build watche
 - Note: Yshai Afterman - _Between ... got 187.3 BPM (probably double time of ~93.6); the BPM sort puts it last.
 - Note: while the analysis fills the rows, the list scrolled under my finger once (at the start of part 1 a tap meant for 3 Sense loaded Let Me In). Maybe the list jumps when rows change; keep the scroll position while values arrive.
 - A tap on a song loads onto the free deck (`load [Channel1] Higher`); deck 2's cover then a song → `load [Channel2] Stardust`; deck 1's cover then a song → `load [Channel1] Easing Light`.
+
+## Part 7: the rest - FAIL (AUTOMIX, genre, CPU; the rest PASS)
+- JUMP (▸| held 0.7 s, deck 1 Easing Light): `next section [Channel1]`, `jump to the next section at 173.4 s; cues: none` (no intro_start / outro_end any more). A tap: `jump [Channel1] to beat 2 on the next beat` (align). PASS
+- Sections: every load this round logged `Sections: [ChannelN] N changes` (Let Me In 4, Lions 2, ...). PASS
+- Phrasing waveforms (`p7_zoom0/in/out.png`): the waves fill most of their lane; + twice → `waveform zoom 2.00`, `1.33`: fewer, wider peaks (less time); − four times → `2.00 ... 6.75`: denser (more time). PASS
+- KEY MATCH: `key match [Channel2] 3B > 3A: 0 semitones` (relative keys, right), off → `key [Channel2] reset_key`; − / + on both decks: `pitch_down` / `pitch_up`. PASS
+- **AUTOMIX: FAIL.** On (`automix on eq true tempo true`), both playing, deck 1 with 1:18 left: the button showed `AUTOMIX 50%` for ~2 min, the crossfader stayed in the middle, deck 1 ran out to 0:00 and stopped, deck 2 played on; no transition, no fade, no log after `automix on` (`p7_automix.png`, `p7_automix2.png`). The BPM glide could not be seen (no transition).
+- **Genre: FAIL (2 of 6).** Found: Let Me In → House, Easing Light → Electronic (shown under the titles). Not found: Awka - Astral Voyage, Viel - Beautiful Place, Gorje Hewek - Children, Deaf Unique - Connecting Beat (`no recording for ..., artist's genre: none`). The first artist only and the mix name stripped ("Children", not "Children - Extended Mix"), as asked. (The list had scrolled, so these are not round 19's five songs.)
+- **CPU: FAIL (better than round 18).** `top`, both playing, SYNC on: Songs 77.6 %, Phrasing 76.3 %, Mixer 74.0 % of one core (round 18 ~100 %; target 32-55 %). The app's meter says `C 8%` (of 8 cores, the same). PSS 582 MB. Audio clean meanwhile: xruns 0, late 0, slowest 4.2 ms.
+- Good to know: a song tapped while both decks play opens "Deck 1 is playing. Load the new song anyway?" CANCEL / LOAD (`Quick: free deck [Channel1] (playing true true)`).
+- Marko was handling the phone during part 7 (the app logged rotations: `insets 0 0 48 0`, `0 0 0 48` with bars hidden = landscape / upside down). Auto-rotate is back on as it was (`accelerometer_rotation 1`).
+
+## Round 20 finished: 5 pass (0, 1, 2, 3, 4, 6 → 6 pass), 2 fail (5, 7)
+Pass: 0 smoke, 1 transport, 2 sliders and knobs, 3 LEDs (32-beat cells 129 px), 4 colours (both decks yellow), 6 BPM and key in advance (66 songs, ~3 s each, kept after restart).
+Fail, ranked:
+1. AUTOMIX does nothing (no fade, no transition; deck 1 ran out).
+2. CPU ~75 % of one core with both decks playing (all tabs).
+3. Genre found for 2 of 6 songs.
+4. Tap on the empty song list area does not bring the navigation bar (only the top strip does).
+5. Landscape Phrasing at 16: two-digit LED numbers run together.
+Notes: EQ knobs at rest point to ~4-5 o'clock; 2 songs re-analysed after a restart; 187.3 BPM (double time) for Yshai Afterman; the list scrolled under the finger once during the analysis; re-log the tap map after an insets change.
+Not tested: by ear (groove continuity of jumps, crossfader sound).
