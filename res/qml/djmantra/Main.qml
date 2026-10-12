@@ -18,7 +18,7 @@ Window {
     color: Style.background
     title: "DJ Mantra"
 
-    property int page: 0 // 0 mixer, 1 waveforms, 2 pads
+    property int page: 0 // 0 mix (beat pads), 1 mixer, 2 keys (Camelot wheel)
     readonly property bool landscape: width > height
     property string overlay: "" // "", "menu", "library", "wheel"
     property string libraryDeck: ""
@@ -111,7 +111,7 @@ Window {
             DeckHeader {
                 objectName: "deck1"
                 width: (headers.width - headers.spacing) / 2
-                height: window.landscape ? 84 : 92
+                height: 74
                 group: "[Channel1]"
                 deckColor: Style.deck1
                 onCoverTapped: {
@@ -123,7 +123,7 @@ Window {
             DeckHeader {
                 objectName: "deck2"
                 width: (headers.width - headers.spacing) / 2
-                height: window.landscape ? 84 : 92
+                height: 74
                 group: "[Channel2]"
                 mirrored: true
                 deckColor: Style.deck2
@@ -177,19 +177,20 @@ Window {
             Item {
                 objectName: "page"
 
-                MixerPage {
+                MixPage {
                     anchors.fill: parent
                     visible: window.page === 0
                 }
 
-                WaveformsPage {
+                MixerPage {
                     anchors.fill: parent
                     visible: window.page === 1
                 }
 
-                PadsPage {
+                WheelPage {
                     anchors.fill: parent
                     visible: window.page === 2
+                    embedded: true
                 }
             }
         }

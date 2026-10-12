@@ -8,13 +8,14 @@ KeyBadge 1.0 KeyBadge.qml
 LibraryPage 1.0 LibraryPage.qml
 MenuSheet 1.0 MenuSheet.qml
 MixerPage 1.0 MixerPage.qml
-PadsPage 1.0 PadsPage.qml
 Transport 1.0 Transport.qml
-VerticalWaveform 1.0 VerticalWaveform.qml
 VuBar 1.0 VuBar.qml
-WaveformsPage 1.0 WaveformsPage.qml
 WheelPage 1.0 WheelPage.qml
 DeckTransport 1.0 DeckTransport.qml
 PhraseLeds 1.0 PhraseLeds.qml
 PhraseBar 1.0 PhraseBar.qml
 NavBar 1.0 NavBar.qml
+BeatPads 1.0 BeatPads.qml
+DeckTools 1.0 DeckTools.qml
+AutoMix 1.0 AutoMix.qml
+MixPage 1.0 MixPage.qml

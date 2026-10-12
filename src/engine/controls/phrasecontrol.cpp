@@ -34,7 +34,8 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
           m_pBeatUnit(std::make_unique<ControlObject>(ConfigKey(group, "beat_unit"))),
           m_pSectionBeatsLeft(
                   std::make_unique<ControlObject>(ConfigKey(group, "section_beats_left"))),
-          m_pSectionFound(std::make_unique<ControlObject>(ConfigKey(group, "section_found"))) {
+          m_pSectionFound(std::make_unique<ControlObject>(ConfigKey(group, "section_found"))),
+          m_pSectionJump(std::make_unique<ControlPushButton>(ConfigKey(group, "section_jump"))) {
     m_pBeatInPhrase->setReadOnly();
     m_pBeatInPhrase->forceSet(-1);
     m_pPhraseLength->set(kDefaultPhraseLength);
@@ -48,6 +49,10 @@ PhraseControl::PhraseControl(const QString& group, UserSettingsPointer pConfig)
     m_pPhraseAnchor->set(-1);
     connect(m_pSetOne.get(), &ControlObject::valueChanged, this, &PhraseControl::slotSetOne);
     connect(m_pJump.get(), &ControlObject::valueChanged, this, &PhraseControl::slotJump);
+    connect(m_pSectionJump.get(),
+            &ControlObject::valueChanged,
+            this,
+            &PhraseControl::slotSectionJump);
     connect(m_pPhraseLength.get(),
             &ControlObject::valueChanged,
             this,
@@ -70,6 +75,8 @@ void PhraseControl::connectCues() {
     m_pCuePoint->connectValueChanged(this, &PhraseControl::slotParametersChanged);
     m_pTrackSamples = std::make_unique<ControlProxy>(
             group, "track_samples", this, ControlFlag::AllowMissingOrInvalid);
+    m_pPlay = std::make_unique<ControlProxy>(
+            group, "play", this, ControlFlag::AllowMissingOrInvalid);
     QStringList names = {QStringLiteral("intro_start_position"),
             QStringLiteral("intro_end_position"),
             QStringLiteral("outro_start_position"),
@@ -243,6 +250,7 @@ void PhraseControl::updateSection(mixxx::audio::FramePos position) {
     if (!pBeats || m_beat < 0) {
         m_pSectionBeatsLeft->forceSet(-1);
         m_pSectionFound->forceSet(0);
+        m_nextSection = -1.0;
         return;
     }
     QList<mixxx::audio::FramePos> boundaries;
@@ -274,6 +282,7 @@ void PhraseControl::updateSection(mixxx::audio::FramePos position) {
     if (m_pSectionFound->get() != (found ? 1 : 0)) {
         m_pSectionFound->forceSet(found ? 1 : 0);
     }
+    m_nextSection = found ? target.toEngineSamplePos() : -1.0;
 }
 
 void PhraseControl::updatePosition(mixxx::audio::FramePos position) {
@@ -342,17 +351,45 @@ void PhraseControl::slotJump(double value) {
     if (target < 0 || !pBeats || !m_position.isValid() || m_beat < 0) {
         return;
     }
+    // Stopped: exactly on the beat (the deck then starts from it in time,
+    // Marko 12.10.2026: "select beat 1, it starts to play from beat 1 in
+    // sync"); playing: the same place within the beat, `beats` beats away
+    const bool playing = m_pPlay && m_pPlay->get() > 0;
     const int length = validLength(m_pPhraseLength->get());
     const int beats = (target % length) - m_beat;
-    if (beats == 0) {
+    if (beats == 0 && playing) {
         return;
     }
-    // Same offset within the beat, `beats` beats away
     const auto prev = pBeats->findPrevBeat(m_position);
-    const auto destinationBeat = pBeats->findNthBeat(prev, beats > 0 ? beats + 1 : beats - 1);
-    if (!prev.isValid() || !destinationBeat.isValid()) {
+    if (!prev.isValid()) {
         return;
     }
-    const auto destination = destinationBeat + (m_position - prev);
+    const auto destinationBeat = beats == 0
+            ? prev
+            : pBeats->findNthBeat(prev, beats > 0 ? beats + 1 : beats - 1);
+    if (!destinationBeat.isValid()) {
+        return;
+    }
+    seekExact(playing ? destinationBeat + (m_position - prev) : destinationBeat);
+}
+
+void PhraseControl::slotSectionJump(double value) {
+    if (value <= 0) {
+        return;
+    }
+    const mixxx::BeatsPointer pBeats = m_pBeats;
+    const double next = m_nextSection;
+    if (!pBeats || !m_position.isValid() || next < 0) {
+        return;
+    }
+    const auto section = pBeats->findClosestBeat(mixxx::audio::FramePos::fromEngineSamplePos(next));
+    const auto prev = pBeats->findPrevBeat(m_position);
+    if (!section.isValid()) {
+        return;
+    }
+    const bool playing = m_pPlay && m_pPlay->get() > 0;
+    // Playing: the same place within the beat, so the mix stays in time
+    const auto destination = playing && prev.isValid() ? section + (m_position - prev) : section;
+    qInfo() << getGroup() << "jump to the next section at" << section.value();
     seekExact(destination);
 }

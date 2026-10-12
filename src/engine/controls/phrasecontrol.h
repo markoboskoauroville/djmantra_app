@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QList>
+#include <atomic>
 #include <QStringList>
 #include <memory>
 #include <vector>
@@ -33,6 +34,9 @@ class ControlPushButton;
 ///   beat_unit        its lower number: 2, 4 (default), 8 or 16
 ///   section_beats_left  beats from the current beat to the next section
 ///                    (read-only), -1 without beats
+///   section_jump     button: to the start of the next section (a found
+///                    change or a cue), the same place within the beat
+///                    while playing, exactly on the beat while stopped
 ///   section_found    1: section_beats_left counts to a section start (a
 ///                    change found in the arrangement, intro / outro
 ///                    markers, hot cues); 0: to the end of the track
@@ -82,6 +86,7 @@ class PhraseControl : public EngineControl {
     void slotDetectSections();
     void slotSetOne(double value);
     void slotJump(double value);
+    void slotSectionJump(double value);
     void slotParametersChanged(double);
 
   private:
@@ -98,6 +103,11 @@ class PhraseControl : public EngineControl {
     std::unique_ptr<ControlObject> m_pBeatUnit;
     std::unique_ptr<ControlObject> m_pSectionBeatsLeft;
     std::unique_ptr<ControlObject> m_pSectionFound;
+    std::unique_ptr<ControlPushButton> m_pSectionJump;
+    std::unique_ptr<ControlProxy> m_pPlay;
+    // The next section start found by updateSection() (engine sample pos,
+    // -1 none): read by slotSectionJump() on the main thread
+    std::atomic<double> m_nextSection{-1};
     std::unique_ptr<ControlProxy> m_pCuePoint;
     std::unique_ptr<ControlProxy> m_pTrackSamples;
     // Section starts: intro / outro markers and hot cues

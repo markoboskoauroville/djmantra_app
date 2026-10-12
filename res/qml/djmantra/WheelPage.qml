@@ -9,6 +9,8 @@ Rectangle {
     id: root
 
     signal done()
+    // as a page (KEYS): no back button
+    property bool embedded: false
 
     color: Style.background
 
@@ -36,7 +38,8 @@ Rectangle {
         id: bar
 
         width: parent.width
-        height: 52
+        height: root.embedded ? 0 : 52
+        visible: !root.embedded
         color: Style.surface
 
         DButton {

@@ -2,7 +2,7 @@ import "."
 import QtQuick 2.12
 
 // The bottom navigation of the horoscope app: icon + label, the selected one
-// yellow. Pages: MIXER, WAVEFORMS, PADS.
+// yellow. Pages: MIX (beat pads), MIXER, KEYS (Camelot wheel).
 Rectangle {
     id: root
 
@@ -16,7 +16,7 @@ Rectangle {
         anchors.fill: parent
 
         Repeater {
-            model: [qsTr("Mixer"), qsTr("Waveforms"), qsTr("Pads")]
+            model: [qsTr("Mix"), qsTr("Mixer"), qsTr("Keys")]
 
             delegate: Item {
                 id: tab
@@ -40,7 +40,7 @@ Rectangle {
                     anchors.topMargin: 8
 
                     Row {
-                        visible: tab.index === 0
+                        visible: tab.index === 1
                         anchors.centerIn: parent
                         spacing: 4
                         Repeater {
@@ -56,25 +56,30 @@ Rectangle {
                         }
                     }
 
-                    Row {
-                        visible: tab.index === 1
+                    Rectangle {
+                        // the wheel
+                        visible: tab.index === 2
                         anchors.centerIn: parent
-                        spacing: 2
-                        Repeater {
-                            model: [0.35, 0.7, 1.0, 0.55, 0.85, 0.4]
-                            delegate: Rectangle {
-                                required property real modelData
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: 2
-                                height: icon.height * modelData
-                                radius: 1
-                                color: tab.tint
-                            }
+                        width: 18
+                        height: 18
+                        radius: 9
+                        color: "transparent"
+                        border.color: tab.tint
+                        border.width: 2
+
+                        Rectangle {
+                            anchors.centerIn: parent
+                            width: 8
+                            height: 8
+                            radius: 4
+                            color: "transparent"
+                            border.color: tab.tint
+                            border.width: 1.5
                         }
                     }
 
                     Grid {
-                        visible: tab.index === 2
+                        visible: tab.index === 0
                         anchors.centerIn: parent
                         columns: 2
                         spacing: 3

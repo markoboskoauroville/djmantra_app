@@ -207,14 +207,15 @@ TEST_F(PhraseControlEngineTest, setOneAndJump) {
     EXPECT_EQ(0, beat());
     seekToBeat(7.2);
     EXPECT_EQ(2, beat());
-    // Jump to beat 8 of the phrase: 5 beats on, same position within the beat
+    // Jump to beat 8 of the phrase: 5 beats on; the deck is stopped, so it
+    // lands exactly on the beat (playing, it keeps the place within the beat)
     ControlObject::set(ConfigKey(m_sGroup1, "phrase_jump"), 8);
     ProcessBuffer();
     ProcessBuffer();
     EXPECT_EQ(7, beat());
     const double seconds =
             ControlObject::get(ConfigKey(m_sGroup1, "playposition")) * m_pTrack->getDuration();
-    EXPECT_NEAR(12.2 * 0.5, seconds, 0.02);
+    EXPECT_NEAR(12.0 * 0.5, seconds, 0.02);
     // And back to beat 1
     ControlObject::set(ConfigKey(m_sGroup1, "phrase_jump"), 1);
     ProcessBuffer();

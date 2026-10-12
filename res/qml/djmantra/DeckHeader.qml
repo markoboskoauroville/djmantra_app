@@ -4,7 +4,7 @@ import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
 // A deck's header: cover, the 8-beat phrase LEDs, artist and key, title, the
-// counter, the overview.
+// counter. No overview: the interface has no waveforms (Marko, 12.10.2026).
 // Deck 1 reads left to right, deck 2 mirrored (cover at the outer edge).
 Item {
     id: root
@@ -15,7 +15,7 @@ Item {
     property var player: Mixxx.PlayerManager.getPlayer(group)
     signal coverTapped()
 
-    implicitHeight: 92
+    implicitHeight: 74
 
     Mixxx.ControlProxy { id: keyControl; group: root.group; key: "key" }
 
@@ -126,11 +126,4 @@ Item {
         }
     }
 
-    Skin.WaveformOverview {
-        group: root.group
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: 26
-    }
 }
