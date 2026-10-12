@@ -134,13 +134,33 @@ Window {
             }
         }
 
+        MatrixDeck { id: matrix1; group: "[Channel1]"; deckColor: Style.deck1 }
+        MatrixDeck { id: matrix2; group: "[Channel2]"; deckColor: Style.deck2 }
+
+        MatrixDisplay {
+            // the OXI E16's dot-matrix display (Marko, 12.10.2026): each
+            // deck's title, key and BPM, section countdown and phrase beat
+            id: matrix
+
+            objectName: "matrix"
+            anchors.top: headers.bottom
+            anchors.topMargin: Style.gap
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: Style.gap
+            anchors.rightMargin: Style.gap
+            height: 56
+            left: matrix1.lines
+            right: matrix2.lines
+        }
+
         PhraseBar {
             // Marko's mixing tool: both decks' phrase lights and section
             // countdowns, always on screen
             id: phraseBar
 
             objectName: "phraseBar"
-            anchors.top: headers.bottom
+            anchors.top: matrix.bottom
             anchors.topMargin: Style.gap
             anchors.left: parent.left
             anchors.right: parent.right

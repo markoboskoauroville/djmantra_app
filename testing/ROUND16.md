@@ -46,3 +46,15 @@ a cover tap → LOAD 1 / LOAD 2 onto that deck; Music listed once.
 ## 7. Controller (only if connected): pads light the beat in the phrase (BEAT_LIGHTS).
 ## Known gap (manifest §6): hot cues and loops are gone from the new interface, but still in the engine, the classic
 interface and the Mix Ultra's pad modes. Not to be tested; noted for the next build.
+## 8. OXI E16 design (Marko, 12.10.2026; manifest dj-mixing.md §8)
+- LED rings: every knob on the Mixer page (GAIN white, HIGH blue, MID green, LOW red, FILTER yellow) has a ring of
+  15 separate dots around it, lit from the bottom left up to the value in the knob's colour, the rest dim. An EQ
+  knob at the top (0 dB) shows the full ring; at the bottom (kill) no dot; FILTER in the middle about half.
+  Turn each knob slowly: the dots follow without jumps. Screenshot with each knob at a different value.
+- Dot-matrix display between the deck headers and the phrase bar: dark glass, a grid of square dots (unlit ones
+  faintly visible), a pixel font. Left half deck 1, right half deck 2, three lines each:
+  1. artist - title, running through when longer than its half (no deck loaded: NO TRACK);
+  2. Camelot key in the deck colour, then the BPM (e.g. `8A 124.0`);
+  3. section countdown in yellow (as the phrase bar's) and the beat in the phrase `B1`…`B8` in the deck colour.
+  Check: readable on the phone at arm's length? Text not cut at the halves' edge? Updates while playing? CPU in
+  `top` with both decks playing, compared with round 13 (32–55 %). Screenshot portrait and landscape.

@@ -34,17 +34,17 @@ Item {
                     anchors.right: deck.index === 1 ? parent.right : undefined
                     spacing: 2
 
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.modelData; key: "pregain"; label: "GAIN" }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter3"; label: "HIGH"; defaultParameter: 1 }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter2"; label: "MID"; defaultParameter: 1 }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter1"; label: "LOW"; defaultParameter: 1 }
+                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.modelData; key: "pregain"; label: "GAIN"; arcColor: Style.text }
+                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter3"; label: "HIGH"; defaultParameter: 1; arcColor: Style.water }
+                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter2"; label: "MID"; defaultParameter: 1; arcColor: Style.earth }
+                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter1"; label: "LOW"; defaultParameter: 1; arcColor: Style.fire }
                     DKnob {
                         width: 58
                         height: (knobs.height - 46) / 5
                         group: "[QuickEffectRack1_" + deck.modelData + "]"
                         key: "super1"
                         label: "FILTER"
-                        arcColor: Style.water
+                        arcColor: Style.accent
                     }
                     DButton { width: 58; height: 36; text: "\uD83C\uDFA7"; group: deck.modelData; key: "pfl" }
                 }

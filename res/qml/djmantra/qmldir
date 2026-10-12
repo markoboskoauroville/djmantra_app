@@ -19,3 +19,5 @@ BeatPads 1.0 BeatPads.qml
 DeckTools 1.0 DeckTools.qml
 AutoMix 1.0 AutoMix.qml
 MixPage 1.0 MixPage.qml
+MatrixDisplay 1.0 MatrixDisplay.qml
+MatrixDeck 1.0 MatrixDeck.qml
