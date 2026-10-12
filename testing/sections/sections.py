@@ -127,6 +127,109 @@ def detector_app(bands3, phase_bar0):
     return out
 
 
+# ---------- C: the app's next detector (v2, builder 12.10.2026) ----------
+# Only what the app has at run time: the waveform's low / mid / high per point
+# (frames here) and the beat grid. Ported to sectiondetector.cpp once it scores
+# well against B on the songs.
+
+def detector_v2(lmh, beats, n_frames):
+    """lmh: per frame low / mid / high (app scale); beats: beat frames.
+    Returns (bar starts in frames, major section start bars, phrase phase)."""
+    lmh = np.asarray(lmh, float)
+    # 1. downbeat: the beat phase whose bar-to-bar band change is largest
+    best = (-1, 0)
+    for p in range(4):
+        bs = beats[p::4]
+        if len(bs) < 12:
+            continue
+        f = per_span(lmh, bs[:-1], bs[1:])
+        ch = np.abs(np.diff(np.log1p(f), axis=0)).sum()
+        if ch > best[0]:
+            best = (ch, p)
+    bars = beats[best[1]::4]
+    starts, ends = bars[:-1], bars[1:]
+    nb = len(starts)
+    if nb < 16:
+        return starts, [], 0
+    b3 = per_span(lmh, starts, ends)
+    b3 = 230 * b3 / (b3.max(axis=0) + 1e-9)
+    # quarters of each bar (the rhythm pattern), log
+    q = []
+    for s0, e0 in zip(starts, ends):
+        edges = np.linspace(s0, e0, 5)
+        q.append(np.concatenate([per_span(lmh, edges[i:i + 1], edges[i + 1:i + 2])[0] for i in range(4)]))
+    q = np.log1p(np.array(q))
+    # 2. kick per bar: the low band's peak on each beat over its level between beats
+    low = lmh[:, 0]
+    pulse = []
+    for s0, e0 in zip(starts, ends):
+        edges = np.linspace(s0, e0, 5)
+        v = []
+        for i in range(4):
+            a, b = int(edges[i]), max(int(edges[i]) + 1, int(edges[i + 1]))
+            seg = low[a:b]
+            head = seg[:max(1, len(seg) // 4)]
+            v.append((head.max() - np.median(seg)) / (seg.max() + 1e-9) if len(seg) else 0)
+        pulse.append(np.mean(v))
+    pulse = np.array(pulse)
+    k = pulse * b3[:, 0]
+    kick = np.clip(k / (np.percentile(k, 90) + 1e-9), 0, 1.5)
+    on = np.zeros(nb, bool)
+    state = kick[0] > 0.5
+    for i, v in enumerate(kick):
+        if state and v < 0.35:
+            state = False
+        elif not state and v > 0.6:
+            state = True
+        on[i] = state
+    i = 0
+    while i < nb:  # a 1-bar state is a fill
+        j = i
+        while j < nb and on[j] == on[i]:
+            j += 1
+        if j - i < 2 and i > 0:
+            on[i:j] = on[i - 1]
+        i = j
+    kch = np.r_[0, (on[1:] != on[:-1]).astype(float)]
+    # band change over 4 bars (the app's old score)
+    bch = np.zeros(nb)
+    for i in range(4, nb - 4):
+        bch[i] = max(abs(np.log((b3[i:i + 4, c].mean() + 4) / (b3[i - 4:i, c].mean() + 4))) for c in range(3))
+    # 3. phrase "1": the 8-bar offset where the kick and the bands change most
+    ch = np.r_[0, np.abs(np.diff(np.log1p(b3), axis=0)).sum(axis=1)]
+    phase = int(np.argmax([2.0 * kch[o::8].sum() + ch[o::8].mean() for o in range(8)]))
+    # 4. novelty: self-similarity of the bars (bands + their rhythm), checkerboard 4 and 8
+    f = zscore(np.c_[3 * np.log1p(b3), q])
+    f = f / (np.linalg.norm(f, axis=1, keepdims=True) + 1e-9)
+    ssm = f @ f.T
+    nov = 0.5 * checker_novelty(ssm, 4) + 0.5 * checker_novelty(ssm, 8)
+    bc = np.clip(bch - 0.3, 0, None)
+    score = nov + 0.6 * kch + 0.8 * bc
+    rel = (np.arange(nb) - phase) % 8
+    score = score * np.where(rel == 0, 1.0, np.where(rel == 4, 0.75, 0.35))
+    thr = np.median(score) + 1.5 * np.median(np.abs(score - np.median(score))) + 0.15
+    peaks = []
+    for i in np.argsort(-score):
+        if score[i] < thr or i < 4 or i > nb - 4:
+            continue
+        if all(abs(i - p) >= 8 for p in peaks):
+            peaks.append(int(i))
+    for i in np.where(kch > 0)[0]:
+        if rel[i] in (0, 4) and 4 <= i <= nb - 1 and all(abs(i - p) >= 4 for p in peaks):
+            peaks.append(int(i))
+    major = sorted(p for p in peaks if kch[max(0, p - 1):p + 2].any() or nov[p] >= 0.5 or bc[p] >= 0.35)
+    return starts, major, phase
+
+
+def compare(found, truth, tol=0):
+    """exact, off (1-4 bars), missed, false: found vs truth (bars)."""
+    exact = sum(any(abs(f - t) <= tol for f in found) for t in truth)
+    near = sum(not any(abs(f - t) <= tol for f in found) and any(abs(f - t) <= 4 for f in found) for t in truth)
+    missed = len(truth) - exact - near
+    false = sum(not any(abs(f - t) <= 4 for t in truth) for f in found)
+    return {"exact": exact, "off_1_4": near, "missed": missed, "false": false}
+
+
 # ---------- B: reference ----------
 
 def zscore(m):
@@ -291,6 +394,11 @@ def analyse(path, outdir):
     energy = np.log1p(b3).sum(axis=1)
     bounds, names = label(b, on, energy, nb)
 
+    # C: the app's next detector, from the app-like bands only, on its own bars
+    c_starts, c_major, c_phase = detector_v2(np.c_[low, mid, high], beats, n)
+    # its bars in the reference's bar numbers (both from the same beat grid)
+    c_major_ref = [int(np.argmin(np.abs(starts - c_starts[i]))) for i in c_major]
+
     t = lambda bar: float(starts[min(bar, nb - 1)] / FPS)
     result = {
         "song": name, "bpm": bpm, "bars": nb, "downbeat_phase": best[1], "phrase_phase": phase,
@@ -302,6 +410,10 @@ def analyse(path, outdir):
         "ref_major_s": [round(t(i), 1) for i in major],
         "ref_labels": [{"bar": bounds[j], "s": round(t(bounds[j]), 1), "name": names[j]}
                        for j in range(len(names))],
+        "v2_major_bar": c_major_ref,
+        "v2_major_s": [round(t(i), 1) for i in c_major_ref],
+        "v2_vs_ref_major": compare(c_major_ref, major),
+        "app_vs_ref_major": compare(list(a), major),
         "app_on_8bar_grid": sum((i - phase) % 8 == 0 for i in a),
         "ref_on_8bar_grid": sum((i - phase) % 8 == 0 for i in b),
     }
@@ -315,7 +427,7 @@ def analyse(path, outdir):
     ax0.imshow(mel_b.T, aspect="auto", origin="lower", cmap="magma",
                extent=[0, nb, 0, mel_b.shape[1]])
     ax0.set_ylabel("timbre\n(40 mel)")
-    ax0.set_title(f"{name}   {bpm} BPM, {nb} bars   red = app today, cyan = reference (solid major, dotted minor)")
+    ax0.set_title(f"{name}   {bpm} BPM, {nb} bars   red = app today, cyan = reference (solid major, dotted minor), green dashed = v2")
     ax1 = fig.add_subplot(gs[1, 0], sharex=ax0)
     for i, (c, l) in enumerate(zip("rgb", ("low", "mid", "high"))):
         ax1.plot(np.arange(nb) + 0.5, b3[:, i], c, lw=1, label=l)
@@ -335,6 +447,8 @@ def analyse(path, outdir):
             ax.axvline(i, color="red", lw=1.6, alpha=0.8)
         for i in b:
             ax.axvline(i, color="cyan", lw=2.2 if i in major else 1.0, ls="-" if i in major else ":")
+        for i in c_major_ref:
+            ax.axvline(i + 0.15, color="lime", lw=1.4, ls="--")
     ax4 = fig.add_subplot(gs[4, 0], sharex=ax0)
     colours = {"Intro": "#8fb3ff", "Up": "#ffd27f", "Down": "#9be59b", "Chorus": "#ff8f8f",
                "Outro": "#c9a8ff"}
@@ -361,8 +475,14 @@ def analyse(path, outdir):
 if __name__ == "__main__":
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
+    tot = {"app": {}, "v2": {}}
     for p in sys.argv[2:]:
         r = analyse(p, out)
+        for key, field in (("app", "app_vs_ref_major"), ("v2", "v2_vs_ref_major")):
+            for k2, v in r[field].items():
+                tot[key][k2] = tot[key].get(k2, 0) + v
+        print(f"   v2 vs ref major: {r['v2_vs_ref_major']}   app: {r['app_vs_ref_major']}")
         print(f"{r['song'][:28]:28s} {r['bpm']:6.2f} BPM {r['bars']:4d} bars  "
               f"app {len(r['app_sections_bar']):2d} ({r['app_on_8bar_grid']} on 8-grid)  "
               f"ref {len(r['ref_sections_bar']):2d} ({r['ref_on_8bar_grid']} on 8-grid)")
+    print("TOTAL vs reference major sections: app", tot["app"], " v2", tot["v2"])
