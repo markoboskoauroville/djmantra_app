@@ -41,3 +41,14 @@ So the Phrasing tab's cost is drawing: the scrolling waveform (repainted every f
 - MASTER = Phone speaker, HEADPHONES = Phone default → APPLY: `Sound output open: "Phone audio output ..." (second output)` and `Sound output open: "Phone speaker" (clock)`, both 48000 Hz 2 ch, device 3; `audio route master -> speaker:A142 channels 1-2`, `headphones -> phone default channels 1-2`; sound, xruns 0, late 0, slowest 3.9 ms.
 - Put back to MASTER = Phone default, HEADPHONES = Off (`audio route master -> phone default`, `headphones -> none`), so the pre-listen does not also play on the speaker.
 - NOT TESTED (needs Marko to plug something in): the list growing on plug-in, MASTER on a USB / Bluetooth output, channels 3-4 on the Mix Ultra, unplug fallback.
+
+## Part 6: genre - PASS (with a language problem)
+NEXT loaded Aktysia, Alba, American Dream, Amulet, Astral Voyage, Beautiful Place (decks stopped):
+- Anonimat - Aktysia: `artist:"Anonimat" track:"Aktysia" -> 0 tracks`, plain `Anonimat Aktysia -> 1 tracks` → **"Elektronička glazba"**.
+- Amonita - Amulet: 0, then 3 tracks → "Elektronička glazba".
+- Viel - Beautiful Place: 0, then 3 tracks → "Elektronička glazba".
+- Awka - Astral Voyage: 0 and 0 → `Deezer has no track` (no genre).
+- Jakatta - American Dream: House (from round 22, no new lookup). Alba: no lookup logged (kept from earlier).
+- Found: 4 of the 5 looked-up / known songs (round 22: 1 of 5). No HTTP errors.
+- **Problem: the genre comes in Croatian** ("Elektronička glazba" = "Electronic music"): Deezer answers in the phone's language (the A142 runs en_CZ / hr_HR). Send `Accept-Language: en` (or Deezer's `lang=en`) so it reads "Electronic". Also very general: three different songs all "Electronic"; MusicBrainz' "House" is more useful when it exists.
+- The strict `artist:"..." track:"..."` search found 0 every time; the plain search found them. The plain one could go first.
