@@ -53,4 +53,8 @@ source"; Marko: "when the deck in the headphones goes on air, the headphones swi
 - Sound on the second output for 2 minutes: any crackle? (The two outputs' clocks drift a little: a tiny drop on the
   headphones every several minutes is possible, the master is never touched.) xruns, late on the master.
 
-## 6. Round 21 leftovers: whatever round 21 failed (see its report), CPU per tab, genre (Deezer).
+## 6. Keys tab (Marko's screenshot: "don't use the matrix font inside the Camelot wheel ... normal font, smooth
+lines"): every code (12A ...) and key name (C#m ...) and the middle text in the normal font, crisp; the rings and
+borders smooth, no broken strokes or stairs. Screenshot, zoomed.
+
+## 7. Round 21 leftovers: whatever round 21 failed (see its report), CPU per tab, genre (Deezer).

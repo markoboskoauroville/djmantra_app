@@ -1,6 +1,7 @@
 import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
+import QtQuick.Window 2.12
 
 // The Camelot wheel: B (major) outside, A (minor) inside, 12 on top. The
 // decks' keys are ringed (deck 1 green, deck 2 magenta); the keys that mix
@@ -66,13 +67,17 @@ Rectangle {
         }
     }
 
-    Canvas {
+    Item {
         // Drawn like the chart wheel of Marko's horoscope app (astro_dos,
         // modern/Wheel.kt): a true circle on a dark disc, each key a thinly
         // tinted ring sector between two radii, thin boundary lines, the code
-        // centred in its band in the key's colour, the bold outer circle
+        // centred in its band in the key's colour, the bold outer circle.
+        // Round 22 (Marko: "don't use the matrix font ... normal font, smooth
+        // lines"): the drawing at the screen's own resolution, all letters as
+        // real text over it.
         id: wheel
 
+        z: 1 // the text over the drawing
         anchors.top: bar.bottom
         anchors.topMargin: root.embedded ? 4 : 12
         anchors.horizontalCenter: parent.horizontalCenter
@@ -81,6 +86,100 @@ Rectangle {
         width: root.embedded ? Math.min(parent.width - 8, parent.height - 8)
                 : Math.min(parent.width - 24, parent.height - bar.height - 220)
         height: width
+
+        readonly property real r: width / 2 - 3
+        readonly property real rB: r * 0.70   // B (major) between rB and r
+        readonly property real rA: r * 0.42   // A (minor) between rA and rB
+        readonly property bool any: root.code1 !== "" || root.code2 !== ""
+        readonly property var match: Mixxx.DJMantra.keyMatch(key1.value, key2.value)
+
+        function keyColor(n, alpha) {
+            // 12 hues round the wheel, the same for A and B of one number
+            return Qt.hsla((((n - 1) * 30 + 150) % 360) / 360, 0.72, 0.62, alpha);
+        }
+
+        Repeater {
+            // the codes and their musical names, real text in their bands
+            model: 24
+
+            delegate: Column {
+                id: label
+
+                required property int index
+                readonly property int n: index % 12 + 1
+                readonly property bool major: index >= 12
+                readonly property string code: n + (major ? "B" : "A")
+                readonly property real r1: major ? wheel.rB : wheel.rA
+                readonly property real r2: major ? wheel.r : wheel.rB
+                readonly property real mid: -Math.PI / 2 + (n % 12) * Math.PI / 6
+                readonly property real lr: (r1 + r2) / 2
+                readonly property bool isDeck: code === root.code1 || code === root.code2
+                readonly property bool lit: wheel.any && root.matches(code)
+                readonly property real size: (r2 - r1) * 0.34
+
+                x: wheel.width / 2 + lr * Math.cos(mid) - width / 2
+                y: wheel.height / 2 + lr * Math.sin(mid) - height / 2
+                spacing: -2
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: label.code
+                    color: label.isDeck ? Style.inkOnAccent
+                            : (wheel.any && !label.lit ? Style.subText : wheel.keyColor(label.n, 1))
+                    font.pixelSize: Math.round(label.size)
+                    font.bold: true
+                }
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: Mixxx.DJMantra.musicalName(label.code)
+                    color: label.isDeck ? Style.inkOnAccent : Style.subText
+                    font.pixelSize: Math.round(label.size * 0.62)
+                }
+            }
+        }
+
+        Column {
+            // in the middle: the decks' keys and how they match
+            anchors.centerIn: parent
+            spacing: 2
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "1  " + (root.code1 !== "" ? root.code1 : "-")
+                color: Style.deck1
+                font.pixelSize: Math.round(wheel.rA * 0.2)
+                font.bold: true
+            }
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "2  " + (root.code2 !== "" ? root.code2 : "-")
+                color: Style.deck2
+                font.pixelSize: Math.round(wheel.rA * 0.2)
+                font.bold: true
+            }
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: wheel.match.why
+                color: wheel.match.color
+                font.pixelSize: Math.round(wheel.rA * 0.15)
+            }
+        }
+    }
+
+    Canvas {
+        // the rings and sectors, in device pixels (scaled down: crisp)
+        id: painter
+
+        readonly property real dpr: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
+        x: wheel.x
+        y: wheel.y
+        width: wheel.width * dpr
+        height: wheel.height * dpr
+        transformOrigin: Item.TopLeft
+        scale: 1 / dpr
         onWidthChanged: requestPaint()
 
         readonly property color wheelBg: "#111833"
@@ -89,8 +188,7 @@ Rectangle {
         readonly property color sub: Style.subText
 
         function keyColor(n, alpha) {
-            // 12 hues round the wheel, the same for A and B of one number
-            return Qt.hsla((((n - 1) * 30 + 150) % 360) / 360, 0.72, 0.62, alpha);
+            return wheel.keyColor(n, alpha);
         }
 
         onPaint: {
@@ -135,19 +233,6 @@ Rectangle {
                         ctx.lineWidth = bold * 1.4;
                         ctx.stroke();
                     }
-                    // the code and its musical name, centred in the band
-                    const lr = (r1 + r2) / 2;
-                    const x = cx + lr * Math.cos(mid);
-                    const y = cy + lr * Math.sin(mid);
-                    const size = (r2 - r1) * 0.34;
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
-                    ctx.font = "bold " + Math.round(size) + "px sans-serif";
-                    ctx.fillStyle = isDeck ? Style.inkOnAccent : (any && !lit ? sub : keyColor(n, 1));
-                    ctx.fillText(code, x, y - size * 0.35);
-                    ctx.font = Math.round(size * 0.62) + "px sans-serif";
-                    ctx.fillStyle = isDeck ? Style.inkOnAccent : sub;
-                    ctx.fillText(Mixxx.DJMantra.musicalName(code), x, y + size * 0.55);
                 }
             }
             // thin boundary lines across both rings
@@ -168,25 +253,12 @@ Rectangle {
                 ctx.lineWidth = width;
                 ctx.stroke();
             }
-            // in the middle: the decks' keys and how they match
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            const fs = rA * 0.2;
-            ctx.font = "bold " + Math.round(fs) + "px sans-serif";
-            ctx.fillStyle = Style.deck1;
-            ctx.fillText("1  " + (root.code1 !== "" ? root.code1 : "-"), cx, cy - fs * 1.2);
-            ctx.fillStyle = Style.deck2;
-            ctx.fillText("2  " + (root.code2 !== "" ? root.code2 : "-"), cx, cy);
-            const m = Mixxx.DJMantra.keyMatch(key1.value, key2.value);
-            ctx.font = Math.round(fs * 0.75) + "px sans-serif";
-            ctx.fillStyle = m.color;
-            ctx.fillText(m.why, cx, cy + fs * 1.2);
         }
 
         Connections {
             target: root
-            function onCode1Changed() { wheel.requestPaint(); }
-            function onCode2Changed() { wheel.requestPaint(); }
+            function onCode1Changed() { painter.requestPaint(); }
+            function onCode2Changed() { painter.requestPaint(); }
         }
     }
 
