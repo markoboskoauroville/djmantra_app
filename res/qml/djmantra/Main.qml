@@ -344,6 +344,8 @@ Window {
             }
 
             Overview {
+                id: overview1
+
                 objectName: "overview1"
                 width: parent.width
                 height: window.landscape ? Math.max(26, decks.room * 0.25) : 26
@@ -352,6 +354,8 @@ Window {
             }
 
             Overview {
+                id: overview2
+
                 objectName: "overview2"
                 width: parent.width
                 height: window.landscape ? Math.max(26, decks.room * 0.25) : 26
@@ -367,7 +371,7 @@ Window {
             deckColor: Style.deck1
             onStarted: (path) => window.markPlayed(path)
         }
-        AutoPhase { id: autoPhase; deck1: matrix1; deck2: matrix2 }
+        AutoPhase { id: autoPhase; deck1: matrix1; deck2: matrix2; hold: overview1.scrubbing || overview2.scrubbing }
         AutoCue { id: autoCueMode }
         MatrixDeck {
             id: matrix2

@@ -32,6 +32,10 @@ Item {
         onValueChanged: root.previewEnded = Date.now()
     }
     property real previewEnded: 0
+    // round 27: a finger scrubbing an overview: no jumps until 1 s after it
+    property bool hold: false
+    property real holdEnded: 0
+    onHoldChanged: holdEnded = Date.now()
 
     // heard on the dance floor: volume up, not cut by the crossfader
     function onAir(deck) {
@@ -52,6 +56,8 @@ Item {
             return;
         if (cue1.value > 0 || cue2.value > 0 || Date.now() - previewEnded < 1000)
             return; // a CUE preview: never jump a deck for it
+        if (hold || Date.now() - holdEnded < 1000)
+            return; // scrubbing: the deck is being placed by hand
         // after an alignment, give it two beats to land
         if (Date.now() - lastAlign < 2 * 60000 / deck1.bpmNow)
             return;

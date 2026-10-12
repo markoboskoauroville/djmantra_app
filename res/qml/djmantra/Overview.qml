@@ -2,6 +2,7 @@ import "."
 import ".." as Skin
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
+import QtQuick.Window 2.12
 
 // A deck's overview waveform (round 18, Marko: "sections need to be clearly
 // seen ... the waveform needs to be much bigger ... make vertical line between
@@ -134,16 +135,25 @@ Rectangle {
     // the zoom while scrubbing: 100 px show this many seconds
     readonly property real scrubZoom: 1.0
 
+    // the deck's finger is scrubbing (AUTO PHASE waits for it)
+    readonly property bool scrubbing: area.scrubbing
+
     Rectangle {
-        // the zoomed waveform while scrubbing, above the overview
+        // the zoomed waveform while scrubbing, above the overview. Round 27:
+        // inside the overview it was clipped away (clip: true): it lives on
+        // the window's top layer, placed over the overview when it opens
         id: scrubView
 
+        readonly property point origin: visible && parent ? root.mapToItem(parent, 0, 0) : Qt.point(0, 0)
+
+        parent: root.Window.contentItem ? root.Window.contentItem : root
         objectName: "scrub" + root.group
         visible: area.scrubbing
         width: root.width
         height: 96
-        y: -height - 4
-        z: 10
+        x: origin.x
+        y: Math.max(0, origin.y - height - 4)
+        z: 100
         radius: 4
         color: "#05070f"
         border.color: Style.accent
