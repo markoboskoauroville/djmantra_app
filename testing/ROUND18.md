@@ -31,6 +31,10 @@ Grep the log once per part: `adb logcat -d | grep -E "Quick:|WindowBridge|GenreL
   the navigation bar`); the next press anywhere (a button works as usual) hides it; a tap on empty space while it is
   there only hides it; unused it hides after ~4 s. Swipe up from the bottom: bars come, next touch hides them.
 - Tabs Songs / Phrasing / Mixer / Keys; landscape once (screenshot).
+- Top row: menu, key badge next to it (left of the camera hole), and top right the small matrix meter (Marko,
+  12.10.2026): `CPU nn%` (the app's share of all cores, once a second, green < 50, yellow < 80, red) and `GPU nn%`
+  or `--`. Log once: `Quick: GPU load from <file>` or `from nowhere`. Compare CPU with `top` (top shows % of ONE
+  core: divide by the core count, `nproc`). Note the values on the Songs and the Phrasing tab.
 
 ## 5. Library
 - Songs tab: Music and Download folders; a tap on a song loads onto the free deck; a cover tap then a song: that deck.

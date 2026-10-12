@@ -8,7 +8,13 @@
 #include <QPointer>
 #include <QTimer>
 #include <QtDebug>
+#include <QDateTime>
+#include <QFile>
+#include <QRegularExpression>
 #include <thread>
+#if defined(Q_OS_LINUX) || defined(Q_OS_ANDROID)
+#include <unistd.h>
+#endif
 #include <algorithm>
 #include <vector>
 #include <cmath>
@@ -182,6 +188,93 @@ void QmlDJMantra::showBars() {
             "(Landroid/content/Context;)V",
             QNativeInterface::QAndroidApplication::context().object());
 #endif
+}
+
+namespace {
+
+QByteArray readSmall(const QString& path) {
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QByteArray();
+    }
+    return file.read(256);
+}
+
+// The GPU load in % from a driver file, -1 if this one does not tell.
+// Adreno: "45 %" or "busy total"; Mali / MediaTek / Pixel: a number first.
+int gpuLoadFrom(const QString& path) {
+    const QByteArray text = readSmall(path).trimmed();
+    if (text.isEmpty()) {
+        return -1;
+    }
+    static const QRegularExpression kNumbers(QStringLiteral("\\d+"));
+    QList<qint64> numbers;
+    auto it = kNumbers.globalMatch(QString::fromLatin1(text));
+    while (it.hasNext() && numbers.size() < 2) {
+        numbers.append(it.next().captured().toLongLong());
+    }
+    if (numbers.isEmpty()) {
+        return -1;
+    }
+    if (path.endsWith(QStringLiteral("/gpubusy"))) {
+        return numbers.size() == 2 && numbers[1] > 0
+                ? static_cast<int>(100 * numbers[0] / numbers[1])
+                : 0;
+    }
+    return numbers[0] >= 0 && numbers[0] <= 100 ? static_cast<int>(numbers[0]) : -1;
+}
+
+} // namespace
+
+QVariantMap QmlDJMantra::usage() {
+    QVariantMap result;
+    int cpu = -1;
+#if defined(Q_OS_LINUX) || defined(Q_OS_ANDROID)
+    // /proc/self/stat: utime and stime, the 12th and 13th fields after ")"
+    const QByteArray stat = readSmall(QStringLiteral("/proc/self/stat"));
+    const int close = stat.lastIndexOf(')');
+    if (close > 0) {
+        const QList<QByteArray> fields = stat.mid(close + 2).split(' ');
+        if (fields.size() > 12) {
+            const qint64 ticks = fields[11].toLongLong() + fields[12].toLongLong();
+            const qint64 now = QDateTime::currentMSecsSinceEpoch();
+            const long hz = sysconf(_SC_CLK_TCK);
+            const long cores = std::max(1L, sysconf(_SC_NPROCESSORS_CONF));
+            if (m_lastCpuTicks >= 0 && now > m_lastCpuAtMs && hz > 0) {
+                const double busyMs = 1000.0 * (ticks - m_lastCpuTicks) / hz;
+                cpu = static_cast<int>(std::lround(
+                        100.0 * busyMs / ((now - m_lastCpuAtMs) * static_cast<double>(cores))));
+            }
+            m_lastCpuTicks = ticks;
+            m_lastCpuAtMs = now;
+        }
+    }
+    // The GPU: the first driver file this phone lets the app read
+    if (!m_gpuProbed) {
+        m_gpuProbed = true;
+        const QStringList candidates = {
+                QStringLiteral("/sys/class/kgsl/kgsl-3d0/gpu_busy_percentage"),
+                QStringLiteral("/sys/class/kgsl/kgsl-3d0/gpubusy"),
+                QStringLiteral("/sys/kernel/ged/hal/gpu_utilization"),
+                QStringLiteral("/proc/mtk_mali/utilization"),
+                QStringLiteral("/sys/kernel/gpu/gpu_busy"),
+                QStringLiteral("/sys/class/misc/mali0/device/utilization"),
+                QStringLiteral("/sys/devices/platform/mali.0/utilization"),
+        };
+        for (const auto& path : candidates) {
+            if (gpuLoadFrom(path) >= 0) {
+                m_gpuSource = path;
+                break;
+            }
+        }
+        qInfo() << "Quick: GPU load from"
+                << (m_gpuSource.isEmpty() ? QStringLiteral("nowhere (the phone does not tell)")
+                                          : m_gpuSource);
+    }
+#endif
+    result[QStringLiteral("cpu")] = cpu;
+    result[QStringLiteral("gpu")] = m_gpuSource.isEmpty() ? -1 : gpuLoadFrom(m_gpuSource);
+    return result;
 }
 
 bool QmlDJMantra::barsVisible() const {

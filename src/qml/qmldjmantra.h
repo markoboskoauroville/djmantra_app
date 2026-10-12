@@ -84,6 +84,9 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE void hideBars();
     /// Shows them (a tap on the app's empty space); the next touch hides them
     Q_INVOKABLE void showBars();
+    /// {cpu, gpu}: the app's CPU use in % of all the cores (since the last
+    /// call) and the GPU's load in % from the driver; -1 when not known
+    Q_INVOKABLE QVariantMap usage();
     /// Whether the system bars are on screen now
     Q_INVOKABLE bool barsVisible() const;
 
@@ -117,6 +120,11 @@ class QmlDJMantra : public QObject {
     int m_insets[4] = {0, 0, 0, 0};
     QString m_lastLoaded;
     QSet<QString> m_genreAsked; // per file, once a run
+    // usage(): the CPU ticks and the time at the last call
+    qint64 m_lastCpuTicks = -1;
+    qint64 m_lastCpuAtMs = 0;
+    QString m_gpuSource; // the GPU load file that works on this phone
+    bool m_gpuProbed = false;
 };
 
 } // namespace qml

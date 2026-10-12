@@ -130,11 +130,23 @@ Window {
             }
 
             KeyBadge {
+                // left of the camera hole, next to the menu (the usage meter
+                // takes the top right corner)
                 objectName: "keyBadge"
+                anchors.left: menuButton.right
+                anchors.leftMargin: 8
+                anchors.verticalCenter: parent.verticalCenter
+                onWheelRequested: window.page = 3
+            }
+
+            UsageMeter {
+                // CPU and GPU use, top right (Marko, 12.10.2026)
+                objectName: "usage"
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
-                onWheelRequested: window.page = 3
+                height: 34
+                width: implicitWidth
             }
         }
 

@@ -1,4 +1,5 @@
 singleton Style 1.0 Style.qml
+singleton PixelFont 1.0 PixelFont.qml
 AutoMix 1.0 AutoMix.qml
 BigWaveform 1.0 BigWaveform.qml
 DButton 1.0 DButton.qml
@@ -16,5 +17,6 @@ MixerPage 1.0 MixerPage.qml
 NavBar 1.0 NavBar.qml
 Overview 1.0 Overview.qml
 PhrasingPage 1.0 PhrasingPage.qml
+UsageMeter 1.0 UsageMeter.qml
 VuBar 1.0 VuBar.qml
 WheelPage 1.0 WheelPage.qml
