@@ -83,10 +83,9 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
         });
     }
 
-    auto* pGpu = addSwitchRow(tr("Draw on the GPU"),
-            tr("Waveforms and meters on the graphics chip, smoother and lighter on "
-               "the battery. Off: on the CPU, for a phone with graphics problems. "
-               "After a restart."));
+    auto* pGpu = addSwitchRow(tr("Draw on the GPU (test)"),
+            tr("Waveforms on the graphics chip. Still being tuned: it can make the "
+               "screen slow. After a restart."));
     pGpu->setChecked(actions.gpu);
     if (actions.setGpu) {
         const auto setGpu = actions.setGpu;
@@ -122,6 +121,7 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
     show();
     raise();
     setFocus();
+    qInfo() << "Settings screen open" << geometry() << "visible" << isVisible();
 }
 
 void SettingsScreen::showAbout() {
@@ -274,6 +274,8 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
     pSettings->setFixedHeight(56);
     const auto settingsAction = actions.settings;
     connect(pSettings, &QToolButton::clicked, this, [this, settingsAction] {
+        // round 12: "a tap on Settings just closed the menu"; logged to see where it stops
+        qInfo() << "Menu: Settings tapped";
         close();
         if (settingsAction) {
             settingsAction();

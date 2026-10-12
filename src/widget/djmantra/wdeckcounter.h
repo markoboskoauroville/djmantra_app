@@ -27,8 +27,15 @@ class WDeckCounter : public WLabel {
         return m_bars;
     }
 
+    /// Narrow is fine: the text shrinks to fit (paintEvent)
+    QSize minimumSizeHint() const override;
+
   protected:
     void mousePressEvent(QMouseEvent* pEvent) override;
+    /// The text at the skin's size, or smaller until it fits: never cut off
+    /// (round 12: "0:31 / 5:56 / -5:2" under the key, Marko: "text going out
+    /// of its display size, that's not allowed")
+    void paintEvent(QPaintEvent* pEvent) override;
 
   private slots:
     void slotUpdate();

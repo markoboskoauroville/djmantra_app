@@ -166,7 +166,7 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
             actions.midi = [this] { slotOptionsPreferences(); };
             actions.advanced = [this] { slotOptionsPreferences(); };
             const ConfigKey gpuKey("[DJMantra]", "gpu");
-            actions.gpu = m_pCoreServices->getSettings()->getValue(gpuKey, true);
+            actions.gpu = m_pCoreServices->getSettings()->getValue(gpuKey, false);
             actions.setGpu = [this, gpuKey](bool on) {
                 // Read at the start (initializeQOpenGL())
                 m_pCoreServices->getSettings()->setValue(gpuKey, on);
@@ -308,8 +308,11 @@ void MixxxMainWindow::initializeQOpenGL() {
     // crashed). [DJMantra],gpu 0 (or safe mode) draws on the CPU as before;
     // so does a GPU that does not start within a few seconds.
     {
+        // Off by default: in round 12 (A142) the GPU path made every frame a
+        // composition of the whole window on the GUI thread (90th percentile
+        // 250 ms, taps ignored for a minute, no VU meters). Settings turns it on.
         const bool gpu = m_pCoreServices->getSettings()->getValue(
-                ConfigKey("[DJMantra]", "gpu"), true);
+                ConfigKey("[DJMantra]", "gpu"), false);
         if (!gpu || CmdlineArgs::Instance().getSafeMode()) {
             qInfo() << "Android: drawing on the CPU (software waveforms)";
             initialize();

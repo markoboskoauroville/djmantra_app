@@ -12,8 +12,10 @@ package com.djmantra.app;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Insets;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.SystemClock;
+import android.view.DisplayCutout;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
@@ -63,8 +65,8 @@ public final class WindowBridge {
         });
     }
 
-    /// The room the visible system bars take: left, top, right, bottom (px).
-    /// 0 everywhere while they are hidden.
+    /// The room the visible system bars and the camera hole take: left, top,
+    /// right, bottom (px). Bars: 0 while they are hidden.
     public static int[] insets() {
         return sInsets;
     }
@@ -98,7 +100,25 @@ public final class WindowBridge {
         Insets bars = visible
                 ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
                 : Insets.NONE;
-        sInsets = new int[] {bars.left, bars.top, bars.right, bars.bottom};
+        // The camera hole (display cutout): nothing may sit under it (Marko,
+        // 12.10.2026: "spread the user interface around this hole"). A hole on
+        // a side (landscape) or off centre at the top: the app keeps out of
+        // that edge's band. A hole in the middle of the top edge (the Nothing
+        // phones, most phones): no band, the skin's top row keeps its middle
+        // free (logo left, key badge right).
+        Insets cutout = insets.getInsetsIgnoringVisibility(WindowInsets.Type.displayCutout());
+        int cutTop = cutout.top;
+        DisplayCutout shape = insets.getDisplayCutout();
+        if (shape != null && cutTop > 0) {
+            Rect hole = shape.getBoundingRectTop();
+            int width = decor.getWidth();
+            if (!hole.isEmpty() && width > 0 && hole.left >= width * 3 / 8
+                    && hole.right <= width * 5 / 8) {
+                cutTop = 0;
+            }
+        }
+        sInsets = new int[] {Math.max(bars.left, cutout.left), Math.max(bars.top, cutTop),
+                Math.max(bars.right, cutout.right), Math.max(bars.bottom, cutout.bottom)};
         if (!visible) {
             sShownSince = 0;
             return;

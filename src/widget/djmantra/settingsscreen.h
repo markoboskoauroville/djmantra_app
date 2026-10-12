@@ -15,7 +15,7 @@ struct SettingsActions {
     std::function<void()> sound;      // sound output
     std::function<void()> midi;       // MIDI devices
     std::function<void()> advanced;   // every setting (Mixxx's preferences)
-    bool gpu = true;                  // waveforms and meters drawn on the GPU
+    bool gpu = false;                 // waveforms and meters drawn on the GPU (test)
     std::function<void(bool)> setGpu; // after the next start
 };
 

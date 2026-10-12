@@ -1,6 +1,7 @@
 #include "widget/djmantra/wdeckcounter.h"
 
 #include <QMouseEvent>
+#include <QPainter>
 #include <algorithm>
 #include <cmath>
 
@@ -56,6 +57,27 @@ QString WDeckCounter::timeText(double elapsed, double remaining) {
     };
     return format(elapsed) + QStringLiteral(" / ") + format(elapsed + remaining) +
             QStringLiteral(" / -") + format(remaining);
+}
+
+QSize WDeckCounter::minimumSizeHint() const {
+    return QSize(fontMetrics().height() * 3, QLabel::minimumSizeHint().height());
+}
+
+void WDeckCounter::paintEvent(QPaintEvent*) {
+    QPainter painter(this);
+    const QRect box = contentsRect();
+    QFont font = this->font();
+    const QString shown = text();
+    // Shrink until it fits (not below 7 px)
+    for (int size = QFontInfo(font).pixelSize(); size > 7; --size) {
+        font.setPixelSize(size);
+        if (QFontMetrics(font).horizontalAdvance(shown) <= box.width()) {
+            break;
+        }
+    }
+    painter.setFont(font);
+    painter.setPen(palette().color(foregroundRole()));
+    painter.drawText(box, static_cast<int>(alignment()) | Qt::AlignVCenter, shown);
 }
 
 void WDeckCounter::mousePressEvent(QMouseEvent* pEvent) {

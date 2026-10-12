@@ -689,8 +689,13 @@ def performance_landscape():
 
 
 def performance_portrait():
-    header = vbox(hbox(spacer(), library_button(32), hspace(10), key_match(), spacer(),
-                       policy="me,min"),
+    # The middle of the top row stays free: most phones have the selfie camera
+    # hole there (Nothing A142: x 511-571, y 31-91 px of 1084; Marko, 12.10.2026:
+    # "spread the user interface around this hole"). Logo left, key badge right;
+    # 40 high, so the deck headers start below the hole. A hole elsewhere: the
+    # app keeps out of its band (WindowBridge insets).
+    header = vbox(hbox(hspace(10), library_button(32), spacer(), key_match(), hspace(10),
+                       policy="me,min", minsize="0,40"),
                   hbox(header_deck_portrait(1), hspace(14), header_deck_portrait(2),
                        policy="me,min"),
                   name="TopBar", policy="me,max")

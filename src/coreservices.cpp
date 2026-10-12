@@ -726,19 +726,19 @@ void CoreServices::initialize(QApplication* pApp) {
             static_cast<int>(musicFiles.count()));
     for (int i = 0; i < numTracks; ++i) {
         if (SoundSourceProxy::isFileNameSupported(musicFiles.at(i))) {
-            if (i == 0 && m_cmdlineArgs.getPlay()) {
-                // Log once when deck 1 really plays (the device tests wait for it)
-                auto* pPlay = new ControlProxy(QStringLiteral("[Channel1]"),
-                        QStringLiteral("play"),
-                        this);
-                pPlay->connectValueChanged(this, [pPlay](double value) {
+            if (m_cmdlineArgs.getPlay()) {
+                // --play: every deck given a song plays (round 12: only deck 1
+                // did). Logged once when the deck really plays (the device
+                // tests wait for it).
+                const QString group = PlayerManager::groupForDeck(i);
+                auto* pPlay = new ControlProxy(group, QStringLiteral("play"), this);
+                pPlay->connectValueChanged(this, [pPlay, i](double value) {
                     if (value > 0) {
-                        qInfo() << "Deck 1 playing";
+                        qInfo().noquote() << QStringLiteral("Deck %1 playing").arg(i + 1);
                         pPlay->deleteLater();
                     }
                 });
-                m_pPlayerManager->slotLoadLocationToPlayer(
-                        musicFiles.at(i), QStringLiteral("[Channel1]"), true);
+                m_pPlayerManager->slotLoadLocationToPlayer(musicFiles.at(i), group, true);
                 continue;
             }
             m_pPlayerManager->slotLoadToDeck(musicFiles.at(i), i + 1);
