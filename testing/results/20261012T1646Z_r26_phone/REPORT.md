@@ -20,3 +20,7 @@ The phone was awake but the notification shade was pulled down over the app (foc
   3. `align ... at beat 5`, `beat launch ... on beat 5` → `cue press: deck at 95.07 s, cue at 81.66 s, playing`
 - **The cue stays at 81.66 s every time**; an aligned PLAY logs `align ... at beat N` and no longer `cue set`. Round 25's note fixed.
 - (In try 2 my pause came before the launch, so the deck was still on the cue; in try 3 the pause tap came while still armed, so CUE was pressed on a playing deck: it went back to 81.66 too.)
+
+## Paused after part 3 (12.10.2026 ~18:55 local)
+- During part 4 the phone turned upright and back, then Firefox came to the front: Marko is using the phone. My taps would land in his apps, so testing stopped. DJ Mantra was force-stopped (it was still playing deck 2 on the speaker) and the screen's stay-awake switched off.
+- Part 4 (CPU) and part 5 (genre match) NOT TESTED yet; they resume when Marko says "continue" or leaves the phone with DJ Mantra.
