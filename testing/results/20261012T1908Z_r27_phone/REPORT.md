@@ -20,3 +20,10 @@ Build: run 38291801689, commit a972af4. Started on Marko's "go" (12.10.2026 ~21:
 - Drag at once (no hold): `scrub [Channel2] zoomed from 194.79 s`, 80 px right, `ended at 194.77 s`: it hardly moved (my MOVE events came fast, in one shell call; may be the input, not the app).
 - **During every scrub AUTO PHASE jumped the OTHER deck**: scrubbing deck 2 → `jump [Channel1] to beat 7` twice and `beat 8` within ~2 s; the tap on deck 1 → `jump [Channel1] to beat 2`. With both on air that follows the "the deck you didn't touch" rule, but the audience hears the deck on the floor jump several times while the DJ only places the other deck. Suggest: AUTO PHASE waits until the scrub has ended, then moves the scrubbed deck.
 - Landscape scrubbing: not done here (see part 4; rotation is Marko's).
+
+## Part 4: landscape - PASS (the scrub window is missing here too, see part 3)
+- Rotated for this part only (`user-rotation lock 1`, then `free`): the deck part fills the screen: headers with covers, the button row, the modes, the matrix and two tall overviews across the full width; no song list, crossfader or tabs (`p4_land.png`).
+- Deck 1's cover: `browse open for [Channel1]`, the list full screen in front, ← top left, "tap a song: deck 1" (`p4_browse.png`). Tap Aktysia: `load [Channel1] Aktysia`, `browse closed` (`p4_loaded.png`).
+- Open again: in the Music folder ← goes UP to Folders (not closed); at the top ← closes: `browse closed`, nothing loaded. Fine (one ← per folder level).
+- Landscape hold on deck 2's overview: `scrub [Channel2] zoomed from 323.19 s` ... `ended at 323.66 s`, again no zoom window visible (`p4_land_hold.png`).
+- Portrait afterwards unchanged: Songs / Phrasing / Mixer / Keys, crossfader (`p4_portrait.png`). Auto-rotate given back (`user-rotation free`).
