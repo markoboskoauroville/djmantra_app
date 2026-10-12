@@ -83,6 +83,19 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
         });
     }
 
+    auto* pGpu = addSwitchRow(tr("Draw on the GPU"),
+            tr("Waveforms and meters on the graphics chip, smoother and lighter on "
+               "the battery. Off: on the CPU, for a phone with graphics problems. "
+               "After a restart."));
+    pGpu->setChecked(actions.gpu);
+    if (actions.setGpu) {
+        const auto setGpu = actions.setGpu;
+        connect(pGpu, &QAbstractButton::toggled, this, [setGpu](bool on) {
+            setGpu(on);
+            qInfo().noquote() << "Settings GPU" << on;
+        });
+    }
+
     addSection(tr("Settings"));
     addRow(icons::kSound, tr("Sound"), tr("Output, latency"), actions.sound);
     addRow(icons::kNote, tr("Library"), tr("Song folders"), actions.library);

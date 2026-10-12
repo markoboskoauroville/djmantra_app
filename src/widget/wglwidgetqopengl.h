@@ -13,6 +13,7 @@
 class QPaintDevice;
 class QOpenGLWindow;
 class OpenGLWindow;
+class OpenGLChildWidget;
 class TrackDropTarget;
 
 class WGLWidget : public QWidget {
@@ -31,13 +32,14 @@ class WGLWidget : public QWidget {
 
     // called (indirectly) by WaveformWidgetFactory
     virtual void paintGL();
-    // called by OpenGLWindow
+    // called by OpenGLWindow (OpenGLChildWidget on Android)
     virtual void resizeGL(int w, int h);
     virtual void initializeGL();
 
     void setTrackDropTarget(TrackDropTarget* pTarget);
     TrackDropTarget* trackDropTarget() const;
 
+    /// nullptr on Android (OpenGLChildWidget, a QOpenGLWidget, instead)
     QOpenGLWindow* getOpenGLWindow() const;
 
   protected:
@@ -47,6 +49,9 @@ class WGLWidget : public QWidget {
     QPaintDevice* paintDevice();
 
   private:
+#ifdef __ANDROID_PORT__
+    OpenGLChildWidget* m_pChild = nullptr;
+#endif
     OpenGLWindow* m_pOpenGLWindow;
     QWidget* m_pContainerWidget;
     TrackDropTarget* m_pTrackDropTarget;

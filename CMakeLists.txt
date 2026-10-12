@@ -1618,6 +1618,7 @@ if(QOPENGL)
     src/waveform/widgets/allshader/rgbstackedwaveformwidget.cpp
     src/waveform/widgets/allshader/simplewaveformwidget.cpp
     src/waveform/widgets/allshader/waveformwidget.cpp
+    src/widget/openglchildwidget.cpp
     src/widget/openglwindow.cpp
     src/widget/tooltipqopengl.cpp
     src/widget/wglwidgetqopengl.cpp
@@ -2979,6 +2980,8 @@ set(
 set(QT_EXTRA_COMPONENTS "")
 if(QT6)
   find_package(QT 6.2 NAMES Qt6 COMPONENTS Core REQUIRED)
+  # QOpenGLWidget: the GPU surface of the OpenGL widgets on Android
+  list(APPEND QT_EXTRA_COMPONENTS "OpenGLWidgets")
   list(APPEND QT_EXTRA_COMPONENTS "ShaderTools")
   list(APPEND QT_EXTRA_COMPONENTS "SvgWidgets")
   list(APPEND QT_EXTRA_COMPONENTS "Core5Compat")
