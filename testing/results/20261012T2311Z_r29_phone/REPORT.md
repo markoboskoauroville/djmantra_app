@@ -10,6 +10,6 @@ Started by the tester's build watcher, 13.10.2026 01:12 local (23:12 UTC), Marko
 
 ## Part 2: the analysis of the 150 songs - PASS
 - Songs → Music → Drive150: `Quick: analysing 150 songs in advance (BPM, key)` at 01:14:12, the header counted down from "150 left", `Quick: analysis in advance finished` at 01:20:05: **150 songs in 5 min 53 s (~2.4 s each)**, the app in front, screen on, no crash.
-- `testing/sections/app_analysis_v7.txt`: 150 lines `Analysis: <file>  bpm  key  first_beat_s  const`. 18 songs `const 0` (beat map). Every BPM is a whole number (x.0000).
+- `testing/sections/app_analysis_v7.txt`: 150 lines `Analysis: <file>  bpm  key  first_beat_s  const`. 18 songs `const 0` (beat map). 93 BPMs are whole numbers, 57 are not (e.g. 122.5, 129.2, 104.3333, 115.0833).
 - `testing/sections/app_beats_v7.txt`: 55 `Beats:` lines: the grid moved half a beat onto the kick, or "the tempo is not constant, a beat map instead of a grid". **The `Beats:` lines carry no file name**, so they cannot be matched to songs except by order; please add the file to that line.
 - The 6 renamed files on the phone (" -> ', ? removed) appear under their phone names.
