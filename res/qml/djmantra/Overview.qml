@@ -1,4 +1,5 @@
 import "."
+import ".." as Skin
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
@@ -12,7 +13,11 @@ import QtQuick 2.12
 //   - the sections as contrasting bands (blue / black), framed by a white line
 //     at each change; the NEXT change is a thick yellow line
 //   - the part already played dimmed, the play position a white line
-// A tap or a drag seeks.
+// A tap jumps there. Holding or dragging (Marko, 12.10.2026: "when user
+// scrolls through the waveform ... automatically zoom in ... so user can
+// precisely put his playhead") opens a zoomed scrolling waveform above the
+// overview, and the finger then moves the play position finely: the waveform
+// follows the finger 1:1.
 Rectangle {
     id: root
 
@@ -124,13 +129,102 @@ Rectangle {
         color: root.deckColor
     }
 
+    Mixxx.ControlProxy { id: duration; group: root.group; key: "duration" }
+
+    // the zoom while scrubbing: 100 px show this many seconds
+    readonly property real scrubZoom: 1.0
+
+    Rectangle {
+        // the zoomed waveform while scrubbing, above the overview
+        id: scrubView
+
+        objectName: "scrub" + root.group
+        visible: area.scrubbing
+        width: root.width
+        height: 96
+        y: -height - 4
+        z: 10
+        radius: 4
+        color: "#05070f"
+        border.color: Style.accent
+        border.width: 2
+        clip: true
+
+        Loader {
+            // made only while scrubbing: hidden, it would still follow the
+            // play position 60 times a second
+            anchors.fill: parent
+            anchors.margins: 2
+            active: area.scrubbing
+
+            sourceComponent: Skin.WaveformRow {
+                group: root.group
+                visualGain: 3
+                zoom: root.scrubZoom
+                showRoll: false
+            }
+        }
+    }
+
     MouseArea {
+        id: area
+
+        property bool scrubbing: false
+        property real startX: 0
+        property real lastX: 0
+        property real startPos: 0
+
         anchors.fill: parent
         enabled: loaded.value > 0
-        onPressed: (mouse) => position.value = Math.max(0, Math.min(1, mouse.x / width))
+        preventStealing: true
+
+        function clamp(p) {
+            return Math.max(0, Math.min(1, p));
+        }
+
+        function beginScrub() {
+            scrubbing = true;
+            startX = lastX;
+            startPos = position.value;
+            Mixxx.DJMantra.log("scrub " + root.group + " zoomed from " + (startPos * duration.value).toFixed(2) + " s");
+        }
+
+        Timer {
+            id: hold
+
+            interval: 250
+            onTriggered: area.beginScrub()
+        }
+
+        onPressed: (mouse) => {
+            startX = mouse.x;
+            lastX = mouse.x;
+            scrubbing = false;
+            hold.restart();
+        }
         onPositionChanged: (mouse) => {
-            if (pressed)
-                position.value = Math.max(0, Math.min(1, mouse.x / width));
+            lastX = mouse.x;
+            if (!scrubbing && Math.abs(mouse.x - startX) > 12 && hold.running) {
+                hold.stop();
+                beginScrub();
+            }
+            if (scrubbing && duration.value > 0)
+                position.value = clamp(startPos + (mouse.x - startX) * root.scrubZoom / 100 / duration.value);
+        }
+        onReleased: (mouse) => {
+            hold.stop();
+            if (!scrubbing) {
+                // a tap: straight there, no zoom
+                position.value = clamp(mouse.x / width);
+                Mixxx.DJMantra.log("jump " + root.group + " to " + (position.value * duration.value).toFixed(2) + " s");
+            } else {
+                Mixxx.DJMantra.log("scrub " + root.group + " ended at " + (position.value * duration.value).toFixed(2) + " s");
+            }
+            scrubbing = false;
+        }
+        onCanceled: {
+            hold.stop();
+            scrubbing = false;
         }
     }
 }
