@@ -2,7 +2,7 @@ import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// The menu (the menu button, top left): Library, Camelot wheel, back to the classic screen
+// The menu (the menu button, top left): the version, Settings, Library, Camelot wheel
 Rectangle {
     id: root
 

@@ -18,8 +18,7 @@ namespace qml {
 
 /// DJ Mantra's helpers for its Qt Quick interface (Marko, 12.10.2026: the
 /// whole interface drawn by the GPU). The room the system bars and the
-/// camera hole take, Camelot keys and their match, the song folders, and
-/// the switch between this interface and the classic one.
+/// camera hole take, Camelot keys and their match, and the song folders.
 class QmlDJMantra : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(DJMantra)

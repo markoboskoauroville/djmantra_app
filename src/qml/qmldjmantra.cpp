@@ -56,8 +56,6 @@ namespace qml {
 
 namespace {
 
-// The classic interface only when chosen: the Qt Quick one is the default
-
 djmantra::camelot::Code codeOf(double keyValue) {
     return djmantra::camelot::fromKey(KeyUtils::keyFromNumericValue(keyValue));
 }
