@@ -66,4 +66,14 @@ source"; Marko: "when the deck in the headphones goes on air, the headphones swi
 lines"): every code (12A ...) and key name (C#m ...) and the middle text in the normal font, crisp; the rings and
 borders smooth, no broken strokes or stairs. Screenshot, zoomed.
 
+## 6b. AUTOMIX EQ curves (Marko: "djay's transition EQ sounds great, mine a little hollow"): new curves
+- AUTOMIX on, EQ on, fader full left, deck 2 playing synced; move the fader right in 10 steps; at each step a Mixer
+  screenshot (or the knob values in the log if available). Expected (incoming = deck 2):
+  - 0-45 %: deck 2's HIGH rises from about -18 dB to the top, its MID from about -12 dB; its LOW stays killed;
+    deck 1 untouched.
+  - 45-55 %: the bass SWAP: deck 2's LOW up to the top while deck 1's LOW goes to the bottom, quickly.
+  - 55-95 %: deck 1's MID down to about -12 dB, its HIGH to about -18 dB; deck 1's LOW killed.
+  - Never both LOWs up, never both LOWs down for long, no band killed on both decks: no hole in the sound.
+- Listen (Marko): full and even through the middle, no hollow moment?
+
 ## 7. Round 21 leftovers: whatever round 21 failed (see its report), CPU per tab, genre (Deezer).

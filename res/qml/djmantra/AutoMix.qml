@@ -7,8 +7,10 @@ import QtQuick 2.12
 // automix. So I'm manually moving the fader."
 //   AUTOMIX on: the crossfader drives the blend. Moving it away from the
 //     deck it rests on (the outgoing one):
-//   EQ: the bass is swapped first, then the highs, then the mids (cut-only
-//     EQs: 1 = 0 dB, 0 = kill); moving back undoes it
+//   EQ: as DJs mix on the EQs: the incoming highs come in first, the mids
+//     follow (never killed), the basses are swapped quickly at the middle
+//     (one bassline at a time), the outgoing highs and mids go last; moving
+//     back undoes it (see follow())
 //   TEMPO BLEND: the tempo glides from the outgoing song's to the incoming
 //     song's own along the fader's travel
 //   8 / 16 / 32: how many beats the phrase has (the matrix's running lights)
@@ -67,9 +69,9 @@ Rectangle {
     function resetEq() {
         for (const deck of ["[Channel1]", "[Channel2]"]) {
             const d = deckControls(deck);
-            d.lo.parameter = 1;
-            d.mi.parameter = 1;
-            d.hi.parameter = 1;
+            d.lo.value = 1;
+            d.mi.value = 1;
+            d.hi.value = 1;
         }
     }
 
@@ -95,14 +97,36 @@ Rectangle {
         const f = deckControls(from);
         const t = deckControls(from === "[Channel1]" ? "[Channel2]" : "[Channel1]");
         if (eq) {
-            const part = (a, b) => Math.max(0, Math.min(1, (progress - a) / (b - a)));
-            const bass = part(0.05, 0.35), highs = part(0.35, 0.65), mids = part(0.65, 0.95);
-            t.lo.parameter = bass;
-            f.lo.parameter = 1 - bass;
-            t.hi.parameter = highs;
-            f.hi.parameter = 1 - highs;
-            t.mi.parameter = mids;
-            f.mi.parameter = 1 - mids;
+            // Round 22 (Marko: "mine is a little hollow"): the old curves cut
+            // whole bands of BOTH songs at once (both basses at -20 dB in the
+            // middle of a long bass fade, the incoming mids killed until the
+            // last third): a hole in the sound. Now, as DJs mix on the EQs
+            // (one bassline at a time, swapped at the middle; the highs come
+            // in first; the mids never killed), in linear gain (1 = 0 dB):
+            //   highs: incoming from -18 dB to 0 dB over 5-45 %, outgoing from
+            //          0 dB to -18 dB over 55-95 %
+            //   mids:  incoming from -12 dB to 0 dB over 15-55 %, outgoing
+            //          from 0 dB to -12 dB over 45-85 %
+            //   bass:  killed on the incoming deck until the swap, a short
+            //          amplitude crossfade over 45-55 % (the kicks are in phase,
+            //          so in + out = 1 keeps the low end even), then killed on
+            //          the outgoing deck
+            const q = progress;
+            const ramp = (a, b) => {
+                const u = Math.max(0, Math.min(1, (q - a) / (b - a)));
+                return u * u * (3 - 2 * u); // smoothstep: no corner at the ends
+            };
+            const db = (d) => Math.pow(10, d / 20);
+            const fade = (fromDb, toDb, u) => db(fromDb + (toDb - fromDb) * u);
+            const highsIn = ramp(0.05, 0.45), highsOut = ramp(0.55, 0.95);
+            const midsIn = ramp(0.15, 0.55), midsOut = ramp(0.45, 0.85);
+            const bass = ramp(0.45, 0.55);
+            t.hi.value = fade(-18, 0, highsIn);
+            f.hi.value = fade(0, -18, highsOut);
+            t.mi.value = fade(-12, 0, midsIn);
+            f.mi.value = fade(0, -12, midsOut);
+            t.lo.value = bass;
+            f.lo.value = 1 - bass;
         }
         if (tempo && startBpm > 0 && t.fileBpm.value > 0)
             f.bpm.value = startBpm + (t.fileBpm.value - startBpm) * progress;
