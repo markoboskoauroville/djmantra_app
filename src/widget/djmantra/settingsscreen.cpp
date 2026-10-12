@@ -175,7 +175,6 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
     setFocusPolicy(Qt::StrongFocus);
     setStyleSheet(QStringLiteral(
             "QLabel { color: %1; background: transparent; }"
-            "QLabel#MenuTitle { font-size: 34px; font-weight: 700; }"
             "QToolButton { background: transparent; border: none; color: %1; font-size: 16px; }"
             "QToolButton:pressed { background-color: %2; border-radius: 12px; }"
             "QToolButton#Tile { font-size: 14px; font-weight: 600; border-radius: 18px; }"
@@ -199,10 +198,7 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
     connect(pClose, &QToolButton::clicked, this, &QWidget::close);
     pLayout->addWidget(pClose, 0, Qt::AlignHCenter);
 
-    auto* pTitle = new QLabel(QStringLiteral("DJ Mantra"), m_pSheet);
-    pTitle->setObjectName(QStringLiteral("MenuTitle"));
-    pTitle->setAlignment(Qt::AlignCenter);
-    pLayout->addWidget(pTitle);
+    // no "DJ Mantra" title on the sheet (Marko, 12.10.2026: no logo text)
 
     // Large tiles, coloured like djay's mode tiles
     auto* pTiles = new QHBoxLayout();

@@ -2,7 +2,7 @@ import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// The menu (the dj logo): Library, Camelot wheel, back to the classic screen
+// The menu (the menu button, top left): Library, Camelot wheel, back to the classic screen
 Rectangle {
     id: root
 
@@ -38,12 +38,6 @@ Rectangle {
             width: parent.width - 24
             spacing: 8
 
-            Text {
-                text: "DJ Mantra"
-                color: Style.accent
-                font.pixelSize: 22
-                font.bold: true
-            }
             Text {
                 text: qsTr("Version %1").arg(Mixxx.DJMantra.version)
                 color: Style.subText

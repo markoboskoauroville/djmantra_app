@@ -547,7 +547,7 @@ def key_match(size="118f,34f"):
 def library_button(size=40):
     # the menu sheet (djay's): Library, Controller, REC, Settings
     return button("[DJMantra],show_menu", "LibraryButton", "", "%df,%df" % (size, size),
-                  pixmaps=[("dj_logo.svg", "dj_logo.svg"), ("dj_logo.svg", "dj_logo.svg")])
+                  pixmaps=[("menu_off.svg", "menu_pressed.svg"), ("menu_on.svg", "menu_pressed.svg")])
 
 
 def tabs(prefix):
@@ -1064,18 +1064,18 @@ def graphics():
     g["play_off.svg"] = transport_button(tri, BUTTON)
     g["play_on.svg"] = transport_button(bars, BUTTON)
     g["play_pressed.svg"] = transport_button(tri, PRESSED)
-    # the menu button and the app's "dj" mark (after Marko's model, changed a
-    # little): a heavy lowercase "dj", a round bowl, a tall d stem, a j with a
-    # round dot and a hook under the d, white on a black rounded tile
-    g["dj_logo.svg"] = svg(40, 40,
-        '<rect x="0.5" y="0.5" width="39" height="39" rx="9" fill="#000000" '
-        'stroke="#2e3133" stroke-width="1"/>'
-        '<g transform="translate(2,-1)" fill="none" stroke="#ffffff" stroke-width="4.2" '
-        'stroke-linecap="round" stroke-linejoin="round">'
-        '<circle cx="13.6" cy="24.6" r="5.4"/>'
-        '<path d="M19.4 9.6v20.9"/>'
-        '<path d="M28 19.4v12.4a4 4 0 0 1-4 4h-0.6"/></g>'
-        '<circle cx="30" cy="12.6" r="2.5" fill="#ffffff"/>')
+    # the menu button (Marko, 12.10.2026: no "dj" logo in the interface, a
+    # fitting icon for what it does): three lines on a dark tile, yellow while
+    # the menu is open
+    def menu_icon(tile, lines):
+        return svg(40, 40,
+            '<rect x="0.5" y="0.5" width="39" height="39" rx="9" fill="%s" '
+            'stroke="#2e3133" stroke-width="1"/>' % tile +
+            ''.join('<rect x="11" y="%s" width="18" height="2.6" rx="1.3" fill="%s"/>' % (y, lines)
+                    for y in (12.7, 18.7, 24.7)))
+    g["menu_off.svg"] = menu_icon("#000000", "#ffffff")
+    g["menu_on.svg"] = menu_icon("#000000", "#FFD54A")
+    g["menu_pressed.svg"] = menu_icon("#2e3133", "#ffffff")
     # the start screen: the app's icon (tools/android/gen_launcher_icon.py)
     import importlib.util
     spec = importlib.util.spec_from_file_location(

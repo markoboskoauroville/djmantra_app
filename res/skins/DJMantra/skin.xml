@@ -84,12 +84,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_off.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -2759,12 +2759,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_off.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -5596,12 +5596,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_off.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -5841,12 +5841,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_off.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>

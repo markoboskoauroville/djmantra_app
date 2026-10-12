@@ -64,3 +64,8 @@ interface and the Mix Ultra's pad modes. Not to be tested; noted for the next bu
   Check: synced decks aligned on the phrase: both yellow cells light together, one above the other, and both
   countdowns reach -0.0 / jump together. Readable at arm's length? Video of 2 phrases (16 beats), both decks playing;
   CPU in `top` vs round 13 (32-55 %). Screenshot portrait and landscape.
+## 9. Menu icon (Marko, 12.10.2026: "remove this DJ logo and text ... find the fitting icon for that function")
+- Smoke check first (10 s): the new interface draws (no black screen), the matrix and both deck headers are there.
+- Top left, both interfaces: no "dj" logo any more; a menu icon (three lines) on a navy tile (classic: black),
+  left of the camera hole. A tap opens the menu and the lines turn yellow; a second tap (or a tap outside) closes it.
+- The menus have no big "DJ Mantra" title any more; the new interface's menu keeps the small version line.

@@ -4,7 +4,7 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 
 // DJ Mantra's interface in Qt Quick: everything is drawn by the GPU (Marko,
-// 12.10.2026). Portrait first: the top row (logo left, Camelot badge right,
+// 12.10.2026). Portrait first: the top row (menu button left, Camelot badge right,
 // the middle free for the selfie camera hole), the two deck headers, the
 // tabs MIXER | WAVEFORMS | PADS, then SYNC / CUE / PLAY and the crossfader.
 // The system bars and a camera hole off the middle are kept clear with the
@@ -62,30 +62,47 @@ Window {
             height: 44
 
             Rectangle {
-                id: logo
+                // the menu (Library, Camelot wheel, settings): a drawn menu
+                // icon, three lines on a navy tile, yellow while it is open
+                // (Marko, 12.10.2026: no "dj" logo in the interface)
+                id: menuButton
 
-                objectName: "logo"
+                readonly property bool open: window.overlay === "menu"
+
+                objectName: "menuButton"
                 anchors.left: parent.left
                 anchors.leftMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
                 width: 36
                 height: 36
                 radius: 8
-                color: Style.accent
+                color: menuArea.pressed ? Style.pressed : Style.tile
+                border.color: open ? Style.accent : Style.line
+                border.width: 1
 
-                Text {
+                Column {
                     anchors.centerIn: parent
-                    text: "dj"
-                    color: Style.inkOnAccent
-                    font.pixelSize: 20
-                    font.bold: true
+                    spacing: 4
+
+                    Repeater {
+                        model: 3
+
+                        Rectangle {
+                            width: 18
+                            height: 2.5
+                            radius: 1.25
+                            color: menuButton.open ? Style.accent : Style.text
+                        }
+                    }
                 }
 
                 MouseArea {
+                    id: menuArea
+
                     anchors.fill: parent
                     onClicked: {
                         Mixxx.DJMantra.log("menu");
-                        window.overlay = "menu";
+                        window.overlay = window.overlay === "menu" ? "" : "menu";
                     }
                 }
             }
