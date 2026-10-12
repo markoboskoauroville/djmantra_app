@@ -17,6 +17,13 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   5 songs load/play, two-deck mix with SYNC + crossfader, One Deck. Results go to
   `testing/results/*_r11_phone/REPORT.md` on `ccr-eb7d1019-d3kubd`. Next: read them, fix, push to
   `main` for a new android-latest, send round 12. Loop until everything passes.
+- Built on the branch while round 11 runs (Marko's requests via the phone session, not yet on a
+  phone, CI building 2b54c80): **deck counter** `WDeckCounter` (tap: TIME "1:23 / 5:40 / -4:17" ↔
+  BARS & BEATS "17.3  next -6.2  4/4"; sections = intro/outro markers + hot cues, else to the end;
+  PhraseControl beat_number, beats_per_bar, beat_unit, section_beats_left, section_found);
+  **Camelot** (`src/widget/djmantra/camelot.*`: notation forced to Lancelot = Camelot, `<KeyMatch>`
+  badge between the decks, wheel screen from the badge and Settings). To do next: song-structure
+  and time-signature detection; mark matching keys in the song picker.
 - The 7-day limit is at warning (resets 2026-10-15 01:00 UTC): keep this file current.
 
 ## Where things are
