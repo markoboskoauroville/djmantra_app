@@ -19,6 +19,7 @@ Window {
     title: "DJ Mantra"
 
     property int page: 0 // 0 mixer, 1 waveforms, 2 pads
+    readonly property bool landscape: width > height
     property string overlay: "" // "", "menu", "library", "wheel"
     property string libraryDeck: ""
 
@@ -111,7 +112,7 @@ Window {
             DeckHeader {
                 objectName: "deck1"
                 width: (headers.width - headers.spacing) / 2
-                height: 92
+                height: window.landscape ? 84 : 92
                 group: "[Channel1]"
                 deckColor: Style.deck1
                 onCoverTapped: {
@@ -123,7 +124,7 @@ Window {
             DeckHeader {
                 objectName: "deck2"
                 width: (headers.width - headers.spacing) / 2
-                height: 92
+                height: window.landscape ? 84 : 92
                 group: "[Channel2]"
                 mirrored: true
                 deckColor: Style.deck2
@@ -134,68 +135,170 @@ Window {
             }
         }
 
-        Row {
-            id: tabs
+        Loader {
+            // portrait: tabs, page, SYNC / CUE / PLAY and crossfader below;
+            // landscape: each deck's SYNC / CUE / PLAY at its side, the page and
+            // the crossfader in the middle (round 13: the page was 40 px high)
+            id: body
 
             anchors.top: headers.bottom
             anchors.topMargin: Style.gap
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 10
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            sourceComponent: window.landscape ? landscapeBody : portraitBody
+        }
 
-            Repeater {
-                model: [qsTr("MIXER"), qsTr("WAVEFORMS"), qsTr("PADS")]
+        Component {
+            id: tabsComponent
 
-                delegate: DButton {
-                    required property string modelData
-                    required property int index
+            Row {
+                spacing: 10
 
-                    objectName: "tab" + index
-                    width: 108
-                    height: 38
-                    text: modelData
-                    fontSize: 13
-                    lit: window.page === index
-                    onClicked: window.page = index
+                Repeater {
+                    model: [qsTr("MIXER"), qsTr("WAVEFORMS"), qsTr("PADS")]
+
+                    delegate: DButton {
+                        required property string modelData
+                        required property int index
+
+                        objectName: "tab" + index
+                        width: 108
+                        height: 38
+                        text: modelData
+                        fontSize: 13
+                        lit: window.page === index
+                        onClicked: window.page = index
+                    }
                 }
             }
         }
 
-        Item {
-            id: pages
+        Component {
+            id: pagesComponent
 
-            objectName: "page"
-            anchors.top: tabs.bottom
-            anchors.topMargin: Style.gap
-            anchors.bottom: transport.top
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Item {
+                objectName: "page"
 
-            MixerPage {
-                anchors.fill: parent
-                visible: window.page === 0
-            }
+                MixerPage {
+                    anchors.fill: parent
+                    visible: window.page === 0
+                }
 
-            WaveformsPage {
-                anchors.fill: parent
-                visible: window.page === 1
-            }
+                WaveformsPage {
+                    anchors.fill: parent
+                    visible: window.page === 1
+                }
 
-            PadsPage {
-                anchors.fill: parent
-                visible: window.page === 2
+                PadsPage {
+                    anchors.fill: parent
+                    visible: window.page === 2
+                }
             }
         }
 
-        Transport {
-            id: transport
+        Component {
+            id: portraitBody
 
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Item {
+                Loader {
+                    id: portraitTabs
+
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    sourceComponent: tabsComponent
+                }
+
+                Loader {
+                    anchors.top: portraitTabs.bottom
+                    anchors.topMargin: Style.gap
+                    anchors.bottom: portraitTransport.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    sourceComponent: pagesComponent
+                }
+
+                Transport {
+                    id: portraitTransport
+
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+            }
+        }
+
+        Component {
+            id: landscapeBody
+
+            Item {
+                DeckTransport {
+                    id: leftDeck
+
+                    anchors.left: parent.left
+                    anchors.leftMargin: Style.gap
+                    anchors.top: parent.top
+                    width: 96
+                    group: "[Channel1]"
+                    deck: 1
+                }
+
+                DeckTransport {
+                    id: rightDeck
+
+                    anchors.right: parent.right
+                    anchors.rightMargin: Style.gap
+                    anchors.top: parent.top
+                    width: 96
+                    group: "[Channel2]"
+                    deck: 2
+                }
+
+                Loader {
+                    id: landscapeTabs
+
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    sourceComponent: tabsComponent
+                }
+
+                Loader {
+                    anchors.top: landscapeTabs.bottom
+                    anchors.topMargin: Style.gap
+                    anchors.bottom: crossfader.top
+                    anchors.bottomMargin: Style.gap
+                    anchors.left: leftDeck.right
+                    anchors.right: rightDeck.left
+                    anchors.leftMargin: Style.gap
+                    anchors.rightMargin: Style.gap
+                    sourceComponent: pagesComponent
+                }
+
+                DFader {
+                    id: crossfader
+
+                    objectName: "crossfader"
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: Style.gap
+                    anchors.left: leftDeck.right
+                    anchors.right: rightDeck.left
+                    anchors.leftMargin: Style.gap
+                    anchors.rightMargin: Style.gap
+                    height: 44
+                    vertical: false
+                    group: "[Master]"
+                    key: "crossfader"
+                }
+            }
         }
 
         Loader {
-            anchors.fill: parent
+            // below the top bar: the camera hole stays clear (round 13: the
+            // wheel's title ran under it)
+            anchors.top: topBar.bottom
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
             active: window.overlay !== ""
             sourceComponent: window.overlay === "menu" ? menuComponent
                     : window.overlay === "library" ? libraryComponent
@@ -245,6 +348,7 @@ Window {
     onWidthChanged: mapTimer.restart()
     onHeightChanged: mapTimer.restart()
     onPageChanged: mapTimer.restart()
+    onLandscapeChanged: mapTimer.restart()
 
     Component.onCompleted: {
         Mixxx.DJMantra.log("interface ready " + width + "x" + height);

@@ -1,4 +1,5 @@
 import "."
+import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
 // Both decks' scrolling waveforms side by side, with zoom
@@ -36,8 +37,27 @@ Item {
                     height: 40
                     spacing: 8
 
-                    DButton { width: 56; height: 36; text: "−"; group: lane.modelData; key: "waveform_zoom_up"; mode: "push" }
-                    DButton { width: 56; height: 36; text: "+"; group: lane.modelData; key: "waveform_zoom_down"; mode: "push" }
+                    // waveform_zoom 1 (close) .. 10 (far); the _up/_down buttons are
+                    // handled by the classic interface only (round 13: no effect)
+                    DButton {
+                        width: 56
+                        height: 36
+                        text: "−"
+                        onClicked: zoomLevel.value = Math.min(10, Math.max(1, zoomLevel.value) + 1)
+                    }
+                    DButton {
+                        width: 56
+                        height: 36
+                        text: "+"
+                        onClicked: zoomLevel.value = Math.max(1, Math.max(1, zoomLevel.value) - 1)
+                    }
+
+                    Mixxx.ControlProxy {
+                        id: zoomLevel
+
+                        group: lane.modelData
+                        key: "waveform_zoom"
+                    }
                 }
             }
         }

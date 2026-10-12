@@ -29,9 +29,19 @@ Rectangle {
         folder = folder.substring(0, folder.lastIndexOf("/"));
     }
 
-    function load(path, group) {
+    property string pendingPath: ""
+    property string pendingGroup: ""
+
+    function load(path, group, sure) {
+        if (!sure && Mixxx.DJMantra.isPlaying(group)) {
+            // a playing deck is not replaced without asking (round 13)
+            pendingPath = path;
+            pendingGroup = group;
+            return;
+        }
         Mixxx.DJMantra.log("load " + group + " " + path);
         Mixxx.PlayerManager.getPlayer(group).loadTrackFromLocation(path, false);
+        pendingPath = "";
         done();
     }
 
@@ -122,7 +132,7 @@ Rectangle {
                     text: "LOAD 1"
                     fontSize: 12
                     onColor: Style.deck1
-                    onClicked: root.load(row.modelData.path, "[Channel1]")
+                    onClicked: root.load(row.modelData.path, "[Channel1]", false)
                 }
 
                 DButton {
@@ -132,7 +142,7 @@ Rectangle {
                     text: "LOAD 2"
                     fontSize: 12
                     onColor: Style.deck2
-                    onClicked: root.load(row.modelData.path, "[Channel2]")
+                    onClicked: root.load(row.modelData.path, "[Channel2]", false)
                 }
             }
 
@@ -141,6 +151,62 @@ Rectangle {
                 width: parent.width
                 height: 1
                 color: "#26272b"
+            }
+        }
+    }
+
+    Rectangle {
+        // "Deck 2 is playing": load anyway?
+        anchors.fill: parent
+        visible: root.pendingPath !== ""
+        color: "#b0000000"
+
+        MouseArea {
+            anchors.fill: parent
+        }
+
+        Rectangle {
+            anchors.centerIn: parent
+            width: parent.width - 48
+            height: confirmColumn.height + 32
+            radius: 12
+            color: Style.surface
+
+            Column {
+                id: confirmColumn
+
+                anchors.centerIn: parent
+                width: parent.width - 32
+                spacing: 12
+
+                Text {
+                    width: parent.width
+                    wrapMode: Text.WordWrap
+                    color: Style.text
+                    font.pixelSize: 16
+                    text: qsTr("Deck %1 is playing. Load the new song anyway?")
+                            .arg(root.pendingGroup === "[Channel2]" ? 2 : 1)
+                }
+
+                Row {
+                    anchors.right: parent.right
+                    spacing: 10
+
+                    DButton {
+                        width: 110
+                        height: 44
+                        text: qsTr("CANCEL")
+                        onClicked: root.pendingPath = ""
+                    }
+
+                    DButton {
+                        width: 110
+                        height: 44
+                        text: qsTr("LOAD")
+                        lit: true
+                        onClicked: root.load(root.pendingPath, root.pendingGroup, true)
+                    }
+                }
             }
         }
     }

@@ -15,6 +15,8 @@ Item {
 
     property string group // required
     property var deckPlayer: Mixxx.PlayerManager.getPlayer(group)
+    // DJ Mantra: display gain of the waveform (WaveformShader.visualGain)
+    property real visualGain: 1.0
 
     Item {
         id: waveformContainer
@@ -128,6 +130,7 @@ Item {
             WaveformShader {
                 group: root.group
                 anchors.fill: parent
+                visualGain: root.visualGain
             }
 
             Shape {

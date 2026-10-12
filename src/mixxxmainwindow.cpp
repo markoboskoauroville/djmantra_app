@@ -123,13 +123,14 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
           m_toolTipsCfg(mixxx::preferences::Tooltips::On) {
     DEBUG_ASSERT(pCoreServices);
 #ifdef __ANDROID_PORT__
-    // DJ Mantra: full screen by default on the phone (no status bar); can be
-    // turned off in Preferences -> Interface
+    // DJ Mantra: no Qt full screen on the phone. WindowBridge (Java) hides the
+    // bars itself; with Qt's full screen as well, its hide call showed them
+    // again (round 13: "requestedVisibleTypes -528 -> -9" right after
+    // "hiding the system bars"). The Qt Quick interface, never full screen,
+    // kept them hidden.
     {
         const ConfigKey fullscreenKey("[Config]", "StartInFullscreen");
-        if (!pCoreServices->getSettings()->exists(fullscreenKey)) {
-            pCoreServices->getSettings()->setValue(fullscreenKey, true);
-        }
+        pCoreServices->getSettings()->setValue(fullscreenKey, false);
     }
 #endif
     // DJ Mantra: the phone screens (the phone has no menu bar). The skin's

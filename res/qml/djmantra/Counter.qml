@@ -22,9 +22,12 @@ Text {
     verticalAlignment: Text.AlignVCenter
     text: {
         if (!bars) {
-            return Mixxx.DJMantra.formatTime(elapsed.value) + "/" +
-                    Mixxx.DJMantra.formatTime(elapsed.value + remaining.value) + "/-" +
-                    Mixxx.DJMantra.formatTime(remaining.value);
+            // from the play position (time_elapsed / time_remaining are only
+            // kept by the classic interface: round 13 showed 0:00/0:00/-0:00)
+            const length = Math.max(0, duration.value);
+            const at = Math.max(0, Math.min(length, position.value * length));
+            return Mixxx.DJMantra.formatTime(at) + "/" + Mixxx.DJMantra.formatTime(length) +
+                    "/-" + Mixxx.DJMantra.formatTime(length - at);
         }
         const signature = (perBar.value > 0 ? perBar.value : 4) + "/" + (unit.value > 0 ? unit.value : 4);
         if (inPhrase.value < 0)
@@ -35,8 +38,8 @@ Text {
         return line + "  " + signature;
     }
 
-    Mixxx.ControlProxy { id: elapsed; group: root.group; key: "time_elapsed" }
-    Mixxx.ControlProxy { id: remaining; group: root.group; key: "time_remaining" }
+    Mixxx.ControlProxy { id: position; group: root.group; key: "playposition" }
+    Mixxx.ControlProxy { id: duration; group: root.group; key: "duration" }
     Mixxx.ControlProxy { id: inPhrase; group: root.group; key: "beat_in_phrase" }
     Mixxx.ControlProxy { id: number; group: root.group; key: "beat_number" }
     Mixxx.ControlProxy { id: perBar; group: root.group; key: "beats_per_bar" }

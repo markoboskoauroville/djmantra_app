@@ -3085,6 +3085,8 @@ if(QML)
   )
 
   target_link_libraries(mixxx-qml-lib PRIVATE mixxx-qml-libplugin)
+  # Mixxx.DJMantra.version (round 13: the menu said 2.5.6, Mixxx's version)
+  target_compile_definitions(mixxx-qml-lib PRIVATE DJMANTRA_VERSION="${DJMANTRA_VERSION}")
 
   qt_add_library(mixxx-qml-mixxxcontrols STATIC)
   set_target_properties(mixxx-qml-mixxxcontrols PROPERTIES AUTOMOC ON)

@@ -24,7 +24,7 @@ Item {
     Rectangle {
         id: body
 
-        width: Math.min(root.width, root.height - caption.height)
+        width: Math.min(root.width, root.height - caption.height - 1)
         height: width
         anchors.horizontalCenter: parent.horizontalCenter
         radius: width / 2
@@ -48,7 +48,9 @@ Item {
     Text {
         id: caption
 
-        anchors.bottom: parent.bottom
+        // right under its knob (round 13: halfway to the next one)
+        anchors.top: body.bottom
+        anchors.topMargin: 1
         anchors.horizontalCenter: parent.horizontalCenter
         text: root.label
         color: Style.subText

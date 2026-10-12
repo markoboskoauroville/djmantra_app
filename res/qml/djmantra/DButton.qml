@@ -14,6 +14,8 @@ Rectangle {
     property color onColor: Style.accent
     property bool lit: root.key !== "" && control.value > 0
     property int fontSize: 15
+    // "play" / "pause": drawn, not a font glyph (round 13: the pause sign was tofu)
+    property string icon: ""
     signal clicked()
 
     radius: Style.radius
@@ -28,10 +30,28 @@ Rectangle {
         key: root.key !== "" ? root.key : "enabled"
     }
 
+    Row {
+        anchors.centerIn: parent
+        visible: root.icon === "pause"
+        spacing: root.height * 0.14
+
+        Repeater {
+            model: 2
+
+            delegate: Rectangle {
+                width: root.height * 0.13
+                height: root.height * 0.42
+                radius: 2
+                color: root.lit ? "#111215" : Style.text
+            }
+        }
+    }
+
     Text {
         anchors.fill: parent
         anchors.margins: 4
-        text: root.text
+        visible: root.icon !== "pause"
+        text: root.icon === "play" ? "\u25B6" : root.text
         color: root.lit ? "#111215" : Style.text
         font.pixelSize: root.fontSize
         font.bold: true

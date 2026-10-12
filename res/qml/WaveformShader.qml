@@ -19,7 +19,9 @@ ShaderEffect {
     property real highGain: filterWaveformEnableControl.value ? (filterHighKillControl.value ? 0 : filterHighControl.value) : 1
     property real midGain: filterWaveformEnableControl.value ? (filterMidKillControl.value ? 0 : filterMidControl.value) : 1
     property real lowGain: filterWaveformEnableControl.value ? (filterLowKillControl.value ? 0 : filterLowControl.value) : 1
-    property real allGain: pregainControl.value
+    // DJ Mantra: a display gain on top (the loudest point fills the lane)
+    property real visualGain: 1.0
+    property real allGain: pregainControl.value * visualGain
     property Image waveformTexture
 
     fragmentShader: "qrc:/shaders/rgbsignal_qml.frag.qsb"

@@ -7,6 +7,7 @@
 #include <QStandardPaths>
 #include <QTimer>
 #include <QtDebug>
+#include <algorithm>
 #include <cmath>
 
 #if defined(Q_OS_ANDROID)
@@ -14,9 +15,13 @@
 #include <QJniObject>
 #endif
 
+#include "control/controlproxy.h"
+#include "mixer/playerinfo.h"
 #include "moc_qmldjmantra.cpp"
 #include "sources/soundsourceproxy.h"
 #include "track/keyutils.h"
+#include "track/track.h"
+#include "waveform/waveform.h"
 #include "util/duration.h"
 #include "widget/djmantra/camelot.h"
 #include "widget/djmantra/wdeckcounter.h"
@@ -134,6 +139,35 @@ QString QmlDJMantra::barsBeatsLeft(double beats, double beatsPerBar) const {
     return WDeckCounter::barsBeatsLeft(static_cast<int>(beats), static_cast<int>(beatsPerBar));
 }
 
+double QmlDJMantra::waveformGain(const QString& group, int length) const {
+    Q_UNUSED(length);
+    const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
+    if (!pTrack) {
+        return 1.0;
+    }
+    const ConstWaveformPointer pWaveform = pTrack->getWaveform();
+    if (!pWaveform) {
+        return 1.0;
+    }
+    const int size = pWaveform->getDataSize();
+    int loudest = 0;
+    for (int i = 0; i < size; ++i) {
+        loudest = std::max(loudest, static_cast<int>(pWaveform->getAll(i)));
+    }
+    if (loudest < 8) {
+        return 1.0; // silence, or not analysed yet
+    }
+    const double gain = std::clamp(0.9 * 255.0 / loudest, 1.0, 20.0);
+    qInfo().noquote() << "Quick: waveform gain" << group << gain << "(loudest" << loudest
+                      << "of" << size << "points)";
+    return gain;
+}
+
+bool QmlDJMantra::isPlaying(const QString& group) const {
+    ControlProxy play(group, QStringLiteral("play"), nullptr, ControlFlag::NoAssertIfMissing);
+    return play.valid() && play.get() > 0;
+}
+
 QVariantList QmlDJMantra::musicRoots() const {
     QVariantList roots;
     QStringList paths;
@@ -143,7 +177,8 @@ QVariantList QmlDJMantra::musicRoots() const {
     paths << QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
     QStringList seen;
     for (const QString& path : std::as_const(paths)) {
-        const QString clean = QDir::cleanPath(path);
+        // /sdcard/Music and /storage/emulated/0/Music are one folder
+        const QString clean = QFileInfo(path).canonicalFilePath();
         if (clean.isEmpty() || seen.contains(clean) || !QFileInfo(clean).isDir()) {
             continue;
         }

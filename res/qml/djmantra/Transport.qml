@@ -92,7 +92,7 @@ Column {
         DButton {
             width: 64
             height: 52
-            text: lit ? "\u275A\u275A" : "\u25B6"
+            icon: lit ? "pause" : "play"
             fontSize: 22
             objectName: "play1"
             group: "[Channel1]"
@@ -112,7 +112,7 @@ Column {
         DButton {
             width: 64
             height: 52
-            text: lit ? "\u275A\u275A" : "\u25B6"
+            icon: lit ? "pause" : "play"
             fontSize: 22
             objectName: "play2"
             group: "[Channel2]"

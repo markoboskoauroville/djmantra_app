@@ -14,3 +14,4 @@ VerticalWaveform 1.0 VerticalWaveform.qml
 VuBar 1.0 VuBar.qml
 WaveformsPage 1.0 WaveformsPage.qml
 WheelPage 1.0 WheelPage.qml
+DeckTransport 1.0 DeckTransport.qml

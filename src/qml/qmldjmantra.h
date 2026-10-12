@@ -54,6 +54,13 @@ class QmlDJMantra : public QObject {
     /// "-6.2" for 26 beats left in 4/4
     Q_INVOKABLE QString barsBeatsLeft(double beats, double beatsPerBar) const;
 
+    /// The waveform's display gain for the deck's track: its loudest point
+    /// fills 90 % of the lane (round 13: loud songs were 5 % wide). `length`
+    /// is only there so that QML asks again when the waveform grows.
+    Q_INVOKABLE double waveformGain(const QString& group, int length) const;
+    /// Whether the deck is playing (a load onto it asks first)
+    Q_INVOKABLE bool isPlaying(const QString& group) const;
+
     /// The folders songs are looked for in first (Music, Download, ...)
     Q_INVOKABLE QVariantList musicRoots() const;
     /// Folders and songs in `folder`: [{name, path, isFolder}], folders first
