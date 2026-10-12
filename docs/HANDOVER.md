@@ -29,6 +29,17 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   "Draw on the GPU" ([DJMantra],gpu). Not yet run on a phone. Round 12 plan: `testing/ROUND12.md`.
   Round 11 partial results (657f953): `testing/results/2026-10-11_2353_r11_phone/`.
   No phone session online at 00:40 (download-4b archived): a new one starts from ROUND12.md.
+- 12.10 ~01:00 UTC: b1f26f9 green on Linux (tests) and Android: first build with the GPU drawing,
+  BrandTranslator (Mixxx -> DJ Mantra in every shown text), Camelot, counter, ui_test fixes.
+  Phone session now: **"Wireless debugging connection"** (session_01EPqFCfKVESsy64tgK2QFvQ, adb
+  192.168.1.30:38589), running ROUND12.md on b1f26f9's APK.
+- Claude Code breaking down on the phone = Android's phantom process killer (10 Termux children
+  killed, 32-process cap) plus memory pressure (DJ Mantra 491 MB PSS, swap 78 %). Marko approved
+  turning the monitor off: `settings put global settings_enable_monitor_phantom_procs false` (done
+  02:45 CEST; undo: true). `tools/android/watch_host.sh` logs kills/memory during rounds.
+  To do: cut DJ Mantra's memory.
+- Pushing to the branch cancels the Android run in progress: wait until the phone has its APK.
+- Pushing to `main` (android-latest) was blocked by the auto-mode classifier: needs Marko's OK.
 - The 7-day limit is at warning (resets 2026-10-15 01:00 UTC): keep this file current.
 
 ## Where things are
