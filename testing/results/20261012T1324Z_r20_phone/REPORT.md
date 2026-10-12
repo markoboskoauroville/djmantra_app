@@ -65,7 +65,7 @@ Build: run 38253413748, commit bd59c40. Started by the tester's own build watche
 - Good to know: a song tapped while both decks play opens "Deck 1 is playing. Load the new song anyway?" CANCEL / LOAD (`Quick: free deck [Channel1] (playing true true)`).
 - Marko was handling the phone during part 7 (the app logged rotations: `insets 0 0 48 0`, `0 0 0 48` with bars hidden = landscape / upside down). Auto-rotate is back on as it was (`accelerometer_rotation 1`).
 
-## Round 20 finished: 5 pass (0, 1, 2, 3, 4, 6 → 6 pass), 2 fail (5, 7)
+## Round 20 finished: 6 pass, 2 fail
 Pass: 0 smoke, 1 transport, 2 sliders and knobs, 3 LEDs (32-beat cells 129 px), 4 colours (both decks yellow), 6 BPM and key in advance (66 songs, ~3 s each, kept after restart).
 Fail, ranked:
 1. AUTOMIX does nothing (no fade, no transition; deck 1 ran out).
