@@ -16,7 +16,7 @@ Rectangle {
 
         group: root.group
         key: "vu_meter"
-        maxRate: 30
+        maxRate: 20
     }
 
     Mixxx.ControlProxy {
@@ -24,7 +24,7 @@ Rectangle {
 
         group: root.group
         key: "peak_indicator"
-        maxRate: 30
+        maxRate: 20
     }
 
     Rectangle {
