@@ -13,6 +13,12 @@ Build: the green Android run of the newest commit with this file. Fixes for roun
   perfectly"): deck 1 playing, deck 2 stopped: press deck 2's PLAY at any moment: log `Quick: align [Channel2] to
   beat N with the other deck`; deck 2 starts on deck 1's NEXT beat, on the same beat of the phrase (the matrix's
   lit cells one above the other at once). Try it 5 times at random moments: always together?
+- AUTO PHASE (new mode, on by default; Marko: "out of phase alignment is the function of this application, the
+  special one"): both decks playing, SYNC on (same BPM), phrases off by a few beats (e.g. jump deck 2 to another
+  beat with AUTO PHASE off, then turn it on): within ~2 beats the deck heard less (crossfader) jumps on its next beat
+  to the other's beat: log `Quick: auto phase: [ChannelN] (beat X) to the other deck's beat`, the matrix's lit cells
+  one above the other from then on; no audible stumble on the deck on air. A jump Marko makes himself (an LED on deck
+  1): deck 2 follows to the same beat on the next beat. Off: nothing moves by itself (log `Quick: auto phase off`).
 - ALIGN (the ▸| button, new): both playing, phrases off by some beats: tap deck 2's ▸|: on the next beat deck 2
   jumps (seamless) to the same beat as deck 1 (`Quick: align ...`). Held 0.6 s: the next section as before
   (`Quick: next section ...`, the button lights).

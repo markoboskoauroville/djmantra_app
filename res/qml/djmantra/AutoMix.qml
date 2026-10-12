@@ -19,6 +19,7 @@ Rectangle {
     property bool eq: true
     property bool tempo: true
     property int beats: 8
+    property var phase // AutoPhase
     // the deck the fader left (outgoing); set while the fader rests at an end
     property string from: "[Channel1]"
     property real startBpm: 0
@@ -131,7 +132,7 @@ Rectangle {
 
         DButton {
             objectName: "autoMix"
-            width: (parent.width - 3 * parent.spacing) * 0.34
+            width: (parent.width - 4 * parent.spacing) * 0.22
             height: parent.height
             text: root.automix && root.progress > 0.01 && root.progress < 0.99
                     ? qsTr("AUTOMIX") + " " + Math.round(root.progress * 100) + "%" : qsTr("AUTOMIX")
@@ -142,7 +143,7 @@ Rectangle {
 
         DButton {
             objectName: "autoEq"
-            width: (parent.width - 3 * parent.spacing) * 0.18
+            width: (parent.width - 4 * parent.spacing) * 0.12
             height: parent.height
             text: qsTr("EQ")
             fontSize: 12
@@ -152,7 +153,7 @@ Rectangle {
 
         DButton {
             objectName: "tempoBlend"
-            width: (parent.width - 3 * parent.spacing) * 0.26
+            width: (parent.width - 4 * parent.spacing) * 0.22
             height: parent.height
             text: qsTr("TEMPO BLEND")
             fontSize: 11
@@ -161,9 +162,20 @@ Rectangle {
         }
 
         DButton {
+            // the decks' phrases kept aligned by themselves (AutoPhase.qml)
+            objectName: "autoPhase"
+            width: (parent.width - 4 * parent.spacing) * 0.22
+            height: parent.height
+            text: qsTr("AUTO PHASE")
+            fontSize: 11
+            lit: root.phase ? root.phase.active : false
+            onClicked: if (root.phase) root.phase.active = !root.phase.active
+        }
+
+        DButton {
             // the phrase length: the matrix's cells
             objectName: "phraseBeats"
-            width: (parent.width - 3 * parent.spacing) * 0.22
+            width: (parent.width - 4 * parent.spacing) * 0.22
             height: parent.height
             text: root.beats + qsTr(" BEATS")
             fontSize: 11

@@ -48,6 +48,7 @@ Item {
     Mixxx.ControlProxy { id: sync; group: root.group; key: "sync_enabled" }
     Mixxx.ControlProxy { id: quantize; group: root.group; key: "quantize" }
     Mixxx.ControlProxy { id: otherPlay; group: root.otherGroup; key: "play" }
+    Mixxx.ControlProxy { id: bpm; group: root.group; key: "bpm" }
     Mixxx.ControlProxy {
         id: otherBeat
 
@@ -73,13 +74,21 @@ Item {
             return false;
         const target = (Math.floor(otherBeat.value) + 1) % cells;
         Mixxx.DJMantra.log("align " + root.group + " to beat " + (target + 1) + " with the other deck");
-        tap(target);
+        tap(target, true);
         return true;
     }
 
-    function tap(index) {
+    // when Marko last moved this deck himself (a beat LED, the matrix): AUTO
+    // PHASE then moves the other deck, not this one
+    property real userMovedAt: 0
+    readonly property bool playing: play.value > 0
+    readonly property real bpmNow: bpm.value
+
+    function tap(index, automatic) {
         if (!loaded)
             return;
+        if (!automatic)
+            userMovedAt = Date.now();
         if (play.value > 0) {
             // queued: the engine jumps on the next beat (seamless, as Ableton
             // with snap 1 beat); the LED shows it until then

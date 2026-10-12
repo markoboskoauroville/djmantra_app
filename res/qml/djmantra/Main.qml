@@ -223,6 +223,7 @@ Window {
             AutoMix {
                 width: parent.width
                 height: 38
+                phase: autoPhase
             }
 
             MatrixDisplay {
@@ -254,6 +255,7 @@ Window {
         }
 
         MatrixDeck { id: matrix1; group: "[Channel1]"; deckColor: Style.deck1 }
+        AutoPhase { id: autoPhase; deck1: matrix1; deck2: matrix2 }
         MatrixDeck { id: matrix2; group: "[Channel2]"; deckColor: Style.deck2 }
 
         Item {

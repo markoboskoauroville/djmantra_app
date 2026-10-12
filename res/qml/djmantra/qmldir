@@ -1,6 +1,7 @@
 singleton Style 1.0 Style.qml
 singleton PixelFont 1.0 PixelFont.qml
 AutoMix 1.0 AutoMix.qml
+AutoPhase 1.0 AutoPhase.qml
 BigWaveform 1.0 BigWaveform.qml
 DButton 1.0 DButton.qml
 DFader 1.0 DFader.qml
