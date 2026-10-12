@@ -1,11 +1,31 @@
 # DJ Mantra handover
 
 Read this first in any new session (any account). It is kept current by every session before it
-stops; the newest state wins over older notes. Last update: **2026-10-09 14:20 UTC**, by the
+stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 11.10.2026 (latest): round 11 on Marko's phone itself
+## 12.10.2026 07:15 UTC (latest): the redesign, waiting for round 17
+
+- Cloud session "DJ mantra app testing" (session_01Ggm1Tq5a9mnY3wAZMMS9jh), branch
+  `ccr-eb7d1019-d3kubd`. Head a91fd92 (= ca2e6ee + a test fix). Android of ca2e6ee is green.
+- The phone session "Wireless debugging connection" (session_01EPqFCfKVESsy64tgK2QFvQ) is
+  **archived** since 06:34 UTC (its 5-hour limit was at warning). A new phone session (Remote
+  Control in Termux) runs `testing/ROUND17.md` on ca2e6ee's (or a91fd92's) Android APK, results to
+  `testing/results/*_r17_phone/`.
+- New interface (Qt Quick, `res/qml/djmantra`), Marko's redesign: deck headers (total / remaining),
+  SYNC CUE PLAY JUMP per deck, AUTOMIX (EQ bass→highs→mids and tempo blend follow the crossfader
+  Marko moves; nothing automatic), 8/16/32 BEATS (phrase_length), the OXI-E16 dot-matrix display as
+  the ONLY phrase lights (elapsed, bar.beat, countdown, running lights, beat launch by tapping a
+  cell), overview waveforms, the playlist (tap = load onto the free deck), crossfader, tabs Songs /
+  Mixer (LED-ring knobs, cut-only EQ) / Keys (wheel, KEY MATCH via camelot::matchShift, −/+).
+- CI: linux.yml has a "QML check" job (`tools/qml/check_djmantra_qml.py`, headless load against a
+  Mixxx stub) since round 16 went black on a QML error (Style.onAccent read as a signal handler).
+- Open: the section countdown after JUMP (round 16b: -9.0 vs ~14 bars; the jump log now lists the
+  cues); hot cues / loops still in the engine, classic interface and controller (manifest §6);
+  progress page (website repo) to update after round 17 passes.
+
+## 11.10.2026: round 11 on Marko's phone itself
 
 - Cloud session "DJ mantra app testing" (session_01Ggm1Tq5a9mnY3wAZMMS9jh), branch
   `ccr-eb7d1019-d3kubd`. "Djapp local" (Mac) no longer exists; the local session now is
