@@ -20,4 +20,8 @@ action at a time (`!!!!!MARKO!!!!!>`); audio only in the private repo markobosko
 - Cloud: sections learned from rekordbox (testing/sections/learn, F1 0.61 within a bar vs 0.40); grid phase
   (off-beat in ~27 % of songs, ~60 ms early) - Essentia beat tracker benchmark running; key: QM 55-58 % vs
   rekordbox, waiting for KeyFinder / Essentia numbers; BPM: live-drum songs need a beat map, not one tempo.
+- Mac (D, Marko 12.10.2026): djay Pro as a reference too (same waveform look, same analysis): conclusions,
+  djay library database -> djmantra-test-songs djay/, decoded per-song JSON -> testing/sections/djay.json,
+  screenshots -> testing/djay/.
+- Done in code: KeyFinder default key (78 % = rekordbox vs 55 %); beat map for live drummers (89.9 -> 93.9 %).
 - Then: V6 with all four, CI green, ROUND29 to the phone tester.
