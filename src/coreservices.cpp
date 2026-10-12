@@ -1,5 +1,7 @@
 #include "coreservices.h"
 
+#include "util/brandtranslator.h"
+
 #include <QApplication>
 #include <QFileDialog>
 #include <QProcess>
@@ -359,6 +361,10 @@ CoreServices::CoreServices(const CmdlineArgs& args, QApplication* pApp)
     }
     mixxx::Translations::initializeTranslations(
             m_pSettingsManager->settings(), pApp, m_cmdlineArgs.getLocale());
+#ifdef __ANDROID_PORT__
+    // DJ Mantra's name in every text that names Mixxx (installed last: asked first)
+    pApp->installTranslator(new djmantra::BrandTranslator(pApp));
+#endif
     initializeKeyboard();
 }
 

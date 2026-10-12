@@ -1226,6 +1226,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/widget/djmantra/camelot.cpp
   src/widget/djmantra/wdeckcounter.cpp
   src/util/androidwindow.cpp
+  src/util/brandtranslator.cpp
   src/util/bundledresources.cpp
   src/util/uitestprobe.cpp
   src/util/cache.cpp
@@ -2374,6 +2375,7 @@ if(BUILD_TESTING)
     src/test/externalcontent_test.cpp
     src/test/phrasecontrol_test.cpp
     src/test/camelot_test.cpp
+    src/test/brandtranslator_test.cpp
     src/test/androidmidicontroller_test.cpp
     src/test/bundledresources_test.cpp
     src/test/starrating_test.cpp

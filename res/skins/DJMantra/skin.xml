@@ -40,7 +40,7 @@
       <attribute config_key="[DJMantra],d2_sampler">0</attribute>
     </attributes>
   </manifest>
-  <ObjectName>Mixxx</ObjectName>
+  <ObjectName>DJMantra</ObjectName>
   <Style src="skins:DJMantra/style.qss"/>
   <MinimumSize>320,320</MinimumSize>
   <SizePolicy>me,me</SizePolicy>

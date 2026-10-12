@@ -132,7 +132,12 @@ void SettingsScreen::showAbout() {
             QStringLiteral(DJMANTRA_VERSION) + QStringLiteral(" (") +
                     VersionStore::gitVersion() + QStringLiteral(")"),
             nullptr);
-    pAbout->addRow(nullptr, tr("Engine"), tr("Mixxx %1, free software (GPL)").arg(VersionStore::version()), nullptr);
+    pAbout->addRow(nullptr, tr("Engine"),
+            // The licence credit keeps the engine's name (outside tr(): the
+            // BrandTranslator would put DJ Mantra in)
+            tr("%1 %2, free software (GPL)")
+                    .arg(QStringLiteral("Mixxx"), VersionStore::version()),
+            nullptr);
     pAbout->addRow(nullptr, tr("Website"), kWebsite, [] {
         QDesktopServices::openUrl(QUrl(kWebsite));
     });
