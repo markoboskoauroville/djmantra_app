@@ -14,3 +14,9 @@ Build: run 38253413748, commit bd59c40. Started by the tester's own build watche
 - CUE: `button [Channel1],cue_default pressed`.
 - AUTO PHASE: off, deck 2 moved to beat 3 → one beat behind (`p1_off.png`: deck 1 on a white 1, deck 2 on 2); on → `auto phase: [Channel2] (beat 4) to the other deck's beat`, both on 4 (`p1_on.png`). A first try (LED 5) logged no correction within 5 s: probably landed in phase already.
 - Drops: 30 s, both playing, SYNC on, while the analysis in advance was running: xruns 0, late 0, slowest 2.4-3.4 ms.
+
+## Part 2: sliders and knobs - PASS
+- Mixer map lines are there: `knob_[Channel1],pregain`, the three EQ `parameter3/2/1`, `super1`, `fader_[ChannelN],volume`, `crossfader`.
+- Knob direction: HIGH deck 1, slow `input swipe` from its centre 150 px DOWN (1.5 s): the pointer turned COUNTER-clockwise (value lower). Two drags up: back clockwise. Right now (`p2_knob_down.png`, `p2_knob_up.png`).
+- Double tap resets the knob (`p2_knob_reset.png`) and the volume fader (dragged to ~half, `p2_moved.png` → `p2_reset.png`). Crossfader to L and back to the middle.
+- Question for the builder: at rest (and after a double tap) HIGH / MID / LOW point to ~4-5 o'clock, while GAIN and FILTER point to 12. If the EQ's neutral is meant to be the middle, the drawing maps it wrong (Mixxx EQ 0..4, neutral 1).
