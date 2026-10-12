@@ -115,9 +115,9 @@ Rectangle {
         // back to normal: both decks' EQs at the middle, both volumes up
         for (const deck of ["[Channel1]", "[Channel2]"]) {
             const d = deckControls(deck);
-            d.lo.parameter = 0.5;
-            d.mi.parameter = 0.5;
-            d.hi.parameter = 0.5;
+            d.lo.parameter = 1; // 0 dB (cut-only EQs)
+            d.mi.parameter = 1;
+            d.hi.parameter = 1;
         }
         running = false;
         waiting = false;
@@ -145,12 +145,14 @@ Rectangle {
             const part = (a, b) => Math.max(0, Math.min(1, (p - a) / (b - a)));
             if (root.eq) {
                 const bass = part(0, 0.25), highs = part(0.25, 0.5), mids = part(0.5, 0.75);
-                t.lo.parameter = 0.5 * bass;
-                f.lo.parameter = 0.5 * (1 - bass);
-                t.hi.parameter = 0.5 * highs;
-                f.hi.parameter = 0.5 * (1 - highs);
-                t.mi.parameter = 0.5 * mids;
-                f.mi.parameter = 0.5 * (1 - mids);
+                // cut-only EQs: 1 = 0 dB (the top), 0 = kill; the knobs are
+                // dB-scaled, so these straight lines are smooth fades in dB
+                t.lo.parameter = bass;
+                f.lo.parameter = 1 - bass;
+                t.hi.parameter = highs;
+                f.hi.parameter = 1 - highs;
+                t.mi.parameter = mids;
+                f.mi.parameter = 1 - mids;
                 f.vol.value = 1 - part(0.75, 1);
             } else {
                 t.vol.value = part(0, 0.5);

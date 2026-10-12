@@ -35,9 +35,9 @@ Item {
                     spacing: 2
 
                     DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.modelData; key: "pregain"; label: "GAIN" }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter3"; label: "HIGH" }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter2"; label: "MID" }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter1"; label: "LOW" }
+                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter3"; label: "HIGH"; defaultParameter: 1 }
+                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter2"; label: "MID"; defaultParameter: 1 }
+                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter1"; label: "LOW"; defaultParameter: 1 }
                     DKnob {
                         width: 58
                         height: (knobs.height - 46) / 5

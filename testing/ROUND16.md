@@ -30,9 +30,19 @@ Push once at the end (and once halfway if the session might stop). Two of Marko'
   deck 2 starts on deck 1's next beat 1; percent runs; EQ knobs (Mixer page) move: bass swapped first, then highs,
   then mids, then deck 1 fades out and stops; deck 1's BPM glides to deck 2's own BPM. Repeat with EQ off and
   8 BARS. Listen: smooth? Report anything abrupt.
+## 2b. EQ: cut only (Marko, 06:52; manifest dj-mixing.md §1)
+- Every LOW / MID / HIGH knob rests at the top = 0 dB (no boost range at all); turning down cuts, smoothly in dB
+  (about -40 dB near the bottom), the bottom is a full kill. Double tap = back to the top (0 dB).
+- Listen while turning a LOW knob slowly from the top: the first part of the travel should be fine, small changes.
+- AUTO MIX with EQ: the incoming deck's knobs start at the bottom (killed) and rise to the top; the outgoing deck's
+  go down from the top; at the end both decks' knobs are at the top again.
+- Classic interface (quick look): its EQ knobs also rest at the top and only cut.
+- Controller (if connected): the EQ knob's whole turn is the cut range (14-bit, finer than 127 steps).
 ## 3. Mixer page: knobs, faders, VU, PFL as before. 4. Keys page: the Camelot wheel (horoscope style), deck keys
 ringed, compatible lit, match in the middle; the badge (top right) opens it too.
 ## 5. Library: one LOAD per song → the free deck (nothing playing: 1, 2, 1 …; one playing: the other; both: asks);
 a cover tap → LOAD 1 / LOAD 2 onto that deck; Music listed once.
 ## 6. Loudness: one song alone, volume up, 20 s: `adb logcat -d | grep "Output level"`.
 ## 7. Controller (only if connected): pads light the beat in the phrase (BEAT_LIGHTS).
+## Known gap (manifest §6): hot cues and loops are gone from the new interface, but still in the engine, the classic
+interface and the Mix Ultra's pad modes. Not to be tested; noted for the next build.

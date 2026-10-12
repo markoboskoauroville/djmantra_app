@@ -2,7 +2,7 @@ import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// A knob: drag up / down to turn, double tap for the middle (centre detent)
+// A knob: drag up / down to turn, double tap for its rest position
 Item {
     id: root
 
@@ -10,6 +10,8 @@ Item {
     property string key
     property string label
     property color arcColor: Style.line
+    // a double tap: the knob's rest position (EQs: the top = 0 dB, cut only)
+    property real defaultParameter: 0.5
 
     implicitWidth: 52
     implicitHeight: 64
@@ -69,9 +71,9 @@ Item {
             startParameter = control.parameter;
         }
         onPositionChanged: (mouse) => {
-            const p = startParameter + (startY - mouse.y) / 150;
+            const p = startParameter + (startY - mouse.y) / 254; // ~2 px per MIDI step
             control.parameter = Math.max(0, Math.min(1, p));
         }
-        onDoubleClicked: control.parameter = 0.5
+        onDoubleClicked: control.parameter = root.defaultParameter
     }
 }

@@ -25,8 +25,15 @@ void ControlEffectKnob::setBehaviour(EffectManifestParameter::ValueScaler type,
         if (dMinValue == 0) {
             if (dMaxValue == 1.0) {
                 // Volume like control
+#ifdef __ANDROID_PORT__
+                // DJ Mantra: the cut-only EQs use the whole knob for -40..0 dB
+                // (Mixxx: -20..0), then the kill at the bottom
+                m_pControl->setBehavior(
+                        new ControlAudioTaperPotBehavior(-40, 0, 1));
+#else
                 m_pControl->setBehavior(
                         new ControlAudioTaperPotBehavior(-20, 0, 1));
+#endif
             } else if (dMaxValue > 1.0) {
                 // Gain like control
                 m_pControl->setBehavior(
