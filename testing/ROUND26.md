@@ -24,6 +24,6 @@ Build: the green Android run of the newest commit with this file. Grep once per 
 
 ## 6. Clock (new, Marko 12.10.2026: "real-time clock in the matrix display style" at the top)
 - Needs the build with ClockDisplay.qml (re-install if parts 4-5 ran on the older one). Top bar, left of the C/G
-  meter: HH:MM in yellow matrix dots, the colon blinking each second; it matches the phone's time and turns over at
+  meter: HH:MM in yellow matrix dots, the colon STATIC (never blinks, Marko); it matches the phone's time and turns over at
   the minute. Portrait and landscape: not under the camera hole, not overlapping the key badge or the meter.
   Screenshot of the top bar.

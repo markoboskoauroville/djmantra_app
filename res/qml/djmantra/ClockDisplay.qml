@@ -3,12 +3,12 @@ import QtQuick 2.12
 
 // A real-time clock in the matrix display style, top of the screen (Marko,
 // 12.10.2026: "real-time clock in the matrix display style"): HH:MM, 24 hours,
-// the colon blinking each second. Repainted once a second, nothing more.
+// the colon static (Marko: "2 dots ... should be static, not blinking");
+// checked once a second, repainted only when the minute turns.
 Canvas {
     id: root
 
     property string time: "--:--"
-    property bool colon: true
     readonly property int columns: 5 * 6 + 1
     readonly property int rows: 7 + 2
     readonly property real pitch: Math.min(width / columns, height / rows)
@@ -24,9 +24,11 @@ Canvas {
         onTriggered: {
             const now = new Date();
             const two = (n) => (n < 10 ? "0" : "") + n;
-            root.time = two(now.getHours()) + ":" + two(now.getMinutes());
-            root.colon = now.getSeconds() % 2 === 0;
-            root.requestPaint();
+            const time = two(now.getHours()) + ":" + two(now.getMinutes());
+            if (time !== root.time) {
+                root.time = time;
+                root.requestPaint();
+            }
         }
     }
 
@@ -39,8 +41,6 @@ Canvas {
         ctx.fillRect(0, 0, width, height);
         const lit = {};
         for (let i = 0; i < time.length; ++i) {
-            if (time[i] === ":" && !colon)
-                continue;
             const g = PixelFont.glyph(time[i]);
             for (let gx = 0; gx < 5; ++gx)
                 for (let gy = 0; gy < 7; ++gy)
