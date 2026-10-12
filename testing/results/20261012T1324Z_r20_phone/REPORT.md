@@ -44,3 +44,12 @@ Build: run 38253413748, commit bd59c40. Started by the tester's own build watche
   - Tester's own mistake, kept as a warning for later rounds: with the bar shown the tabs move up 126 px, but the tab map is not re-logged, so a tap at the old tab position hits the bar's Recents / Home. Please re-log the map after an insets change.
 - Landscape (rotated with `settings put system user_rotation 1`): the bar sits on the right, `insets [126, 0, 126, 0]`, `Quick: insets 48 0 48 0`: it covers nothing; +/−, the tabs and the meter stay clear (`p5_land_bar.png`).
 - **FAIL (small): landscape Phrasing at 16 BEATS (`p5_land_phr.png`): the two decks' LEDs are side by side, but the two-digit numbers run together ("10111213141516"): the cells are too narrow for their digits.** Smaller font or fewer cells per row in landscape.
+
+## Part 6: library, BPM and key IN ADVANCE - PASS
+- Opening Music started it by itself: `Quick: analysing 66 songs in advance (BPM, key)` (15:24:58); the header said `analysing BPM / key: 65 left`, counting down (`p6_music_open.png`, 40 left at ~1.5 min); `Quick: analysis in advance finished` at 15:28:14: 66 songs in 196 s, **~3 s per song**.
+- While it ran, both decks playing: xruns 0, late 0 (part 1).
+- After a force-stop and restart, Music again: the values are there at once (`p6_reopened.png`); `analysing 2 songs in advance` → finished within seconds (2 of 66 analysed again: which two is not logged; worth a look whether two results are not saved).
+- Every row has the cover, title, artist, BPM and Camelot key. Sorting: BPM ▲ (`songs sorted by bpm up`) to the end of the list, no blanks (`p6_bpm_end.png`); KEY ▲ in wheel order 2B, 3A, 3A, 3B, 4A (`p6_key_end.png`). Folders on top.
+- Note: Yshai Afterman - _Between ... got 187.3 BPM (probably double time of ~93.6); the BPM sort puts it last.
+- Note: while the analysis fills the rows, the list scrolled under my finger once (at the start of part 1 a tap meant for 3 Sense loaded Let Me In). Maybe the list jumps when rows change; keep the scroll position while values arrive.
+- A tap on a song loads onto the free deck (`load [Channel1] Higher`); deck 2's cover then a song → `load [Channel2] Stardust`; deck 1's cover then a song → `load [Channel1] Easing Light`.
