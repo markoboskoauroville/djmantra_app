@@ -18,6 +18,27 @@ Item {
     property real lastAlign: 0
 
     Mixxx.ControlProxy { id: fader; group: "[Master]"; key: "crossfader" }
+    Mixxx.ControlProxy { id: volume1; group: "[Channel1]"; key: "volume" }
+    Mixxx.ControlProxy { id: volume2; group: "[Channel2]"; key: "volume" }
+    // round 24: a CUE preview (held) plays the deck: not a deck to align with
+    Mixxx.ControlProxy {
+        id: cue1
+        group: "[Channel1]"; key: "cue_default"
+        onValueChanged: root.previewEnded = Date.now()
+    }
+    Mixxx.ControlProxy {
+        id: cue2
+        group: "[Channel2]"; key: "cue_default"
+        onValueChanged: root.previewEnded = Date.now()
+    }
+    property real previewEnded: 0
+
+    // heard on the dance floor: volume up, not cut by the crossfader
+    function onAir(deck) {
+        if (deck === deck1)
+            return volume1.value > 0.05 && fader.value < 0.98;
+        return volume2.value > 0.05 && fader.value > -0.98;
+    }
 
     function check() {
         if (!active || !deck1 || !deck2 || !deck1.playing || !deck2.playing)
@@ -29,12 +50,17 @@ Item {
             return;
         if (deck1.phraseBeat === deck2.phraseBeat || deck1.queuedBeat >= 0 || deck2.queuedBeat >= 0)
             return;
+        if (cue1.value > 0 || cue2.value > 0 || Date.now() - previewEnded < 1000)
+            return; // a CUE preview: never jump a deck for it
         // after an alignment, give it two beats to land
         if (Date.now() - lastAlign < 2 * 60000 / deck1.bpmNow)
             return;
         let follower;
         const now = Date.now();
-        if (now - deck1.userMovedAt < 4000 || now - deck2.userMovedAt < 4000)
+        const air1 = onAir(deck1), air2 = onAir(deck2);
+        if (air1 !== air2)
+            follower = air1 ? deck2 : deck1; // round 24: the deck on air never moves
+        else if (now - deck1.userMovedAt < 4000 || now - deck2.userMovedAt < 4000)
             follower = deck1.userMovedAt > deck2.userMovedAt ? deck2 : deck1;
         else
             follower = fader.value <= 0 ? deck2 : deck1; // the one heard less

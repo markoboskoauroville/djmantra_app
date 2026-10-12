@@ -60,6 +60,12 @@ Row {
         // as on a CDJ (back to the cue / preview while held).
         property bool held: false
         onPressedDown: {
+            // round 24: where the cue and the deck are, on every press
+            const seconds = (v) => (v * cueDuration.value).toFixed(2);
+            Mixxx.DJMantra.log("cue press " + root.group + ": deck at " + seconds(cuePosition.value) +
+                    " s, cue at " + (cuePoint.value >= 0 && trackSamples.value > 0
+                            ? seconds(cuePoint.value / trackSamples.value) + " s" : "none") +
+                    (playControl.value > 0 ? ", playing" : ", paused"));
             const away = playControl.value <= 0 && cuePoint.value >= 0 && trackSamples.value > 0 &&
                     Math.abs(cuePosition.value * trackSamples.value - cuePoint.value) > 2048;
             if (away) {
@@ -84,6 +90,7 @@ Row {
         Mixxx.ControlProxy { id: cuePoint; group: root.group; key: "cue_point" }
         Mixxx.ControlProxy { id: cuePosition; group: root.group; key: "playposition" }
         Mixxx.ControlProxy { id: trackSamples; group: root.group; key: "track_samples" }
+        Mixxx.ControlProxy { id: cueDuration; group: root.group; key: "duration" }
     }
 
     DButton {
