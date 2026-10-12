@@ -31,3 +31,12 @@ Build: run 38291801689, commit a972af4. Started on Marko's "go" (12.10.2026 ~21:
 ## Stopped by Marko after part 4 (12.10.2026 ~21:18 local)
 - Part 5 (CPU) had started: both decks playing (Aktysia + Alba, peak 0.62-0.74, xruns 0); Songs tab 9.0 %, then the app's CPU read 0 % on Phrasing / Mixer / Keys (the app was no longer running in front: someone was using the phone, the volume panel had opened). Void, not a result.
 - Marko: "stop testing". Parts 5-9 NOT TESTED. Screen stay-awake switched off; rotation is free.
+
+## Marko's new request (12.10.2026 ~21:25 local, verbatim)
+
+> "I have to stop testing. We need to add more features, then we continue testing. So the feature is that the second number, which is counting the bars and beats from the top of the song, should reset on every section. That's why section detection needs to be perfect. Please work on that in your environment. Test the, the algorithm for section detection. and compare it visually and then find a good algorithm for testing. Compare this algorithm with something from Serato or from Pioneer Rekordbox software. Must be in that level of quality."
+
+### Shaped for the builder
+1. The matrix's middle number (bar.beat, today counted from the top of the song) restarts at 1.1 at every section start (intro, verse, break, drop, outro ...).
+2. Section detection must be at the level of Rekordbox's phrase analysis / Serato: every section start on a bar line (in electronic music on a 8 / 16 / 32-bar phrase), none missed, no false ones.
+3. The tester evaluates the current detector offline against a stronger reference algorithm on the Music folder, with pictures, and sends the findings (testing/sections/).
