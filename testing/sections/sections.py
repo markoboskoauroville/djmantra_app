@@ -394,6 +394,10 @@ def analyse(path, outdir):
     energy = np.log1p(b3).sum(axis=1)
     bounds, names = label(b, on, energy, nb)
 
+    if os.environ.get("SECTIONS_DUMP"):  # the inputs, to tune the detector without decoding again
+        np.savez_compressed(os.path.join(os.environ["SECTIONS_DUMP"], name + ".npz"),
+                            lmh=np.c_[low, mid, high].astype(np.float32), beats=beats, n=n,
+                            ref_starts=starts, ref_major=np.array(major, int))
     # C: the app's next detector, from the app-like bands only, on its own bars
     c_starts, c_major, c_phase = detector_v2(np.c_[low, mid, high], beats, n)
     # its bars in the reference's bar numbers (both from the same beat grid)
