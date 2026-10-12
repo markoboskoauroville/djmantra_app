@@ -45,3 +45,13 @@ Round 21 was skipped at the builder's request (its fixes are in this build).
 ## Part 6: Keys tab - PASS (font); note on size
 - `p6_wheel_zoom.png` (full resolution): every code (12A ...), every key name (C#m ...) and the middle text (`1 10A`, `2 -`, `key`) in the normal font, no matrix dots; rings and borders smooth, no stairs or broken strokes.
 - Note (landscape): the wheel is small there: ~310 px across (~118 dp), the key names ~15 px high, hard to read at arm's length. Portrait not re-checked this round (Marko had the phone sideways).
+
+## Part 6b: AUTOMIX EQ curves - PASS (by the knobs; not by ear)
+AUTOMIX on, EQ on, deck 1 playing, deck 2 playing synced, crossfader from full left to full right in 10 steps; a Mixer screenshot at each (`p6b/eq_0.png` ... `eq_10.png`; left column deck 1, right deck 2). No knob values in the log, so read from the pointers and rings:
+- 0 %: deck 1 all bands full; deck 2 HIGH lowered (~1 o'clock), MID lowered, LOW killed.
+- 10-40 %: deck 2's HIGH and MID rise step by step to full; its LOW stays killed; deck 1 untouched.
+- 50 %: the swap in progress: deck 1's LOW half down, deck 2's LOW half up (neither killed, neither both full).
+- 60 %: deck 1's LOW killed, deck 2's LOW full.
+- 70-100 %: deck 1's HIGH and MID go down (HIGH lower than MID); its LOW stays killed; deck 2 full.
+- Never both LOWs full, both LOWs down only together at half in the swap step, no band killed on both decks. As expected.
+- Not judged: the sound ("no hollow moment"): Marko's ear. A knob-value log line (`Quick: automix eq [ChannelN] low x mid y high z`) would let the tester check the dB values.
