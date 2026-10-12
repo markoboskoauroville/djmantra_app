@@ -43,8 +43,10 @@ Build: run 38233904582, commit 1a724b3. Started on Marko's word ("please start t
 
 > "Please change the color scheme, both player side same color, not different color schemes. And automating BPM scanning of the current songs shown in a playlist, that must happen automatically in advance. And not only the BPM, also the key update, and then test."
 
+> "I prefer yellow color for both players. I mean their times and also beat led and buttons"
+
 ### Shaped for the builder
-1. **One color for both decks.** Deck 1 and deck 2 look the same everywhere: SYNC / PLAY buttons, the matrix numbers and cells, the overviews, the Phrasing LEDs, the key labels, the Keys tab rows. No green-left / blue-right.
+1. **One color for both decks: yellow.** Deck 1 and deck 2 look the same everywhere, in yellow: their times (matrix digits), the beat LEDs, the buttons (SYNC / PLAY when on), and also SYNC / PLAY buttons, the matrix numbers and cells, the overviews, the Phrasing LEDs, the key labels, the Keys tab rows. No green-left / blue-right.
 2. **BPM analysed in advance, automatically.** Every song shown in the open folder / playlist gets its BPM analysed in the background without being loaded onto a deck, as soon as the folder is shown; the BPM column fills in by itself.
 3. **Key analysed in advance too.** Same for the key: the KEY column (Camelot) fills in for every song shown, without loading it.
 4. Then round 20: test it.
