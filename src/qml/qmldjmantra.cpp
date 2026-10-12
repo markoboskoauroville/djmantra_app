@@ -31,8 +31,11 @@
 #include "mixer/playerinfo.h"
 #include "soundio/soundmanager.h"
 #include "soundio/soundmanagerconfig.h"
-#ifdef __OBOE__
-#include "soundio/sounddeviceoboe.h"
+#if defined(Q_OS_ANDROID)
+// The Android output's host API name (sounddeviceoboe.cpp, in mixxx-lib):
+// this library is built without __OBOE__ and Oboe's headers (round 22: the
+// router listed only "Phone default", the outputs were compiled out)
+extern const QString kOboeHostApi;
 #endif
 #include "qml/asyncimageprovider.h"
 #include "qml/qmllibraryproxy.h"
@@ -313,12 +316,34 @@ QVariantList QmlDJMantra::audioOutputs() const {
     phone[QStringLiteral("label")] = tr("Phone default (follows plugging in)");
     phone[QStringLiteral("channels")] = 2;
     result.append(phone);
-#ifdef __OBOE__
-    for (const auto& output : SoundDeviceOboe::androidOutputs()) {
+#if defined(Q_OS_ANDROID)
+    // AudioRouter.outputs(): "key|label|channels" per output
+    const QJniObject array = QJniObject::callStaticObjectMethod(
+            "com/djmantra/app/AudioRouter",
+            "outputs",
+            "(Landroid/content/Context;)[Ljava/lang/String;",
+            QNativeInterface::QAndroidApplication::context().object());
+    QJniEnvironment env;
+    if (env.checkAndClearExceptions() || !array.isValid()) {
+        qWarning() << "Quick: the audio outputs could not be read";
+        return result;
+    }
+    const auto jArray = static_cast<jobjectArray>(array.object());
+    const jsize count = env->GetArrayLength(jArray);
+    for (jsize i = 0; i < count; ++i) {
+        const auto jItem = static_cast<jstring>(env->GetObjectArrayElement(jArray, i));
+        const QString item = QJniObject(jItem).toString();
+        env->DeleteLocalRef(jItem);
+        const QStringList parts = item.split(QChar('|'));
+        qInfo().noquote() << "Quick: audio output" << item;
+        if (parts.size() < 2) {
+            continue;
+        }
+        const int channels = parts.size() >= 3 ? std::max(2, parts[2].toInt()) : 2;
         QVariantMap entry;
-        entry[QStringLiteral("key")] = output.key;
-        entry[QStringLiteral("label")] = output.label;
-        entry[QStringLiteral("channels")] = output.channels;
+        entry[QStringLiteral("key")] = parts[0];
+        entry[QStringLiteral("label")] = parts[1];
+        entry[QStringLiteral("channels")] = channels - channels % 2;
         result.append(entry);
     }
 #endif
@@ -326,8 +351,8 @@ QVariantList QmlDJMantra::audioOutputs() const {
 }
 
 int QmlDJMantra::audioOutputsVersion() const {
-#ifdef __OBOE__
-    return SoundDeviceOboe::androidOutputsVersion();
+#if defined(Q_OS_ANDROID)
+    return QJniObject::callStaticMethod<jint>("com/djmantra/app/AudioRouter", "version", "()I");
 #else
     return 0;
 #endif
@@ -365,7 +390,7 @@ QString QmlDJMantra::setAudioRoute(const QString& master,
     }
     // the outputs plugged in since the start are known only after a new look
     s_pSoundManager->clearAndQueryDevices();
-#ifdef __OBOE__
+#if defined(Q_OS_ANDROID)
     const auto devices = s_pSoundManager->getDeviceList(kOboeHostApi, true, false);
 #else
     const auto devices = s_pSoundManager->getDeviceList(

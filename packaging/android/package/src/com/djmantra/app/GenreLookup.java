@@ -44,9 +44,12 @@ public final class GenreLookup {
             if (!artist.isEmpty()) {
                 query = "artist:\"" + clean(artist) + "\" " + query;
             }
-            JSONObject found = getJson("https://api.deezer.com/search?limit=3&q="
-                    + URLEncoder.encode(query, "UTF-8"));
-            JSONArray tracks = found.optJSONArray("data");
+            // round 22: the advanced query ("artist:... track:...") found
+            // nothing 4 times in 4: then the plain words, as a person types
+            JSONArray tracks = deezerSearch(query);
+            if (tracks == null || tracks.length() == 0) {
+                tracks = deezerSearch((artist + " " + title).trim());
+            }
             if (tracks == null || tracks.length() == 0) {
                 Log.i(TAG, "GenreLookup: Deezer has no track for " + artist + " - " + title);
                 return "";
@@ -67,6 +70,16 @@ public final class GenreLookup {
             Log.w(TAG, "GenreLookup: Deezer failed for " + artist + " - " + title + ": " + error);
             return "";
         }
+    }
+
+    private static JSONArray deezerSearch(String query) throws Exception {
+        String url = "https://api.deezer.com/search?limit=3&q=" + URLEncoder.encode(query, "UTF-8");
+        JSONObject found = getJson(url);
+        JSONArray data = found.optJSONArray("data");
+        Log.i(TAG, "GenreLookup: Deezer " + url + " -> " + (data == null ? "no data: "
+                + found.toString().substring(0, Math.min(200, found.toString().length()))
+                : data.length() + " tracks"));
+        return data;
     }
 
     private static String musicBrainz(String fullArtist, String fullTitle) {
@@ -193,6 +206,7 @@ public final class GenreLookup {
             connection.setReadTimeout(8000);
             int status = connection.getResponseCode();
             if (status != 200) {
+                Log.w(TAG, "GenreLookup: HTTP " + status + " for " + url);
                 throw new Exception("HTTP " + status);
             }
             InputStream in = connection.getInputStream();

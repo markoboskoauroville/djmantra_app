@@ -36,7 +36,13 @@ Item {
 
         group: root.group
         key: "beat_in_phrase"
-        onValueChanged: root.queuedBeat = -1
+        onValueChanged: {
+            root.queuedBeat = -1;
+            // round 22: the CUE landed 3 beats early: it was set on a timer,
+            // before the seek. Now it is set once the deck IS on the cued beat
+            if (cueSet.running && value >= 0 && Math.floor(value) % root.cells === root.cuedBeat)
+                cueSet.setNow();
+        }
     }
     Mixxx.ControlProxy { id: beatsLeft; group: root.group; key: "section_beats_left" }
     Mixxx.ControlProxy { id: found; group: root.group; key: "section_found" }
@@ -133,10 +139,16 @@ Item {
         // the CUE point where the deck now is (after the engine's seek)
         id: cueSet
 
-        interval: 120
-        onTriggered: {
+        // only a safety net: normally the deck reaching the beat sets it
+        interval: 1500
+        onTriggered: setNow()
+
+        function setNow() {
+            stop();
             cueSetControl.value = 1;
             cueSetControl.value = 0;
+            Mixxx.DJMantra.log("cue set " + root.group + " at phrase beat " +
+                    (beat.value >= 0 ? Math.floor(beat.value) % root.cells + 1 : 0));
         }
     }
 

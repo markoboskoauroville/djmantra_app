@@ -316,22 +316,34 @@ Window {
                     onDone: window.libraryDeck = "" // loaded: the next song to the free deck
                 }
 
-                PhrasingPage {
-                    objectName: "phrasing"
+                // round 22: ~80 % CPU on every tab: a hidden tab costs nothing
+                // now, it is only made while it is shown
+                Loader {
                     anchors.fill: parent
-                    visible: window.page === 1
-                    deck1: matrix1
-                    deck2: matrix2
+                    active: window.page === 1
+                    visible: active
+
+                    sourceComponent: PhrasingPage {
+                        objectName: "phrasing"
+                        deck1: matrix1
+                        deck2: matrix2
+                    }
                 }
 
-                MixerPage {
+                Loader {
                     anchors.fill: parent
-                    visible: window.page === 2
+                    active: window.page === 2
+                    visible: active
+
+                    sourceComponent: MixerPage {}
                 }
 
-                Item {
+                Loader {
                     anchors.fill: parent
-                    visible: window.page === 3
+                    active: window.page === 3
+                    visible: active
+
+                    sourceComponent: Item {
 
                     WheelPage {
                         anchors.top: parent.top
@@ -363,6 +375,7 @@ Window {
                             group: "[Channel2]"
                             deckColor: Style.deck2
                         }
+                    }
                     }
                 }
             }

@@ -82,6 +82,8 @@ Rectangle {
         startBpm = deckControls(from).bpm.value;
     }
 
+    property int loggedStep: -1
+
     function follow() {
         if (!automix)
             return;
@@ -127,6 +129,15 @@ Rectangle {
             f.mi.value = fade(0, -12, midsOut);
             t.lo.value = bass;
             f.lo.value = 1 - bass;
+            // round 22: the values in the log, every tenth of the fade
+            const step = Math.round(q * 10);
+            if (step !== loggedStep) {
+                loggedStep = step;
+                const v = (c) => c.value.toFixed(2);
+                Mixxx.DJMantra.log("automix eq " + Math.round(q * 100) + "%: out hi " + v(f.hi) +
+                        " mid " + v(f.mi) + " low " + v(f.lo) + " | in hi " + v(t.hi) +
+                        " mid " + v(t.mi) + " low " + v(t.lo));
+            }
         }
         if (tempo && startBpm > 0 && t.fileBpm.value > 0)
             f.bpm.value = startBpm + (t.fileBpm.value - startBpm) * progress;

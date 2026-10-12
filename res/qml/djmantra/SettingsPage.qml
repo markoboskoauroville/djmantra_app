@@ -59,8 +59,38 @@ Rectangle {
         anchors.fill: parent
     }
 
+    // round 22: the ← button stays put, only the settings scroll
+    Row {
+        id: header
+
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 12
+        spacing: 10
+
+        DButton {
+            width: 52
+            height: 40
+            text: "←"
+            fontSize: 22
+            onClicked: root.done()
+        }
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: qsTr("Settings")
+            color: Style.text
+            font.pixelSize: 20
+            font.bold: true
+        }
+    }
+
     Flickable {
-        anchors.fill: parent
+        anchors.top: header.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.margins: 12
         contentHeight: column.height
         clip: true
@@ -70,27 +100,6 @@ Rectangle {
 
             width: parent.width
             spacing: 10
-
-            Row {
-                width: parent.width
-                spacing: 10
-
-                DButton {
-                    width: 52
-                    height: 40
-                    text: "←"
-                    fontSize: 22
-                    onClicked: root.done()
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: qsTr("Settings")
-                    color: Style.text
-                    font.pixelSize: 20
-                    font.bold: true
-                }
-            }
 
             DButton {
                 // automatic pre-listen
