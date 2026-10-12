@@ -24,6 +24,11 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   **Camelot** (`src/widget/djmantra/camelot.*`: notation forced to Lancelot = Camelot, `<KeyMatch>`
   badge between the decks, wheel screen from the badge and Settings). To do next: song-structure
   and time-signature detection; mark matching keys in the song picker.
+- 12.10 ~00:40 UTC: **GPU drawing on Android** (fbb6ceb): `OpenGLChildWidget` (QOpenGLWidget) under
+  `WGLWidget`, all-shader waveforms and GLSL VU meters, 4 s fallback to the CPU, Settings switch
+  "Draw on the GPU" ([DJMantra],gpu). Not yet run on a phone. Round 12 plan: `testing/ROUND12.md`.
+  Round 11 partial results (657f953): `testing/results/2026-10-11_2353_r11_phone/`.
+  No phone session online at 00:40 (download-4b archived): a new one starts from ROUND12.md.
 - The 7-day limit is at warning (resets 2026-10-15 01:00 UTC): keep this file current.
 
 ## Where things are
