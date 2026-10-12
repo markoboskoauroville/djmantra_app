@@ -27,24 +27,28 @@ public final class GenreLookup {
     private static long sLastRequest = 0;
 
     /// The genre ("Deep House"), or "" when MusicBrainz knows none
-    public static String lookup(String artist, String title) {
+    public static String lookup(String fullArtist, String fullTitle) {
+        // Round 18: "Jakatta, PROFF - American Dream - PROFF Interpretation"
+        // was not found: the first artist only, the title without its mix name
+        final String artist = firstArtist(fullArtist);
+        final String title = baseTitle(fullTitle);
         try {
             String query = "recording:\"" + clean(title) + "\"";
-            if (artist != null && !artist.isEmpty()) {
+            if (!artist.isEmpty()) {
                 query += " AND artist:\"" + clean(artist) + "\"";
             }
             JSONObject found = get("recording?fmt=json&limit=5&query="
                     + URLEncoder.encode(query, "UTF-8"));
             JSONArray recordings = found.optJSONArray("recordings");
-            if (recordings == null || recordings.length() == 0) {
-                Log.i(TAG, "GenreLookup: no recording for " + artist + " - " + title);
-                return "";
+            if (recordings == null || recordings.length() == 0
+                    || recordings.getJSONObject(0).optInt("score", 0) < 80) {
+                // The song is not known: the artist's genre
+                String genre = artistGenre(artist);
+                Log.i(TAG, "GenreLookup: no recording for " + artist + " - " + title
+                        + ", artist's genre: " + (genre.isEmpty() ? "none" : genre));
+                return genre;
             }
             JSONObject best = recordings.getJSONObject(0);
-            if (best.optInt("score", 0) < 80) {
-                Log.i(TAG, "GenreLookup: no close match for " + artist + " - " + title);
-                return "";
-            }
             // The recording's own genres, else its artist's
             String genre = topGenre(get("recording/" + best.getString("id")
                     + "?fmt=json&inc=genres"));
@@ -65,6 +69,44 @@ public final class GenreLookup {
             Log.w(TAG, "GenreLookup failed for " + artist + " - " + title + ": " + error);
             return "";
         }
+    }
+
+    private static String artistGenre(String artist) throws Exception {
+        if (artist.isEmpty()) {
+            return "";
+        }
+        JSONObject found = get("artist?fmt=json&limit=1&query="
+                + URLEncoder.encode("artist:\"" + clean(artist) + "\"", "UTF-8"));
+        JSONArray artists = found.optJSONArray("artists");
+        if (artists == null || artists.length() == 0
+                || artists.getJSONObject(0).optInt("score", 0) < 90) {
+            return "";
+        }
+        return topGenre(get("artist/" + artists.getJSONObject(0).getString("id")
+                + "?fmt=json&inc=genres"));
+    }
+
+    // "Eran Hersh, Anorre, The NGHBRS" -> "Eran Hersh"; "A feat. B" -> "A"
+    static String firstArtist(String artist) {
+        if (artist == null) {
+            return "";
+        }
+        String first = artist.split("(?i)\\s*(,|&|;|\\bfeat\\.?|\\bft\\.|\\bx\\b|\\bvs\\.?)\\s*")[0];
+        return first.trim();
+    }
+
+    // "American Dream - PROFF Interpretation" -> "American Dream";
+    // "Song (Extended Mix)" -> "Song"
+    static String baseTitle(String title) {
+        if (title == null) {
+            return "";
+        }
+        String base = title.replaceAll("\\s*[\\(\\[].*?[\\)\\]]", "");
+        int dash = base.indexOf(" - ");
+        if (dash > 0) {
+            base = base.substring(0, dash);
+        }
+        return base.trim();
     }
 
     // Lucene's special characters out of the query
@@ -114,6 +156,18 @@ public final class GenreLookup {
             connection.setConnectTimeout(8000);
             connection.setReadTimeout(8000);
             int status = connection.getResponseCode();
+            if (status == 503) {
+                // MusicBrainz is busy (round 18): once more after a pause
+                connection.disconnect();
+                Thread.sleep(2500);
+                sLastRequest = System.currentTimeMillis();
+                connection = (HttpURLConnection) new URL(BASE + path).openConnection();
+                connection.setRequestProperty("User-Agent", AGENT);
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setConnectTimeout(8000);
+                connection.setReadTimeout(8000);
+                status = connection.getResponseCode();
+            }
             if (status != 200) {
                 throw new Exception("HTTP " + status);
             }

@@ -17,6 +17,12 @@ Item {
     property var deckPlayer: Mixxx.PlayerManager.getPlayer(group)
     // DJ Mantra: display gain of the waveform (WaveformShader.visualGain)
     property real visualGain: 1.0
+    // DJ Mantra: its own zoom (seconds of track per 100 px, as waveform_zoom;
+    // 0 = the deck's waveform_zoom control, which the Qt Quick interface does
+    // not have: round 18's zoom did nothing) and no pre / post roll marks
+    // (round 18: diagonal lines in landscape)
+    property real zoom: 0
+    property bool showRoll: true
 
     Item {
         id: waveformContainer
@@ -120,7 +126,7 @@ Item {
         Item {
             id: waveform
 
-            property real effectiveZoomFactor: (1 / rateRatioControl.value) * (100 / zoomControl.value)
+            property real effectiveZoomFactor: (1 / rateRatioControl.value) * (100 / (root.zoom > 0 ? root.zoom : zoomControl.value))
 
             width: waveformContainer.duration * effectiveZoomFactor
             height: parent.height
@@ -135,6 +141,8 @@ Item {
 
             Shape {
                 id: preroll
+
+                visible: root.showRoll
 
                 property real triangleHeight: waveform.height
                 property real triangleWidth: 0.25 * waveform.effectiveZoomFactor
@@ -169,6 +177,8 @@ Item {
 
             Shape {
                 id: postroll
+
+                visible: root.showRoll
 
                 property real triangleHeight: waveform.height
                 property real triangleWidth: 0.25 * waveform.effectiveZoomFactor

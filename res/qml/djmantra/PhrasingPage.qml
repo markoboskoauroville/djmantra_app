@@ -14,17 +14,22 @@ Item {
     property var deck1   // MatrixDeck
     property var deck2
 
-    Mixxx.ControlProxy { id: zoom1; group: "[Channel1]"; key: "waveform_zoom" }
-    Mixxx.ControlProxy { id: zoom2; group: "[Channel2]"; key: "waveform_zoom" }
-
-    // waveform_zoom 1 (close) .. 10 (far), both decks the same
+    // the waveforms' zoom, both decks the same: 100 px show `zoom` seconds
+    // (round 18: waveform_zoom does not exist in this interface, + / − did
+    // nothing)
+    property real zoom: 3
     function setZoom(value) {
-        const z = Math.min(10, Math.max(1, value));
-        zoom1.value = z;
-        zoom2.value = z;
+        zoom = Math.min(12, Math.max(0.5, value));
+        Mixxx.DJMantra.log("waveform zoom " + zoom.toFixed(2));
     }
 
-    Component.onCompleted: setZoom(zoom1.value > 0 ? zoom1.value : 3)
+    // the LEDs come first (round 18: at 32 beats they were 19 dp tall under a
+    // 480 px waveform): each LED row gets at least 46 px, the waveforms the
+    // rest (at most half the page). Landscape: the two decks' LEDs side by side.
+    readonly property bool wide: width > height * 1.2
+    readonly property int ledRows: Math.max(1, Math.ceil((deck1 ? deck1.cells : 8) / 8))
+    readonly property real ledNeed: wide ? ledRows * 46 + (ledRows - 1) * 5 + 12
+                                         : 2 * (ledRows * 46 + (ledRows - 1) * 5 + 12) + Style.gap
 
     Rectangle {
         id: waves
@@ -33,7 +38,8 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: Style.gap
-        height: Math.max(120, (root.height - 2 * Style.gap) * 0.5)
+        height: Math.max(60, Math.min((root.height - 3 * Style.gap) * 0.5,
+                                      root.height - 3 * Style.gap - root.ledNeed))
         radius: 6
         color: "#05070f"
         clip: true
@@ -44,6 +50,7 @@ Item {
             height: parent.height / 2
             group: "[Channel1]"
             upper: true
+            zoom: root.zoom
         }
 
         BigWaveform {
@@ -53,6 +60,7 @@ Item {
             height: parent.height / 2
             group: "[Channel2]"
             upper: false
+            zoom: root.zoom
         }
 
         Rectangle {
@@ -76,7 +84,7 @@ Item {
                 height: 32
                 text: "+"
                 fontSize: 18
-                onClicked: root.setZoom(Math.max(1, zoom1.value) - 1)
+                onClicked: root.setZoom(root.zoom / 1.5)
             }
 
             DButton {
@@ -85,14 +93,15 @@ Item {
                 height: 32
                 text: "−"
                 fontSize: 18
-                onClicked: root.setZoom(Math.max(1, zoom1.value) + 1)
+                onClicked: root.setZoom(root.zoom * 1.5)
             }
         }
     }
 
-    Column {
+    Grid {
         id: leds
 
+        columns: root.wide ? 2 : 1
         anchors.top: waves.bottom
         anchors.topMargin: Style.gap
         anchors.bottom: parent.bottom
@@ -116,8 +125,8 @@ Item {
                 readonly property int rows: Math.max(1, Math.ceil(cells / 8))
 
                 objectName: "bigLeds" + (index + 1)
-                width: leds.width
-                height: (leds.height - leds.spacing) / 2
+                width: root.wide ? (leds.width - leds.spacing) / 2 : leds.width
+                height: root.wide ? leds.height : (leds.height - leds.spacing) / 2
                 radius: 6
                 color: "#05070f"
 

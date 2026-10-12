@@ -1,6 +1,7 @@
 #include "engine/controls/phrasecontrol.h"
 
 #include <QStringList>
+#include <QTimer>
 
 #include "control/controlobject.h"
 #include "control/controlproxy.h"
@@ -82,10 +83,10 @@ void PhraseControl::connectCues() {
             group, "track_samples", this, ControlFlag::AllowMissingOrInvalid);
     m_pPlay = std::make_unique<ControlProxy>(
             group, "play", this, ControlFlag::AllowMissingOrInvalid);
-    QStringList names = {QStringLiteral("intro_start_position"),
-            QStringLiteral("intro_end_position"),
-            QStringLiteral("outro_start_position"),
-            QStringLiteral("outro_end_position")};
+    // Not intro_start / outro_end: the analysis puts them at the first and
+    // the last sound, so JUMP went to the end of the song (round 18)
+    QStringList names = {QStringLiteral("intro_end_position"),
+            QStringLiteral("outro_start_position")};
     for (int i = 1; i <= kSectionHotcues; ++i) {
         names << QStringLiteral("hotcue_%1_position").arg(i);
     }
@@ -105,6 +106,7 @@ void PhraseControl::trackLoaded(TrackPointer pNewTrack) {
             [this, pNewTrack] {
                 disconnect(m_waveformConnection);
                 m_pSectionTrack = pNewTrack;
+                m_detectTries = 0;
                 if (pNewTrack) {
                     m_waveformConnection = connect(pNewTrack.get(),
                             &Track::waveformUpdated,
@@ -135,7 +137,20 @@ void PhraseControl::slotDetectSections() {
     }
     const ConstWaveformPointer pWaveform = pTrack->getWaveform();
     const mixxx::BeatsPointer pBeats = pTrack->getBeats();
+    // Round 18: 2 of 4 songs never got sections: the waveform was done
+    // before the beats (or the track length) and nothing asked again. Until
+    // the detection ran, it asks again every 2 s (for 3 minutes).
+    const auto retry = [this, pTrack] {
+        if (m_detectTries++ < 90) {
+            QTimer::singleShot(2000, this, [this, pTrack] {
+                if (m_pSectionTrack == pTrack) {
+                    slotDetectSections();
+                }
+            });
+        }
+    };
     if (!pWaveform || !pBeats || !m_pTrackSamples || m_pTrackSamples->get() <= 0) {
+        retry();
         return;
     }
     const auto end = mixxx::audio::FramePos::fromEngineSamplePos(m_pTrackSamples->get());
@@ -145,8 +160,10 @@ void PhraseControl::slotDetectSections() {
             static_cast<int>(m_pBeatsPerBar->get()),
             end);
     if (sections.isEmpty() && pWaveform->getCompletion() < pWaveform->getDataSize()) {
-        return; // not analysed yet: waveformUpdated comes again
+        retry(); // not analysed yet
+        return;
     }
+    m_detectTries = 1000; // done for this track
     std::atomic_store(&m_pSections,
             std::make_shared<const QList<mixxx::audio::FramePos>>(sections));
     QList<double> fractions;
@@ -393,6 +410,7 @@ void PhraseControl::slotSectionJump(double value) {
     const mixxx::BeatsPointer pBeats = m_pBeats;
     const double next = m_nextSection;
     if (!pBeats || !m_position.isValid() || next < 0) {
+        qInfo() << getGroup() << "jump: no section change ahead";
         return;
     }
     const auto section = pBeats->findClosestBeat(mixxx::audio::FramePos::fromEngineSamplePos(next));

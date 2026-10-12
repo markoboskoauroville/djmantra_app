@@ -49,6 +49,7 @@ Item {
         if (!loaded)
             return;
         if (play.value > 0) {
+            Mixxx.DJMantra.log("jump " + root.group + " to beat " + (index + 1));
             jump.value = index + 1;
             return;
         }

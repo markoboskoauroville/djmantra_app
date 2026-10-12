@@ -27,6 +27,7 @@ Rectangle {
     Mixxx.ControlProxy { id: resetKey; group: root.group; key: "reset_key" }
 
     function pulse(control) {
+        Mixxx.DJMantra.log("key " + root.group + " " + control.key);
         keylock.value = 1; // the key moves without the tempo
         control.value = 1;
         control.value = 0;

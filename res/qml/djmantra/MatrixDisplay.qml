@@ -80,7 +80,16 @@ Canvas {
         }
     }
 
-    onDecksChanged: requestPaint()
+    // Paint only when what it shows changed (round 18: ~100 % of a core; the
+    // deck info is rebuilt on every play position update, many times a second)
+    property string shown: ""
+    onDecksChanged: {
+        const now = JSON.stringify(decks);
+        if (now !== shown) {
+            shown = now;
+            requestPaint();
+        }
+    }
     onWidthChanged: requestPaint()
     onHeightChanged: requestPaint()
 

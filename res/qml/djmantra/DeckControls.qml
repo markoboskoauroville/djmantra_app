@@ -15,6 +15,18 @@ Row {
     spacing: 4
     layoutDirection: mirrored ? Qt.RightToLeft : Qt.LeftToRight
 
+    Mixxx.ControlProxy { id: bpm1; group: "[Channel1]"; key: "bpm" }
+    Mixxx.ControlProxy { id: bpm2; group: "[Channel2]"; key: "bpm" }
+
+    Timer {
+        // after SYNC: both decks' tempo in the log (round 18: not measurable)
+        id: syncLog
+
+        interval: 400
+        onTriggered: Mixxx.DJMantra.log("sync " + root.group + ": deck 1 " + bpm1.value.toFixed(2) +
+                " bpm, deck 2 " + bpm2.value.toFixed(2) + " bpm")
+    }
+
     DButton {
         objectName: "sync" + root.deck
         width: (root.width - 3 * root.spacing) * 0.24
@@ -24,6 +36,7 @@ Row {
         group: root.group
         key: "sync_enabled"
         litColor: root.deckColor
+        onClicked: syncLog.restart()
     }
 
     DButton {

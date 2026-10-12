@@ -156,11 +156,18 @@ public final class WindowBridge {
         // The bars' full room while they are visible, nothing while hidden:
         // not the animated value (round 10: the margins went to 0 while the
         // bar was still on screen)
-        final boolean visible = insets.isVisible(WindowInsets.Type.systemBars());
+        // Either bar counts (round 18: isVisible(systemBars()) needs BOTH, so
+        // the navigation bar alone, brought by a tap, was never seen: it never
+        // hid and the app made no room for it)
+        final boolean navVisible = insets.isVisible(WindowInsets.Type.navigationBars());
+        final boolean statusVisible = insets.isVisible(WindowInsets.Type.statusBars());
+        final boolean visible = navVisible || statusVisible;
         sVisible = visible;
-        Insets bars = visible
-                ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
-                : Insets.NONE;
+        Insets bars = Insets.max(
+                navVisible ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars())
+                           : Insets.NONE,
+                statusVisible ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars())
+                              : Insets.NONE);
         // The camera hole (display cutout): nothing may sit under it (Marko,
         // 12.10.2026: "spread the user interface around this hole"). A hole on
         // a side (landscape) or off centre at the top: the app keeps out of

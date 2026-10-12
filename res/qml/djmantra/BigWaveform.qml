@@ -13,6 +13,7 @@ Item {
 
     property string group
     property bool upper: true
+    property real zoom: 3
     readonly property var player: Mixxx.PlayerManager.getPlayer(group)
     // the song's level fills the lane; asked again until the analysis is done
     property real gain: 1
@@ -44,7 +45,11 @@ Item {
 
     Skin.WaveformRow {
         group: root.group
-        visualGain: root.gain
+        // round 18: the waves used ~15 % of the lane: 3x the measured gain
+        // (the shader clips what goes past the edge)
+        visualGain: root.gain * 3
+        zoom: root.zoom
+        showRoll: false
         width: root.width
         height: root.height * 2
         y: root.upper ? 0 : -root.height
