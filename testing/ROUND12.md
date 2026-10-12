@@ -20,3 +20,6 @@ Songs: `tools/android/fetch_test_songs.sh --dest /sdcard/Music` (69 MP3s, skips 
 6. `python3 tools/android/ui_test.py --serial $SERIAL --out $OUT` (round 11 failed: deck 2 hot cue
    pads, the p_mixer / p_deck selectors, landscape mode buttons and pads).
 7. Mix: two songs, SYNC on deck 2, crossfader left → right; One Deck: play, next, previous, a row tap.
+8. **No "Mixxx" on screen** (d594f12): on every screen visited, `adb shell uiautomator dump /sdcard/ui.xml && adb shell grep -c -i mixxx /sdcard/ui.xml`
+   (Qt widgets may not show in the dump: then look at the screenshots). Press Android's back while a deck plays:
+   the box must say "Exit DJ Mantra?". Settings → About may say "Mixxx" only in the Engine line (licence credit).
