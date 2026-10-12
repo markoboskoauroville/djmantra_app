@@ -54,7 +54,7 @@ Section research: `testing/sections/README.md`, manifest `modules/section-detect
   plugged in), the Mix Ultra controller mapping, CPU on V7, genre match on V7.
 - V7 finds ~20 sections per song (every ~8 bars); decide whether the counter resets on all of them or only the
   major ones.
-- `Beats:` log lines carry no file name.
+- `Beats:` log lines carry no file name (fixed in f9e2d7a, from V8).
 - The release build is not debuggable: `run-as` cannot read the app's database; analysis comes through log lines.
 - Donnie Horoscope v23 (astro_dos, report reports/v23.md on branch phone-reports) is half tested and paused:
   zoom / drag / double tap / planet tap PASS, pinch not possible over adb (SELinux), no reset after a 180° turn,
