@@ -1,0 +1,4 @@
+# fix build 0a52eb0, CPU drawing, waveforms tab, both decks playing, pid 23635
+23635 u0_a342      10 -10  19G 543M 208M S  126   7.3   0:59.59 com.djmantra.app
+23635 u0_a342      10 -10  19G 540M 208M S  117   7.2   0:59.92 com.djmantra.app
+23635 u0_a342      10 -10  19G 544M 208M S  123   7.3   1:02.26 com.djmantra.app

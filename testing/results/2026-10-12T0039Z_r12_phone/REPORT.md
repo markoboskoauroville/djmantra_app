@@ -126,3 +126,20 @@ sha256 `02633b30f6e0a9aaac0217e7704e9398ffdbdb17aec4ea22f2f53ee0bef64e6a`, insta
 | 2e | Deck header time | `1:23 / 5:40 / -4:17` | **Cut off on both decks:** deck 1 `0:44 / 5:56 / -5:` (end clipped by the key), deck 2 `18 / 5:11 / -4:53` (the start "0:" is clipped) | FAIL (cosmetic) |
 | 3a | CPU, both decks, GPU on | (measure) | pid 9292, waveforms tab: **92.3 / 89.5 / 70.5 %CPU**; mixer tab: 85.1 / 78.5 / 60.0 %CPU (`cpu-gpu.txt`, measured with `top -p PID`, because `grep djmantra` also matched the grep's own shell). gfxinfo: 23 frames, 90th percentile 250 ms | (measured) |
 | 3b | Settings → "Draw on the GPU" off | Settings opens | **Not reached yet.** From the waveforms tab, the dj logo did not open the menu (5 tries over ~1 min), and a tab tap was ignored too. A minute later the mixer tab responded and the menu opened from there, but a tap on "Settings" / its gear closed the menu without opening Settings (twice, 03:04–03:06). Then the logo stopped opening the menu again. uiautomator showed no hidden dialog. Paused here: Marko stopped the round before the restart for the camera hole request | BLOCKED |
+
+## Fix build 0a52eb0 (run 38190884949, sha256 23f1cf6d…e9c, installed 03:29) — screenshots in `fix/`, each with a `-hole` copy that shows the camera hole (red) and the 126 px line (yellow)
+
+| # | what | expected | what happened | pass/fail |
+|---|---|---|---|---|
+| F1 | CPU drawing by default | `Android: drawing on the CPU` | `03:30:13 Android: drawing on the CPU (software waveforms)` | PASS |
+| F2 | `--play A B` starts both decks | `Deck 1 playing`, `Deck 2 playing` | both logged (03:30:14.811 / .822) | PASS |
+| F3 | VU meters move | strips between the faders | Two green VU strips between the faders, moving (`p-mixer-2.png`) | PASS |
+| F4 | **The app is no longer full screen. Its top and bottom rows are under the Android bars** | nothing under the status bar or the navigation buttons (manifest `system-bars.md`) | `dumpsys window`: `statusBars frame=[0,0][1084,126] visible=true`, `navigationBars frame=[0,2286][1084,2412] visible=true`. The app still lays out over the whole glass. **The clock and the notification icons sit over the dj logo, the Wi-Fi/LTE/battery icons over the Camelot badge, and ◼ ● ◀ over the play/pause buttons and the crossfader** (`p-mixer.png`, `p-mixer-2.png`, `p-waveforms.png`). Still the same 14 s after the start. | **FAIL, blocker** |
+| F5 | Menu → Settings | "Menu: Settings tapped", Settings opens | **Cannot be reached.** A tap on the dj logo (now under the clock, x≈92 y≈67) does nothing, and nothing is logged (`logcat -c` before, no Menu line after). The menu cannot be opened, so Settings cannot be tested | BLOCKED by F4 |
+| F6 | Camera hole | nothing under the hole | The middle of the top row is now free in the app's own layout (logo left, badge right). But with the status bar showing, the whole row is under the bar anyway | blocked by F4 |
+| F7 | Deck counter text fits | whole text visible | Fits now (`1:16 / 5:56 / -4:39`), but the font shrank so much (and it is dim grey) that it is hard to read on the phone: about 9 px high in a 1084-px-wide screenshot | PASS (fits), too small |
+| F8 | Waveforms fill their box | full width | **Still narrow with CPU drawing:** deck 1 ~25 %, deck 2 (Dune) ~25 %, and for a while ~10 % (`p-waveforms.png`, `p-menu.png`). The play line now has its marker on the left edge | FAIL |
+| F9 | Taps answered at once | — | The waveforms tab tap answered within 3 s | PASS |
+| F10 | CPU, CPU drawing, waveforms tab, both decks | (measure) | **126 / 117 / 123 %CPU** (`fix/cpu-cpu-waveforms.txt`), against 92 / 89 / 70 % with GPU drawing in the first build | (measured) |
+
+Stopped here: Marko asked for a new build that fixes everything before steps 4–8, and F4 blocks the menu.
