@@ -245,7 +245,68 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
         pBeats = mixxx::Beats::fromConstTempo(m_sampleRate, mixxx::audio::kStartFramePos, bpm);
     }
 
+    // DJ Mantra: the grid on the beat, not the off-beat. The QM tracker locks
+    // onto the hi-hats in ~27 % of Marko's test songs (half a beat off
+    // rekordbox's grid); the kick band's onsets decide between the grid and
+    // the grid moved by half a beat (right on 74 of 78 songs).
+    if (pBeats && pBeats->hasConstantTempo()) {
+        if (const auto* pQm = dynamic_cast<const mixxx::AnalyzerQueenMaryBeats*>(m_pPlugin.get())) {
+            pBeats = onTheBeat(pBeats, *pQm);
+        }
+    }
     pTrack->trySetBeats(pBeats);
+}
+
+mixxx::BeatsPointer AnalyzerBeats::onTheBeat(const mixxx::BeatsPointer& pBeats,
+        const mixxx::AnalyzerQueenMaryBeats& plugin) const {
+    const std::vector<double>& onsets = plugin.kickOnsets();
+    const int step = plugin.stepSizeFrames();
+    const int window = plugin.windowSize();
+    const int count = static_cast<int>(onsets.size());
+    const mixxx::audio::FramePos first = pBeats->firstBeat();
+    if (count < 100 || step <= 0 || !first.isValid()) {
+        return pBeats;
+    }
+    const mixxx::audio::FramePos second = pBeats->findNextBeat(first + 1);
+    if (!second.isValid()) {
+        return pBeats;
+    }
+    const double beatLength = second - first;
+    const double end = static_cast<double>(count) * step;
+    // the mean of the strongest onset within +-2 steps of each grid line
+    const auto score = [&](double start) {
+        double sum = 0;
+        int n = 0;
+        for (double t = start; t < end - m_sampleRate.toDouble(); t += beatLength) {
+            const int i = static_cast<int>(std::lround((t - window / 2.0) / step));
+            if (i <= 2 || i >= count - 3) {
+                continue;
+            }
+            double best = 0;
+            for (int j = i - 2; j <= i + 2; ++j) {
+                best = std::max(best, onsets[j]);
+            }
+            sum += best;
+            ++n;
+        }
+        return n > 0 ? sum / n : 0.0;
+    };
+    const double onBeat = score(first.value());
+    const double offBeat = score(first.value() + beatLength / 2);
+    if (offBeat <= onBeat) {
+        return pBeats;
+    }
+    double moved = first.value() + beatLength / 2;
+    if (moved >= beatLength) {
+        moved -= beatLength;
+    }
+    const mixxx::Bpm bpm = pBeats->getBpmInRange(
+            mixxx::audio::kStartFramePos, mixxx::audio::FramePos(end));
+    qInfo() << "Beats: the grid moved half a beat onto the kick" << onBeat << "->" << offBeat;
+    return mixxx::Beats::fromConstTempo(m_sampleRate,
+            mixxx::audio::FramePos(moved).toNearestFrameBoundary(),
+            bpm,
+            pBeats->getSubVersion());
 }
 
 // static

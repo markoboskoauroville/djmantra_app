@@ -42,6 +42,20 @@ class AnalyzerQueenMaryBeats : public AnalyzerBeatsPlugin {
         return m_resultBeats;
     }
 
+    /// DJ Mantra: per analysis step, the onset (rise of the log magnitude)
+    /// of the band around 130-175 Hz, the body of the kick. AnalyzerBeats
+    /// uses it to put the grid on the beat, not the off-beat (testing/sections/
+    /// REKORDBOX_COMPARE.md: the right choice on 74 of 78 songs).
+    const std::vector<double>& kickOnsets() const {
+        return m_kickOnsets;
+    }
+    int stepSizeFrames() const {
+        return m_stepSizeFrames;
+    }
+    int windowSize() const {
+        return m_windowSize;
+    }
+
   private:
     std::unique_ptr<DetectionFunction> m_pDetectionFunction;
     DownmixAndOverlapHelper m_helper;
@@ -50,6 +64,12 @@ class AnalyzerQueenMaryBeats : public AnalyzerBeatsPlugin {
     int m_stepSizeFrames;
     std::vector<double> m_detectionResults;
     QVector<mixxx::audio::FramePos> m_resultBeats;
+    // the kick band's log magnitude per step, then its onsets (finalize)
+    std::vector<double> m_kickBand;
+    std::vector<double> m_kickOnsets;
+    std::vector<double> m_kickWindow; // Hann
+    std::vector<double> m_kickCos;    // bins 3 and 4
+    std::vector<double> m_kickSin;
 };
 
 } // namespace mixxx

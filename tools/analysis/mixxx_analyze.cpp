@@ -196,8 +196,31 @@ int main(int argc, char** argv) {
     cfg.adaptiveWhitening = false; cfg.whiteningRelaxCoeff = -1; cfg.whiteningFloor = -1;
     DetectionFunction df(cfg);
     std::vector<double> results;
+    std::vector<double> kickBand; // as AnalyzerQueenMaryBeats (DJ Mantra)
+    std::vector<double> hann(window), cosT(2 * window), sinT(2 * window);
+    const double kPi = 3.14159265358979323846;
+    for (int n = 0; n < window; ++n) {
+        hann[n] = 0.5 - 0.5 * std::cos(2 * kPi * n / (window - 1));
+        for (int b = 0; b < 2; ++b) {
+            cosT[b * window + n] = std::cos(2 * kPi * (3 + b) * n / window);
+            sinT[b * window + n] = std::sin(2 * kPi * (3 + b) * n / window);
+        }
+    }
     Downmix beatHelper;
-    beatHelper.init(window, step, [&](double* w) { results.push_back(df.processTimeDomain(w)); });
+    beatHelper.init(window, step, [&](double* w) {
+        double mag = 0;
+        for (int b = 0; b < 2; ++b) {
+            double re = 0, im = 0;
+            for (int n = 0; n < window; ++n) {
+                const double x = w[n] * hann[n];
+                re += x * cosT[b * window + n];
+                im -= x * sinT[b * window + n];
+            }
+            mag += std::sqrt(re * re + im * im);
+        }
+        kickBand.push_back(std::log1p(mag));
+        results.push_back(df.processTimeDomain(w));
+    });
     // key
     GetKeyMode::Config kc(sr, 440);
     // experiments (the app uses the defaults): KEY_OVERLAP, KEY_HPCP, KEY_MEDIAN
@@ -238,6 +261,26 @@ int main(int argc, char** argv) {
     if (!regions.empty()) {
         bpm = makeConstBpm(regions, sr, &first);
         if (bpm > 0) first = adjustPhase(first, bpm, sr, beatFrames);
+    }
+    // DJ Mantra: the grid on the beat (AnalyzerBeats::onTheBeat), unless NOKICK is set
+    if (bpm > 0 && !getenv("NOKICK") && kickBand.size() > 100) {
+        std::vector<double> on(kickBand.size());
+        for (size_t i = 1; i < kickBand.size(); ++i) on[i] = std::max(0.0, kickBand[i] - kickBand[i - 1]);
+        const int count = (int)on.size();
+        const double bl = 60 * sr / bpm, end = (double)count * step;
+        auto score = [&](double start) {
+            double sum = 0; int n = 0;
+            for (double t = start; t < end - sr; t += bl) {
+                int i = (int)std::lround((t - window / 2.0) / step);
+                if (i <= 2 || i >= count - 3) continue;
+                double best = 0;
+                for (int j = i - 2; j <= i + 2; ++j) best = std::max(best, on[j]);
+                sum += best; ++n;
+            }
+            return n ? sum / n : 0.0;
+        };
+        double f0 = std::fmod(first, bl);
+        if (score(f0 + bl / 2) > score(f0)) { first = f0 + bl / 2; if (first >= bl) first -= bl; }
     }
     // global key: the longest total duration
     std::map<int, double> hist;

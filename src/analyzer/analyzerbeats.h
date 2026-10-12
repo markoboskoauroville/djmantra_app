@@ -6,8 +6,13 @@
 
 #include "analyzer/analyzer.h"
 #include "analyzer/plugins/analyzerplugin.h"
+#include "track/beats.h"
 #include "preferences/beatdetectionsettings.h"
 #include "preferences/usersettings.h"
+
+namespace mixxx {
+class AnalyzerQueenMaryBeats;
+} // namespace mixxx
 
 class AnalyzerBeats : public Analyzer {
   public:
@@ -33,6 +38,10 @@ class AnalyzerBeats : public Analyzer {
 
     BeatDetectionSettings m_bpmSettings;
     std::unique_ptr<mixxx::AnalyzerBeatsPlugin> m_pPlugin;
+    /// DJ Mantra: the grid moved by half a beat when the off-beat lines up
+    /// with the kick better than the grid does
+    mixxx::BeatsPointer onTheBeat(const mixxx::BeatsPointer& pBeats,
+            const mixxx::AnalyzerQueenMaryBeats& plugin) const;
     const bool m_enforceBpmDetection;
     QString m_pluginId;
     bool m_bPreferencesReanalyzeOldBpm;

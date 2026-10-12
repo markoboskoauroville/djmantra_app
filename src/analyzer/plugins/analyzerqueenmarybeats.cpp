@@ -7,6 +7,8 @@
 
 #include "analyzer/constants.h"
 
+#include <cmath>
+
 namespace mixxx {
 namespace {
 
@@ -21,6 +23,7 @@ namespace {
 constexpr float kStepSecs = 0.01161f;
 // results in 43 Hz @ 44.1 kHz / 47 Hz @ 48 kHz / 47 Hz @ 96 kHz
 constexpr int kMaximumBinSizeHz = 50; // Hz
+constexpr double kPi = 3.14159265358979323846;
 
 DFConfig makeDetectionFunctionConfig(int stepSizeFrames, int windowSize) {
     // These are the defaults for the VAMP beat tracker plugin we used in Mixxx
@@ -53,10 +56,37 @@ bool AnalyzerQueenMaryBeats::initialize(mixxx::audio::SampleRate sampleRate) {
     m_windowSize = MathUtilities::nextPowerOfTwo(m_sampleRate / kMaximumBinSizeHz);
     m_pDetectionFunction = std::make_unique<DetectionFunction>(
             makeDetectionFunctionConfig(m_stepSizeFrames, m_windowSize));
+    // DJ Mantra: the kick band (bins 3 and 4 of this window: ~130-175 Hz at
+    // 44.1 kHz), a plain DFT of two bins with a Hann window
+    m_kickBand.clear();
+    m_kickOnsets.clear();
+    m_kickWindow.resize(m_windowSize);
+    m_kickCos.resize(2 * m_windowSize);
+    m_kickSin.resize(2 * m_windowSize);
+    for (int n = 0; n < m_windowSize; ++n) {
+        m_kickWindow[n] = 0.5 - 0.5 * std::cos(2 * kPi * n / (m_windowSize - 1));
+        for (int b = 0; b < 2; ++b) {
+            const double phase = 2 * kPi * (3 + b) * n / m_windowSize;
+            m_kickCos[b * m_windowSize + n] = std::cos(phase);
+            m_kickSin[b * m_windowSize + n] = std::sin(phase);
+        }
+    }
     qDebug() << "input sample rate is " << m_sampleRate << ", step size is " << m_stepSizeFrames;
 
     m_helper.initialize(
             m_windowSize, m_stepSizeFrames, [this](double* pWindow, size_t) {
+                double magnitude = 0;
+                for (int b = 0; b < 2; ++b) {
+                    double re = 0;
+                    double im = 0;
+                    for (int n = 0; n < m_windowSize; ++n) {
+                        const double x = pWindow[n] * m_kickWindow[n];
+                        re += x * m_kickCos[b * m_windowSize + n];
+                        im -= x * m_kickSin[b * m_windowSize + n];
+                    }
+                    magnitude += std::sqrt(re * re + im * im);
+                }
+                m_kickBand.push_back(std::log1p(magnitude));
                 // TODO(rryan) reserve?
                 m_detectionResults.push_back(
                         m_pDetectionFunction->processTimeDomain(pWindow));
@@ -111,6 +141,11 @@ bool AnalyzerQueenMaryBeats::finalize() {
         m_resultBeats.push_back(result);
     }
 
+    m_kickOnsets.resize(m_kickBand.size());
+    for (size_t i = 0; i < m_kickBand.size(); ++i) {
+        m_kickOnsets[i] = i == 0 ? 0 : std::max(0.0, m_kickBand[i] - m_kickBand[i - 1]);
+    }
+    m_kickBand.clear();
     m_pDetectionFunction.reset();
     return true;
 }
