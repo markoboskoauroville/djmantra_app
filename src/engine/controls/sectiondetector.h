@@ -42,6 +42,17 @@ QList<int> sectionBeatsV2(const std::vector<std::array<double, 3>>& points,
         const std::vector<double>& beats,
         int beatsPerBar = 4);
 
+/// Detector v3 (V6): the same bars as v2 (its downbeat vote), then a small
+/// logistic model learned from rekordbox 7's phrase analysis of Marko's songs
+/// (testing/sections/learn; sections.py detector_v3 is the same in Python):
+/// per bar the novelty (checkerboard 1 / 2 / 4 / 8 bars), the band changes
+/// over 1 / 2 / 4 bars, the 4 / 8 / 16-bar position and the energy; peaks at
+/// least 3 bars apart. Out: the beats (indices into `beats`) where a phrase
+/// starts. Against rekordbox's phrase starts, within one bar: F1 0.50 (v2 0.31).
+QList<int> sectionBeatsV3(const std::vector<std::array<double, 3>>& points,
+        const std::vector<double>& beats,
+        int beatsPerBar = 4);
+
 /// The section starts of a whole track (frames), empty while the waveform
 /// is not complete or without beats
 QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,

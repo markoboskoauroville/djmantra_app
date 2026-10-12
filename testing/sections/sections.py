@@ -222,6 +222,73 @@ def detector_v2(lmh, beats, n_frames):
     return starts, major, phase
 
 
+# ---------- D: detector v3 = the model learned from rekordbox's phrases (testing/sections/learn) ----------
+# The same bars as v2 (its downbeat vote), then per bar: novelty (checkerboard 1 / 2 / 4 / 8 bars), band
+# changes over 1 / 2 / 4 bars, the 4 / 8 / 16-bar position, the energy -> logistic model -> peaks 3 bars apart.
+V3_W = [-0.209382, 0.453735, 0.252804, -0.19666, 0.210246, 0.123065, -0.125752, 0.169679, -0.0496278, 0.0465346,
+        -0.119272, -0.0208984, -0.0993343, 0.228287, 0.211971, -0.0247236, -0.0761221, -0.04336, -0.336709, 0.20421]
+V3_B = -0.17862991077174878
+V3_MU = [0.280492, 0.208267, 0.162295, 0.173146, 0.191839, 0.275827, 0.267643, 0.168424, 0.250137, 0.240638,
+         0.170458, 0.219792, 0.229267, 0.349417, 0.252799, 0.128049, 0.0658737, 0.0143942, 0.0143942, 4.58622]
+V3_SD = [0.258823, 0.205962, 0.18109, 0.195467, 0.280045, 0.298463, 0.354939, 0.281898, 0.292713, 0.332933,
+         0.27281, 0.264326, 0.316374, 0.358401, 0.434617, 0.334144, 0.248061, 0.119109, 0.119109, 0.716047]
+V3_THRESHOLD = 0.5
+V3_GAP = 3
+
+
+def bar_features(b3, q):
+    nb = len(b3)
+    L = np.log1p(b3)
+    f = zscore(np.c_[3 * L, q])
+    f = f / (np.linalg.norm(f, axis=1, keepdims=True) + 1e-9)
+    ssm = f @ f.T
+    nov = {h: checker_novelty(ssm, h) for h in (1, 2, 4, 8)}
+
+    def change(w):
+        o = np.zeros((nb, 3))
+        for i in range(w, nb - w + 1):
+            o[i] = np.abs(np.log((b3[i:i + w].mean(0) + 4) / (b3[i - w:i].mean(0) + 4)))
+        return o
+    c1, c2, c4 = change(1), change(2), change(4)
+    k = np.arange(nb)
+    return np.c_[nov[1], nov[2], nov[4], nov[8], c1, c2, c4, c4.max(1),
+                 (k % 4 == 0), (k % 8 == 0), (k % 16 == 0), (k < 2), (k > nb - 3), L.sum(1) / 3]
+
+
+def detector_v3(lmh, beats, n_frames):
+    """Returns (bar starts in frames, section start bars)."""
+    lmh = np.asarray(lmh, float)
+    best = (-1, 0)
+    for p in range(4):
+        bs = beats[p::4]
+        if len(bs) < 12:
+            continue
+        f = per_span(lmh, bs[:-1], bs[1:])
+        ch = np.abs(np.diff(np.log1p(f), axis=0)).sum()
+        if ch > best[0]:
+            best = (ch, p)
+    bars = beats[best[1]::4]
+    starts, ends = bars[:-1], bars[1:]
+    if len(starts) < 16:
+        return starts, []
+    b3 = per_span(lmh, starts, ends)
+    b3 = 230 * b3 / (b3.max(axis=0) + 1e-9)
+    q = []
+    for s0, e0 in zip(starts, ends):
+        edges = np.linspace(s0, e0, 5)
+        q.append(np.concatenate([per_span(lmh, edges[i:i + 1], edges[i + 1:i + 2])[0] for i in range(4)]))
+    q = np.log1p(np.array(q))
+    X = (bar_features(b3, q) - np.array(V3_MU)) / np.array(V3_SD)
+    prob = 1 / (1 + np.exp(-(X @ np.array(V3_W) + V3_B)))
+    out = []
+    for i in np.argsort(-prob, kind="stable"):
+        if prob[i] < V3_THRESHOLD:
+            break
+        if all(abs(i - j) >= V3_GAP for j in out):
+            out.append(int(i))
+    return starts, sorted(out)
+
+
 def compare(found, truth, tol=0):
     """exact, off (1-4 bars), missed, false: found vs truth (bars)."""
     exact = sum(any(abs(f - t) <= tol for f in found) for t in truth)

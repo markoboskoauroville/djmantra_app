@@ -153,6 +153,39 @@ TEST(PhraseControlTest, detectorV2FindsKickBreakdownAndBass) {
     EXPECT_TRUE(djmantra::sectionBeatsV2(steady, steadyBeats, 4).isEmpty());
 }
 
+TEST(PhraseControlTest, detectorV3FindsKickBreakdownAndBass) {
+    // the arrangement of detectorV2FindsKickBreakdownAndBass, through the
+    // model learned from rekordbox's phrases
+    std::vector<std::array<double, 3>> points(40, {5, 5, 5});
+    std::vector<double> beats;
+    for (int bar = 0; bar < 96; ++bar) {
+        for (int beat = 0; beat < 4; ++beat) {
+            beats.push_back(static_cast<double>(points.size()));
+            const bool kick = (bar >= 16 && bar < 48) || bar >= 64;
+            for (int j = 0; j < 20; ++j) {
+                double low = kick ? (j < 4 ? 200 : 20) : 10;
+                if (bar >= 64) {
+                    low += 40;
+                }
+                const double mid = bar >= 48 && bar < 64 ? 120 : 30;
+                const double high = j >= 8 && j < 12 ? 60 : 20;
+                points.push_back({low, mid, high});
+            }
+        }
+    }
+    beats.push_back(static_cast<double>(points.size()));
+    EXPECT_EQ(QList<int>({64, 192, 256}), djmantra::sectionBeatsV3(points, beats, 4));
+    std::vector<std::array<double, 3>> steady;
+    std::vector<double> steadyBeats;
+    for (int beat = 0; beat < 96 * 4; ++beat) {
+        steadyBeats.push_back(static_cast<double>(steady.size()));
+        for (int j = 0; j < 20; ++j) {
+            steady.push_back({j < 4 ? 200.0 : 20.0, 30, 20});
+        }
+    }
+    EXPECT_TRUE(djmantra::sectionBeatsV3(steady, steadyBeats, 4).isEmpty());
+}
+
 TEST(PhraseControlTest, sectionsWhereTheArrangementChanges) {
     // 16 bars without bass, 16 with, 16 without the highs, 16 as before
     QList<std::array<double, 3>> bars;

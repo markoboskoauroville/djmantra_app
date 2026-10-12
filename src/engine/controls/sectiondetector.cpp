@@ -378,6 +378,203 @@ QList<int> sectionBeatsV2(const std::vector<std::array<double, 3>>& points,
     return result;
 }
 
+namespace {
+
+// The learned model (testing/sections/learn/learn.py, 12.10.2026)
+constexpr int kV3Features = 20;
+constexpr double kV3W[kV3Features] = {-0.209382, 0.453735, 0.252804, -0.19666, 0.210246, 0.123065,
+        -0.125752, 0.169679, -0.0496278, 0.0465346, -0.119272, -0.0208984, -0.0993343, 0.228287,
+        0.211971, -0.0247236, -0.0761221, -0.04336, -0.336709, 0.20421};
+constexpr double kV3B = -0.17862991077174878;
+constexpr double kV3Mu[kV3Features] = {0.280492, 0.208267, 0.162295, 0.173146, 0.191839, 0.275827,
+        0.267643, 0.168424, 0.250137, 0.240638, 0.170458, 0.219792, 0.229267, 0.349417, 0.252799,
+        0.128049, 0.0658737, 0.0143942, 0.0143942, 4.58622};
+constexpr double kV3Sd[kV3Features] = {0.258823, 0.205962, 0.18109, 0.195467, 0.280045, 0.298463,
+        0.354939, 0.281898, 0.292713, 0.332933, 0.27281, 0.264326, 0.316374, 0.358401, 0.434617,
+        0.334144, 0.248061, 0.119109, 0.119109, 0.716047};
+constexpr double kV3Threshold = 0.5;
+constexpr int kV3Gap = 3;
+
+} // namespace
+
+QList<int> sectionBeatsV3(const std::vector<std::array<double, 3>>& points,
+        const std::vector<double>& beats,
+        int beatsPerBar) {
+    QList<int> result;
+    if (beatsPerBar < 1) {
+        beatsPerBar = 4;
+    }
+    if (points.empty() || beats.size() < static_cast<size_t>(16 * beatsPerBar)) {
+        return result;
+    }
+    const auto logBands = [](const Bands& b) {
+        return Bands{std::log1p(b[0]), std::log1p(b[1]), std::log1p(b[2])};
+    };
+    // The downbeat: as v2
+    int downbeat = 0;
+    double bestChange = -1;
+    for (int p = 0; p < beatsPerBar; ++p) {
+        double change = 0;
+        Bands previous{};
+        bool first = true;
+        for (size_t i = p; i + beatsPerBar < beats.size(); i += beatsPerBar) {
+            const Bands now = logBands(spanMean(points, beats[i], beats[i + beatsPerBar]));
+            if (!first) {
+                for (int c = 0; c < 3; ++c) {
+                    change += std::fabs(now[c] - previous[c]);
+                }
+            }
+            previous = now;
+            first = false;
+        }
+        if (change > bestChange) {
+            bestChange = change;
+            downbeat = p;
+        }
+    }
+    std::vector<int> barBeat;
+    for (size_t i = downbeat; i + beatsPerBar < beats.size(); i += beatsPerBar) {
+        barBeat.push_back(static_cast<int>(i));
+    }
+    const int nb = static_cast<int>(barBeat.size());
+    if (nb < 16) {
+        return result;
+    }
+    // Per bar: the bands (0..230 per band's peak) and their quarters
+    std::vector<Bands> b3(nb);
+    std::vector<std::array<double, 12>> quarters(nb);
+    Bands peak{1e-9, 1e-9, 1e-9};
+    for (int k = 0; k < nb; ++k) {
+        const double from = beats[barBeat[k]];
+        const double to = beats[barBeat[k] + beatsPerBar];
+        b3[k] = spanMean(points, from, to);
+        for (int q = 0; q < 4; ++q) {
+            const Bands m = logBands(spanMean(points,
+                    from + (to - from) * q / 4,
+                    from + (to - from) * (q + 1) / 4));
+            for (int c = 0; c < 3; ++c) {
+                quarters[k][q * 3 + c] = m[c];
+            }
+        }
+        for (int c = 0; c < 3; ++c) {
+            peak[c] = std::max(peak[c], b3[k][c]);
+        }
+    }
+    for (auto& b : b3) {
+        for (int c = 0; c < 3; ++c) {
+            b[c] = 230 * b[c] / peak[c];
+        }
+    }
+    // The bars' self-similarity (bands + rhythm), z-scored, cosine
+    constexpr int kDims = 15;
+    std::vector<std::array<double, kDims>> f(nb);
+    for (int k = 0; k < nb; ++k) {
+        for (int c = 0; c < 3; ++c) {
+            f[k][c] = 3 * std::log1p(b3[k][c]);
+        }
+        for (int i = 0; i < 12; ++i) {
+            f[k][3 + i] = quarters[k][i];
+        }
+    }
+    for (int d = 0; d < kDims; ++d) {
+        double mean = 0;
+        for (int k = 0; k < nb; ++k) {
+            mean += f[k][d] / nb;
+        }
+        double var = 0;
+        for (int k = 0; k < nb; ++k) {
+            var += (f[k][d] - mean) * (f[k][d] - mean) / nb;
+        }
+        const double sd = std::sqrt(var) + 1e-6;
+        for (int k = 0; k < nb; ++k) {
+            f[k][d] = (f[k][d] - mean) / sd;
+        }
+    }
+    for (auto& row : f) {
+        double norm = 0;
+        for (double v : row) {
+            norm += v * v;
+        }
+        norm = std::sqrt(norm) + 1e-9;
+        for (double& v : row) {
+            v /= norm;
+        }
+    }
+    std::vector<std::vector<double>> ssm(nb, std::vector<double>(nb));
+    for (int i = 0; i < nb; ++i) {
+        for (int j = 0; j < nb; ++j) {
+            double dot = 0;
+            for (int d = 0; d < kDims; ++d) {
+                dot += f[i][d] * f[j][d];
+            }
+            ssm[i][j] = dot;
+        }
+    }
+    const auto nov1 = checkerNovelty(ssm, 1);
+    const auto nov2 = checkerNovelty(ssm, 2);
+    const auto nov4 = checkerNovelty(ssm, 4);
+    const auto nov8 = checkerNovelty(ssm, 8);
+    // Band changes over w bars: |log((after + 4) / (before + 4))| per band
+    const auto change = [&](int w, int k, int c) {
+        if (k < w || k > nb - w) {
+            return 0.0;
+        }
+        double before = 0;
+        double after = 0;
+        for (int i = 0; i < w; ++i) {
+            before += b3[k - w + i][c] / w;
+            after += b3[k + i][c] / w;
+        }
+        return std::fabs(std::log((after + kFloor) / (before + kFloor)));
+    };
+    std::vector<double> prob(nb);
+    for (int k = 0; k < nb; ++k) {
+        double x[kV3Features];
+        x[0] = nov1[k];
+        x[1] = nov2[k];
+        x[2] = nov4[k];
+        x[3] = nov8[k];
+        double c4max = 0;
+        for (int c = 0; c < 3; ++c) {
+            x[4 + c] = change(1, k, c);
+            x[7 + c] = change(2, k, c);
+            x[10 + c] = change(4, k, c);
+            c4max = std::max(c4max, x[10 + c]);
+        }
+        x[13] = c4max;
+        x[14] = k % 4 == 0 ? 1 : 0;
+        x[15] = k % 8 == 0 ? 1 : 0;
+        x[16] = k % 16 == 0 ? 1 : 0;
+        x[17] = k < 2 ? 1 : 0;
+        x[18] = k > nb - 3 ? 1 : 0;
+        x[19] = (std::log1p(b3[k][0]) + std::log1p(b3[k][1]) + std::log1p(b3[k][2])) / 3;
+        double z = kV3B;
+        for (int i = 0; i < kV3Features; ++i) {
+            z += kV3W[i] * (x[i] - kV3Mu[i]) / kV3Sd[i];
+        }
+        prob[k] = 1 / (1 + std::exp(-z));
+    }
+    std::vector<int> order(nb);
+    for (int k = 0; k < nb; ++k) {
+        order[k] = k;
+    }
+    std::stable_sort(order.begin(), order.end(), [&](int a, int b) { return prob[a] > prob[b]; });
+    std::vector<int> peaks;
+    for (int k : order) {
+        if (prob[k] < kV3Threshold) {
+            break;
+        }
+        if (std::all_of(peaks.begin(), peaks.end(), [k](int p) { return std::abs(k - p) >= kV3Gap; })) {
+            peaks.push_back(k);
+        }
+    }
+    std::sort(peaks.begin(), peaks.end());
+    for (int k : peaks) {
+        result.append(barBeat[k]);
+    }
+    return result;
+}
+
 QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         const mixxx::BeatsPointer& pBeats,
         mixxx::audio::FramePos one,
@@ -412,7 +609,7 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         }
         beat = next;
     }
-    for (int index : sectionBeatsV2(points, beats, beatsPerBar)) {
+    for (int index : sectionBeatsV3(points, beats, beatsPerBar)) {
         result.append(beatFrames[index]);
     }
     return result;
