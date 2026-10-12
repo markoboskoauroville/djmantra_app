@@ -5,6 +5,11 @@ name: Android
 
 on:
   push:
+    # test reports and notes do not need a build (the tester pushes after every part)
+    paths-ignore:
+      - "testing/**"
+      - "docs/**"
+      - "**.md"
   pull_request:
   workflow_dispatch:
 
