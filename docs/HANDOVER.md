@@ -5,7 +5,24 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 12.10.2026 07:15 UTC (latest): the redesign, waiting for round 17
+## 12.10.2026 17:00 UTC (latest): test rounds 22-26, the loop runs by itself
+
+- Builder: this cloud session (branch `ccr-eb7d1019-d3kubd`). Tester: the local session on Marko's Mac (it watches
+  for `testing/ROUND<N>.md` + a green Android run, pushes `testing/results/*_r<N>_phone/REPORT.md`, messages each part).
+  This cloud session cannot message the tester back (auth): the ROUND file is the signal.
+- Round 26 (a5fd87c): parts 0-3 PASS; paused while Marko uses the phone; parts 4 (CPU) and 5 (genre match) next.
+- Fixed in rounds 22-26: audio router reads the outputs over JNI (no `__OBOE__` in the QML lib); Deezer plain search,
+  English (`Accept-Language: en`), artist must match, match logged, Croatian saved genres re-looked up; CUE on a
+  paused deck returns to the cue (`cue_gotoandstop`), cue set when the deck reaches the beat, only a hand-pressed beat
+  sets the cue; AUTO PHASE never moves the on-air deck, ignores a CUE preview; hidden tabs are Loaders; 60 fps cap
+  (WindowBridge.limitFrameRate); Android MIDI controller woken by data, not polled; `ControlProxy.maxRate` (C++)
+  throttles playposition (4-10 Hz displays, 60 Hz waveforms) and VU (20 Hz); AUTOMIX EQ values logged; Settings ←
+  fixed; tap map logged again 6 s after the start.
+- CPU (both decks playing, % of a core): r25 Songs 39, Keys 43, Mixer 58, Phrasing 65 (render thread ~21 %).
+- Open: landscape layout (song list ~3 rows, small wheel); router with the Mix Ultra / Bluetooth plugged in (needs
+  Marko); BPM cap at 150 (Marko's answer pending); the strict Deezer query never matches (only the plain one does).
+
+## 12.10.2026 07:15 UTC: the redesign, waiting for round 17
 
 - Cloud session "DJ mantra app testing" (session_01Ggm1Tq5a9mnY3wAZMMS9jh), branch
   `ccr-eb7d1019-d3kubd`. Head a91fd92 (= ca2e6ee + a test fix). Android of ca2e6ee is green.
