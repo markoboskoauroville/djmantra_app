@@ -67,10 +67,13 @@ Row {
         onPressedDown: {
             if (playControl.value > 0) {
                 playControl.value = 0;
-            } else if (!(root.matrixDeck && root.matrixDeck.align())) {
+                Mixxx.DJMantra.log("button " + root.group + ",play 0");
+            } else if (root.matrixDeck && root.matrixDeck.align()) {
+                Mixxx.DJMantra.log("button " + root.group + ",play armed (aligned start)");
+            } else {
                 playControl.value = 1;
+                Mixxx.DJMantra.log("button " + root.group + ",play 1");
             }
-            Mixxx.DJMantra.log("button " + root.group + ",play " + playControl.value);
         }
     }
 

@@ -18,8 +18,24 @@ Rectangle {
     property string sortKey: ""
     property bool sortUp: true
     property int filled: 0
+    readonly property int analysisLeft: Mixxx.DJMantra.analysisLeft
 
     ListModel { id: songs }
+
+    Connections {
+        // a song analysed in advance: its BPM / key into the list
+        target: Mixxx.DJMantra
+        function onAnalysisChanged() {
+            for (let i = 0; i < songs.count; ++i) {
+                const r = songs.get(i);
+                if (r.isFolder || (r.bpm > 0 && r.key !== ""))
+                    continue;
+                const info = Mixxx.DJMantra.songInfo(r.path);
+                if ((info.bpm || 0) !== r.bpm || (info.key || "") !== r.key)
+                    songs.set(i, {bpm: info.bpm || 0, key: info.key || ""});
+            }
+        }
+    }
 
     onEntriesChanged: {
         songs.clear();
@@ -51,6 +67,16 @@ Rectangle {
             }
             if (root.filled >= songs.count) {
                 stop();
+                // the songs without a BPM or key: analysed in advance, in the
+                // background (Marko, round 19)
+                const missing = [];
+                for (let i = 0; i < songs.count; ++i) {
+                    const r = songs.get(i);
+                    if (!r.isFolder && (r.bpm <= 0 || r.key === ""))
+                        missing.push(r.path);
+                }
+                if (missing.length > 0)
+                    Mixxx.DJMantra.analyzeAhead(missing);
                 if (root.sortKey !== "")
                     root.sortBy(root.sortKey, root.sortUp);
             }
@@ -146,7 +172,8 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
-            text: root.deck === "[Channel1]" ? qsTr("tap a song: deck 1")
+            text: root.analysisLeft > 0 ? qsTr("analysing BPM / key: %1 left").arg(root.analysisLeft)
+                    : root.deck === "[Channel1]" ? qsTr("tap a song: deck 1")
                     : root.deck === "[Channel2]" ? qsTr("tap a song: deck 2") : qsTr("tap a song: free deck")
             color: root.deck !== "" ? Style.accent : Style.subText
             font.pixelSize: 12

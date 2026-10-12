@@ -224,6 +224,8 @@ Window {
                 width: parent.width
                 height: 38
                 phase: autoPhase
+                // the LED map changes with the beat count
+                onBeatsChanged: mapTimer.restart()
             }
 
             MatrixDisplay {

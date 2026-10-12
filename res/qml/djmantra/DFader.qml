@@ -9,6 +9,8 @@ Item {
 
     property string group
     property string key
+    // in the tap map of the phone tests (round 19: the Mixer tab had none)
+    objectName: "fader_" + group + "," + key
     property bool vertical: true
     property color barColor: Style.accent
 

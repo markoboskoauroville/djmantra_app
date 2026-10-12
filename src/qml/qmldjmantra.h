@@ -6,6 +6,7 @@
 #include <QVariantList>
 #include <QVariantMap>
 
+#include "analyzer/trackanalysisscheduler.h"
 #include "preferences/usersettings.h"
 #include "track/track_decl.h"
 
@@ -30,6 +31,8 @@ class QmlDJMantra : public QObject {
     Q_PROPERTY(QString version READ version CONSTANT)
     /// The screen's rounded corner radius (dp): the app keeps out of it
     Q_PROPERTY(int cornerRadius READ cornerRadius NOTIFY insetsChanged)
+    /// Songs still waiting for their BPM / key analysis (0: none)
+    Q_PROPERTY(int analysisLeft READ analysisLeft NOTIFY analysisChanged)
   public:
     explicit QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent = nullptr);
 
@@ -46,6 +49,9 @@ class QmlDJMantra : public QObject {
         return m_insets[3];
     }
     QString version() const;
+    int analysisLeft() const {
+        return m_analysisLeft;
+    }
     int cornerRadius() const {
         return m_cornerRadius;
     }
@@ -87,6 +93,11 @@ class QmlDJMantra : public QObject {
     /// A song's {artist, title, bpm, key (Camelot), cover (image URL or "")}:
     /// from the library, the file added to it (tags read) when new
     Q_INVOKABLE QVariantMap songInfo(const QString& path) const;
+    /// BPM and key in advance (Marko, round 19: "automating BPM scanning of the
+    /// songs shown in a playlist ... in advance ... also the key"): the songs
+    /// without them are analysed in the background, one at a time, at low
+    /// priority, without their waveform; the results go into the library.
+    Q_INVOKABLE void analyzeAhead(const QStringList& paths);
 
     /// Hides the status and navigation bars again
     Q_INVOKABLE void hideBars();
@@ -114,6 +125,8 @@ class QmlDJMantra : public QObject {
 
   signals:
     void insetsChanged();
+    /// One more song analysed (the list reads its BPM / key again)
+    void analysisChanged();
 
   protected:
     bool eventFilter(QObject* pObject, QEvent* pEvent) override;
@@ -134,6 +147,8 @@ class QmlDJMantra : public QObject {
     qint64 m_lastCpuAtMs = 0;
     QString m_gpuSource; // the GPU load file that works on this phone
     bool m_gpuProbed = false;
+    TrackAnalysisScheduler::Pointer m_pAnalysis = TrackAnalysisScheduler::NullPointer();
+    int m_analysisLeft = 0;
 };
 
 } // namespace qml

@@ -18,8 +18,12 @@ QtObject {
     readonly property color earth: "#6CCB72"
     readonly property color air: "#F2D35B"
     readonly property color water: "#5AA2F0"
-    readonly property color deck1: earth
-    readonly property color deck2: water
+    // both decks yellow (Marko, round 19: "I prefer yellow color for both
+    // players: their times and also beat LEDs and buttons"); the marked states
+    // (beat 1 lit, a beat waiting to launch / jump) are white instead
+    readonly property color deck1: accent
+    readonly property color deck2: accent
+    readonly property color marked: "#FFFFFF"
     readonly property color orange: fire        // CUE
     readonly property color red: fire
     readonly property int gap: 6

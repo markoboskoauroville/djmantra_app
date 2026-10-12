@@ -12,6 +12,8 @@ Item {
 
     property string group
     property string key
+    // in the tap map of the phone tests (round 19: the Mixer tab had none)
+    objectName: "knob_" + group + "," + key
     property string label
     property color arcColor: Style.accent
     // a double tap: the knob's rest position (EQs: the top = 0 dB, cut only)

@@ -28,8 +28,8 @@ Item {
     // rest (at most half the page). Landscape: the two decks' LEDs side by side.
     readonly property bool wide: width > height * 1.2
     readonly property int ledRows: Math.max(1, Math.ceil((deck1 ? deck1.cells : 8) / 8))
-    readonly property real ledNeed: wide ? ledRows * 46 + (ledRows - 1) * 5 + 12
-                                         : 2 * (ledRows * 46 + (ledRows - 1) * 5 + 12) + Style.gap
+    readonly property real ledNeed: wide ? ledRows * 46 + (ledRows - 1) * 3 + 8
+                                         : 2 * (ledRows * 46 + (ledRows - 1) * 3 + 8) + Style.gap
 
     Rectangle {
         id: waves
@@ -38,8 +38,12 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: Style.gap
-        height: Math.max(60, Math.min((root.height - 3 * Style.gap) * 0.5,
-                                      root.height - 3 * Style.gap - root.ledNeed))
+        // round 19: at 32 beats the LEDs were 37 dp under a 60 px strip: the
+        // waveforms step aside when there is no room for a useful strip
+        readonly property real room: Math.min((root.height - 3 * Style.gap) * 0.5,
+                                              root.height - 3 * Style.gap - root.ledNeed)
+        height: room >= 60 ? room : 0
+        visible: height > 0
         radius: 6
         color: "#05070f"
         clip: true
@@ -102,7 +106,7 @@ Item {
         id: leds
 
         columns: root.wide ? 2 : 1
-        anchors.top: waves.bottom
+        anchors.top: waves.visible ? waves.bottom : parent.top
         anchors.topMargin: Style.gap
         anchors.bottom: parent.bottom
         anchors.bottomMargin: Style.gap
@@ -134,9 +138,9 @@ Item {
                     id: grid
 
                     anchors.fill: parent
-                    anchors.margins: 6
+                    anchors.margins: 4
                     columns: 8
-                    rowSpacing: 5
+                    rowSpacing: 3
                     columnSpacing: 5
 
                     Repeater {
@@ -156,9 +160,9 @@ Item {
                             height: (grid.height - (panel.rows - 1) * grid.rowSpacing) / panel.rows
                             radius: 3
                             color: area.pressed ? Style.pressed
-                                    : (lit || (armed && blink)) ? (index % 8 === 0 || armed ? Style.accent : panel.deck.deckColor)
+                                    : (lit || (armed && blink)) ? (index % 8 === 0 || armed ? Style.marked : panel.deck.deckColor)
                                     : index % 8 === 0 ? "#4a4326" : "#1d2550"
-                            border.color: armed ? Style.accent : "transparent"
+                            border.color: armed ? Style.marked : "transparent"
                             border.width: armed ? 2 : 0
 
                             Timer {

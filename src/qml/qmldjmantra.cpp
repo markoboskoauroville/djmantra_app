@@ -506,6 +506,62 @@ QVariantMap QmlDJMantra::songInfo(const QString& path) const {
     return info;
 }
 
+void QmlDJMantra::analyzeAhead(const QStringList& paths) {
+    const auto pLibrary = QmlLibraryProxy::library();
+    if (!pLibrary) {
+        return;
+    }
+    QList<AnalyzerScheduledTrack> tracks;
+    for (const auto& path : paths) {
+        const TrackPointer pTrack = pLibrary->trackCollectionManager()->getOrAddTrack(
+                TrackRef::fromFilePath(path));
+        if (!pTrack || !pTrack->getId().isValid()) {
+            continue;
+        }
+        const bool hasKey = djmantra::camelot::fromKey(pTrack->getKey()).isValid();
+        if (pTrack->getBpm() > 0 && hasKey) {
+            continue;
+        }
+        tracks.append(AnalyzerScheduledTrack(pTrack->getId()));
+    }
+    if (tracks.isEmpty()) {
+        return;
+    }
+    if (!m_pAnalysis) {
+        // One thread, low priority, beats and key only (no waveform): the
+        // decks' sound must not drop while it runs
+        m_pAnalysis = pLibrary->createTrackAnalysisScheduler(1,
+                static_cast<AnalyzerModeFlags>(
+                        AnalyzerModeFlags::WithBeats | AnalyzerModeFlags::LowPriority));
+        connect(m_pAnalysis.get(),
+                &TrackAnalysisScheduler::progress,
+                this,
+                [this](AnalyzerProgress, int current, int total) {
+                    const int left = std::max(0, total - current);
+                    if (left != m_analysisLeft) {
+                        m_analysisLeft = left;
+                        emit analysisChanged();
+                    }
+                });
+        connect(m_pAnalysis.get(), &TrackAnalysisScheduler::finished, this, [this] {
+            qInfo() << "Quick: analysis in advance finished";
+            m_analysisLeft = 0;
+            emit analysisChanged();
+            // deleted later, not from inside its own signal
+            QTimer::singleShot(0, this, [this] {
+                if (m_analysisLeft == 0) {
+                    m_pAnalysis.reset();
+                }
+            });
+        });
+    }
+    const int scheduled = m_pAnalysis->scheduleTracks(tracks);
+    m_pAnalysis->resume();
+    m_analysisLeft += scheduled;
+    emit analysisChanged();
+    qInfo() << "Quick: analysing" << scheduled << "songs in advance (BPM, key)";
+}
+
 void QmlDJMantra::setQuickInterface(bool on) {
     if (m_pConfig) {
         m_pConfig->setValue(kClassicKey, !on);

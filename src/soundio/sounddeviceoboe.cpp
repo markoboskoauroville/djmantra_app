@@ -94,6 +94,8 @@ oboe::Result SoundDeviceOboe::openStream() {
             ->setSampleRate(static_cast<int32_t>(m_sampleRate.value()))
             ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Medium)
             ->setFramesPerDataCallback(static_cast<int32_t>(m_configFramesPerBuffer))
+            // room for 3 callbacks (round 19: the capacity was 2 callbacks)
+            ->setBufferCapacityInFrames(static_cast<int32_t>(4 * m_configFramesPerBuffer))
             ->setUsage(oboe::Usage::Media)
             ->setContentType(oboe::ContentType::Music)
             ->setDataCallback(this)

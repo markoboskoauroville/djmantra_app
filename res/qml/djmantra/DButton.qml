@@ -92,13 +92,17 @@ Rectangle {
         anchors.fill: parent
         onPressed: {
             root.pressedDown();
-            if (root.key !== "" && root.mode === "push")
+            if (root.key !== "" && root.mode === "push") {
                 control.value = 1;
+                Mixxx.DJMantra.log("button " + root.group + "," + root.key + " pressed");
+            }
             // toggles act on the press (round 17: Marko's PLAY "doesn't work":
-            // a finger that slides a little lost the click)
+            // a finger that slides a little lost the click); the log names the
+            // new value (round 19: the proxy's value lagged behind)
             if (root.key !== "" && root.mode === "toggle") {
-                control.value = control.value > 0 ? 0 : 1;
-                Mixxx.DJMantra.log("button " + root.group + "," + root.key + " " + control.value);
+                const next = control.value > 0 ? 0 : 1;
+                control.value = next;
+                Mixxx.DJMantra.log("button " + root.group + "," + root.key + " " + next);
             }
         }
         onReleased: {

@@ -40,13 +40,13 @@ STUB = {
                          " function getPlayer(group) { return null; }\n}\n",
     "DJMantra.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
                     " property int insetLeft: 0\n property int insetTop: 0\n property int insetRight: 0\n"
-                    " property int insetBottom: 0\n property string version: \"0\"\n property int cornerRadius: 40\n"
+                    " property int insetBottom: 0\n property string version: \"0\"\n property int cornerRadius: 40\n property int analysisLeft: 0\n signal analysisChanged()\n"
                     " function camelot(k) { return \"8A\"; }\n function musicalName(c) { return \"\"; }\n"
                     " function keyMatch(a, b) { return ({}); }\n function keyMatchShift(a, b) { return 0; }\n function formatTime(s) { return \"0:00\"; }\n"
                     " function barBeat(n, p) { return \"1.1\"; }\n function barsBeatsLeft(b, p) { return \"-0.0\"; }\n"
                     " function waveformGain(g, l) { return 0; }\n function isPlaying(g) { return false; }\n"
                     " function freeDeck() { return \"[Channel1]\"; }\n function noteLoaded(g) {}\n"
-                    " function musicRoots() { return []; }\n function listFolder(f) { return [{name: \"a\", path: \"/m/a.mp3\", isFolder: false}]; }\n function songInfo(p) { return ({artist: \"Artist\", title: \"Title\", bpm: 124, key: \"8A\", cover: \"\"}); }\n"
+                    " function musicRoots() { return []; }\n function listFolder(f) { return [{name: \"a\", path: \"/m/a.mp3\", isFolder: false}]; }\n function analyzeAhead(p) {}\n function songInfo(p) { return ({artist: \"Artist\", title: \"Title\", bpm: 124, key: \"8A\", cover: \"\"}); }\n"
                     " function hideBars() {}\n function showBars() {}\n function barsVisible() { return false; }\n function usage() { return ({cpu: 34, gpu: -1}); }\n function sections(g) { return []; }\n function setQuickInterface(on) {}\n"
                     " function quickInterface() { return true; }\n function log(t) {}\n}\n",
 }
