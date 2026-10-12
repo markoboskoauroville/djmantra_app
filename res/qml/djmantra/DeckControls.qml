@@ -68,7 +68,7 @@ Row {
             if (playControl.value > 0) {
                 playControl.value = 0;
                 Mixxx.DJMantra.log("button " + root.group + ",play 0");
-            } else if (root.matrixDeck && root.matrixDeck.align()) {
+            } else if (root.matrixDeck && (root.matrixDeck.startFromCue() || root.matrixDeck.align())) {
                 Mixxx.DJMantra.log("button " + root.group + ",play armed (aligned start)");
             } else {
                 playControl.value = 1;

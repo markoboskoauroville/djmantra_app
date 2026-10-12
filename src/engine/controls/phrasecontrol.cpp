@@ -419,6 +419,17 @@ void PhraseControl::slotJump(double value) {
     if (!destinationBeat.isValid()) {
         return;
     }
+    // Stopped: Marko cues the beat (the interface then sets the CUE point
+    // there, round 22). "1" must stay where it is, though it follows the cue
+    // point by default: fix it to the current one first.
+    const auto userAnchor =
+            mixxx::audio::FramePos::fromEngineSamplePosMaybeInvalid(m_pPhraseAnchor->get());
+    if (!userAnchor.isValid() || userAnchor < mixxx::audio::kStartFramePos) {
+        const auto one = anchor();
+        if (one.isValid()) {
+            m_pPhraseAnchor->set(pBeats->findClosestBeat(one).toEngineSamplePos());
+        }
+    }
     seekExact(destinationBeat);
 }
 

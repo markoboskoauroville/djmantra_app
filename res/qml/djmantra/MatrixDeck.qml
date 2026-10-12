@@ -43,7 +43,13 @@ Item {
     Mixxx.ControlProxy { id: position; group: root.group; key: "playposition" }
     Mixxx.ControlProxy { id: duration; group: root.group; key: "duration" }
     Mixxx.ControlProxy { id: length; group: root.group; key: "phrase_length" }
-    Mixxx.ControlProxy { id: play; group: root.group; key: "play" }
+    Mixxx.ControlProxy {
+        id: play
+
+        group: root.group
+        key: "play"
+        onValueChanged: if (value > 0) root.cuedBeat = -1
+    }
     Mixxx.ControlProxy { id: jump; group: root.group; key: "phrase_jump" }
     Mixxx.ControlProxy { id: sync; group: root.group; key: "sync_enabled" }
     Mixxx.ControlProxy { id: quantize; group: root.group; key: "quantize" }
@@ -75,6 +81,8 @@ Item {
         const target = (Math.floor(otherBeat.value) + 1) % cells;
         Mixxx.DJMantra.log("align " + root.group + " to beat " + (target + 1) + " with the other deck");
         tap(target, true);
+        if (!playing)
+            startFromCue(); // stopped: cued on that beat, starting with the other deck's
         return true;
     }
 
@@ -97,14 +105,44 @@ Item {
             pulseJump(index + 1);
             return;
         }
+        // Stopped: CUE that beat (Marko, round 22: "I press stop, I press 32,
+        // and I'm cueing"): the deck goes to it and the CUE point is set there;
+        // nothing starts. PLAY then starts from it in phase (align()).
         quantize.value = 1;
+        armedBeat = -1;
         pulseJump(index + 1);
-        if (otherPlay.value > 0) {
-            sync.value = 1;
-            armedBeat = armedBeat === index ? -1 : index;
-        } else {
-            play.value = 1;
+        cuedBeat = index;
+        cueSet.restart();
+        Mixxx.DJMantra.log("cue " + root.group + " at beat " + (index + 1));
+    }
+
+    // the beat cued on the stopped deck (-1: none); PLAY starts from it
+    property int cuedBeat: -1
+
+    Mixxx.ControlProxy { id: cueSetControl; group: root.group; key: "cue_set" }
+
+    Timer {
+        // the CUE point where the deck now is (after the engine's seek)
+        id: cueSet
+
+        interval: 120
+        onTriggered: {
+            cueSetControl.value = 1;
+            cueSetControl.value = 0;
         }
+    }
+
+    // PLAY on the stopped deck: a cued beat starts when the other deck reaches
+    // the same beat of its phrase (beat 32 with beat 32); without a cued beat
+    // it starts on the other deck's next beat, on the same phrase beat
+    function startFromCue() {
+        if (!loaded || otherPlay.value <= 0 || cuedBeat < 0)
+            return false;
+        sync.value = 1;
+        armedBeat = cuedBeat;
+        Mixxx.DJMantra.log("start " + root.group + " from the cued beat " + (cuedBeat + 1) +
+                " with the other deck's beat " + (cuedBeat + 1));
+        return true;
     }
 
     readonly property int cells: length.value >= 2 ? Math.round(length.value) : 8
@@ -126,7 +164,7 @@ Item {
         countdown: countdown,
         beat: phraseBeat,
         cells: cells,
-        armed: armedBeat >= 0 ? armedBeat : queuedBeat,
+        armed: armedBeat >= 0 ? armedBeat : queuedBeat >= 0 ? queuedBeat : cuedBeat,
         color: String(deckColor)
     })
 }

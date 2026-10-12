@@ -10,7 +10,15 @@ Grep once per part: `adb logcat -d | grep -E "Quick:|SoundDeviceOboe|AudioRouter
 
 ## 2. Sliders and knobs (quick): crossfader, one EQ knob.
 
-## 3. LEDs (quick): matrix running, 32 BEATS LEDs.
+## 3. LEDs and CUEING (new behaviour, Marko: "I press stop, I press 32, and I'm cueing")
+- STOPPED deck: a press on a beat (Phrasing LED or matrix cell) CUES it: the deck goes to that beat exactly, the CUE
+  point is set there (CUE then returns to it), the LED gets a white frame; NOTHING starts. Log `Quick: cue [ChannelN]
+  at beat M`. The phrase numbering does not move ("1" stays "1": the matrix still counts the same beats after the cue).
+- Then PLAY with the other deck playing: it waits for the other deck's beat M and starts on it (beat 32 with beat 32):
+  `Quick: start [ChannelN] from the cued beat M with the other deck's beat M`, then `beat launch ... on beat M`; both
+  rows' lit cells together. The other deck stopped: PLAY starts at once from the cue.
+- PLAY without a cued beat: as before (the other deck's next beat, same phrase beat).
+- PLAYING deck: a press jumps on the next beat (seamless), as before. 32 BEATS LEDs as round 20.
 
 ## 4. AUTO CUE (new; djay Pro's "Auto select": "automatically selects the deck that isn't playing as your pre-cue
 source"; Marko: "when the deck in the headphones goes on air, the headphones switch to the other deck")
