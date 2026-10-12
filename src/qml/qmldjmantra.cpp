@@ -103,7 +103,14 @@ bool QmlDJMantra::eventFilter(QObject* pObject, QEvent* pEvent) {
 
 void QmlDJMantra::lookUpGenre(const QString& group, TrackPointer pTrack) {
 #if defined(Q_OS_ANDROID)
-    if (!pTrack || !pTrack->getGenre().trimmed().isEmpty()) {
+    if (!pTrack) {
+        return;
+    }
+    // round 24: genres saved before the lookup asked for English came in
+    // Croatian ("Klasična glazba", "Elektronička glazba"): looked up again
+    const QString saved = pTrack->getGenre().trimmed();
+    const bool croatian = saved.contains(QStringLiteral("glazba"), Qt::CaseInsensitive);
+    if (!saved.isEmpty() && !croatian) {
         return;
     }
     const QString title = pTrack->getTitle().trimmed();
@@ -115,7 +122,7 @@ void QmlDJMantra::lookUpGenre(const QString& group, TrackPointer pTrack) {
     m_genreAsked.insert(location);
     qInfo() << "Quick: looking up the genre of" << group << artist << "-" << title;
     QPointer<QmlDJMantra> pThis(this);
-    std::thread([pThis, pTrack, artist, title] {
+    std::thread([pThis, pTrack, artist, title, saved] {
         const QJniObject result = QJniObject::callStaticObjectMethod(
                 "com/djmantra/app/GenreLookup",
                 "lookup",
@@ -128,8 +135,8 @@ void QmlDJMantra::lookUpGenre(const QString& group, TrackPointer pTrack) {
         }
         QMetaObject::invokeMethod(
                 pThis.data(),
-                [pTrack, genre] {
-                    if (pTrack->getGenre().trimmed().isEmpty()) {
+                [pTrack, genre, saved] {
+                    if (pTrack->getGenre().trimmed() == saved) {
                         pTrack->updateGenre(genre);
                         qInfo() << "Quick: genre" << pTrack->getTitle() << ":" << genre;
                     }
