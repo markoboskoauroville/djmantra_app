@@ -1,0 +1,19 @@
+== Mon Oct 12 02:04:02 UTC 2026 start
+-- phantom process settings
+null
+false
+-- Termux battery optimisation (whitelisted = not killed in the background)
+user,com.termux.api,10245
+user,com.termux,10245
+-- memory
+MemTotal:        7590488 kB
+MemFree:          204872 kB
+MemAvailable:    2278128 kB
+Buffers:            1412 kB
+Cached:          2616220 kB
+-- Claude Code version
+2.1.296 (Claude Code)
+-- Claude Code debug logs
+total 32
+-rw-r--r--+1 root root 29573 Sep 13 11:44 c9175d5f-4490-4d53-a9ab-ce9462e85e4b.txt
+lrwxrwxrwx+1 root root    60 Sep 13 11:43 latest -> /root/.claude/debug/c9175d5f-4490-4d53-a9ab-ce9462e85e4b.txt

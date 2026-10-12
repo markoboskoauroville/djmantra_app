@@ -43,3 +43,25 @@ Media volume 0 (night).
 | 5d | ← in the library | Music → Folders → decks | Music → Folders → deck screen (`q5-arrow-back`, `q5-arrow-back2`) | PASS |
 | 5e | Android back in the library | back to the decks | Folders → deck screen (`q5-android-back`) | PASS |
 | 5f | Library remembers the folder | (nice to have) | Opens at Folders every time, not in Music | note |
+| 6a | Landscape: camera hole | app keeps out of the hole's side | Rotation 1: `DisplayCutout insets=Rect(126, 0 - 0, 0)`, hole on the left (bounding rect x 0–126, y 544–630). **The app starts right of x=126: hole clear** (`q6-land-*-hole.png`, yellow line = inset) | PASS |
+| 6b | Landscape: header | readable | Logo, badge, both decks with cover/title/counter, overviews, tabs: fine | PASS |
+| 6c | Landscape: waveforms tab | two lanes | **The page area is ~40 px high**: the lanes are a thin line with the zoom buttons under it (`q6-land-waveforms-hole.png`) | **FAIL** |
+| 6d | Landscape: mixer tab | knobs, faders, VU | **Squashed into ~40 px**: GAIN/HIGH/MID/LOW/FILTER labels drawn on top of each other, no knobs visible, faders and VU a few px high (`q6-land-mixer-hole.png`) | **FAIL** |
+| 6e | Landscape: pads tab | 2×8 pads | **Pad numbers overlap in a strip**, pads not drawn (`q6-land-pads-hole.png`) | **FAIL** |
+| 6f | (restore) | — | `user_rotation` back to 0, auto-rotate left off as it was | — |
+| 7 | Menu → BACK TO THE CLASSIC SCREEN, close and open | classic interface | Button turns into "Classic screen at the next start: close and open the app", log `Quick: interface at the next start: classic`. After force-stop + start: `Interface: classic (widgets)` (`q7-after-back-tap`, `q7-reopened`). The classic screen has the bars over it again (0a) | PASS |
+
+## Summary for the next build
+
+Classic interface: **the bars still cover it**: WindowBridge's "hiding the system bars" sets `requestedVisibleTypes -9` (only the IME hidden), right after Qt had hidden them (`-528`). That blocks the logo menu and Settings. Waveforms ~10 % wide. Counter not cut, but tiny.
+
+New interface (Qt Quick): **loads on the first try, bars hidden, hole clear in portrait and landscape, every control answers at once, CPU about a third of the classic one (32–55 % against 117–126 %).** To fix:
+1. TIME counter stays `0:00/0:00/-0:00` on both decks (BARS works).
+2. The pause glyph is tofu (▶ is fine): use an icon or a font that has ⏸.
+3. Waveforms ~5 % of the lane width (same scaling problem as the classic one).
+4. Zoom −/+ does nothing.
+5. The Camelot wheel title runs under the camera hole.
+6. Library lists "Music" twice; LOAD on a playing deck replaces it without asking.
+7. Menu header says "DJ Mantra 2.5.6" (Mixxx's version?), the app is 0.5.0.
+8. Knob labels halfway between two knobs.
+9. Landscape: the page area under the tabs collapses to ~40 px (waveforms, mixer, pads).
