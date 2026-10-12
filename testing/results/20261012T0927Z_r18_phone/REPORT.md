@@ -33,3 +33,6 @@ Tester's guess at the cause (for the builder, not verified in code): the app's "
 WindowBridge still decides with `insets.isVisible(WindowInsets.Type.systemBars())`, that is true only when status AND
 navigation bars are both visible; showing the navigation bar alone leaves it false. `isVisible(navigationBars()) ||
 isVisible(statusBars())` would see it, and with it the 4 s hide, the touch-to-hide and the room-making would run.
+| 5 | folders | Music and Download | `Folders`: Music, Download; Music opens with ← (00_start.png, 05_cover_pick.png) | PASS |
+| 5 | tap a song | loads onto the free deck | part 1: `Quick: load [Channel1] …3 Sense`, then `[Channel2] …Addis` | PASS |
+| 5 | cover tap, then a song | that deck | deck 2's cover: Songs tab, `tap a song: deck 2` in yellow (05_cover_pick.png); Aktysia → `Quick: load [Channel2] /storage/emulated/0/Music/Aktysia.mp3`. The tap map's `deck2` is the whole header: a tap in its middle hits the text (= empty space → navigation bar), the cover is at the outer edge | PASS |
