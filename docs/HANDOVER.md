@@ -5,12 +5,15 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 13.10.2026 night (latest): V6, the analysis measured against rekordbox
+## 13.10.2026 night (latest): V7, the analysis measured against rekordbox
 
-Read `docs/RESULTS_2026-10-13.md` first (results), `docs/COORDINATION.md` (the three sessions: cloud builder,
-phone tester "dj amp local", Mac helper "record box local"). Phone testing was stopped by Marko until V6; ROUND29
-tests V6. Open: the off-beat grid (~27 % of songs), double / half BPM (4 songs), djay Pro as a reference and its
-waveform look (data requested from the Mac), All-In-One (madmom install needs Marko).
+Read `docs/RESULTS_2026-10-13.md` first (results), `docs/COORDINATION.md` (the sessions: cloud builder,
+phone tester "dj amp local" session_01MCmmCT2kk49c9sPPKrkUk8; the Mac helper is archived, not needed).
+ROUND29 tests V7 (parts 0-2 PASS; V7 vs rekordbox: key 78 %, BPM 120/150 the same, grid 8 off-beat left).
+Open: part 3 sections (app_sections_v7.txt) vs rekordbox; double / half BPM (7 songs, listed in RESULTS);
+the 8 off-beat grids; All-In-One installed in the cloud (tools/analysis/allin1/) but its weights need
+huggingface.co + dl.fbaipublicfiles.com allowed in the environment's Network access (Marko); djay Pro
+waveform look (testing/djay/). Next build: bump to V8 (f9e2d7a: `Beats:` log lines name the file).
 
 ## 12.10.2026 17:00 UTC: test rounds 22-26, the loop runs by itself
 
