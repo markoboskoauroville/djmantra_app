@@ -99,3 +99,19 @@ horoscope style, in the new interface.
   - list rows: glyph left, title + grey second line, value right;
   - a bottom navigation bar of icon + label tabs, the selected one in yellow;
   - element colours fire `#FF6B5E`, earth `#6CCB72`, air `#F2D35B`, water `#5AA2F0`; tinted ring bands at alpha `0x38`.
+
+## Marko, 06:33: the phrase lights are his mixing tool, more than the waveform
+
+> "And this is the whole theme of the whole aligning these running dots. I remove waveform as such, give me this
+> running lights which needs to be aligned, and we need to optimize this in user interface and in controller. It's
+> always seen. This is my tool. My tool for mixing is section change, which I see the counter and Aligning the beats,
+> meaning aligning the phrasing. The first beat of the phrase of one song needs to be aligned to the second, and light
+> helping me to know where I am. Although I have counter now, but seeing the light helps also."
+
+What this asks for:
+- The 8-step phrase lights of both decks are **the** mixing view: always visible on every tab, in the interface and on the controller's LEDs.
+- He mixes by two things only: (1) the **section change** (the countdown counter), and (2) **phrase alignment**:
+  beat 1 of one song's phrase lands on beat 1 of the other's. The two rows of running lights side by side show at a
+  glance whether the phrases are in step, and where in the phrase each deck is.
+- The waveform matters less to him than these lights ("I remove waveform as such").
+- The same lights on the controller (the slicer's LED algorithm).
