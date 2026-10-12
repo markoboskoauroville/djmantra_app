@@ -202,6 +202,8 @@ public final class GenreLookup {
         try {
             connection.setRequestProperty("User-Agent", AGENT);
             connection.setRequestProperty("Accept", "application/json");
+            // round 23: Deezer named the genres in Croatian (the phone's language)
+            connection.setRequestProperty("Accept-Language", "en");
             connection.setConnectTimeout(8000);
             connection.setReadTimeout(8000);
             int status = connection.getResponseCode();
@@ -233,6 +235,8 @@ public final class GenreLookup {
         try {
             connection.setRequestProperty("User-Agent", AGENT);
             connection.setRequestProperty("Accept", "application/json");
+            // round 23: Deezer named the genres in Croatian (the phone's language)
+            connection.setRequestProperty("Accept-Language", "en");
             connection.setConnectTimeout(8000);
             connection.setReadTimeout(8000);
             int status = connection.getResponseCode();
@@ -244,6 +248,8 @@ public final class GenreLookup {
                 connection = (HttpURLConnection) new URL(BASE + path).openConnection();
                 connection.setRequestProperty("User-Agent", AGENT);
                 connection.setRequestProperty("Accept", "application/json");
+                // round 23: Deezer named the genres in Croatian (the phone's language)
+                connection.setRequestProperty("Accept-Language", "en");
                 connection.setConnectTimeout(8000);
                 connection.setReadTimeout(8000);
                 status = connection.getResponseCode();
