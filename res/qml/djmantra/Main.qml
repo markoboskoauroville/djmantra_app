@@ -149,23 +149,11 @@ Window {
             anchors.right: parent.right
             anchors.leftMargin: Style.gap
             anchors.rightMargin: Style.gap
-            height: 56
+            height: 72
             left: matrix1.lines
             right: matrix2.lines
-        }
-
-        PhraseBar {
-            // Marko's mixing tool: both decks' phrase lights and section
-            // countdowns, always on screen
-            id: phraseBar
-
-            objectName: "phraseBar"
-            anchors.top: matrix.bottom
-            anchors.topMargin: Style.gap
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.leftMargin: Style.gap
-            anchors.rightMargin: Style.gap
+            leftBeat: matrix1.phraseBeat
+            rightBeat: matrix2.phraseBeat
         }
 
         Loader {
@@ -174,7 +162,7 @@ Window {
             // the crossfader in the middle (round 13: the page was 40 px high)
             id: body
 
-            anchors.top: phraseBar.bottom
+            anchors.top: matrix.bottom
             anchors.topMargin: Style.gap
             anchors.bottom: parent.bottom
             anchors.left: parent.left

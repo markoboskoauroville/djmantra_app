@@ -20,6 +20,9 @@ Item {
     Mixxx.ControlProxy { id: found; group: root.group; key: "section_found" }
     Mixxx.ControlProxy { id: perBar; group: root.group; key: "beats_per_bar" }
 
+    // the beat in the 8-beat phrase, 0 = beat 1 (as PhraseLeds); -1: none
+    readonly property int phraseBeat: loaded && beat.value >= 0 ? Math.floor(beat.value) % 8 : -1
+
     readonly property var lines: {
         if (!loaded)
             return [[{ text: "NO TRACK", color: Style.subText }], [], []];
@@ -34,7 +37,7 @@ Item {
             [{ text: (code ? code : "--") + " ", color: root.deckColor },
              { text: bpm.value > 0 ? bpm.value.toFixed(1) : "---", color: Style.text }],
             [{ text: countdown + " ", color: Style.accent },
-             { text: beat.value >= 1 ? "B" + Math.floor(beat.value) : "B-", color: root.deckColor }]
+             { text: phraseBeat >= 0 ? "B" + (phraseBeat + 1) : "B-", color: root.deckColor }]
         ];
     }
 }

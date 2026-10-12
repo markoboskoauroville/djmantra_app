@@ -11,7 +11,8 @@ Push once at the end (and once halfway if the session might stop). Two of Marko'
   Mix | Mixer | Keys (drawn icons, selected yellow); nothing under the camera hole, no text cut, no bars over it.
 - No waveforms anywhere (no waveform page, no overview). No hot cues, no loops in the interface.
 - Deck headers: cover, 8 phrase LEDs (4 over 4) beside it, artist + Camelot key, title, counter (tap: TIME ↔ BARS).
-- Phrase bar under the headers on every page: deck 1's 8 steps over deck 2's, each deck's section countdown.
+- The dot-matrix display (part 8) under the headers on every page: it replaces the phrase bar (deck 1's 8 steps over
+  deck 2's, each deck's section countdown, now drawn in the matrix).
 
 ## 2. Mix page (the main tool)
 - Each deck: 8 big beat pads (the running lights: the current beat lit, beat 1 yellow), the NEXT SECTION box
@@ -51,10 +52,16 @@ interface and the Mix Ultra's pad modes. Not to be tested; noted for the next bu
   15 separate dots around it, lit from the bottom left up to the value in the knob's colour, the rest dim. An EQ
   knob at the top (0 dB) shows the full ring; at the bottom (kill) no dot; FILTER in the middle about half.
   Turn each knob slowly: the dots follow without jumps. Screenshot with each knob at a different value.
-- Dot-matrix display between the deck headers and the phrase bar: dark glass, a grid of square dots (unlit ones
+- Dot-matrix display under the deck headers (the phrase bar is gone, the matrix has it): dark glass, a grid of square dots (unlit ones
   faintly visible), a pixel font. Left half deck 1, right half deck 2, three lines each:
   1. artist - title, running through when longer than its half (no deck loaded: NO TRACK);
   2. Camelot key in the deck colour, then the BPM (e.g. `8A 124.0`);
-  3. section countdown in yellow (as the phrase bar's) and the beat in the phrase `B1`…`B8` in the deck colour.
+  3. section countdown in yellow and the beat in the phrase `B1`…`B8` in the deck colour.
   Check: readable on the phone at arm's length? Text not cut at the halves' edge? Updates while playing? CPU in
   `top` with both decks playing, compared with round 13 (32–55 %). Screenshot portrait and landscape.
+- Phrase running lights inside the matrix (Marko: "a led running lights for phrasing inside matrix display"):
+  under the text, two rows of 8 LED cells made of the matrix's own dots, deck 1 above deck 2. The current beat's
+  cell lights in the deck colour and runs left to right with the music; beat 1's cell lights yellow (dim it is a
+  faint brown, so the "1" is findable even unlit). Line 3's `B1`…`B8` equals the lit cell, and the small phrase
+  squares beside the covers light the same step. Synced decks aligned on the phrase: both yellow cells light
+  together, one above the other. Video of 2 phrases (16 beats) with both decks playing.

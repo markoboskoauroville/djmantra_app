@@ -6,15 +6,25 @@ import QtQuick 2.12
 // the unlit ones faintly visible. Two halves (deck 1 left, deck 2 right),
 // three lines each; a line is a list of {text, color} pieces. A piece with
 // scroll: true runs through its room when it is too long (the titles).
+// Below the text, the phrase running lights (Marko, 12.10.2026): both decks'
+// 8 steps as LED cells of the same pixels, deck 1 over deck 2, so both "1"s
+// lining up reads at a glance. Beat 1 lights in the accent colour.
 Canvas {
     id: root
 
     property var left: []   // [[{text, color, scroll}], line 2, line 3]
     property var right: []
+    property int leftBeat: -1  // 0..7, -1: none
+    property int rightBeat: -1
+    property color leftColor: Style.deck1
+    property color rightColor: Style.deck2
     property int scrollStep: 0
     readonly property int lines: 3
     readonly property int rowsPerLine: 8 // 7 dots + 1 gap
-    readonly property real pitch: height / (lines * rowsPerLine + 1)
+    readonly property int cellRows: 3 // a phrase LED cell is 3 dots high
+    readonly property int textRows: lines * rowsPerLine + 1
+    readonly property int totalRows: textRows + 2 * (cellRows + 1)
+    readonly property real pitch: height / totalRows
     readonly property int columns: Math.floor(width / pitch)
 
     // 5x7 font: 7 rows of 5 bits per glyph
@@ -53,6 +63,8 @@ Canvas {
         }
     }
 
+    onLeftBeatChanged: requestPaint()
+    onRightBeatChanged: requestPaint()
     onLeftChanged: requestPaint()
     onRightChanged: requestPaint()
     onWidthChanged: requestPaint()
@@ -66,7 +78,7 @@ Canvas {
         // dark glass
         ctx.fillStyle = "#04060e";
         ctx.fillRect(0, 0, width, height);
-        const rows = lines * rowsPerLine + 1;
+        const rows = totalRows;
         // the lit pixels of this frame: "x,y" -> colour
         const lit = {};
         const half = Math.floor(columns / 2);
@@ -102,6 +114,23 @@ Canvas {
         };
         drawHalf(left, 0, half);
         drawHalf(right, half, columns - half);
+        // the phrase running lights: 8 cells across the whole width per deck
+        const cellGap = 2;
+        const cellWidth = Math.floor((columns - 2 - 7 * cellGap) / 8);
+        const firstColumn = Math.floor((columns - (8 * cellWidth + 7 * cellGap)) / 2);
+        const dimCell = "#252d5c";
+        const dimFirst = "#4a4326";
+        const drawCells = (beatNow, color, top) => {
+            for (let c = 0; c < 8; ++c) {
+                const on = c === beatNow;
+                const fill = on ? (c === 0 ? Style.accent : color) : (c === 0 ? dimFirst : dimCell);
+                for (let dx = 0; dx < cellWidth; ++dx)
+                    for (let dy = 0; dy < cellRows; ++dy)
+                        lit[(firstColumn + c * (cellWidth + cellGap) + dx) + "," + (top + dy)] = fill;
+            }
+        };
+        drawCells(leftBeat, leftColor, textRows);
+        drawCells(rightBeat, rightColor, textRows + cellRows + 1);
         for (let y = 0; y < rows; ++y) {
             for (let x = 0; x < columns; ++x) {
                 const c = lit[x + "," + y];
@@ -111,6 +140,6 @@ Canvas {
         }
         // the gap between the halves
         ctx.fillStyle = "#04060e";
-        ctx.fillRect(half * p - p * 0.2, 0, p * 0.4, height);
+        ctx.fillRect(half * p - p * 0.2, 0, p * 0.4, textRows * p);
     }
 }
