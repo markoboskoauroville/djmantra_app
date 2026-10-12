@@ -76,10 +76,10 @@ Rectangle {
         width: Math.min(parent.width - 24, parent.height - bar.height - 220)
         height: width
 
-        readonly property color wheelBg: "#141821"
-        readonly property color line: "#5d6584"
-        readonly property color ink: "#eef0ff"
-        readonly property color sub: "#9aa3c7"
+        readonly property color wheelBg: "#111833"
+        readonly property color line: Style.line
+        readonly property color ink: Style.text
+        readonly property color sub: Style.subText
 
         function keyColor(n, alpha) {
             // 12 hues round the wheel, the same for A and B of one number
@@ -124,7 +124,7 @@ Rectangle {
                     ctx.fillStyle = keyColor(n, alpha);
                     ctx.fill();
                     if (isDeck) {
-                        ctx.strokeStyle = code === root.code1 ? "#3ad13a" : "#e04ad0";
+                        ctx.strokeStyle = code === root.code1 ? Style.deck1 : Style.deck2;
                         ctx.lineWidth = bold * 1.4;
                         ctx.stroke();
                     }
@@ -136,10 +136,10 @@ Rectangle {
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
                     ctx.font = "bold " + Math.round(size) + "px sans-serif";
-                    ctx.fillStyle = isDeck ? "#111215" : (any && !lit ? sub : keyColor(n, 1));
+                    ctx.fillStyle = isDeck ? Style.onAccent : (any && !lit ? sub : keyColor(n, 1));
                     ctx.fillText(code, x, y - size * 0.35);
                     ctx.font = Math.round(size * 0.62) + "px sans-serif";
-                    ctx.fillStyle = isDeck ? "#111215" : sub;
+                    ctx.fillStyle = isDeck ? Style.onAccent : sub;
                     ctx.fillText(Mixxx.DJMantra.musicalName(code), x, y + size * 0.55);
                 }
             }
@@ -166,9 +166,9 @@ Rectangle {
             ctx.textBaseline = "middle";
             const fs = rA * 0.2;
             ctx.font = "bold " + Math.round(fs) + "px sans-serif";
-            ctx.fillStyle = "#3ad13a";
+            ctx.fillStyle = Style.deck1;
             ctx.fillText("1  " + (root.code1 !== "" ? root.code1 : "-"), cx, cy - fs * 1.2);
-            ctx.fillStyle = "#e04ad0";
+            ctx.fillStyle = Style.deck2;
             ctx.fillText("2  " + (root.code2 !== "" ? root.code2 : "-"), cx, cy);
             const m = Mixxx.DJMantra.keyMatch(key1.value, key2.value);
             ctx.font = Math.round(fs * 0.75) + "px sans-serif";
@@ -194,21 +194,21 @@ Rectangle {
         Text {
             width: parent.width
             wrapMode: Text.WordWrap
-            color: "#3ad13a"
+            color: Style.earth
             font.pixelSize: 14
             text: qsTr("Same key, ±1, A ↔ B with the same number: compatible. +1 lifts the energy, -1 calms it.")
         }
         Text {
             width: parent.width
             wrapMode: Text.WordWrap
-            color: "#ffb300"
+            color: Style.air
             font.pixelSize: 14
             text: qsTr("+2, +7, diagonal (8A > 9B): risky, an energy boost on a short blend.")
         }
         Text {
             width: parent.width
             wrapMode: Text.WordWrap
-            color: "#e53935"
+            color: Style.fire
             font.pixelSize: 14
             text: qsTr("Anything else clashes: blend on the drums only.")
         }

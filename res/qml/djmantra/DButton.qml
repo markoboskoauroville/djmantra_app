@@ -20,7 +20,7 @@ Rectangle {
 
     radius: Style.radius
     color: area.pressed ? Style.pressed : (lit ? onColor : Style.tile)
-    border.color: lit ? onColor : "#3a3c41"
+    border.color: lit ? onColor : Style.surface
     border.width: 1
 
     Mixxx.ControlProxy {
@@ -42,7 +42,7 @@ Rectangle {
                 width: root.height * 0.13
                 height: root.height * 0.42
                 radius: 2
-                color: root.lit ? "#111215" : Style.text
+                color: root.lit ? Style.onAccent : Style.text
             }
         }
     }
@@ -52,7 +52,7 @@ Rectangle {
         anchors.margins: 4
         visible: root.icon !== "pause"
         text: root.icon === "play" ? "\u25B6" : root.text
-        color: root.lit ? "#111215" : Style.text
+        color: root.lit ? Style.onAccent : Style.text
         font.pixelSize: root.fontSize
         font.bold: true
         horizontalAlignment: Text.AlignHCenter

@@ -71,13 +71,12 @@ Window {
                 width: 36
                 height: 36
                 radius: 8
-                color: "#000000"
-                border.color: "#3a3c41"
+                color: Style.accent
 
                 Text {
                     anchors.centerIn: parent
                     text: "dj"
-                    color: "white"
+                    color: Style.onAccent
                     font.pixelSize: 20
                     font.bold: true
                 }
@@ -135,13 +134,27 @@ Window {
             }
         }
 
+        PhraseBar {
+            // Marko's mixing tool: both decks' phrase lights and section
+            // countdowns, always on screen
+            id: phraseBar
+
+            objectName: "phraseBar"
+            anchors.top: headers.bottom
+            anchors.topMargin: Style.gap
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: Style.gap
+            anchors.rightMargin: Style.gap
+        }
+
         Loader {
             // portrait: tabs, page, SYNC / CUE / PLAY and crossfader below;
             // landscape: each deck's SYNC / CUE / PLAY at its side, the page and
             // the crossfader in the middle (round 13: the page was 40 px high)
             id: body
 
-            anchors.top: headers.bottom
+            anchors.top: phraseBar.bottom
             anchors.topMargin: Style.gap
             anchors.bottom: parent.bottom
             anchors.left: parent.left
@@ -152,25 +165,9 @@ Window {
         Component {
             id: tabsComponent
 
-            Row {
-                spacing: 10
-
-                Repeater {
-                    model: [qsTr("MIXER"), qsTr("WAVEFORMS"), qsTr("PADS")]
-
-                    delegate: DButton {
-                        required property string modelData
-                        required property int index
-
-                        objectName: "tab" + index
-                        width: 108
-                        height: 38
-                        text: modelData
-                        fontSize: 13
-                        lit: window.page === index
-                        onClicked: window.page = index
-                    }
-                }
+            NavBar {
+                current: window.page
+                onSelected: (index) => window.page = index
             }
         }
 
@@ -202,16 +199,7 @@ Window {
 
             Item {
                 Loader {
-                    id: portraitTabs
-
                     anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    sourceComponent: tabsComponent
-                }
-
-                Loader {
-                    anchors.top: portraitTabs.bottom
-                    anchors.topMargin: Style.gap
                     anchors.bottom: portraitTransport.top
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -221,9 +209,18 @@ Window {
                 Transport {
                     id: portraitTransport
 
+                    anchors.bottom: portraitNav.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+
+                Loader {
+                    id: portraitNav
+
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
+                    sourceComponent: tabsComponent
                 }
             }
         }
@@ -257,14 +254,16 @@ Window {
                 Loader {
                     id: landscapeTabs
 
-                    anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.left: leftDeck.right
+                    anchors.right: rightDeck.left
+                    anchors.leftMargin: Style.gap
+                    anchors.rightMargin: Style.gap
                     sourceComponent: tabsComponent
                 }
 
                 Loader {
-                    anchors.top: landscapeTabs.bottom
-                    anchors.topMargin: Style.gap
+                    anchors.top: parent.top
                     anchors.bottom: crossfader.top
                     anchors.bottomMargin: Style.gap
                     anchors.left: leftDeck.right
@@ -278,7 +277,7 @@ Window {
                     id: crossfader
 
                     objectName: "crossfader"
-                    anchors.bottom: parent.bottom
+                    anchors.bottom: landscapeTabs.top
                     anchors.bottomMargin: Style.gap
                     anchors.left: leftDeck.right
                     anchors.right: rightDeck.left

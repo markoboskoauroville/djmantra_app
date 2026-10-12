@@ -8,7 +8,7 @@ Rectangle {
 
     property string group
 
-    color: "#18191b"
+    color: Style.surface
     radius: 2
 
     Mixxx.ControlProxy {
@@ -32,9 +32,9 @@ Rectangle {
         height: parent.height * Math.max(0, Math.min(1, level.value))
         radius: 2
         gradient: Gradient {
-            GradientStop { position: 0.0; color: peak.value > 0 ? "#ff304a" : "#ff8a00" }
-            GradientStop { position: 0.35; color: "#3ad13a" }
-            GradientStop { position: 1.0; color: "#1f8f1f" }
+            GradientStop { position: 0.0; color: peak.value > 0 ? Style.fire : Style.air }
+            GradientStop { position: 0.35; color: Style.earth }
+            GradientStop { position: 1.0; color: "#3f8a45" }
         }
     }
 }

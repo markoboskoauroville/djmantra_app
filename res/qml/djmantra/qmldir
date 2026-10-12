@@ -15,3 +15,6 @@ VuBar 1.0 VuBar.qml
 WaveformsPage 1.0 WaveformsPage.qml
 WheelPage 1.0 WheelPage.qml
 DeckTransport 1.0 DeckTransport.qml
+PhraseLeds 1.0 PhraseLeds.qml
+PhraseBar 1.0 PhraseBar.qml
+NavBar 1.0 NavBar.qml

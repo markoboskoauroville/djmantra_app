@@ -23,8 +23,8 @@ Column {
 
             Text {
                 text: "DECK " + (deck.index + 1) + "  HOT CUES"
-                color: Style.subText
-                font.pixelSize: 12
+                color: Style.accent
+                font.pixelSize: 13
                 font.bold: true
             }
 

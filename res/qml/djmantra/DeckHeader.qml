@@ -3,7 +3,8 @@ import ".." as Skin
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// A deck's header: cover, artist and key, title, the counter, the overview.
+// A deck's header: cover, the 8-beat phrase LEDs, artist and key, title, the
+// counter, the overview.
 // Deck 1 reads left to right, deck 2 mirrored (cover at the outer edge).
 Item {
     id: root
@@ -21,11 +22,11 @@ Item {
     Rectangle {
         id: cover
 
-        width: 56
-        height: 56
-        radius: 6
+        width: 52
+        height: 52
+        radius: 8
         color: Style.tile
-        border.color: "#3a3c41"
+        border.color: Style.line
         anchors.top: parent.top
         anchors.left: root.mirrored ? undefined : parent.left
         anchors.right: root.mirrored ? parent.right : undefined
@@ -52,12 +53,28 @@ Item {
         }
     }
 
+    PhraseLeds {
+        id: leds
+
+        objectName: root.group === "[Channel1]" ? "leds1" : "leds2"
+        anchors.top: parent.top
+        anchors.topMargin: 3
+        anchors.left: root.mirrored ? undefined : cover.right
+        anchors.right: root.mirrored ? cover.left : undefined
+        anchors.leftMargin: root.mirrored ? 0 : 6
+        anchors.rightMargin: root.mirrored ? 6 : 0
+        group: root.group
+        deckColor: root.deckColor
+        // 4 over 4, as tall as the cover's upper half
+        square: 8
+    }
+
     Column {
         id: lines
 
         anchors.top: parent.top
-        anchors.left: root.mirrored ? parent.left : cover.right
-        anchors.right: root.mirrored ? cover.left : parent.right
+        anchors.left: root.mirrored ? parent.left : leds.right
+        anchors.right: root.mirrored ? leds.left : parent.right
         anchors.leftMargin: root.mirrored ? 0 : 8
         anchors.rightMargin: root.mirrored ? 8 : 0
         spacing: 1

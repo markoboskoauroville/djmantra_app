@@ -25,7 +25,7 @@ Item {
         width: root.vertical ? 4 : root.width - 8
         height: root.vertical ? root.height - 8 : 4
         radius: 2
-        color: "#3a3c41"
+        color: Style.line
     }
 
     Rectangle {
@@ -34,7 +34,7 @@ Item {
         width: root.vertical ? Math.min(root.width, 44) : 26
         height: root.vertical ? 26 : Math.min(root.height, 44)
         radius: 5
-        color: "#b8bbbf"
+        color: Style.text
         border.color: root.barColor
         border.width: 2
         x: root.vertical ? (root.width - width) / 2 : control.parameter * (root.width - width)

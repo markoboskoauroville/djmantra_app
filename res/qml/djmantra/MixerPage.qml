@@ -44,7 +44,7 @@ Item {
                         group: "[QuickEffectRack1_" + deck.modelData + "]"
                         key: "super1"
                         label: "FILTER"
-                        arcColor: Style.accent
+                        arcColor: Style.water
                     }
                     DButton { width: 58; height: 36; text: "\uD83C\uDFA7"; group: deck.modelData; key: "pfl" }
                 }

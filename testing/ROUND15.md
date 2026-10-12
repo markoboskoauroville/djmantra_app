@@ -24,3 +24,17 @@ B. New interface (`--qml` or Settings → "New interface (GPU)")
    6. Landscape: SYNC/BPM/CUE/PLAY at the sides, page and crossfader in the middle (not run in round 14).
 C. Loudness (not run in round 14): one song alone, volume up, crossfader to its side, 20 s:
    `adb logcat -d | grep "Output level"`.
+
+## Added before the round (Marko, 06:27 and 06:33): test these in the new interface
+
+D. Phrase lights, Marko's mixing tool:
+   1. Beside each deck's cover: 8 small squares, 4 over 4; the square of the current beat of the 8-beat phrase
+      lights (beat 1 yellow).
+   2. The phrase bar under the deck headers, on EVERY page (mixer, waveforms, pads, landscape): deck 1's 8 steps
+      over deck 2's, numbered 1-8, the current one lit (beat 1 yellow), and at the right each deck's countdown to
+      its next section change (yellow, "-6.2"). Play both decks with SYNC: do both "1"s light together?
+   3. The controller (when connected): the pads light the same beat (BEAT_LIGHTS in the Mix Ultra script).
+E. Horoscope style: deep navy background, navy cards, one yellow accent (selected tab, LOAD, logo tile), grey
+   second lines, element colours; bottom navigation bar with icon + label (Mixer, Waveforms, Pads), the selected
+   one yellow; library rows with a glyph, the name and a grey second line (Folder / MP3 ...). Screenshots of each
+   page next to Marko's manual/08-planets.png style.

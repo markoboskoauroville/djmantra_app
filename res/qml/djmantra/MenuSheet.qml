@@ -39,9 +39,15 @@ Rectangle {
             spacing: 8
 
             Text {
-                text: "DJ Mantra " + Mixxx.DJMantra.version
+                text: "DJ Mantra"
+                color: Style.accent
+                font.pixelSize: 22
+                font.bold: true
+            }
+            Text {
+                text: qsTr("Version %1").arg(Mixxx.DJMantra.version)
                 color: Style.subText
-                font.pixelSize: 12
+                font.pixelSize: 13
             }
             DButton {
                 width: parent.width

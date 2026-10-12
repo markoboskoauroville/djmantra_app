@@ -94,19 +94,46 @@ Rectangle {
             required property var modelData
 
             width: list.width
-            height: 56
+            height: 64
             color: rowArea.pressed ? Style.pressed : "transparent"
 
             Text {
+                // the glyph on the left, as the horoscope app's lists
+                id: glyph
+
                 anchors.left: parent.left
                 anchors.leftMargin: 14
+                anchors.verticalCenter: parent.verticalCenter
+                width: 28
+                text: row.modelData.isFolder ? "\uD83D\uDCC1" : "\u266B"
+                color: row.modelData.isFolder ? Style.accent : Style.text
+                font.pixelSize: 20
+            }
+
+            Column {
+                anchors.left: glyph.right
+                anchors.leftMargin: 10
                 anchors.right: buttons.left
                 anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
-                text: (row.modelData.isFolder ? "\uD83D\uDCC1  " : "\u266B  ") + row.modelData.name
-                color: Style.text
-                font.pixelSize: 15
-                elide: Text.ElideRight
+
+                Text {
+                    width: parent.width
+                    text: row.modelData.name
+                    color: Style.text
+                    font.pixelSize: 16
+                    font.bold: true
+                    elide: Text.ElideRight
+                }
+
+                Text {
+                    width: parent.width
+                    text: row.modelData.isFolder ? qsTr("Folder")
+                            : row.modelData.path.substring(row.modelData.path.lastIndexOf(".") + 1).toUpperCase()
+                    color: Style.subText
+                    font.pixelSize: 13
+                    elide: Text.ElideRight
+                }
             }
 
             MouseArea {
@@ -132,7 +159,7 @@ Rectangle {
                     height: 40
                     text: root.deck === "[Channel1]" ? "LOAD 1" : root.deck === "[Channel2]" ? "LOAD 2" : "LOAD"
                     fontSize: 12
-                    onColor: Style.accent
+                    lit: true // the primary action: yellow
                     onClicked: root.load(row.modelData.path,
                             root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false)
                 }
@@ -142,7 +169,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 width: parent.width
                 height: 1
-                color: "#26272b"
+                color: Style.surface
             }
         }
     }

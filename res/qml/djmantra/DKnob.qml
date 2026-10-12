@@ -9,7 +9,7 @@ Item {
     property string group
     property string key
     property string label
-    property color arcColor: Style.orange
+    property color arcColor: Style.line
 
     implicitWidth: 52
     implicitHeight: 64
