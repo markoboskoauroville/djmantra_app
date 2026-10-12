@@ -28,6 +28,8 @@ class QmlDJMantra : public QObject {
     Q_PROPERTY(int insetRight READ insetRight NOTIFY insetsChanged)
     Q_PROPERTY(int insetBottom READ insetBottom NOTIFY insetsChanged)
     Q_PROPERTY(QString version READ version CONSTANT)
+    /// The screen's rounded corner radius (dp): the app keeps out of it
+    Q_PROPERTY(int cornerRadius READ cornerRadius NOTIFY insetsChanged)
   public:
     explicit QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent = nullptr);
 
@@ -44,6 +46,9 @@ class QmlDJMantra : public QObject {
         return m_insets[3];
     }
     QString version() const;
+    int cornerRadius() const {
+        return m_cornerRadius;
+    }
 
     /// "8A" for the value of a key control, "" without a key
     Q_INVOKABLE QString camelot(double keyValue) const;
@@ -118,6 +123,7 @@ class QmlDJMantra : public QObject {
     static inline UserSettingsPointer s_pUserSettings = nullptr;
     const UserSettingsPointer m_pConfig;
     int m_insets[4] = {0, 0, 0, 0};
+    int m_cornerRadius = 0;
     QString m_lastLoaded;
     QSet<QString> m_genreAsked; // per file, once a run
     // usage(): the CPU ticks and the time at the last call

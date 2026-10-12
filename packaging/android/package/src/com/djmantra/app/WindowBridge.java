@@ -33,6 +33,8 @@ public final class WindowBridge {
     // left, top, right, bottom in pixels: read from the Qt thread
     private static volatile int[] sInsets = new int[] {0, 0, 0, 0};
     private static volatile boolean sVisible = false;
+    // The screen's rounded corner radius in pixels (0 if square or unknown)
+    private static volatile int sCorner = 0;
     private static boolean sErrorLogged = false;
     private static final String TAG = "DJMantra";
 
@@ -87,6 +89,12 @@ public final class WindowBridge {
                 sShownSince = 0;
             }
         });
+    }
+
+    /// The radius of the screen's rounded corners in pixels (round 19: the
+    /// top right meter was cut by the corner)
+    public static int cornerRadius() {
+        return sCorner;
     }
 
     /// Whether the system bars are on screen (from the last watch pass)
@@ -163,6 +171,17 @@ public final class WindowBridge {
         final boolean statusVisible = insets.isVisible(WindowInsets.Type.statusBars());
         final boolean visible = navVisible || statusVisible;
         sVisible = visible;
+        if (Build.VERSION.SDK_INT >= 31) {
+            int corner = 0;
+            for (int position : new int[] {android.view.RoundedCorner.POSITION_TOP_LEFT,
+                         android.view.RoundedCorner.POSITION_TOP_RIGHT}) {
+                android.view.RoundedCorner rounded = insets.getRoundedCorner(position);
+                if (rounded != null) {
+                    corner = Math.max(corner, rounded.getRadius());
+                }
+            }
+            sCorner = corner;
+        }
         Insets bars = Insets.max(
                 navVisible ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars())
                            : Insets.NONE,

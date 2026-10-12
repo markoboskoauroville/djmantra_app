@@ -40,7 +40,7 @@ STUB = {
                          " function getPlayer(group) { return null; }\n}\n",
     "DJMantra.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
                     " property int insetLeft: 0\n property int insetTop: 0\n property int insetRight: 0\n"
-                    " property int insetBottom: 0\n property string version: \"0\"\n"
+                    " property int insetBottom: 0\n property string version: \"0\"\n property int cornerRadius: 40\n"
                     " function camelot(k) { return \"8A\"; }\n function musicalName(c) { return \"\"; }\n"
                     " function keyMatch(a, b) { return ({}); }\n function keyMatchShift(a, b) { return 0; }\n function formatTime(s) { return \"0:00\"; }\n"
                     " function barBeat(n, p) { return \"1.1\"; }\n function barsBeatsLeft(b, p) { return \"-0.0\"; }\n"

@@ -48,10 +48,14 @@ Window {
         id: content
 
         anchors.fill: parent
-        anchors.leftMargin: Mixxx.DJMantra.insetLeft
-        anchors.topMargin: Mixxx.DJMantra.insetTop
-        anchors.rightMargin: Mixxx.DJMantra.insetRight
-        anchors.bottomMargin: Mixxx.DJMantra.insetBottom
+        // clear of the bars, the camera hole and the screen's rounded corners
+        // (round 19: the top right meter was cut by the corner, the app
+        // reached the very edge)
+        readonly property int corner: Mixxx.DJMantra.cornerRadius
+        anchors.leftMargin: Math.max(Mixxx.DJMantra.insetLeft, Math.round(corner * 0.3))
+        anchors.topMargin: Mixxx.DJMantra.insetTop + (corner > 0 ? 4 : 0)
+        anchors.rightMargin: Math.max(Mixxx.DJMantra.insetRight, Math.round(corner * 0.3))
+        anchors.bottomMargin: Math.max(Mixxx.DJMantra.insetBottom, Math.round(corner * 0.2))
         focus: true
 
         Keys.onBackPressed: (event) => {
@@ -145,7 +149,7 @@ Window {
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
-                height: 34
+                height: 24
                 width: implicitWidth
             }
         }

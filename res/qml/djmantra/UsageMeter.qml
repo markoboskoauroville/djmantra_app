@@ -12,11 +12,12 @@ Canvas {
 
     property int cpu: -1
     property int gpu: -1
-    readonly property int columns: 7 * 6 + 1
+    // half the size of round 18's (Marko): "C 12%" / "G 40%"
+    readonly property int columns: 5 * 6 + 1
     readonly property int rows: 2 * 8 + 1
     readonly property real pitch: Math.min(width / columns, height / rows)
 
-    implicitHeight: 34
+    implicitHeight: 24
     implicitWidth: columns * implicitHeight / rows
 
     function level(value) {
@@ -53,14 +54,14 @@ Canvas {
                             lit[(column + i * 6 + gx) + "," + (top + gy)] = color;
             }
         };
-        const value = (v) => v < 0 ? "--" : String(Math.min(999, v)) + "%";
+        const value = (v) => v < 0 ? "--" : String(Math.min(99, v)) + "%";
         const line = (label, v, top) => {
             text(label, 1, top, String(Style.subText));
             const s = value(v);
             text(s, columns - s.length * 6, top, level(v));
         };
-        line("CPU", cpu, 1);
-        line("GPU", gpu, 9);
+        line("C", cpu, 1);
+        line("G", gpu, 9);
         for (let y = 0; y < rows; ++y)
             for (let x = 0; x < columns; ++x) {
                 const c = lit[x + "," + y];

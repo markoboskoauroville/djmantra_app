@@ -174,8 +174,16 @@ void QmlDJMantra::followInsets() {
             changed = true;
         }
     }
+    const int corner = qRound(QJniObject::callStaticMethod<jint>(
+                                      "com/djmantra/app/WindowBridge", "cornerRadius", "()I") /
+            ratio);
+    if (corner != m_cornerRadius) {
+        m_cornerRadius = corner;
+        changed = true;
+    }
     if (changed) {
-        qInfo() << "Quick: insets" << m_insets[0] << m_insets[1] << m_insets[2] << m_insets[3];
+        qInfo() << "Quick: insets" << m_insets[0] << m_insets[1] << m_insets[2] << m_insets[3]
+                << "corner" << m_cornerRadius;
         emit insetsChanged();
     }
 #endif

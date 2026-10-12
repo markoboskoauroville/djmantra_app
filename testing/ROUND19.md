@@ -29,7 +29,11 @@ Build: the green Android run of the newest commit with this file. Fixes for roun
   the Keys tab, the CPU meter stay clear). Swipe up from the bottom: bars come, next touch hides.
 - Landscape Phrasing: the two decks' LEDs side by side, readable numbers; the scrolling waveform without diagonal
   lines (screenshot).
-- The CPU / GPU meter top right: values on the Songs and the Phrasing tab.
+- Edges (Marko's photo, round 19: the app ran into the rounded corners, the meter's numbers cut): log `Quick: insets
+  ... corner N` (the screen's corner radius); nothing touches the screen's edges or corners, the menu button and the
+  meter sit inside the rounded corners; photo / screenshot of the top corners and the bottom tabs.
+- The meter top right, half its old size: `C nn%` / `G nn%` (or `--`), both numbers fully visible; values on the
+  Songs and the Phrasing tab.
 
 ## 5. Library
 - A tap loads onto the free deck; cover tap then a song: that deck (quick check).
