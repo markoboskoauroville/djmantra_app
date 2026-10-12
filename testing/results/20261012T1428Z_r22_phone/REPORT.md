@@ -41,3 +41,7 @@ Round 21 was skipped at the builder's request (its fixes are in this build).
 - MASTER = Phone default, HEADPHONES = Off → APPLY: `Sound output closed`, `Sound output open: "Phone audio output ..." (clock) 48000 Hz, 2 channels`, `audio route master -> phone default channels 1-2`, `audio route headphones -> none`; the page says "Done."; a song played afterwards (peak 0.32, xruns 0, late 0).
 - NOT TESTED (needs Marko to plug something in): the list changing on plug / unplug, a second output (wired / Bluetooth / USB) with the 200 ms warning, MULTI-CHANNEL 1-2 / 3-4 on the Mix Ultra, the route kept / fallback after a restart, 2 minutes on the second output.
 - Tester slip (no app fault): with the page scrolled, a tap meant for ← hit the AUTO CUE switch (off), switched back on at once (`auto cue on`). ← scrolls away with the page; a fixed header would avoid that.
+
+## Part 6: Keys tab - PASS (font); note on size
+- `p6_wheel_zoom.png` (full resolution): every code (12A ...), every key name (C#m ...) and the middle text (`1 10A`, `2 -`, `key`) in the normal font, no matrix dots; rings and borders smooth, no stairs or broken strokes.
+- Note (landscape): the wheel is small there: ~310 px across (~118 dp), the key names ~15 px high, hard to read at arm's length. Portrait not re-checked this round (Marko had the phone sideways).
