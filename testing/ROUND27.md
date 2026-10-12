@@ -43,7 +43,7 @@ orientations.
   either deck; the pads still work in the controller's mode.
 
 ## 9. Version and the classic screen gone (new)
-- Menu: the version reads "V1". The APK is named DJMantra-V1-...; `adb shell dumpsys package com.djmantra.app |
+- Menu and Settings (top right): the version reads "V1", yellow, underlined; a tap opens GitHub releases/tag/android-latest in the browser (log `version V1: open ...`). The APK is named DJMantra-V1-...; `adb shell dumpsys package com.djmantra.app |
   grep version`: versionName=V1, versionCode=6.
 - No "BACK TO THE CLASSIC SCREEN" in the menu; the app always starts the new interface (`Interface: Qt Quick (GPU)`),
   even if an old setting chose the classic one. The APK has no assets/res/skins.

@@ -86,6 +86,14 @@ Rectangle {
         }
     }
 
+    VersionLink {
+        // the version, top right: a tap opens the newest release (update)
+        objectName: "settingsVersion"
+        anchors.right: parent.right
+        anchors.rightMargin: 20
+        anchors.verticalCenter: header.verticalCenter
+    }
+
     Flickable {
         anchors.top: header.bottom
         anchors.bottom: parent.bottom

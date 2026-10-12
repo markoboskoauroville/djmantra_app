@@ -39,10 +39,8 @@ Rectangle {
             width: parent.width - 24
             spacing: 8
 
-            Text {
-                text: Mixxx.DJMantra.version
-                color: Style.subText
-                font.pixelSize: 13
+            VersionLink {
+                objectName: "menuVersion"
             }
             DButton {
                 objectName: "menuSettings"
