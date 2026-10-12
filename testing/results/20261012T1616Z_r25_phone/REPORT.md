@@ -24,3 +24,28 @@ Phone woken (`KEYCODE_WAKEUP`, no lock), kept awake for the round. I locked port
   - `deck at 99.30 s, cue at 89.66 s, playing` → stopped at -4:26 (the cue)
   Each time it stopped on the cue. PASS
 - **Note:** the cue point itself moves between presses (88.16 → 90.16 → 89.66 s): every PLAY from the cue is an aligned start, which logs `cue [Channel2] at beat 5` / `cue set ... at phrase beat 5` (then 7) and so sets a NEW cue on the aligned beat. A DJ expects the cue to stay where it was set; please confirm with Marko whether the aligned start may move the cue.
+
+## Part 4: CPU - FAIL (Songs / Keys in target; Phrasing / Mixer not)
+Both decks playing (output peak 0.51-0.58, xruns 0), landscape, 8 s per tab then `top` over 3 s:
+
+| tab | round 25 | round 24 | round 23 |
+|---|---|---|---|
+| Songs | 39.3 % | 62.3 % | 51.6 % |
+| Phrasing | 65.3 % | 64.3 % | 76.3 % |
+| Mixer | 58.0 % | 64.6 % | 74.6 % |
+| Keys | 42.6 % | 66.3 % | 49.0 % |
+
+Threads: Songs: qtMainLoopThread 17.6 %, AudioTrack 7.0 %, QtThread (render) 6.3 %. Phrasing: qtMainLoopThread 28.3 %, **QtThread 20.6 %**, AudioTrack 7.3 %, mali-event-handler 4.6 %.
+- The update-rate fix worked where the overview / time / meters dominate (Songs -23 points, Keys -24). The Phrasing tab is unchanged: its render thread stays at ~21 % (the scrolling waveform and the 2 x 8 LEDs), and its main loop went up to 28 %. Mixer -7.
+- The time left still counts every second (-0:39 → -0:36 and -2:24 → -2:22 in 2 s), the overview playhead moves, the VU meters look live (part 2).
+- (Two earlier passes were void: deck 2 was paused by my extra tap, peak ~0.23 with one deck; and one PLAY tap was not taken: no log at all; the next tap on the same spot worked.)
+
+## Part 5: genre - PASS (language), note on the match
+- Addis (Orkidz) now shows **"Classical"** (`p4_state.png`): looked up again and in English. Round 24's Croatian leftover is gone.
+- But "Classical" is wrong for Orkidz - Addis (an organic / afro-house track). The source of that genre is not in the log; please log which service gave it (MusicBrainz tag or Deezer) so a bad match can be traced, and prefer a genre from the track over one from the artist.
+
+## Round 25 finished: 4 pass, 1 fail
+Pass: 0-2 smoke / transport / knobs (the second map matches the screen), 3 AUTO PHASE + CUE (the on-air deck never moves; a CUE preview is ignored; CUE on a playing deck stops on the cue 3 of 3), 5 genre in English.
+Fail: 4 CPU on the Phrasing tab (65 %, render thread ~21 %) and Mixer (58 %); Songs 39 % and Keys 43 % are fine now.
+Notes: every aligned PLAY from the cue sets a new cue (88.16 → 90.16 → 89.66 s): ask Marko; "Classical" for Addis.
+Phone: woken for the round and kept awake (`stayon` off again at the end). Rotation left to Marko (he freed it again within a minute of my lock; the tester no longer locks it).
