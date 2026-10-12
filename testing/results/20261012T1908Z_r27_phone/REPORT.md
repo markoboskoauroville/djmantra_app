@@ -12,3 +12,11 @@ Build: run 38291801689, commit a972af4. Started on Marko's "go" (12.10.2026 ~21:
 ## Part 2: Mixer tab - PASS
 - Both decks playing, Mixer, portrait (`p2_mixer.png`): the two VU meters between the faders rise and fall in 4 frames 0.25 s apart, green into yellow at the top; no black wedge or spike anywhere.
 - Crossfader full left with deck 2 in the headphones (auto cue had put it there, Marko's case): 2 more frames, the same, no spike (`p2_mixer_xf_left.png`). Crossfader back to the middle.
+
+## Part 3: overview scrubbing - FAIL
+- TAP on deck 1's overview at 30 %: `jump [Channel1] to 48.94 s` at once, no zoom window (`p3_tap.png`). PASS
+- HOLD still (motionevent DOWN, 0.6-1 s): `scrub [Channel1] zoomed from 52.79 s` / `scrub [Channel2] zoomed from 174.57 s` is logged, **but no zoomed waveform / yellow frame is visible anywhere on the screen** (`p3_hold.png`, `p3_hold_full.png`: full screenshot while the finger is down; the matrix, overviews and list look as without a hold).
+- Drag while held: deck 1, 100 px right → `ended at 53.48 s` (+0.69 s, later, slow); deck 2, 150 px left → remaining time 3:00 → 3:02 (earlier). Release: the deck stays there. The fine movement works; only the window is missing.
+- Drag at once (no hold): `scrub [Channel2] zoomed from 194.79 s`, 80 px right, `ended at 194.77 s`: it hardly moved (my MOVE events came fast, in one shell call; may be the input, not the app).
+- **During every scrub AUTO PHASE jumped the OTHER deck**: scrubbing deck 2 → `jump [Channel1] to beat 7` twice and `beat 8` within ~2 s; the tap on deck 1 → `jump [Channel1] to beat 2`. With both on air that follows the "the deck you didn't touch" rule, but the audience hears the deck on the floor jump several times while the DJ only places the other deck. Suggest: AUTO PHASE waits until the scrub has ended, then moves the scrubbed deck.
+- Landscape scrubbing: not done here (see part 4; rotation is Marko's).
