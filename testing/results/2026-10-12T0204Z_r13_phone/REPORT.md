@@ -13,3 +13,9 @@ Media volume 0 (night).
 | 0d | Classic: waveforms full width | full width | **Narrower than before: ~10 % of the lane on both decks** (`s0-waveforms-hole.png`) | **FAIL** |
 | 0e | Classic: counter readable | own line, white, readable, not cut | Own line under the title, white, not cut (`0:44/5:56/-5:12`). **Still tiny**: ~8 px high on a 1084 px screen. The key moved to the artist line (`Orkidz 8A 5B Maxim Sheremetev, Cafe De A…`), and that line runs deck 1's artist into deck 2's | not cut / too small |
 | 0f | Camera hole | nothing under the hole | Under the status bar anyway (0a); the badge sits right of the hole, the logo left | blocked by 0a |
+| 1a | New interface starts (`--qml --play A B`) | "Interface: Qt Quick (GPU)", "Quick: interface ready", map lines | `04:05:57.866 Interface: Qt Quick (GPU)`, `04:05:59.256 Quick: interface ready 413x919`, both decks playing, 15 `Quick: map` lines (logo, keyBadge, deck1/2, tab0–2, page, sync1/2, cue1/2, play1/2, crossfader). No QML/module error, crash buffer empty. `logcat-quick.txt` | PASS |
+| 1b | Bars hidden | no status/navigation bar | Hidden in the new interface (`q1-start-hole.png`) | PASS |
+| 1c | Camera hole | nothing under the hole | Logo left (x 26–121), badge right (x 748–1058), the hole (x ~511–571) over empty black | PASS |
+| 1d | Deck counter | moves while playing | **Stays `0:00/0:00/-0:00` on both decks** while both play and the VU meters move (`q1-start.png`, `q1-start-b.png` 4 s later) | **FAIL** |
+| 1e | Play buttons | ▶ / ⏸ icon | **Two empty boxes (tofu) on both play buttons**: the glyph is missing from the font on Android | **FAIL** |
+| 1f | Overviews | coloured waveform | Grey, flat, almost empty strips under the titles | FAIL? (look in step 3) |
