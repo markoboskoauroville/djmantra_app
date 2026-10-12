@@ -10,7 +10,7 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
 Read `docs/RESULTS_2026-10-13.md` first (results), `docs/COORDINATION.md` (the sessions: cloud builder,
 phone tester "dj amp local" session_01MCmmCT2kk49c9sPPKrkUk8; the Mac helper is archived, not needed).
 ROUND29 tests V7 (parts 0-2 PASS; V7 vs rekordbox: key 78 %, BPM 120/150 the same, grid 8 off-beat left).
-Open: part 3 sections (app_sections_v7.txt) vs rekordbox; double / half BPM (7 songs, listed in RESULTS);
+Round 29 finished (4/4 PASS); sections on the phone F1 0.54 within ±1 bar vs rekordbox (bench 0.50). Open: double / half BPM (7 songs, listed in RESULTS);
 the 8 off-beat grids; All-In-One installed in the cloud (tools/analysis/allin1/) but its weights need
 huggingface.co + dl.fbaipublicfiles.com allowed in the environment's Network access (Marko); djay Pro
 waveform look (testing/djay/). Next build: bump to V8 (f9e2d7a: `Beats:` log lines name the file).
