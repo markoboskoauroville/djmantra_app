@@ -18,3 +18,10 @@ Build: run 38233904582, commit 1a724b3. Started on Marko's word ("please start t
 - DROPS: `Sound buffer: 2048 of 2048 frames` (ROUND19 said ~3072). 60 s on Phrasing, both playing, SYNC on: xruns stayed 1 (the one from start), late 0, slowest callback 2.4-3.4 ms. KEY MATCH on deck 2 (`key match [Channel2] 8A > 10A: 2 semitones`), 30 s: xruns 1, late 0, slowest 4.0-4.3 ms.
   Not done: a sound recording to count silences (no audio capture over adb on Android 16); Marko's ear needed.
 - The key badge (top) opens the Keys tab.
+
+## Part 2: sliders and knobs - PASS (quick check)
+- Crossfader L / R / M: the thumb follows the finger to both ends and back (`p2_xf_left.png`, `p2_xf_right.png`). No log line for it, so the sound side is not checked (not by ear).
+- Volume fader deck 1 dragged to half (`p2_moved.png`), double tap: back to full (`p2_reset.png`).
+- HIGH knob deck 1: a drag DOWN turned it clockwise (up). Check the direction: on DJ apps a drag down turns a knob down. Double tap: back to centre; its LED ring follows.
+- The meters between the faders do not change with the fader or the crossfader (pre-fader). Fine if intended.
+- The Mixer tab emits no `Quick: map` lines (tapped by screen coordinates).
