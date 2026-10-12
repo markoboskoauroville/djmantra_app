@@ -20,3 +20,10 @@ Build: run 38253413748, commit bd59c40. Started by the tester's own build watche
 - Knob direction: HIGH deck 1, slow `input swipe` from its centre 150 px DOWN (1.5 s): the pointer turned COUNTER-clockwise (value lower). Two drags up: back clockwise. Right now (`p2_knob_down.png`, `p2_knob_up.png`).
 - Double tap resets the knob (`p2_knob_reset.png`) and the volume fader (dragged to ~half, `p2_moved.png` → `p2_reset.png`). Crossfader to L and back to the middle.
 - Question for the builder: at rest (and after a double tap) HIGH / MID / LOW point to ~4-5 o'clock, while GAIN and FILTER point to 12. If the EQ's neutral is meant to be the middle, the drawing maps it wrong (Mixxx EQ 0..4, neutral 1).
+
+## Part 3: LEDs - PASS
+- 32 BEATS portrait (`p3_32beats.png`): the scrolling waveforms step aside, the LEDs take the page: each cell 129 device px high (`map led1_1 66 966 106 129`), ~49 dp. Asked: at least ~46 dp / ~120 px. Round 19's FAIL fixed.
+- 8 and 16 BEATS: waveforms back above the LEDs (`p3_8beats.png`, `p3_16beats.png`).
+- The LED map is logged again after each 8 / 16 / 32 change (`map bigLeds1 ... 560`, `led1_32`, `led2_32` at 32).
+- Quantized jumps, AUTO PHASE off: LED 1 three times in a row → 3 x `jump [Channel2] to beat 1 on the next beat`; then 32, 8, 4, 1 → each logged. xruns 0, late 0, slowest 4.1-5.0 ms. Groove continuity: not by ear.
+- AUTO PHASE back on moved deck 1 to deck 2's beat (`auto phase: [Channel1] (beat 10) ...`): the deck it moves is the one heard less; with the crossfader in the middle either is right.
