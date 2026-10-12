@@ -29,3 +29,8 @@ Round 21 was skipped at the builder's request (its fixes are in this build).
 - `played in this set: <path>` for every song that started (3 Sense, Addis, Alba). In the list: ✓ before the title, title and artist dimmed (`p3b_list.png`, `p3b_list2.png`); Aktysia (only loaded) is not marked.
 - After a restart the marks are gone (`p3b_restart.png`).
 - Landscape note: the song list shows only ~3 rows beside the decks (`p3b_list.png`); usable, but very short.
+
+## Part 4: AUTO CUE - PASS
+- Deck 1 PLAY (fader up, crossfader middle), deck 2 loaded and stopped: `auto cue: headphones to [Channel2]` at once; Mixer: deck 2's 🎧 lit, deck 1's off (`p4_deck1_on.png`).
+- Deck 2 started (both on air, crossfader middle): no change. Crossfader full right (deck 1 cut): `auto cue: headphones to [Channel1]` (`p4_xf_right.png`). Back to the middle: no change. Deck 2 stopped: `headphones to [Channel2]`.
+- Menu → SETTINGS: AUTO CUE: `auto cue off` (`p4_off.png`); crossfader right and back, deck 2 started and stopped: no switch. Restart: still off (`p4_after_restart.png`). On again: `auto cue on`.
