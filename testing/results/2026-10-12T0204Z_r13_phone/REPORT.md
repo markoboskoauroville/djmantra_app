@@ -19,3 +19,9 @@ Media volume 0 (night).
 | 1d | Deck counter | moves while playing | **Stays `0:00/0:00/-0:00` on both decks** while both play and the VU meters move (`q1-start.png`, `q1-start-b.png` 4 s later) | **FAIL** |
 | 1e | Play buttons | ▶ / ⏸ icon | **Two empty boxes (tofu) on both play buttons**: the glyph is missing from the font on Android | **FAIL** |
 | 1f | Overviews | coloured waveform | Grey, flat, almost empty strips under the titles | FAIL? (look in step 3) |
+| 2a | Mixer tab | clean, nothing cut, nothing under the hole | Knobs with labels under them, two VU meters moving, faders with deck colours (`q1-start-hole.png`). Hole clear. Counter stuck (1d), play icons tofu (1e) | PASS except 1d/1e |
+| 2b | Waveforms tab | both lanes, full width | Both lanes scroll, beat lines, **but the waveform is only ~5 % of the lane width** (narrower than the classic one): `q2-waveforms-hole.png`. Same scaling problem as 0d | **FAIL** |
+| 2c | Pads tab | 2×8 hot cue pads | DECK 1 / DECK 2 HOT CUES, pads 1–8, nothing cut (`q2-pads-hole.png`) | PASS |
+| 2d | Menu (logo) | menu | LIBRARY, CAMELOT WHEEL, BACK TO THE CLASSIC SCREEN (`q2-menu-hole.png`). **Header says "DJ Mantra 2.5.6"**: that looks like Mixxx's version, the app is 0.5.0. The LIBRARY button starts at y≈96, 5 px under the hole: tight but clear. No Settings in this menu | PASS (version text wrong) |
+| 2e | Library | folders | "Folders" with ← back: Music, Download, **Music again** (listed twice) (`q2-library-hole.png`) | FAIL (duplicate) |
+| 2f | Camelot wheel (badge tap) | wheel | Wheel with 8A outlined green, 5B pink, three explanation lines in green/orange/red (`q2-camelot-hole.png`). **The title "Camelot wheel" runs under the camera hole** (the hole sits on "…eel") | **FAIL (hole)** |
