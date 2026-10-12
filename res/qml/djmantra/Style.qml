@@ -12,7 +12,7 @@ QtObject {
     readonly property color subText: "#9AA3C7"
     readonly property color line: "#6B76A8"
     readonly property color accent: "#FFD54A"    // the one accent: selected, primary
-    readonly property color onAccent: "#1A1A1A"
+    readonly property color inkOnAccent: "#1A1A1A"
     // the element colours: fire, earth, air, water
     readonly property color fire: "#FF6B5E"
     readonly property color earth: "#6CCB72"

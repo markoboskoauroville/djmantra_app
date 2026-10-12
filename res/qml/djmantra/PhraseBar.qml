@@ -33,7 +33,7 @@ Rectangle {
                 height: root.rowHeight
 
                 Mixxx.ControlProxy { id: beat; group: deckRow.modelData.group; key: "beat_in_phrase" }
-                Mixxx.ControlProxy { id: left; group: deckRow.modelData.group; key: "section_beats_left" }
+                Mixxx.ControlProxy { id: beatsLeft; group: deckRow.modelData.group; key: "section_beats_left" }
                 Mixxx.ControlProxy { id: found; group: deckRow.modelData.group; key: "section_found" }
                 Mixxx.ControlProxy { id: perBar; group: deckRow.modelData.group; key: "beats_per_bar" }
                 Mixxx.ControlProxy { id: length; group: deckRow.modelData.group; key: "phrase_length" }
@@ -81,7 +81,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 text: (parent.index + 1).toString()
-                                color: parent.lit ? Style.onAccent : Style.subText
+                                color: parent.lit ? Style.inkOnAccent : Style.subText
                                 font.pixelSize: 11
                                 font.bold: parent.lit
                             }
@@ -97,8 +97,8 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: 62
                     horizontalAlignment: Text.AlignRight
-                    text: left.value >= 0
-                            ? Mixxx.DJMantra.barsBeatsLeft(left.value, perBar.value) + (found.value > 0 ? "" : "|")
+                    text: beatsLeft.value >= 0
+                            ? Mixxx.DJMantra.barsBeatsLeft(beatsLeft.value, perBar.value) + (found.value > 0 ? "" : "|")
                             : "-.-"
                     color: Style.accent
                     font.pixelSize: 15

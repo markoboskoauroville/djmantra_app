@@ -33,8 +33,8 @@ Text {
         if (inPhrase.value < 0)
             return "-.-  " + signature;
         let line = Mixxx.DJMantra.barBeat(number.value, perBar.value);
-        if (left.value >= 0)
-            line += "  " + Mixxx.DJMantra.barsBeatsLeft(left.value, perBar.value) + (found.value > 0 ? "" : "|");
+        if (beatsLeft.value >= 0)
+            line += "  " + Mixxx.DJMantra.barsBeatsLeft(beatsLeft.value, perBar.value) + (found.value > 0 ? "" : "|");
         return line + "  " + signature;
     }
 
@@ -44,7 +44,7 @@ Text {
     Mixxx.ControlProxy { id: number; group: root.group; key: "beat_number" }
     Mixxx.ControlProxy { id: perBar; group: root.group; key: "beats_per_bar" }
     Mixxx.ControlProxy { id: unit; group: root.group; key: "beat_unit" }
-    Mixxx.ControlProxy { id: left; group: root.group; key: "section_beats_left" }
+    Mixxx.ControlProxy { id: beatsLeft; group: root.group; key: "section_beats_left" }
     Mixxx.ControlProxy { id: found; group: root.group; key: "section_found" }
 
     MouseArea {

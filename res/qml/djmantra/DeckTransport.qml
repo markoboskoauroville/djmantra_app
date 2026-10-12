@@ -21,7 +21,7 @@ Column {
         text: "SYNC"
         group: root.group
         key: "sync_enabled"
-        onColor: root.deckColor
+        litColor: root.deckColor
     }
 
     Text {
@@ -42,7 +42,7 @@ Column {
         group: root.group
         key: "cue_default"
         mode: "push"
-        onColor: Style.orange
+        litColor: Style.orange
     }
 
     DButton {
@@ -53,6 +53,6 @@ Column {
         fontSize: 22
         group: root.group
         key: "play"
-        onColor: root.deckColor
+        litColor: root.deckColor
     }
 }

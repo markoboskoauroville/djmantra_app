@@ -139,10 +139,10 @@ Rectangle {
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
                     ctx.font = "bold " + Math.round(size) + "px sans-serif";
-                    ctx.fillStyle = isDeck ? Style.onAccent : (any && !lit ? sub : keyColor(n, 1));
+                    ctx.fillStyle = isDeck ? Style.inkOnAccent : (any && !lit ? sub : keyColor(n, 1));
                     ctx.fillText(code, x, y - size * 0.35);
                     ctx.font = Math.round(size * 0.62) + "px sans-serif";
-                    ctx.fillStyle = isDeck ? Style.onAccent : sub;
+                    ctx.fillStyle = isDeck ? Style.inkOnAccent : sub;
                     ctx.fillText(Mixxx.DJMantra.musicalName(code), x, y + size * 0.55);
                 }
             }

@@ -11,7 +11,7 @@ Rectangle {
     property string group
     property string key
     property string mode: "toggle" // or "push", or "" (only clicked())
-    property color onColor: Style.accent
+    property color litColor: Style.accent
     property bool lit: root.key !== "" && control.value > 0
     property int fontSize: 15
     // "play" / "pause": drawn, not a font glyph (round 13: the pause sign was tofu)
@@ -19,8 +19,8 @@ Rectangle {
     signal clicked()
 
     radius: Style.radius
-    color: area.pressed ? Style.pressed : (lit ? onColor : Style.tile)
-    border.color: lit ? onColor : Style.surface
+    color: area.pressed ? Style.pressed : (lit ? litColor : Style.tile)
+    border.color: lit ? litColor : Style.surface
     border.width: 1
 
     Mixxx.ControlProxy {
@@ -42,7 +42,7 @@ Rectangle {
                 width: root.height * 0.13
                 height: root.height * 0.42
                 radius: 2
-                color: root.lit ? Style.onAccent : Style.text
+                color: root.lit ? Style.inkOnAccent : Style.text
             }
         }
     }
@@ -52,7 +52,7 @@ Rectangle {
         anchors.margins: 4
         visible: root.icon !== "pause"
         text: root.icon === "play" ? "\u25B6" : root.text
-        color: root.lit ? Style.onAccent : Style.text
+        color: root.lit ? Style.inkOnAccent : Style.text
         font.pixelSize: root.fontSize
         font.bold: true
         horizontalAlignment: Text.AlignHCenter

@@ -13,7 +13,7 @@ Item {
     readonly property bool loaded: player ? player.isLoaded : false
 
     Mixxx.ControlProxy { id: beat; group: root.group; key: "beat_in_phrase" }
-    Mixxx.ControlProxy { id: left; group: root.group; key: "section_beats_left" }
+    Mixxx.ControlProxy { id: beatsLeft; group: root.group; key: "section_beats_left" }
     Mixxx.ControlProxy { id: found; group: root.group; key: "section_found" }
     Mixxx.ControlProxy { id: perBar; group: root.group; key: "beats_per_bar" }
 
@@ -24,8 +24,8 @@ Item {
 
     readonly property string barBeat: loaded ? Mixxx.DJMantra.barBeat(number.value, perBar.value) : "-.-"
     // ONE countdown: to the next phrase / section change ("|": to the end)
-    readonly property string countdown: loaded && left.value >= 0
-            ? Mixxx.DJMantra.barsBeatsLeft(left.value, perBar.value) + (found.value > 0 ? "" : "|")
+    readonly property string countdown: loaded && beatsLeft.value >= 0
+            ? Mixxx.DJMantra.barsBeatsLeft(beatsLeft.value, perBar.value) + (found.value > 0 ? "" : "|")
             : "-.-"
     readonly property var info: ({
         number: group === "[Channel2]" ? 2 : 1,

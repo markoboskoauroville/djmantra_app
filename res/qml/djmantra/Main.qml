@@ -76,7 +76,7 @@ Window {
                 Text {
                     anchors.centerIn: parent
                     text: "dj"
-                    color: Style.onAccent
+                    color: Style.inkOnAccent
                     font.pixelSize: 20
                     font.bold: true
                 }

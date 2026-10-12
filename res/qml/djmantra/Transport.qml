@@ -25,7 +25,7 @@ Column {
             text: "SYNC"
             group: "[Channel1]"
             key: "sync_enabled"
-            onColor: Style.deck1
+            litColor: Style.deck1
         }
 
         Text {
@@ -56,7 +56,7 @@ Column {
             text: "SYNC"
             group: "[Channel2]"
             key: "sync_enabled"
-            onColor: Style.deck2
+            litColor: Style.deck2
         }
     }
 
@@ -71,7 +71,7 @@ Column {
             group: "[Channel1]"
             key: "cue_default"
             mode: "push"
-            onColor: Style.orange
+            litColor: Style.orange
         }
 
         DButton {
@@ -82,7 +82,7 @@ Column {
             group: "[Channel2]"
             key: "cue_default"
             mode: "push"
-            onColor: Style.orange
+            litColor: Style.orange
         }
     }
 
@@ -97,7 +97,7 @@ Column {
             objectName: "play1"
             group: "[Channel1]"
             key: "play"
-            onColor: Style.deck1
+            litColor: Style.deck1
         }
 
         DFader {
@@ -117,7 +117,7 @@ Column {
             objectName: "play2"
             group: "[Channel2]"
             key: "play"
-            onColor: Style.deck2
+            litColor: Style.deck2
         }
     }
 }

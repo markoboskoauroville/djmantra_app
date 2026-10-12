@@ -13,7 +13,7 @@ Row {
 
     spacing: 5
 
-    Mixxx.ControlProxy { id: left; group: root.group; key: "section_beats_left" }
+    Mixxx.ControlProxy { id: beatsLeft; group: root.group; key: "section_beats_left" }
     Mixxx.ControlProxy { id: found; group: root.group; key: "section_found" }
     Mixxx.ControlProxy { id: perBar; group: root.group; key: "beats_per_bar" }
     Mixxx.ControlProxy { id: keyValue; group: root.group; key: "key" }
@@ -49,8 +49,8 @@ Row {
             }
 
             Text {
-                text: left.value >= 0
-                        ? Mixxx.DJMantra.barsBeatsLeft(left.value, perBar.value) + (found.value > 0 ? "" : "|")
+                text: beatsLeft.value >= 0
+                        ? Mixxx.DJMantra.barsBeatsLeft(beatsLeft.value, perBar.value) + (found.value > 0 ? "" : "|")
                         : "-.-"
                 color: Style.accent
                 font.pixelSize: 20
@@ -70,7 +70,7 @@ Row {
             group: root.group
             key: "section_jump"
             mode: "push"
-            onColor: Style.accent
+            litColor: Style.accent
         }
     }
 

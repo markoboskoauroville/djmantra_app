@@ -87,7 +87,7 @@ Grid {
             Text {
                 anchors.centerIn: parent
                 text: (pad.index + 1).toString()
-                color: pad.lit ? Style.onAccent : Style.text
+                color: pad.lit ? Style.inkOnAccent : Style.text
                 font.pixelSize: 20
                 font.bold: true
             }
