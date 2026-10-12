@@ -723,6 +723,30 @@ QVariantMap QmlDJMantra::songInfo(const QString& path) const {
     return info;
 }
 
+namespace {
+
+// One line per analysed song for the comparison with rekordbox
+// (testing/sections/REKORDBOX_COMPARE.md): the tester reads it with logcat
+void logAnalysis(const TrackPointer& pTrack) {
+    if (!pTrack) {
+        return;
+    }
+    const auto pBeats = pTrack->getBeats();
+    const auto sampleRate = pTrack->getSampleRate();
+    double firstBeat = -1;
+    if (pBeats && sampleRate.isValid() && pBeats->firstBeat().isValid()) {
+        firstBeat = pBeats->firstBeat().value() / sampleRate.toDouble();
+    }
+    qInfo().noquote() << QStringLiteral("Analysis: %1\tbpm %2\tkey %3\tfirst_beat_s %4\tconst %5")
+                                 .arg(QFileInfo(pTrack->getLocation()).fileName())
+                                 .arg(pTrack->getBpm(), 0, 'f', 4)
+                                 .arg(pTrack->getKeyText())
+                                 .arg(firstBeat, 0, 'f', 4)
+                                 .arg(pBeats && pBeats->hasConstantTempo() ? 1 : 0);
+}
+
+} // namespace
+
 void QmlDJMantra::analyzeAhead(const QStringList& paths) {
     const auto pLibrary = QmlLibraryProxy::library();
     if (!pLibrary) {
@@ -737,6 +761,7 @@ void QmlDJMantra::analyzeAhead(const QStringList& paths) {
         }
         const bool hasKey = djmantra::camelot::fromKey(pTrack->getKey()).isValid();
         if (pTrack->getBpm() > 0 && hasKey) {
+            logAnalysis(pTrack); // analysed before
             continue;
         }
         tracks.append(AnalyzerScheduledTrack(pTrack->getId()));
@@ -758,6 +783,17 @@ void QmlDJMantra::analyzeAhead(const QStringList& paths) {
                     if (left != m_analysisLeft) {
                         m_analysisLeft = left;
                         emit analysisChanged();
+                    }
+                });
+        connect(m_pAnalysis.get(),
+                &TrackAnalysisScheduler::trackProgress,
+                this,
+                [](TrackId trackId, AnalyzerProgress progress) {
+                    if (progress < kAnalyzerProgressDone) {
+                        return;
+                    }
+                    if (const auto pLibrary = QmlLibraryProxy::library()) {
+                        logAnalysis(pLibrary->trackCollectionManager()->getTrackById(trackId));
                     }
                 });
         connect(m_pAnalysis.get(), &TrackAnalysisScheduler::finished, this, [this] {
