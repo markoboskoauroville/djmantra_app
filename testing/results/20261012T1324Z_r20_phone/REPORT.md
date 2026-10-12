@@ -27,3 +27,7 @@ Build: run 38253413748, commit bd59c40. Started by the tester's own build watche
 - The LED map is logged again after each 8 / 16 / 32 change (`map bigLeds1 ... 560`, `led1_32`, `led2_32` at 32).
 - Quantized jumps, AUTO PHASE off: LED 1 three times in a row → 3 x `jump [Channel2] to beat 1 on the next beat`; then 32, 8, 4, 1 → each logged. xruns 0, late 0, slowest 4.1-5.0 ms. Groove continuity: not by ear.
 - AUTO PHASE back on moved deck 1 to deck 2's beat (`auto phase: [Channel1] (beat 10) ...`): the deck it moves is the one heard less; with the crossfader in the middle either is right.
+
+## Part 4: colours - PASS
+- Both decks yellow (`p3_32beats.png`, `p4_armed_a.png`): SYNC / PLAY when on, the matrix's time left and bar.beat, its running lights, the Phrasing LEDs, the key labels (and genre) under the titles, the overviews' edge, the Keys tab rows `1 5A` / `2 7A` (`p4_keys.png`). No deck is green or blue any more. (The overviews' waveforms keep their sound colours; the Camelot wheel keeps its key colours; the CPU meter stays green: none of these is a deck colour.)
+- White marked states: the matrix countdown (right) is white; a lit beat 1 of a bar (cell 25 on deck 1) is white; a stopped deck's armed LED 1 is solid white (`p4_armed_a/b.png`), then `beat launch [Channel2] on beat 1` at deck 1's next phrase. Readable against the yellow.
