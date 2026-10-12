@@ -39,3 +39,18 @@ Threads (`top -H`): Phrasing: qtMainLoopThread 24.3 %, QtThread (render) 20.6 %,
 - A first measurement with both decks silently stopped (peak 0) gave Keys 10 %: so ~55 points of the cost come from playing decks (waveforms, meters, matrix animating), not from the tab itself.
 - Smoothness: waveforms scroll, no visible stutter in screenshots (not judged by eye on the phone).
 - Tester slip: one CUE / PLAY pair landed on SYNC / CUE of deck 1 (`sync_enabled 1` logged from a CUE tap); deck 1's SYNC is now on. Positions in the map matched the screen afterwards, so maybe a moment with the bars shown.
+
+## Part 5: genre in English - PASS (one leftover)
+- New lookups via NEXT: Viel - Beautiful Place → **Electro**, Don Lockwood - Beautiful Sky → **Electro**, Gorje Hewek - Children → **Dance**, Deaf Unique - Connecting Beat → **Electro**. The headers show them in English with the key (`p5_genre.png`). 4 of 4 found; Awka - Astral Voyage still not on Deezer.
+- Beautiful Place had "Elektronička glazba" in round 23 and is now "Electro": it was looked up again.
+- **Leftover:** deck 1's Addis still shows **"Klasična gl..."** (Croatian "Klasična glazba" = classical music, and wrong for an Afro-house track) from an older lookup. Genres saved in another language should be looked up again once; and "Classical" for Orkidz looks like a bad match (log which source gave it).
+- Songs looked up in round 23 (Alba, American Dream, Amulet) logged no new lookup: they keep whatever was saved then.
+
+## Round 24 finished: 3 pass, 2 fail
+Pass: 0-2 smoke / transport / knobs (frame rate 90 → 60 Hz, then 120 → 60 Hz), 5 genre in English.
+Fail, ranked:
+1. A CUE preview (CUE held on the stopped deck 2) made AUTO PHASE jump deck 1, which was ON AIR: the audience hears a jump. AUTO PHASE must never move the on-air deck because of a cue preview.
+2. CPU 62-66 % of one core on every tab (r23 52 / 76 / 75 / 49): the Controller thread is gone, the render thread still ~21 % on Phrasing / Mixer, the main loop ~24 % everywhere.
+Fixed: CUE on a paused deck goes back to the cued beat exactly (45.1, 41.3).
+Notes: CUE on a PLAYING deck stopped at 48.2 the first time, not at the cue (41.3); the map logged right after start is ~100 px off until the layout settles; Addis keeps a Croatian "Klasična glazba".
+Phone: woken from sleep for the round, kept awake (`svc power stayon true`) and rotation locked to portrait while testing; both given back at the end (`stayon false`, `user-rotation free`).
