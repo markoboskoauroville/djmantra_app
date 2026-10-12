@@ -126,8 +126,11 @@ Item {
         armedBeat = -1;
         pulseJump(index + 1);
         cuedBeat = index;
-        cueSet.restart();
-        Mixxx.DJMantra.log("cue " + root.group + " at beat " + (index + 1));
+        // round 25: only Marko's own press sets the CUE point; an aligned
+        // PLAY (automatic) moved it each time (88.16 -> 90.16 -> 89.66 s)
+        if (!automatic)
+            cueSet.restart();
+        Mixxx.DJMantra.log((automatic ? "align " : "cue ") + root.group + " at beat " + (index + 1));
     }
 
     // the beat cued on the stopped deck (-1: none); PLAY starts from it
