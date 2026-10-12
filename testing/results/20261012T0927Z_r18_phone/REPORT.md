@@ -36,3 +36,24 @@ isVisible(statusBars())` would see it, and with it the 4 s hide, the touch-to-hi
 | 5 | folders | Music and Download | `Folders`: Music, Download; Music opens with ← (00_start.png, 05_cover_pick.png) | PASS |
 | 5 | tap a song | loads onto the free deck | part 1: `Quick: load [Channel1] …3 Sense`, then `[Channel2] …Addis` | PASS |
 | 5 | cover tap, then a song | that deck | deck 2's cover: Songs tab, `tap a song: deck 2` in yellow (05_cover_pick.png); Aktysia → `Quick: load [Channel2] /storage/emulated/0/Music/Aktysia.mp3`. The tap map's `deck2` is the whole header: a tap in its middle hits the text (= empty space → navigation bar), the cover is at the outer edge | PASS |
+| 6 | headers | artist, title, key + genre; no times; deck 2's key on its own side | as listed; deck 2's key (8A, 7A) under its title on the right (02_mixer_knobs_set.png, 06_keys.png) | PASS |
+| 6 | genre online | found and sensible | 1 of 5: `GenreLookup: Fulltone - Alba: Dance`, `Quick: genre "Alba" : "Dance"` (shown). Not found: `no recording for Eran Hersh, Anorre, The NGHBRS - 3 Sense`, `… Orkidz - Addis`, `… Jakatta, PROFF - American Dream - PROFF Interpretation` (a known track: the query carries the remix suffix and two artists), `Amonita - Amulet: none`; once `GenreLookup failed for Anonimat, Basaar - Aktysia: java.lang.Exception: HTTP 503` (MusicBrainz rate limit?). Suggest: first artist only, title without " - … Remix/Interpretation/Extended Mix", retry once on 503, a second source | FAIL |
+| 6 | overviews | waveform from the bottom, section bands, white lines, next change yellow | Addis and Aktysia: bands, white lines, the next change yellow (06_phr_zoomed.png, 06_keys.png); countdown to it (`-6.2`, `-54.3`). American Dream and Amulet: no section at all, no `Sections:` line, the countdown runs to the end (`-270.0`) | FAIL (sections missing in 2 of 4 songs) |
+| 6 | JUMP | to the next section in time | with no sections it jumps to the END: `"[Channel2]" jump to the next section at "535.5" s; cues: "outro_end_position 535.5 s"`, `"[Channel1]" … at "243.7" s; cues: "intro_start_position 0.3 s, outro_end_position 243.7 s"`: both songs ended. Suggest: no section ahead → do nothing (or 16 / 32 bars) | FAIL |
+| 6 | Phrasing waveforms | deck 1 up, deck 2 down, + / − zoom, smooth | both decks drawn up / down from the middle line (03_phrasing.png). + pressed twice: no visible change (the vertical lines ~215 px apart before and after, 06_phr_zoomed.png), no log line. The waves use ~15 % of their lane height (Marko asked for much bigger). Smoothness not judged from screenshots | FAIL |
+| 6 | Keys tab | the wheel as wide as the page | ~880 px wide, every code and key name readable (06_keys.png) | PASS |
+| 6 | KEY MATCH | deck 2 7A vs 8A → 8A; off; − / + | `Quick: key match [Channel2] 7A > 8A: -5 semitones`. Off, −, + log nothing; afterwards deck 2 shows 7A again (06_keys_after.png): consistent with off and −/+ cancelling, not proven per step. Suggest a log line for each | PASS (on) |
+| 6 | AUTOMIX | bass swap first, EQs follow the fader, off resets | `Quick: automix on eq true tempo true`; at 35 % (06_automix_mid.png): incoming deck 1 LOW full, HIGH/MID cut; outgoing deck 2 LOW cut, HIGH/MID full; right end `automix: [Channel2] is the outgoing deck`; `automix off …` → all EQs full (06_automix_off.png). BPM glide not measured (no BPM in the log) | PASS |
+| 7 | CPU and memory | vs round 13 (32-55 %) | both decks playing, `top` (100 % = one core): Mixer 102 %, Songs 97 %, Phrasing 100 %; the app's own meter shows 12-13 % (all cores). `TOTAL PSS 527596 K` | FAIL (about 2× round 13 by the same `top` measure, if round 13 used it) |
+
+## Round 18 finished: 4 parts pass (0, 1, 2, 5), 4 fail (3, 4, 6, 7)
+
+The fails, most important first:
+1. **The navigation bar never hides** once shown (part 4); in landscape it covers + / −, the Keys label, the CPU meter and the last LED column.
+2. **JUMP goes to the end of the song** when there is no section ahead (part 6).
+3. **Sections missing** in 2 of 4 songs (American Dream, Amulet): no `Sections:` line (part 6).
+4. **32-beat LEDs ~19 dp tall** (part 3); landscape LEDs unreadable (part 4).
+5. **Phrasing waveforms**: zoom shows no change, the waves use ~15 % of the lane (part 6).
+6. **Genre** found for 1 of 5 songs (part 6).
+7. **CPU** ~100 % of one core with both decks playing (part 7).
+Not tested: Marko's own PLAY presses (he is out), the swipe-up from the bottom (the bar was stuck), sound by ear.
