@@ -228,9 +228,9 @@ QList<int> sectionBeatsV2(const std::vector<std::array<double, 3>>& points,
     bool state = kickRaw[0] / p90 > 0.5;
     for (int k = 0; k < nb; ++k) {
         const double v = std::clamp(kickRaw[k] / p90, 0.0, 1.5);
-        if (state && v < 0.35) {
+        if (state && v < 0.45) { // tuned (0.35 / 0.6 before)
             state = false;
-        } else if (!state && v > 0.6) {
+        } else if (!state && v > 0.7) {
             state = true;
         }
         on[k] = state;
@@ -270,15 +270,15 @@ QList<int> sectionBeatsV2(const std::vector<std::array<double, 3>>& points,
     int phase = 0;
     double bestVote = -1;
     for (int o = 0; o < 8; ++o) {
-        double kicks = 0;
         double sum = 0;
         int count = 0;
         for (int k = o; k < nb; k += 8) {
-            kicks += kickChange[k];
             sum += change[k];
             ++count;
         }
-        const double vote = 2.0 * kicks + (count ? sum / count : 0);
+        // tuned on Marko's 150 songs (testing/sections): the kick in the
+        // vote cost 7 % exact sections; the bands only
+        const double vote = count ? sum / count : 0;
         if (vote > bestVote) {
             bestVote = vote;
             phase = o;

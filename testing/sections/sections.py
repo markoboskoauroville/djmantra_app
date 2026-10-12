@@ -177,9 +177,9 @@ def detector_v2(lmh, beats, n_frames):
     on = np.zeros(nb, bool)
     state = kick[0] > 0.5
     for i, v in enumerate(kick):
-        if state and v < 0.35:
+        if state and v < 0.45:  # (tuned: 0.35 / 0.6 before)
             state = False
-        elif not state and v > 0.6:
+        elif not state and v > 0.7:
             state = True
         on[i] = state
     i = 0
@@ -197,7 +197,8 @@ def detector_v2(lmh, beats, n_frames):
         bch[i] = max(abs(np.log((b3[i:i + 4, c].mean() + 4) / (b3[i - 4:i, c].mean() + 4))) for c in range(3))
     # 3. phrase "1": the 8-bar offset where the kick and the bands change most
     ch = np.r_[0, np.abs(np.diff(np.log1p(b3), axis=0)).sum(axis=1)]
-    phase = int(np.argmax([2.0 * kch[o::8].sum() + ch[o::8].mean() for o in range(8)]))
+    # (tuned on Marko's 150 songs: the kick in the vote cost 7 % exact; bands only)
+    phase = int(np.argmax([ch[o::8].mean() for o in range(8)]))
     # 4. novelty: self-similarity of the bars (bands + their rhythm), checkerboard 4 and 8
     f = zscore(np.c_[3 * np.log1p(b3), q])
     f = f / (np.linalg.norm(f, axis=1, keepdims=True) + 1e-9)

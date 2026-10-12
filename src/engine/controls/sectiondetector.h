@@ -34,7 +34,7 @@ QList<int> sectionBars(const QList<std::array<double, 3>>& energies,
 /// change is largest); per bar the bands, their four quarters (the rhythm)
 /// and the kick (the low band's peak on the beats; on / off with hysteresis,
 /// a 1-bar state is a fill); the phrase "1" by vote (the 8-bar offset where
-/// the kick and the bands change most); a bar self-similarity novelty
+/// the bands change most); a bar self-similarity novelty
 /// (checkerboard, 4 and 8 bars); score = novelty + kick change + band change,
 /// weighted to the 8-bar grid; peaks 8 bars apart; a kick change on a 4 / 8
 /// bar line is always a section.
