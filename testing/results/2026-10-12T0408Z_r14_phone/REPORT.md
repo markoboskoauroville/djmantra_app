@@ -19,3 +19,60 @@ icons sit on the dj logo, and Wi-Fi, LTE, signal and battery sit on the Camelot 
 | A2b | Menu → Settings | opens, logged | `06:10:44.591 Menu: Settings tapped`, `06:10:44.608 Settings screen open QRect(0,0 413x919) visible true`. Settings shows Main Volume, Split Output, New interface (GPU), Draw on the GPU (test), Sound, Library, Camelot wheel (`a2-settings-hole.png`). Title and ← clear of the hole | PASS |
 | A3a | Counter readable | readable size | Not cut (`0:43/5:56/-5:13`), white, but **still ~8 px high** on a 1084 px screen | FAIL (size) |
 | A3b | Waveform width | (report) | **~30 % of the lane** on both decks (round 13: ~10 %) (`a3-waveforms-hole.png`) | better, not full |
+| B1 | New: TIME counter runs | elapsed/length/-remaining | `0:08/5:56/-5:47` → `0:23/5:56/-5:33`, both decks; BARS `71.1 -44.0 4/4` | PASS |
+| B2 | New: play/pause icon | ▶ / two bars | Two bars drawn while playing (`b1-mixer-hole.png`), no tofu | PASS |
+| B3 | New: waveforms fill their lane | most of the lane | `Quick: waveform gain [Channel1] 2.1055 (loudest 109 of 314336 points)`, `[Channel2] 2.08636 (loudest 110 …)`: the loudest point of the waveform data is only 109–110 of 255. **On screen still ~5–15 % of the lane** (`b3-waveforms-hole.png`) | **FAIL** |
+| B4 | New: zoom −/+ | scale changes | +2: beat lines ~2× farther apart; −4: much closer (`b4-zoom-plus2`, `b4-zoom-minus4`). **But each deck zooms on its own: Marko says both decks must always share one zoom level** (below) | PASS (works) / design FAIL |
+| B5 | New: Camelot wheel title below the hole | clear | Title and ← below the top row, hole clear (`b5-camelot-hole.png`). **Marko: the wheel itself "looks like rubbish"** (below) | hole PASS / look FAIL |
+| B6 | New: library | Music once; ask on a playing deck | **Music still listed twice** (`b6-library-hole.png`). LOAD 2 while deck 2 plays → "Deck 2 is playing. Load the new song anyway?" CANCEL / LOAD; CANCEL kept Dune (`b6-load2-playing-hole.png`) | Music FAIL / ask PASS |
+| B7 | New: menu header | DJ Mantra 0.5.0 | "DJ Mantra 0.5.0" (`b7-menu-hole.png`) | PASS |
+| B8 | New: knob labels under their knobs | under | GAIN/HIGH/MID/LOW/FILTER right under each knob (`b1-mixer-hole.png`) | PASS |
+| B9 | New: landscape | — | **Not tested.** A stray tap sent the phone to Android's recent-apps screen, then Marko stopped the round. Rotation restored to 0 | not run |
+| C | Loudness | — | **Not run** (Marko stopped the round) | not run |
+
+## Marko, 06:20: stop testing, fix everything, then test the new build
+
+> "Please update the app and then test the new app. Don't continue testing. Whatever you found out until now, you fix,
+> fix what I told you, and then test."
+
+His feature request and two "very big" mistakes, in his words:
+
+> "Please feature request. Loading song is pretty straightforward. You don't need to put into library or file picker,
+> load into one deck or load in deck 2. Song is always loaded in the deck which is free, which is not playing, and goes
+> in the logic 1-2, 1-2, 1-2. If both are not playing, then you replace one, the next song replace two. You need to see
+> how this is done inside DJ Pro Chrome algorithm. They have the same feature, load into free deck, and they want to
+> have it also here. And to load in specific deck, the users just click on the Artwork."
+
+(Probably **djay Pro by Algoriddim**: "DJ Pro Chrome algorithm" is the dictation of "djay Pro, Algoriddim". Its "load to free deck" is meant.)
+
+> "And I noticed that you are changing the zoom of zoomed-in waveform independently. This is not working. The both
+> tracks need to be always the same zoom level so user can mix them. They need to be comparable like one track.
+> That's very big mistake."
+
+> "And second mistake: song sections are not recognized correctly. This countdown for the next section is counting down
+> to the end of the song. That's nonsense. It's very clearly seen when there is intro, there is instrumental part, there
+> is breakdown. So changes in the structure It's very easy to detect in the song because one section is doing the same
+> patterns, then it changes. So you simply can count down to the actual next section when arrangement is changing. Bass
+> is gone, vocal is gone, something is changing. So sections are easy to recognize. You don't need to recognize what is
+> it. You just need to recognize its changes and then count down, count down until change of the section."
+
+> "Camelot wheel looks like rubbish. Should be nicely drawn wheel. Like, look at my horoscope application. The wheel in
+> horoscope is perfect. Same technology you need to use here."
+
+The horoscope app is Donnie Horoscope, private repo `markoboskoauroville/astro_dos`, branch `ccr-2d5376a4-jo2igv`.
+Its wheel is `android/core/src/main/kotlin/com/astrodos/zodiac/modern/Wheel.kt`: a true circle drawn with
+`Vg.band()` (filled ring sectors between two radii), thin sector boundary lines, glyphs centred in the band, degree
+ticks, colours from a `Theme`; `Vg.kt` is the drawing interface, `AndroidVg.kt` the Canvas implementation.
+
+### The full list for the next build
+
+1. **Load to the free deck** (feature): one LOAD per song; it goes to the deck that is not playing; if neither plays,
+   alternate 1, 2, 1, 2. Tap a deck's artwork to choose that deck explicitly.
+2. **One zoom for both decks**, always the same, in both interfaces.
+3. **Sections**: the "next" countdown goes to the next change in the arrangement (bass / vocal / pattern change), not to the end of the track.
+4. **Camelot wheel** drawn like the horoscope wheel (true circle, ring sectors, clean boundaries).
+5. Classic: bars come back after a swipe and never hide; the app does not make room (fix pushed after part A, not yet tested).
+6. Classic: menu ✕ under the camera hole (fix pushed, not yet tested). Counter size (fix pushed).
+7. Both: waveforms narrow (data peaks at 109/255; classic ~30 %, new ~5–15 % of the lane).
+8. New: library lists "Music" twice.
+9. New: landscape and loudness (C) still to test on the next build.
