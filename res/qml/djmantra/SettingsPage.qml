@@ -32,6 +32,7 @@ Rectangle {
     property int cqTapKey: Number(Mixxx.DJMantra.setting("cq_tap_key", "0"))
     property real stopTime: Number(Mixxx.DJMantra.setting("stop_time", "0"))
     property string laneStyle: Mixxx.DJMantra.setting("lane_style", "mirrored")
+    property string laneHeight: Mixxx.DJMantra.setting("lane_height", "djay")
     property int cqFx: Number(Mixxx.DJMantra.setting("cq_fx", "1"))
     property int seenVersion: -1
     signal done()
@@ -168,6 +169,30 @@ Rectangle {
                         onClicked: {
                             root.laneStyle = modelData[0];
                             Mixxx.DJMantra.setSetting("lane_style", modelData[0]);
+                        }
+                    }
+                }
+            }
+
+            Row {
+                // the lane's height: djay's thin wave (default) or the big one
+                spacing: 6
+
+                Repeater {
+                    model: [["djay", qsTr("THIN (djay)")], ["tall", qsTr("TALL")]]
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "laneHeight_" + modelData[0]
+                        width: (column.width - 6) / 2
+                        height: 40
+                        text: modelData[1]
+                        fontSize: 13
+                        lit: root.laneHeight === modelData[0]
+                        onClicked: {
+                            root.laneHeight = modelData[0];
+                            Mixxx.DJMantra.setSetting("lane_height", modelData[0]);
                         }
                     }
                 }

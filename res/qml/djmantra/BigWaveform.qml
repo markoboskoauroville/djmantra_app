@@ -19,6 +19,11 @@ Item {
     property real gain: 1
     property bool measured: false
     property bool mirrored: Mixxx.DJMantra.setting("lane_style", "mirrored") !== "half"
+    // Marko 13.10.2026 ("the looks of the waveform the same as the reference ones"):
+    // every djay reference (testing/djay/screenshots, the round 35/39 pairs) draws the
+    // lane thin, ~20-25 % of its height, one arrow per hit: that is the default now;
+    // Settings -> LANE HEIGHT "tall" keeps the big wave
+    property bool thin: Mixxx.DJMantra.setting("lane_height", "djay") !== "tall"
 
     clip: true
 
@@ -52,7 +57,7 @@ Item {
         // round 35 (djay vs the app at the same bars): djay draws each deck's wave
         // centred in its own lane, mirrored up and down; Settings -> LANE "half"
         // keeps round 18's big half wave (deck 1 up, deck 2 down from the middle)
-        heightGain: root.mirrored ? 0.8 : 0.9
+        heightGain: root.thin ? (root.mirrored ? 0.3 : 0.35) : (root.mirrored ? 0.8 : 0.9)
         zoom: root.zoom
         showRoll: false
         width: root.width

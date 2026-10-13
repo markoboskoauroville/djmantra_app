@@ -17,3 +17,5 @@ after. Log lines `AutoMix: ...`.
 "<songs> <total time>" and "<analysed %>" (green at 100 %). The analysis runs only in the open folder, starting 3 s
 after it is opened (log `Analysis: folder ...`), and stops when it is left (`Analysis: stopped`); opening it again
 goes on. Check: a new folder 0 % -> 100 %, leave halfway (stops), come back (goes on from where it was).
+## 4. V36 (Marko: the waveform as the references): the Phrasing lanes thin as djay's (0.3 of the lane: every djay
+reference shows ~20-25 %, one arrow per hit); Settings -> LANE HEIGHT: THIN (djay, default) / TALL. Pairs vs djay.
