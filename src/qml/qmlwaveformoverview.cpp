@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "mixer/basetrackplayer.h"
+#include "waveform/djaycolor.h"
 #include "moc_qmlwaveformoverview.cpp"
 
 namespace {
@@ -143,6 +144,11 @@ void QmlWaveformOverview::paint(QPainter* pPainter) {
 
     const int nextCompletion = actualCompletion + completionIncrement;
 
+    if (m_renderer == Renderer::Djay) {
+        drawDjay(pPainter, pWaveform, std::min(waveformCompletion, dataSize));
+        return;
+    }
+
     const Channels channels = m_channels;
     // DJ Mantra: the song's loud parts fill the height (round 18, Marko: "the
     // waveform needs to be much bigger"): the 97th percentile of the drawn
@@ -266,6 +272,59 @@ void QmlWaveformOverview::drawFiltered(QPainter* pPainter,
         pPainter->setPen(m_colorLow);
         pPainter->drawLine(QPointF(offsetX, 0), QPointF(offsetX, rightLow));
     }
+}
+
+// DJ Mantra: djay Pro's overview (testing/djay/screenshots): mirrored around the
+// middle, a darker outline from the local peak and a brighter body from the level,
+// each column in djay's colour; the song's loud parts fill the height.
+void QmlWaveformOverview::drawDjay(QPainter* pPainter,
+        ConstWaveformPointer pWaveform,
+        int completion) const {
+    const int points = completion / 2;
+    if (points < 2 || width() <= 0 || height() <= 0) {
+        return;
+    }
+    std::vector<double> level(points);
+    std::vector<int> sorted(points);
+    for (int i = 0; i < points; ++i) {
+        level[i] = (pWaveform->getAll(2 * i) + pWaveform->getAll(2 * i + 1)) / 2.0;
+        sorted[i] = static_cast<int>(level[i]);
+    }
+    const auto at = [&](int percent) {
+        auto nth = sorted.begin() + static_cast<std::ptrdiff_t>((points - 1) * percent / 100);
+        std::nth_element(sorted.begin(), nth, sorted.end());
+        return std::max(1, *nth);
+    };
+    const double colourScale = 1.0 / at(99); // the colour's inputs, as fitted
+    const double heightScale = 0.95 / at(97); // the loud parts fill the height
+    const double middle = height() / 2;
+    const double step = width() / points;
+    pPainter->save();
+    pPainter->setClipRect(boundingRect());
+    pPainter->setRenderHint(QPainter::Antialiasing, false);
+    QPen pen;
+    pen.setWidthF(std::max(1.0, step + 0.5));
+    for (int i = 0; i < points; ++i) {
+        double peak = level[i];
+        for (int j = std::max(0, i - 2); j <= std::min(points - 1, i + 2); ++j) {
+            peak = std::max(peak, level[j]);
+        }
+        const QColor colour = djmantra::djayColor(
+                (pWaveform->getLow(2 * i) + pWaveform->getLow(2 * i + 1)) / 2.0 * colourScale,
+                (pWaveform->getMid(2 * i) + pWaveform->getMid(2 * i + 1)) / 2.0 * colourScale,
+                (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0 * colourScale,
+                level[i] * colourScale);
+        const double x = (i + 0.5) * step;
+        const double outer = std::min(1.0, peak * heightScale) * middle;
+        const double inner = std::min(1.0, level[i] * heightScale) * middle * 0.7;
+        pen.setColor(colour.darker(170));
+        pPainter->setPen(pen);
+        pPainter->drawLine(QPointF(x, middle - outer), QPointF(x, middle + outer));
+        pen.setColor(colour.lighter(115));
+        pPainter->setPen(pen);
+        pPainter->drawLine(QPointF(x, middle - inner), QPointF(x, middle + inner));
+    }
+    pPainter->restore();
 }
 
 QColor QmlWaveformOverview::getRgbPenColor(ConstWaveformPointer pWaveform, int completion) const {

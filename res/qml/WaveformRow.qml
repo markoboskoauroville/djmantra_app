@@ -23,6 +23,47 @@ Item {
     // (round 18: diagonal lines in landscape)
     property real zoom: 0
     property bool showRoll: true
+    // V9 djay Pro's look (DjayWaveformShader): the bands / the song's loudest level
+    // (Mixxx.DJMantra.waveformLevel) and how far the loud parts reach
+    property real levelGain: 1.0
+    property real heightGain: 0.9
+    // V9: bar lines orange with the bar number (djay), beat lines grey. The bar of
+    // each beat comes from the deck's beat_number (beats since "1") at the last
+    // beat: oneSample only changes when the count does, not every frame
+    property real oneSample: -1
+    readonly property real beatSamples: bpmControl.value > 0
+            ? 60 / bpmControl.value * sampleRateControl.value * 2 : 0
+
+    Mixxx.ControlProxy {
+        id: beatNumberControl
+
+        group: root.group
+        key: "beat_number"
+        onValueChanged: root.updateOne()
+        Component.onCompleted: root.updateOne()
+    }
+
+    function updateOne() {
+        if (root.beatSamples > 0 && samplesControl.value > 0)
+            root.oneSample = Math.round(playPositionControl.value * samplesControl.value
+                    - beatNumberControl.value * root.beatSamples);
+    }
+
+    onBeatSamplesChanged: updateOne()
+
+    Mixxx.ControlProxy {
+        id: beatsPerBarControl
+
+        group: root.group
+        key: "beats_per_bar"
+    }
+
+    Mixxx.ControlProxy {
+        id: bpmControl
+
+        group: root.group
+        key: "file_bpm"
+    }
 
     Item {
         id: waveformContainer
@@ -31,6 +72,12 @@ Item {
 
         anchors.fill: parent
         clip: true
+
+        Rectangle {
+            // djay Pro's lane background
+            anchors.fill: parent
+            color: "#141414"
+        }
 
         Mixxx.ControlProxy {
             id: samplesControl
@@ -136,10 +183,11 @@ Item {
             x: playMarker.screenPosition * waveformContainer.width - playPositionControl.value * width
             visible: root.deckPlayer.isLoaded
 
-            WaveformShader {
+            Skin.DjayWaveformShader {
                 group: root.group
                 anchors.fill: parent
-                visualGain: root.visualGain
+                levelGain: root.levelGain
+                heightGain: root.heightGain
             }
 
             Shape {
@@ -218,12 +266,31 @@ Item {
                 model: root.deckPlayer.beatsModel
 
                 Rectangle {
-                    property real alpha: 0.9 // TODO: Make this configurable (i.e., "[Waveform],beatGridAlpha" config option)
+                    id: beatLine
 
-                    width: 1
+                    required property real framePosition
+                    readonly property int perBar: beatsPerBarControl.value > 0 ? beatsPerBarControl.value : 4
+                    readonly property int beat: root.beatSamples > 0 && root.oneSample >= 0
+                            ? Math.round((framePosition * 2 - root.oneSample) / root.beatSamples) : 1
+                    readonly property bool bar: ((beat % perBar) + perBar) % perBar === 0
+
+                    width: bar ? 2 : 1
                     height: waveform.height
                     x: (framePosition * 2 / samplesControl.value) * waveform.width
-                    color: Theme.waveformBeatColor
+                    color: bar ? "#d99a2b" : "#3a3a3a"
+
+                    Text {
+                        // djay: ... -2, -1, 1, 2 ... (no bar 0)
+                        visible: beatLine.bar && root.oneSample >= 0
+                        x: 3
+                        y: 1
+                        text: {
+                            const n = Math.floor(beatLine.beat / beatLine.perBar);
+                            return String(n >= 0 ? n + 1 : n);
+                        }
+                        color: "#bdbdbd"
+                        font.pixelSize: 10
+                    }
                 }
             }
 

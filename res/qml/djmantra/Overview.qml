@@ -48,7 +48,7 @@ Rectangle {
     }
 
     radius: 4
-    color: "#05070f"
+    color: "#141414" // djay Pro's background
     clip: true
 
     Mixxx.ControlProxy { id: position; group: root.group; key: "playposition"; maxRate: 10 }
@@ -73,7 +73,7 @@ Rectangle {
             x: start * root.width
             width: Math.max(0, (end - start) * root.width)
             height: root.height
-            color: "#25348f"
+            color: "#262626" // a lighter band, not a colour: djay's colours stay true
         }
     }
 
@@ -81,7 +81,9 @@ Rectangle {
         anchors.fill: parent
         player: Mixxx.PlayerManager.getPlayer(root.group)
         channels: Mixxx.WaveformOverview.Channels.LeftChannel
-        renderer: Mixxx.WaveformOverview.Renderer.Filtered
+        // V9 (Marko 13.10.2026: "djay algorithm waveform shape is paramount"):
+        // djay Pro's overview, mirrored, its colours (src/waveform/djaycolor.h)
+        renderer: Mixxx.WaveformOverview.Renderer.Djay
         normalize: true
         colorLow: "#ff3b30"
         colorMid: "#4cd964"
@@ -155,7 +157,7 @@ Rectangle {
         y: Math.max(0, origin.y - height - 4)
         z: 100
         radius: 4
-        color: "#05070f"
+        color: "#141414"
         border.color: Style.accent
         border.width: 2
         clip: true
@@ -169,7 +171,7 @@ Rectangle {
 
             sourceComponent: Skin.WaveformRow {
                 group: root.group
-                visualGain: 3
+                levelGain: Math.max(1, Mixxx.DJMantra.waveformLevel(root.group))
                 zoom: root.scrubZoom
                 showRoll: false
             }

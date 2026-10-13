@@ -31,7 +31,7 @@ STUB = {
               "singleton DJMantra 1.0 DJMantra.qml\nsingleton PlayerManager 1.0 PlayerManager.qml\n"
               "WaveformOverview 1.0 WaveformOverview.qml\n",
     "WaveformOverview.qml": "import QtQuick 2.12\nItem {\n enum Channels { LeftChannel, RightChannel, BothChannels }\n"
-                            " enum Renderer { RGB, Filtered, HSV }\n property var player\n property int channels\n"
+                            " enum Renderer { RGB, Filtered, HSV, Djay }\n property var player\n property int channels\n"
                             " property int renderer\n property color colorHigh\n property color colorMid\n"
                             " property color colorLow\n property bool normalize\n}\n",
     "ControlProxy.qml": "import QtQuick 2.12\nQtObject {\n property string group\n property string key\n"
@@ -46,7 +46,7 @@ STUB = {
                     " function barBeat(n, p) { return \"1.1\"; }\n function barsBeatsLeft(b, p) { return \"-0.0\"; }\n"
                     " function waveformGain(g, l) { return 0; }\n function isPlaying(g) { return false; }\n"
                     " function freeDeck() { return \"[Channel1]\"; }\n function noteLoaded(g) {}\n"
-                    " function musicRoots() { return []; }\n function listFolder(f) { return [{name: \"a\", path: \"/m/a.mp3\", isFolder: false}]; }\n function analyzeAhead(p) {}\n function analyzeDecksAgain() { return 0; }\n function audioOutputs() { return [{key: \"\", label: \"Phone\"}, {key: \"usb:X\", label: \"USB: X\", channels: 4}]; }\n function audioOutputsVersion() { return 1; }\n function audioRoute() { return ({master: \"usb:X\", masterPair: 0, headphones: \"usb:X\", headphonesPair: 1}); }\n function setAudioRoute(m, mp, h, hp) { return \"\"; }\n function setting(n, f) { return f; }\n function setSetting(n, v) {}\n function songInfo(p) { return ({artist: \"Artist\", title: \"Title\", bpm: 124, key: \"8A\", cover: \"\"}); }\n"
+                    " function musicRoots() { return []; }\n function listFolder(f) { return [{name: \"a\", path: \"/m/a.mp3\", isFolder: false}]; }\n function analyzeAhead(p) {}\n function analyzeDecksAgain() { return 0; }\n function waveformLevel(g) { return 2; }\n function audioOutputs() { return [{key: \"\", label: \"Phone\"}, {key: \"usb:X\", label: \"USB: X\", channels: 4}]; }\n function audioOutputsVersion() { return 1; }\n function audioRoute() { return ({master: \"usb:X\", masterPair: 0, headphones: \"usb:X\", headphonesPair: 1}); }\n function setAudioRoute(m, mp, h, hp) { return \"\"; }\n function setting(n, f) { return f; }\n function setSetting(n, v) {}\n function songInfo(p) { return ({artist: \"Artist\", title: \"Title\", bpm: 124, key: \"8A\", cover: \"\"}); }\n"
                     " function hideBars() {}\n function showBars() {}\n function barsVisible() { return false; }\n function usage() { return ({cpu: 34, gpu: -1}); }\n function sections(g) { return []; }\n function setQuickInterface(on) {}\n"
                     " function quickInterface() { return true; }\n function log(t) {}\n}\n",
 }

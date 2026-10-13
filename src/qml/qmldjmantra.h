@@ -72,6 +72,8 @@ class QmlDJMantra : public QObject {
     /// "-6.2" for 26 beats left in 4/4
     Q_INVOKABLE QString barsBeatsLeft(double beats, double beatsPerBar) const;
 
+    /// V9: djay's colours: 255 / the song's loudest waveform level (0 = not ready)
+    Q_INVOKABLE double waveformLevel(const QString& group) const;
     /// The waveform's display gain for the deck's track: its level fills the
     /// lane (rounds 13-14: loud songs were 5-15 % wide). 0 while the track is
     /// not analysed yet. `length` is unused (kept for the QML calls).

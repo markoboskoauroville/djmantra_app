@@ -27,7 +27,7 @@ Item {
         running: root.player !== null && root.player.isLoaded && !root.measured
         triggeredOnStart: true
         onTriggered: {
-            const g = Mixxx.DJMantra.waveformGain(root.group, 0);
+            const g = Mixxx.DJMantra.waveformLevel(root.group);
             if (g > 0) {
                 root.gain = g;
                 root.measured = true;
@@ -45,9 +45,8 @@ Item {
 
     Skin.WaveformRow {
         group: root.group
-        // round 18: the waves used ~15 % of the lane: 3x the measured gain
-        // (the shader clips what goes past the edge)
-        visualGain: root.gain * 3
+        // V9: djay Pro's look; the song's loudest level reaches 90 % of the lane
+        levelGain: root.gain
         zoom: root.zoom
         showRoll: false
         width: root.width

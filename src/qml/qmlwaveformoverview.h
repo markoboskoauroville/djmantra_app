@@ -39,6 +39,7 @@ class QmlWaveformOverview : public QQuickPaintedItem {
     enum class Renderer {
         RGB = 1,
         Filtered = 2,
+        Djay = 3, // DJ Mantra: djay Pro's look (src/waveform/djaycolor.h)
     };
     Q_ENUM(Renderer)
 
@@ -73,6 +74,7 @@ class QmlWaveformOverview : public QQuickPaintedItem {
 
   private:
     void setCurrentTrack(TrackPointer pTrack);
+    void drawDjay(QPainter* pPainter, ConstWaveformPointer pWaveform, int completion) const;
     void drawFiltered(QPainter* pPainter,
             Channels channels,
             ConstWaveformPointer pWaveform,

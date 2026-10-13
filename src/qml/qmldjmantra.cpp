@@ -597,6 +597,29 @@ QString QmlDJMantra::barsBeatsLeft(double beats, double beatsPerBar) const {
     return WDeckCounter::barsBeatsLeft(static_cast<int>(beats), static_cast<int>(beatsPerBar));
 }
 
+double QmlDJMantra::waveformLevel(const QString& group) const {
+    // V9: the colour's inputs as djay's colour was fitted (src/waveform/djaycolor.h):
+    // the bands divided by the song's loudest level (99th percentile of "all");
+    // 0 while the waveform is not analysed yet (QML asks again)
+    const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
+    const ConstWaveformPointer pWaveform = pTrack ? pTrack->getWaveform() : ConstWaveformPointer();
+    if (!pWaveform || pWaveform->getCompletion() < pWaveform->getDataSize()) {
+        return 0.0;
+    }
+    const int size = pWaveform->getDataSize();
+    std::vector<int> histogram(256, 0);
+    for (int i = 0; i < size; ++i) {
+        histogram[pWaveform->getAll(i)]++;
+    }
+    int level = 255;
+    int above = 0;
+    while (level > 1 && above + histogram[level] <= size / 100) {
+        above += histogram[level];
+        --level;
+    }
+    return 255.0 / std::max(level, 8);
+}
+
 double QmlDJMantra::waveformGain(const QString& group, int length) const {
     Q_UNUSED(length);
     const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
