@@ -141,3 +141,28 @@ Could not open 16 channels ( "ErrorOutOfRange" ), trying 2
 ```
 No `Echo Out:` line at all from the effect (deck 1 playing): the slot's button_parameter1 is set, but the effect
 does not seem to process / log (not loaded in the chain? disabled slot? wrong parameter index?).
+
+## V27 (b2f49a6), 19:54-19:59
+### Part 16: the deep-buffer variants reach the YouTube ceiling (~0.58x), but the app does not keep them
+| variant | Output rate | Android USB thread (Frames-written delta) |
+|---|---|---|
+| first open (perf None, Float) | 13,759 | AudioOut_D ~14,000/s |
+| 1: Float, **PowerSaving** | **27,918** | **AudioOut_15** ~25,000/s |
+| 2: I16, **PowerSaving** | **27,251** | AudioOut_15 |
+| 3: I16, perf None | 14,780 | AudioOut_D |
+| 4: I32, perf None | 14,613 | AudioOut_D |
+| 5: I16, perf None | 14,862, then 14,389 / 13,800 / 14,290 (kept) | AudioOut_D ~14,000/s |
+- PowerSaving lands on the deep-buffer thread AudioOut_15 (HAL period 960) at 0.58x, the same as YouTube; every
+  perf-None variant lands on AudioOut_D (period 480) at 0.30x. **The app keeps trying after the best one and ends on
+  variant 5 (0.30x)**: it should keep the fastest variant (PowerSaving Float) when none reaches 80 %.
+- 0.58x is Android's ceiling on this CQ in Multitrack: the Stereo / own-driver decision (needs_marko.md) stands.
+### Part 15: Echo Out works - PASS (decay a bit slower than djay)
+```
+Echo Out:  engaged true enable state 1 beats 2 mix 1     (on)
+Echo Out:  engaged false enable state 1 beats 2 mix 1    (off)    x2
+```
+Recorded (scrcpy, Nanana 0:58, ON at 4.2 s, OFF at 16.4 s; djmantra-test-songs `fx/app_v27_20261013/`): per second
+-16 ... -21, -25, -30, -35, -40, -45, -49, -54, -59, -64, -69 dB, OFF -> -18 / -16 at once.
+Band change vs dry (`p15_echoout_djay_vs_v27.txt`): 2-6 s after ON djay -21.9 dB, V27 -17.6; 6-10 s djay -52.4,
+V27 -36.7: **djay dies faster (~7.5 dB/s vs ~5 dB/s)**; the first 2 s: djay drops the lows more (-7 vs -2 dB at <150 Hz),
+V27 the mids (-7 at 400-2k).
