@@ -5,7 +5,19 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 13.10.2026 evening (latest): V17-V23 while Marko was out
+## 13.10.2026 night (latest): V24-V29
+
+- FX DONE (V25-V29): all four within a few dB of djay's recordings on the phone (tester's band tables, audio in
+  djmantra-test-songs fx/app_v2x_20261013). Echo Out runs while chosen; the cause of "ON does nothing" was
+  QmlDJMantra::setControl using ControlObject::set() (its owner never hears it): now via ControlProxy (V27).
+  Nit left: Echo Out's first 2 s (djay dips lows more, ours mids).
+- CQ-12T on the phone's USB (Multitrack 16 ch): Android itself is slow on it (YouTube ~0.54x); our best is the
+  PowerSaving (deep buffer) variant ~0.58x, kept automatically (V26-V28 variant search in sounddeviceoboe.cpp).
+  Full fix needs Marko: CQ USB Stream Mode -> Stereo (MixPad CONFIG -> USB/SD), or our own USB audio driver (libusb).
+  Asked Marko (yes/no), no answer yet. Do not switch the CQ without him.
+- Open questions for Marko: lane height (djay 15 % vs ours 80 %), deep-zoom real wave, FX sliders.
+
+## 13.10.2026 evening: V17-V23 while Marko was out
 
 - Lanes (V17, V21): mirrored per deck (Settings -> LANE MIRRORED / HALF), translucent, crimson kicks, less magenta,
   hits more distinct (x^1.7). Open: djay's two-deck lane is ~15 % high (ours 0.8), and djay draws the real wave at deep
