@@ -209,3 +209,14 @@ Process 40, 48, 47 % of a core (V14: 48-52, V13: 62-76). Per thread (`top -H`, 3
 (V16: 18-21), AudioTrack 15, 4, 4 % (the audio callback; on the CQ route it now runs on Android's AudioTrack /
 PowerSaving variant), qtMainLoopThread 11, 0, 4 %, mali / binder 4 % now and then. `cpu_v29_phrasing_both_playing.png`.
 Note: the output is the CQ (0.55x), so the decks advance slower than real time in this measurement.
+
+## V29: ROUND38 part 6, the CQ over its own USB MIDI - PASS
+- Settings -> CQ MIXER -> **USB**: `CQ: looking for the CQ on USB`, `CQ: connected over USB MIDI (Allen&Heath Ltd CQ12T
+  CQ12T)`; the field shows "usb", the button DISCONNECT, the status line "connected over USB MIDI ...".
+- MIXER page: CQ DELAY shown (under the faders). Deck 1 playing, tap: lit; log `CQ: mute 0 51 false`,
+  `CQ: level 4c 14 0 dB`, `CQ: delay on input 1 FX 1`. Checked **on the CQ itself** from the Mac over the LAN
+  (`tools/cq/cq_midi.py 169.254.5.29 get`): **Ip1 -> FX1 send = 62 00 (0 dB)**, FX1 mute 00 (off).
+  Tap again: `CQ: level 4c 14 -100 dB`, `CQ: delay off ...`; the CQ reads Ip1 -> FX1 = 00 00 (-inf): back as before.
+- The tap tempo was not tried (SOFT KEY = NO TAP; the CQ's FX1 has no Tap Delay set up and its soft key is unassigned:
+  setting those needs MixPad clicks, the Mac's screen is locked).
+- A side note: `ControlDoublePrivate::getControl returning NULL for ( "[DJMantra]" , "cq_ip" )` once at connect.
