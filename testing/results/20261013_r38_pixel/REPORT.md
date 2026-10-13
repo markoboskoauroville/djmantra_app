@@ -181,3 +181,12 @@ Band change vs dry (`p17_echoout_djay_vs_v28.txt`), V28 vs djay:
 So V28 overshoots: ~8 dB/s vs djay's ~7.5 is close, but it starts ~6 dB lower in the first 2 s and the lows are
 thinned far more than djay's (djay keeps the lows at the same level as the other bands while it dies).
 (V27 was the other way: ~5 dB/s, lows kept.) Halfway between, with lows kept like the other bands, would match.
+
+## V29 (454c5f3) - part 18: Echo Out matches djay - PASS
+Per second after ON: -18, -25, -31, -38, -45, -51, -58, -65, -71, -78, -84 (~6.6 dB/s); OFF -> -24 / -16 at once.
+Change vs dry (`p18_echoout_djay_vs_v29.txt`), V29 vs djay:
+- 0-2 s: rms -4.2 vs -4.4 (lows -2.6 vs -7.1, mids -7.8 vs -2.7)
+- 2-6 s: rms -23.4 vs -21.9, every band within 5 dB (lows -23.6 vs -22.8)
+- 6-10 s: rms -49.5 vs -52.4, every band within 3.5 dB
+All four FX now within a few dB of djay's recordings (Flanger, Underwater, Cooldown on V25; Echo Out on V29).
+Small remaining difference: in the first 2 s djay dips the lows more and V29 the mids.
