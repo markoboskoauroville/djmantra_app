@@ -17,6 +17,15 @@ Voice to Marko only for a hand on the controller (his MANTRA_VOICE).
   numbers (bar 1 on the song's first downbeat?), anything that looks different from djay. Push the screenshots to
   testing/results/<date>_r31_pixel/ and a short REPORT.md. Message the result of this part at once.
 
+## 1b. Neural Mix (new in V9, as djay Pro)
+- Mixer page: each deck has an EQ / NEURAL button under the knobs. NEURAL: the knob names become HARMONY / VOCALS /
+  DRUMS. Log: `Neural Mix [ChannelN] on`.
+- Play a song with a clear voice (e.g. Lovely Day). NEURAL, VOCALS to 0: the voice mostly goes, the band stays;
+  DRUMS to 0: the kick and hats go; HARMONY to 0: drums + voice stay. Record 10 s each with the Mac's microphone
+  (tools/android/observe.py) and push the recordings; say what you hear.
+- Switching EQ <-> NEURAL while playing: a short smooth change, no click, no jump in time against the other deck.
+- CPU with both decks in NEURAL and knobs off centre (`top`), compared with EQ mode.
+
 ## 2. Smoke + basics: PLAY / pause both decks, faders, knobs, aligned start, 30 s both playing: xruns, late 0.
 CPU of the Phrasing page with both lanes playing (`top -n 1 -b | grep djmantra`) vs round 25 (65 %).
 
