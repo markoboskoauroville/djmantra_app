@@ -365,7 +365,8 @@ QVariantMap QmlDJMantra::usage() {
     }
     result[QStringLiteral("gpu")] = gpu;
     result[QStringLiteral("gpuSource")] = !m_gpuSource.isEmpty() ? QStringLiteral("driver")
-            : gpu >= 0                                            ? QStringLiteral("app frames")
+            : gpu >= 0 ? (djmantra::gputime::fromGpuTimestamps() ? QStringLiteral("app frames (GPU)")
+                                                                  : QStringLiteral("app frames (render thread)"))
                                                                   : QString();
     return result;
 }
@@ -635,7 +636,7 @@ QString QmlDJMantra::barsBeatsLeft(double beats, double beatsPerBar) const {
 
 double QmlDJMantra::waveformLevel(const QString& group) const {
     // V9: the colour's inputs as djay's colour was fitted (src/waveform/djaycolor.h):
-    // the bands divided by the song's loudest level (99th percentile of "all");
+    // the bands divided by the song's loudest band (99th percentile of max(l, m, h));
     // 0 while the waveform is not analysed yet (QML asks again)
     const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
     const ConstWaveformPointer pWaveform = pTrack ? pTrack->getWaveform() : ConstWaveformPointer();
@@ -645,7 +646,8 @@ double QmlDJMantra::waveformLevel(const QString& group) const {
     const int size = pWaveform->getDataSize();
     std::vector<int> histogram(256, 0);
     for (int i = 0; i < size; ++i) {
-        histogram[pWaveform->getAll(i)]++;
+        // max(low, mid, high), as the colour was fitted (djaycolor.h)
+        histogram[std::max({pWaveform->getLow(i), pWaveform->getMid(i), pWaveform->getHigh(i)})]++;
     }
     int level = 255;
     int above = 0;

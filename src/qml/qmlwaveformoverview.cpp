@@ -312,14 +312,16 @@ void QmlWaveformOverview::drawDjay(QPainter* pPainter,
         int loudest;
         double peak;
         double mean;
+        double bands; // max(low, mid, high) at the loudest point (the colour's scale)
     };
     std::vector<Column> cols(columns);
     std::vector<int> peaks(columns);
+    std::vector<int> bandPeaks(columns);
     for (int x = 0; x < columns; ++x) {
         const int centre = static_cast<int>((x + 0.5) * perColumn);
         const int from = std::clamp(centre - window / 2, 0, points - 1);
         const int to = std::clamp(from + window, from + 1, points);
-        Column c{from, 0.0, 0.0};
+        Column c{from, 0.0, 0.0, 0.0};
         for (int i = from; i < to; ++i) {
             const double v = all(i);
             c.mean += v;
@@ -329,17 +331,21 @@ void QmlWaveformOverview::drawDjay(QPainter* pPainter,
             }
         }
         c.mean /= (to - from);
+        const int i = c.loudest;
+        c.bands = std::max({(pWaveform->getLow(2 * i) + pWaveform->getLow(2 * i + 1)) / 2.0,
+                (pWaveform->getMid(2 * i) + pWaveform->getMid(2 * i + 1)) / 2.0,
+                (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0});
         cols[x] = c;
         peaks[x] = static_cast<int>(c.peak);
+        bandPeaks[x] = static_cast<int>(c.bands);
     }
-    const auto at = [&](int percent) {
-        std::vector<int> v = peaks;
+    const auto at = [](std::vector<int> v, int percent) {
         auto nth = v.begin() + static_cast<std::ptrdiff_t>((v.size() - 1) * percent / 100);
         std::nth_element(v.begin(), nth, v.end());
         return std::max(1, *nth);
     };
-    const double colourScale = 1.0 / at(99); // the colour's inputs, as fitted
-    const double heightScale = 0.75 / at(97); // djay: the loud parts reach 3/4
+    const double colourScale = 1.0 / at(bandPeaks, 99); // the colour's inputs, as fitted
+    const double heightScale = 0.75 / at(peaks, 97);    // djay: the loud parts reach 3/4
     const double middle = height() / 2;
     pPainter->save();
     pPainter->setClipRect(boundingRect());
@@ -352,8 +358,7 @@ void QmlWaveformOverview::drawDjay(QPainter* pPainter,
         const QColor colour = djmantra::djayColor(
                 (pWaveform->getLow(2 * i) + pWaveform->getLow(2 * i + 1)) / 2.0 * colourScale,
                 (pWaveform->getMid(2 * i) + pWaveform->getMid(2 * i + 1)) / 2.0 * colourScale,
-                (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0 * colourScale,
-                c.peak * colourScale);
+                (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0 * colourScale);
         const double outer = std::min(1.0, c.peak * heightScale) * middle;
         const double inner = std::min(1.0, c.mean * heightScale) * middle;
         pen.setColor(colour.darker(140));

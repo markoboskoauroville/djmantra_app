@@ -14,5 +14,7 @@ void watch(QQuickWindow* pWindow);
 /// The GPU's busy time for the app's frames since the start, in microseconds;
 /// -1 while no frame has reported a time (no timer queries on this GPU)
 long long busyMicroseconds();
+/// true: busyMicroseconds() is the GPU's own time; false: the render thread's
+bool fromGpuTimestamps();
 
 } // namespace djmantra::gputime

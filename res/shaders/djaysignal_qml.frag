@@ -41,12 +41,13 @@ vec4 getWaveformData(float position) {
 }
 
 vec3 djayColor(vec4 x) {
+    // x.w = max(low, mid, high), as src/waveform/djaycolor.h
     vec4 v = sqrt(clamp(x, 0.0, 1.5));
-    vec3 c = vec3(0.1597, 0.2188, 0.0633)
-            + v.x * vec3(1.0319, -0.0081, -0.0594)
-            + v.y * vec3(-0.4393, 1.3782, 0.5831)
-            + v.z * vec3(-0.3169, -0.5140, 0.6696)
-            + v.w * vec3(0.1319, -0.0914, -0.2709);
+    vec3 c = vec3(0.1561, 0.2868, 0.0815)
+            + v.x * vec3(1.1164, 0.3428, -0.0047)
+            + v.y * vec3(-0.5454, 1.3173, 0.3851)
+            + v.z * vec3(-0.2553, -0.1464, 0.8582)
+            + v.w * vec3(0.0784, -0.8494, -0.4954);
     float voiced = clamp((x.w - 0.02) / 0.06, 0.0, 1.0);
     return clamp(mix(vec3(0.19), c, voiced), 0.0, 1.0);
 }
@@ -59,6 +60,9 @@ void main(void) {
     if (idx >= 0.0 && idx <= float(waveformLength) - 2.0) {
         // both channels as one (djay draws mono)
         vec4 data = (getWaveformData(idx) + getWaveformData(idx + 1.0)) * 0.5;
+        // round 32: the texture's alpha ("all") reached the phone as nothing (the
+        // wave had no height); as the classic shader, everything from the 3 bands
+        data.w = max(data.x, max(data.y, data.z));
         vec4 x = data * levelGain;
         x.x *= lowGain;
         x.y *= midGain;
