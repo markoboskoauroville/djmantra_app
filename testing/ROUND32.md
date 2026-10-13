@@ -18,3 +18,8 @@ screenshot both decks' buttons, playing and paused.
 source? Compare with `adb shell cat /sys/devices/platform/*.mali/utilization` (as shell) while playing.
 ## 3. Round 31's parts 1b (Neural Mix), 1c (every overlay closes with ✕ / back), 2 (basics, CPU).
 ## 4. testing/CQ12T.md part B (the CQ-12T on the phone, USB tracks 1-4).
+## 5. The CQ from the app (new in V10; testing/CQ12T_FX.md): Settings -> CQ MIXER: the CQ's IP (169.254.5.29 on the
+Mac's LAN; the phone must reach it: the CQ's own Wi-Fi or the same network), CONNECT (`CQ: connected to ...`).
+FX 1, SOFT KEY n (the one set to the Tap Delay's Tap Tempo in CQ MixPad). Mixer page: CQ DELAY on: in MixPad Ip1 ->
+FX1 send 0 dB, FX1 unmuted, `CQ: tap tempo <bpm>`; the delay time = 60000 / BPM ms. Change the deck's tempo: after
+2 s the taps come again. CQ DELAY off: the send at -inf. Put the CQ back as it was.

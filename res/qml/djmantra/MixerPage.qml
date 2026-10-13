@@ -7,8 +7,29 @@ import QtQuick 2.12
 Item {
     id: root
 
+    DButton {
+        // the CQ mixer's delay on the app's sound (Settings -> CQ MIXER), in time
+        // with the on-air deck: shown while the CQ is connected
+        id: cqDelay
+
+        objectName: "cqDelay"
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: Style.gap
+        visible: Mixxx.DJMantra.cqConnected
+        width: visible ? 160 : 0
+        height: visible ? 40 : 0
+        text: qsTr("CQ DELAY")
+        fontSize: 13
+        lit: Mixxx.DJMantra.cqDelayOn
+        onClicked: Mixxx.DJMantra.cqSetDelay(!Mixxx.DJMantra.cqDelayOn)
+    }
+
     Row {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: cqDelay.visible ? cqDelay.top : parent.bottom
         anchors.margins: Style.gap
         spacing: Style.gap
 

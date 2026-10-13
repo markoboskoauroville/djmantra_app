@@ -10,6 +10,10 @@
 #include "preferences/usersettings.h"
 #include "track/track_decl.h"
 
+namespace djmantra {
+class CqLink;
+} // namespace djmantra
+
 class QTimer;
 class SoundManager;
 
@@ -33,6 +37,10 @@ class QmlDJMantra : public QObject {
     Q_PROPERTY(int cornerRadius READ cornerRadius NOTIFY insetsChanged)
     /// Songs still waiting for their BPM / key analysis (0: none)
     Q_PROPERTY(int analysisLeft READ analysisLeft NOTIFY analysisChanged)
+    // the Allen & Heath CQ mixer over the network (qml/cqlink.h)
+    Q_PROPERTY(QString cqStatus READ cqStatus NOTIFY cqChanged)
+    Q_PROPERTY(bool cqConnected READ cqConnected NOTIFY cqChanged)
+    Q_PROPERTY(bool cqDelayOn READ cqDelayOn NOTIFY cqChanged)
   public:
     explicit QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent = nullptr);
 
@@ -100,6 +108,18 @@ class QmlDJMantra : public QObject {
     /// without them are analysed in the background, one at a time, at low
     /// priority, without their waveform; the results go into the library.
     Q_INVOKABLE void analyzeAhead(const QStringList& paths);
+    /// The CQ (Settings -> CQ MIXER): connect to its address (remembered), the
+    /// DELAY on / off (the app's input -> the delay's FX send, the FX unmuted), and
+    /// the delay's tap tempo from the on-air deck's BPM
+    Q_INVOKABLE void cqConnect(const QString& host);
+    Q_INVOKABLE void cqDisconnect();
+    Q_INVOKABLE void cqSetDelay(bool on);
+    Q_INVOKABLE void cqTapNow();
+    QString cqStatus() const;
+    bool cqConnected() const;
+    bool cqDelayOn() const {
+        return m_cqDelayOn;
+    }
     /// Settings -> beats: the songs on the stopped decks analysed again with the
     /// options now chosen; returns how many
     Q_INVOKABLE int analyzeDecksAgain();
@@ -153,11 +173,14 @@ class QmlDJMantra : public QObject {
     void insetsChanged();
     /// One more song analysed (the list reads its BPM / key again)
     void analysisChanged();
+    void cqChanged();
 
   protected:
     bool eventFilter(QObject* pObject, QEvent* pEvent) override;
 
   private:
+    void cqFollowTempo();
+    double onAirBpm() const;
     void scheduleAnalysis(const QList<AnalyzerScheduledTrack>& tracks);
     void followInsets();
     /// A song without a genre: MusicBrainz is asked (Android, GenreLookup.java)
@@ -175,6 +198,11 @@ class QmlDJMantra : public QObject {
     qint64 m_lastCpuAtMs = 0;
     QString m_gpuSource; // the GPU load file that works on this phone
     bool m_gpuProbed = false;
+    djmantra::CqLink* m_pCq = nullptr;
+    bool m_cqDelayOn = false;
+    double m_cqTappedBpm = 0;
+    double m_cqPendingBpm = 0;
+    int m_cqStableTicks = 0;
     long long m_lastGpuBusyUs = -1; // qml/gputime.h, at the last usage()
     qint64 m_lastGpuAtMs = 0;
     TrackAnalysisScheduler::Pointer m_pAnalysis = TrackAnalysisScheduler::NullPointer();

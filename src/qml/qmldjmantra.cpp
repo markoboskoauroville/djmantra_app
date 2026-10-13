@@ -40,6 +40,7 @@
 extern const QString kOboeHostApi;
 #endif
 #include "qml/asyncimageprovider.h"
+#include "qml/cqlink.h"
 #include "qml/gputime.h"
 #include "qml/qmllibraryproxy.h"
 #include "moc_qmldjmantra.cpp"
@@ -97,6 +98,16 @@ QmlDJMantra::QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent)
         : QObject(pParent),
           m_pConfig(std::move(pConfig)) {
     hideBars();
+    // the CQ mixer: back to the address it had; the delay's tempo follows the decks
+    m_pCq = new djmantra::CqLink(this);
+    connect(m_pCq, &djmantra::CqLink::statusChanged, this, &QmlDJMantra::cqChanged);
+    const QString cqHost = setting(QStringLiteral("cq_ip"), QString()).toString();
+    if (!cqHost.isEmpty()) {
+        m_pCq->connectTo(cqHost);
+    }
+    auto* pTempo = new QTimer(this);
+    connect(pTempo, &QTimer::timeout, this, &QmlDJMantra::cqFollowTempo);
+    pTempo->start(1000);
 #if defined(Q_OS_ANDROID)
     auto* pTimer = new QTimer(this);
     connect(pTimer, &QTimer::timeout, this, &QmlDJMantra::followInsets);
@@ -909,6 +920,93 @@ void QmlDJMantra::scheduleAnalysis(const QList<AnalyzerScheduledTrack>& tracks) 
 
 void QmlDJMantra::log(const QString& text) const {
     qInfo().noquote() << "Quick:" << text;
+}
+
+
+// ---- the Allen & Heath CQ (qml/cqlink.h; testing/results/20261013_cq12t/midi.md) ----
+
+QString QmlDJMantra::cqStatus() const {
+    return m_pCq ? m_pCq->status() : QString();
+}
+
+bool QmlDJMantra::cqConnected() const {
+    return m_pCq && m_pCq->isConnected();
+}
+
+void QmlDJMantra::cqConnect(const QString& host) {
+    setSetting(QStringLiteral("cq_ip"), host.trimmed());
+    m_cqTappedBpm = 0;
+    m_pCq->connectTo(host);
+}
+
+void QmlDJMantra::cqDisconnect() {
+    setSetting(QStringLiteral("cq_ip"), QString());
+    m_pCq->disconnectFrom();
+}
+
+void QmlDJMantra::cqSetDelay(bool on) {
+    // the CQ input the app plays into (1 = Ip1/2, USB 1-2) -> FX n send; FX n unmuted
+    const int input = std::clamp(setting(QStringLiteral("cq_input"), QStringLiteral("1")).toInt(), 1, 16);
+    const int fx = std::clamp(setting(QStringLiteral("cq_fx"), QStringLiteral("1")).toInt(), 1, 4);
+    m_pCq->setMute(0x00, 0x50 + fx, false);
+    m_pCq->setLevel(0x4C, 0x14 + (input - 1) * 4 + (fx - 1), on ? 0.0 : -100.0);
+    m_cqDelayOn = on;
+    qInfo().noquote() << "CQ: delay" << (on ? "on" : "off") << "input" << input << "FX" << fx;
+    if (on) {
+        cqTapNow();
+    }
+    emit cqChanged();
+}
+
+void QmlDJMantra::cqTapNow() {
+    const int key = setting(QStringLiteral("cq_tap_key"), QStringLiteral("0")).toInt();
+    const double bpm = onAirBpm();
+    if (key >= 1 && key <= 3 && bpm > 0) {
+        m_pCq->tapTempo(key, bpm);
+        m_cqTappedBpm = bpm;
+    }
+}
+
+double QmlDJMantra::onAirBpm() const {
+    // the playing deck that is loudest in the mix (volume; the crossfader's side)
+    double best = -1;
+    double bpm = 0;
+    const double crossfader = ControlObject::get(ConfigKey(QStringLiteral("[Master]"), QStringLiteral("crossfader")));
+    for (int deck = 1; deck <= 2; ++deck) {
+        const QString group = QStringLiteral("[Channel%1]").arg(deck);
+        if (ControlObject::get(ConfigKey(group, QStringLiteral("play"))) <= 0) {
+            continue;
+        }
+        const double side = deck == 1 ? 1 - std::max(0.0, crossfader) : 1 + std::min(0.0, crossfader);
+        const double weight = ControlObject::get(ConfigKey(group, QStringLiteral("volume"))) * side;
+        if (weight > best) {
+            best = weight;
+            bpm = ControlObject::get(ConfigKey(group, QStringLiteral("bpm")));
+        }
+    }
+    return bpm;
+}
+
+void QmlDJMantra::cqFollowTempo() {
+    // a new tempo held for 2 s is tapped in again (not every small wobble of a sync)
+    if (!m_pCq || !m_pCq->isConnected() ||
+            setting(QStringLiteral("cq_tap_key"), QStringLiteral("0")).toInt() == 0) {
+        return;
+    }
+    const double bpm = onAirBpm();
+    if (bpm <= 0 || std::fabs(bpm - m_cqTappedBpm) < 0.5) {
+        m_cqStableTicks = 0;
+        return;
+    }
+    if (std::fabs(bpm - m_cqPendingBpm) < 0.5) {
+        if (++m_cqStableTicks >= 2) {
+            m_cqStableTicks = 0;
+            cqTapNow();
+        }
+    } else {
+        m_cqPendingBpm = bpm;
+        m_cqStableTicks = 0;
+    }
 }
 
 } // namespace qml

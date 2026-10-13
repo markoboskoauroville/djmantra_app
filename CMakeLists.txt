@@ -3116,6 +3116,7 @@ if(QML)
     src/qml/asyncimageprovider.cpp
     src/qml/qmlapplication.cpp
     src/qml/gputime.cpp
+    src/qml/cqlink.cpp
     src/qml/qmlautoreload.cpp
     src/qml/qmlbeatsmodel.cpp
     src/qml/qmlcuesmodel.cpp

@@ -29,6 +29,8 @@ Rectangle {
     property int sectionSensitivity: Number(Mixxx.DJMantra.setting("section_sensitivity", "3"))
     property int beatGridMode: Number(Mixxx.DJMantra.setting("beat_grid_mode", "0"))
     property bool beatOnKick: Mixxx.DJMantra.setting("beat_on_kick", "1") !== "0"
+    property int cqTapKey: Number(Mixxx.DJMantra.setting("cq_tap_key", "0"))
+    property int cqFx: Number(Mixxx.DJMantra.setting("cq_fx", "1"))
     property int seenVersion: -1
     signal done()
 
@@ -137,6 +139,114 @@ Rectangle {
             // V8 (Marko 13.10.2026): sections and beats are a choice, to find the best
             // in practice. Each choice is written to the log ("Settings:", "Sections
             // options:", "Beats options:").
+            // the Allen & Heath CQ mixer on the network (Marko 13.10.2026): its delay
+            // in time with the decks, triggered from the app
+            Text {
+                text: qsTr("CQ MIXER (Allen & Heath, on the network)")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Row {
+                spacing: 6
+
+                Rectangle {
+                    width: column.width - 6 - 120
+                    height: 42
+                    radius: Style.radius
+                    color: Style.tile
+                    border.color: Style.surface
+
+                    TextInput {
+                        id: cqAddress
+
+                        objectName: "cqAddress"
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        verticalAlignment: TextInput.AlignVCenter
+                        color: Style.text
+                        font.pixelSize: 16
+                        inputMethodHints: Qt.ImhPreferNumbers
+                        text: Mixxx.DJMantra.setting("cq_ip", "")
+                    }
+                }
+
+                DButton {
+                    objectName: "cqConnect"
+                    width: 120
+                    height: 42
+                    text: Mixxx.DJMantra.cqConnected ? qsTr("DISCONNECT") : qsTr("CONNECT")
+                    fontSize: 13
+                    lit: Mixxx.DJMantra.cqConnected
+                    onClicked: Mixxx.DJMantra.cqConnected ? Mixxx.DJMantra.cqDisconnect()
+                                                          : Mixxx.DJMantra.cqConnect(cqAddress.text)
+                }
+            }
+
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: Mixxx.DJMantra.cqStatus + qsTr("  (the CQ's IP address, e.g. 169.254.5.29)")
+                color: Style.subText
+                font.pixelSize: 12
+            }
+
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: qsTr("The delay's FX slot, and the soft key set to its Tap Tempo on the CQ (the app taps the on-air deck's BPM in)")
+                color: Style.subText
+                font.pixelSize: 13
+            }
+
+            Row {
+                spacing: 6
+
+                Repeater {
+                    model: 4
+
+                    delegate: DButton {
+                        required property int index
+
+                        objectName: "cqFx_" + (index + 1)
+                        width: (column.width - 18) / 4
+                        height: 38
+                        text: "FX " + (index + 1)
+                        fontSize: 13
+                        lit: root.cqFx === index + 1
+                        onClicked: {
+                            root.cqFx = index + 1;
+                            Mixxx.DJMantra.setSetting("cq_fx", index + 1);
+                        }
+                    }
+                }
+            }
+
+            Row {
+                spacing: 6
+
+                Repeater {
+                    model: [qsTr("NO TAP"), qsTr("SOFT KEY 1"), qsTr("SOFT KEY 2"), qsTr("SOFT KEY 3")]
+
+                    delegate: DButton {
+                        required property int index
+                        required property string modelData
+
+                        objectName: "cqTapKey_" + index
+                        width: (column.width - 18) / 4
+                        height: 38
+                        text: modelData
+                        fontSize: 11
+                        lit: root.cqTapKey === index
+                        onClicked: {
+                            root.cqTapKey = index;
+                            Mixxx.DJMantra.setSetting("cq_tap_key", index);
+                        }
+                    }
+                }
+            }
+
             Text {
                 text: qsTr("SECTIONS: how they are found")
                 color: Style.accent
