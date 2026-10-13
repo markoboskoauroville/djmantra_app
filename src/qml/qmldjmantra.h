@@ -125,6 +125,8 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    /// The decks' FILTER knob = the Pioneer DJM filter (loads it into the quick effect slots)
+    Q_INVOKABLE void useDjmFilter();
 
     /// Hides the status and navigation bars again
     Q_INVOKABLE void hideBars();

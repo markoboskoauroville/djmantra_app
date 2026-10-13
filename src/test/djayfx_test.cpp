@@ -96,4 +96,28 @@ TEST(DjayFxTest, EchoOutLoopsTheLastBeats) {
     EXPECT_NEAR(second2 / first, 0.5, 0.05);     // each round -6 dB (djay's 2 beats)
 }
 
+TEST(DjayFxTest, DjmFilterMiddleIsOffEdgesCut) {
+    const int frames = static_cast<int>(kRate);
+    djmantra::DjmFilter mid(kRate), left(kRate), right(kRate);
+    const auto in = sine(1000, frames);
+    const auto dry = run(mid, in, 0.5, 0.4);
+    EXPECT_EQ(in, dry); // the middle does nothing
+    const auto lp = run(left, in, 0.0, 0.4);
+    const auto hp = run(right, in, 1.0, 0.4);
+    EXPECT_LT(rms(lp, frames / 2, frames), 0.01); // 1 kHz under a ~45 Hz low-pass
+    EXPECT_LT(rms(hp, frames / 2, frames), 0.02); // 1 kHz under a ~9 kHz high-pass
+    EXPECT_NEAR(djmantra::DjmFilter::cutoffFor(0.5), 0, 1e-9);
+    EXPECT_LT(djmantra::DjmFilter::cutoffFor(0.2), 0);   // left: a low-pass
+    EXPECT_GT(djmantra::DjmFilter::cutoffFor(0.8), 0);   // right: a high-pass
+}
+
+TEST(DjayFxTest, DjmFilterResonatesAtTheCorner) {
+    // a sine at the corner comes out louder than it went in (the DJM's peak)
+    const int frames = static_cast<int>(kRate);
+    const double corner = -djmantra::DjmFilter::cutoffFor(0.3);
+    djmantra::DjmFilter fx(kRate);
+    const auto out = run(fx, sine(corner, frames), 0.3, 0.4);
+    EXPECT_GT(rms(out, frames / 2, frames), 0.5 / std::sqrt(2.0) * 1.3);
+}
+
 } // namespace

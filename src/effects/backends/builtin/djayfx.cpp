@@ -207,4 +207,63 @@ void EchoOut::process(const float* pIn,
     }
 }
 
+DjmFilter::DjmFilter(double sampleRate)
+        : m_sampleRate(sampleRate) {
+    reset();
+}
+
+void DjmFilter::setSampleRate(double sampleRate) {
+    m_sampleRate = sampleRate;
+}
+
+void DjmFilter::reset() {
+    m_knob = 0.5;
+    m_svf.reset();
+}
+
+// static
+double DjmFilter::cutoffFor(double knob) {
+    const double d = clamp01(knob) - 0.5;
+    if (std::abs(d) <= kDeadZone) {
+        return 0;
+    }
+    const double t = (std::abs(d) - kDeadZone) / (0.5 - kDeadZone); // 0..1 from the dead zone out
+    if (d < 0) {
+        return -20000.0 * std::pow(45.0 / 20000.0, t); // low-pass going down
+    }
+    return 20.0 * std::pow(9000.0 / 20.0, t); // high-pass going up
+}
+
+void DjmFilter::process(
+        const float* pIn, float* pOut, int frames, double knob, double resonance) {
+    const double q = 0.7 + 3.3 * clamp01(resonance);
+    for (int start = 0; start < frames; start += kControlFrames) {
+        const int n = std::min(kControlFrames, frames - start);
+        m_knob = glide(m_knob, clamp01(knob), 0.015, n, m_sampleRate);
+        const double cutoff = cutoffFor(m_knob);
+        const double d = std::abs(m_knob - 0.5);
+        if (cutoff == 0) {
+            for (int i = 2 * start; i < 2 * (start + n); ++i) {
+                pOut[i] = pIn[i];
+            }
+            m_svf.reset();
+            continue;
+        }
+        // from dry to the filter over the first 4 % past the dead zone
+        const auto wet = static_cast<float>(std::min(1.0, (d - kDeadZone) / 0.04));
+        // the resonance grows in as the knob leaves the middle (the DJM's sweep)
+        m_svf.set(m_sampleRate, std::abs(cutoff), 0.707 + (q - 0.707) * wet);
+        const bool lowPass = cutoff < 0;
+        for (int f = start; f < start + n; ++f) {
+            for (int ch = 0; ch < 2; ++ch) {
+                const float x = pIn[2 * f + ch];
+                float high = 0;
+                const float low = m_svf.process(x, ch, &high);
+                const float y = lowPass ? low : high;
+                pOut[2 * f + ch] = x + (y - x) * wet;
+            }
+        }
+    }
+}
+
 } // namespace djmantra

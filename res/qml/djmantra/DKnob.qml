@@ -97,20 +97,47 @@ Item {
         font.bold: true
     }
 
+    // a long press (0.5 s, finger still): the GAIN knob flips to FILTER (MixerPage)
+    signal longPressed()
+
+    Timer {
+        id: hold
+
+        interval: 500
+        onTriggered: {
+            knobArea.flipped = true;
+            root.longPressed();
+        }
+    }
+
     MouseArea {
+        id: knobArea
+
         property real startY: 0
         property real startParameter: 0
+        property bool flipped: false
 
         anchors.fill: dial
         preventStealing: true
         onPressed: (mouse) => {
             startY = mouse.y;
             startParameter = control.parameter;
+            flipped = false;
+            hold.restart();
         }
         onPositionChanged: (mouse) => {
+            if (Math.abs(mouse.y - startY) > 8)
+                hold.stop();
+            if (flipped)
+                return;
             const p = startParameter + (startY - mouse.y) / 254; // ~2 px per MIDI step
             control.parameter = Math.max(0, Math.min(1, p));
         }
-        onDoubleClicked: control.parameter = root.defaultParameter
+        onReleased: hold.stop()
+        onCanceled: hold.stop()
+        onDoubleClicked: {
+            hold.stop();
+            control.parameter = root.defaultParameter;
+        }
     }
 }

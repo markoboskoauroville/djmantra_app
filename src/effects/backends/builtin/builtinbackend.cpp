@@ -56,6 +56,7 @@ BuiltInBackend::BuiltInBackend() {
     registerEffect<UnderwaterEffect>();
     registerEffect<CooldownEffect>();
     registerEffect<EchoOutEffect>();
+    registerEffect<DjmFilterEffect>();
     registerEffect<EchoEffect>();
     registerEffect<AutoPanEffect>();
 #ifndef __MACAPPSTORE__

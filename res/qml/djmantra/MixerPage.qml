@@ -61,6 +61,7 @@ Item {
     }
 
     Component.onCompleted: {
+        Mixxx.DJMantra.useDjmFilter();
         loadEffect(1, effectIndex(1));
         loadEffect(2, effectIndex(2));
     }
@@ -121,6 +122,7 @@ Item {
                 readonly property int number: index + 1
                 readonly property string fxGroup: "[EffectRack1_EffectUnit" + number + "_Effect1]"
                 property int choice: root.effectIndex(number)
+                property bool gainIsFilter: Mixxx.DJMantra.setting("gain_filter_" + number, "0") === "1"
                 // knobs and two buttons share the column's height
                 // Marko 13.10.2026: the FILTER knob is gone, the rest grows (4 knobs, 2 buttons)
                 readonly property real knobHeight: (knobs.height - 2 * 52 - 5 * knobs.spacing) / 4
@@ -140,7 +142,22 @@ Item {
                     anchors.right: deck.index === 1 ? parent.right : undefined
                     spacing: 2
 
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.modelData; key: "pregain"; label: "GAIN"; arcColor: Style.text }
+                    DKnob {
+                        // GAIN, or (long press) the Pioneer DJM FILTER: left low-pass,
+                        // middle off, right high-pass (Marko 13.10.2026)
+                        objectName: "gainFilter" + deck.number
+                        width: knobs.width
+                        height: deck.knobHeight
+                        group: deck.gainIsFilter ? "[QuickEffectRack1_" + deck.modelData + "]" : deck.modelData
+                        key: deck.gainIsFilter ? "super1" : "pregain"
+                        label: deck.gainIsFilter ? "FILTER" : "GAIN"
+                        arcColor: deck.gainIsFilter ? Style.water : Style.text
+                        onLongPressed: {
+                            deck.gainIsFilter = !deck.gainIsFilter;
+                            Mixxx.DJMantra.setSetting("gain_filter_" + deck.number, deck.gainIsFilter ? "1" : "0");
+                            Mixxx.DJMantra.log("knob " + deck.modelData + ": " + label);
+                        }
+                    }
                     DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water }
                     DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth }
                     DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire }

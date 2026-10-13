@@ -29,3 +29,8 @@ carrying the deck's BPM, the label under it says PITCH, a scale with the song's 
 (9 marks over the deck's pitch range, the middle = the song's own tempo); up = faster. The handle follows sync and
 tempo blend. Double tap: volume to the top / pitch to the middle. The mode is remembered per deck. Check against
 the deck's BPM display while dragging, and during an AutoMix / tempo blend transition.
+## 7. V40 (Marko): long press GAIN (0.5 s, finger still) flips it to FILTER (blue arc) and back; remembered per deck.
+FILTER = a Pioneer DJM Color FX filter on every deck (log `DJM filter: loaded on [ChannelN]`): middle off (a small
+dead zone), left a resonant low-pass sweeping 20 kHz -> 45 Hz, right a resonant high-pass 20 Hz -> 9 kHz (Q ~2),
+exponential travel. The controller's FILTER knob drives the same. Record a slow sweep left and right (the peak should
+sing like a DJM), double tap = middle.

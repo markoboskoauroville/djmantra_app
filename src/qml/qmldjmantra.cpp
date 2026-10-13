@@ -41,6 +41,11 @@ extern const QString kOboeHostApi;
 #endif
 #include "qml/asyncimageprovider.h"
 #include "qml/cqlink.h"
+#include "qml/qmleffectsmanagerproxy.h"
+#include "effects/effectsmanager.h"
+#include "effects/effectslot.h"
+#include "effects/chains/quickeffectchain.h"
+#include "effects/backends/effectsbackendmanager.h"
 #include "qml/gputime.h"
 #include "qml/qmllibraryproxy.h"
 #include "moc_qmldjmantra.cpp"
@@ -848,6 +853,34 @@ void QmlDJMantra::analyzeAhead(const QStringList& paths) {
         tracks.append(AnalyzerScheduledTrack(pTrack->getId()));
     }
     scheduleAnalysis(tracks);
+}
+
+void QmlDJMantra::useDjmFilter() {
+    // Marko 13.10.2026: the decks' FILTER (the quick effect knob, super1) is the
+    // Pioneer DJM Color FX filter (djayfx.h DjmFilter), not Mixxx's own filter
+    const auto pEffects = QmlEffectsManagerProxy::effectsManager();
+    if (!pEffects) {
+        return;
+    }
+    const EffectManifestPointer pManifest = pEffects->getBackendManager()->getManifest(
+            QStringLiteral("org.djmantra.effects.djmfilter"), EffectBackendType::BuiltIn);
+    if (!pManifest) {
+        qWarning() << "DJM filter: not registered";
+        return;
+    }
+    for (int deck = 1; deck <= 4; ++deck) {
+        const QString group = QStringLiteral("[Channel%1]").arg(deck);
+        const auto pChain = pEffects->getQuickEffectChain(group);
+        if (!pChain) {
+            continue;
+        }
+        const EffectSlotPointer pSlot = pChain->getEffectSlot(0);
+        if (!pSlot || (pSlot->getManifest() && pSlot->getManifest()->id() == pManifest->id())) {
+            continue;
+        }
+        pSlot->loadEffectWithDefaults(pManifest);
+        qInfo().noquote() << "DJM filter: loaded on" << group;
+    }
 }
 
 void QmlDJMantra::stopAnalysis() {

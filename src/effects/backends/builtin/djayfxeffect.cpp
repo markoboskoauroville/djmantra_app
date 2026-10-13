@@ -174,3 +174,67 @@ void EchoOutEffect::processChannel(DjayFxGroupState* pState,
             beatSeconds,
             m_pMix->value());
 }
+
+// static
+QString DjmFilterEffect::getId() {
+    return "org.djmantra.effects.djmfilter";
+}
+
+// static
+EffectManifestPointer DjmFilterEffect::getManifest() {
+    EffectManifestPointer pManifest(new EffectManifest());
+    pManifest->setId(getId());
+    pManifest->setName(QObject::tr("DJM Filter"));
+    pManifest->setShortName(QObject::tr("DJM Filter"));
+    pManifest->setAuthor("DJ Mantra");
+    pManifest->setVersion("1.0");
+    pManifest->setDescription(QObject::tr(
+            "Pioneer DJM style Color FX filter: left a resonant low-pass, right a "
+            "resonant high-pass, the middle off"));
+    pManifest->setEffectRampsFromDry(true);
+    pManifest->setMetaknobDefault(0.5);
+
+    EffectManifestParameterPointer filter = pManifest->addParameter();
+    filter->setId("filter");
+    filter->setName(QObject::tr("Filter"));
+    filter->setShortName(QObject::tr("Filter"));
+    filter->setDescription(QObject::tr("Left: low-pass, middle: off, right: high-pass"));
+    filter->setValueScaler(EffectManifestParameter::ValueScaler::Linear);
+    filter->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+    filter->setDefaultLinkType(EffectManifestParameter::LinkType::Linked);
+    filter->setRange(0, 0.5, 1);
+
+    EffectManifestParameterPointer resonance = pManifest->addParameter();
+    resonance->setId("resonance");
+    resonance->setName(QObject::tr("Resonance"));
+    resonance->setShortName(QObject::tr("Res"));
+    resonance->setDescription(QObject::tr("The peak at the corner (the DJM's PARAMETER)"));
+    resonance->setValueScaler(EffectManifestParameter::ValueScaler::Linear);
+    resonance->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+    resonance->setRange(0, 0.4, 1);
+    return pManifest;
+}
+
+void DjmFilterEffect::loadEngineEffectParameters(
+        const QMap<QString, EngineEffectParameterPointer>& parameters) {
+    m_pFilter = parameters.value("filter");
+    m_pResonance = parameters.value("resonance");
+}
+
+void DjmFilterEffect::processChannel(DjayFxGroupState* pState,
+        const CSAMPLE* pInput,
+        CSAMPLE* pOutput,
+        const mixxx::EngineParameters& engineParameters,
+        const EffectEnableState enableState,
+        const GroupFeatureState& groupFeatures) {
+    Q_UNUSED(groupFeatures);
+    pState->djmFilter.setSampleRate(engineParameters.sampleRate().toDouble());
+    if (enableState == EffectEnableState::Enabling) {
+        pState->djmFilter.reset();
+    }
+    pState->djmFilter.process(pInput,
+            pOutput,
+            static_cast<int>(engineParameters.framesPerBuffer()),
+            m_pFilter->value(),
+            m_pResonance->value());
+}

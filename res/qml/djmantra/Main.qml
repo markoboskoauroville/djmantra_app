@@ -617,6 +617,8 @@ Window {
     onLandscapeChanged: mapTimer.restart()
 
     Component.onCompleted: {
+        // the decks' FILTER = the Pioneer DJM filter (also for the controller's filter knob)
+        Mixxx.DJMantra.useDjmFilter();
         Mixxx.DJMantra.log("interface ready " + width + "x" + height);
         Mixxx.DJMantra.hideBars();
     }

@@ -93,4 +93,27 @@ class EchoOut {
     float m_wet = 0;       // 0 = dry, 1 = the echo (5 ms ramps)
 };
 
+/// Pioneer DJM Sound Color FX FILTER (Marko 13.10.2026: "it didn't sound like Pioneer"):
+/// one knob, the middle does nothing (a small dead zone), left = a resonant low-pass
+/// sweeping down from 20 kHz to ~45 Hz, right = a resonant high-pass sweeping up from
+/// 20 Hz to ~9 kHz, both on an exponential (musical) travel; the DJM's peaky resonance
+/// (Q ~2 by default, the PARAMETER knob's "resonance" 0..1 = Q 0.7..4) is what makes its
+/// sweep sing. The filter comes in from dry at the edge of the dead zone (no click).
+class DjmFilter {
+  public:
+    static constexpr double kDeadZone = 0.03; // of the knob's travel, each side of the middle
+
+    explicit DjmFilter(double sampleRate = 44100);
+    void setSampleRate(double sampleRate);
+    void reset();
+    void process(const float* pIn, float* pOut, int frames, double knob, double resonance);
+    /// the corner for a knob position: < 0 = low-pass, > 0 = high-pass, 0 = off
+    static double cutoffFor(double knob);
+
+  private:
+    double m_sampleRate;
+    double m_knob = 0.5; // smoothed
+    Svf m_svf;
+};
+
 } // namespace djmantra

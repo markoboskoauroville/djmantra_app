@@ -13,11 +13,13 @@ class DjayFxGroupState final : public EffectState {
             : EffectState(engineParameters),
               underwater(engineParameters.sampleRate().toDouble()),
               cooldown(engineParameters.sampleRate().toDouble()),
-              echoOut(engineParameters.sampleRate().toDouble()) {
+              echoOut(engineParameters.sampleRate().toDouble()),
+              djmFilter(engineParameters.sampleRate().toDouble()) {
     }
     djmantra::Underwater underwater;
     djmantra::Cooldown cooldown;
     djmantra::EchoOut echoOut;
+    djmantra::DjmFilter djmFilter;
     bool lastEngaged = false;
 };
 
@@ -71,4 +73,24 @@ class EchoOutEffect : public DjayFxEffectBase {
             const mixxx::EngineParameters& engineParameters,
             const EffectEnableState enableState,
             const GroupFeatureState& groupFeatures) override;
+};
+
+/// Pioneer DJM's Sound Color FX FILTER (djmantra::DjmFilter): "filter" (the knob, linked
+/// to the deck's FILTER / quick effect knob) and "resonance"
+class DjmFilterEffect : public EffectProcessorImpl<DjayFxGroupState> {
+  public:
+    static QString getId();
+    static EffectManifestPointer getManifest();
+    void loadEngineEffectParameters(
+            const QMap<QString, EngineEffectParameterPointer>& parameters) override;
+    void processChannel(DjayFxGroupState* pState,
+            const CSAMPLE* pInput,
+            CSAMPLE* pOutput,
+            const mixxx::EngineParameters& engineParameters,
+            const EffectEnableState enableState,
+            const GroupFeatureState& groupFeatures) override;
+
+  private:
+    EngineEffectParameterPointer m_pFilter;
+    EngineEffectParameterPointer m_pResonance;
 };
