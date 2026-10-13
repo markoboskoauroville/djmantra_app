@@ -24,3 +24,8 @@ lines move on whole device pixels (no shimmer of the wave, no 1 px lines blurrin
 position jitter (< 4 ms) no longer corrects the motion, drift is pulled in slowly (8 % a frame). Screen-record 60 fps
 at zoom 3, 0.5 and 0.04 while playing; per frame the lane's shift (should be even: e.g. 41-42 px at 0.04, never
 0 then 80); beat lines steady (no flicker); the play head still.
+## 6. V39 (Marko): the MIXER faders are VOLUME and PITCH: long press (0.5 s, still) flips one; PITCH = a blue handle
+carrying the deck's BPM, the label under it says PITCH, a scale with the song's BPM on the left and % on the right
+(9 marks over the deck's pitch range, the middle = the song's own tempo); up = faster. The handle follows sync and
+tempo blend. Double tap: volume to the top / pitch to the middle. The mode is remembered per deck. Check against
+the deck's BPM display while dragging, and during an AutoMix / tempo blend transition.

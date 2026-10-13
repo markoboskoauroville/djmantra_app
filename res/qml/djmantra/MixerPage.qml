@@ -202,11 +202,11 @@ Item {
                     spacing: Style.gap
                     layoutDirection: deck.index === 0 ? Qt.LeftToRight : Qt.RightToLeft
 
-                    DFader {
+                    PitchVolumeFader {
+                        // long press: VOLUME <-> PITCH (Marko 13.10.2026)
                         width: deck.width - knobs.width - 3 * Style.gap - 14
                         height: parent.height
                         group: deck.modelData
-                        key: "volume"
                         barColor: deck.index === 0 ? Style.deck1 : Style.deck2
                     }
 
