@@ -111,29 +111,45 @@ void main(void) {
             outputColor = vec4(colour * a, a);
         }
     }
-    // Marko 13.10.2026 (djay's deep zoom): when a pixel holds fewer than ~3 points of
-    // the real wave, the signed wave itself takes over (each kick's wiggle), in the
-    // same colour, as a line between the min and the max of the points it covers
-    if (fineLength > 0 && outputColor.a >= 0.0) {
+    // Marko 13.10.2026 (djay's deep zoom; round 39 pairs): zoomed in, djay draws the
+    // signed wave itself as ONE thin line (no fill, not mirrored): each kick a few clear
+    // sine cycles. From ~12 points of the real wave per pixel down: the min..max of the
+    // points a pixel covers (a line once a pixel holds one point or less, interpolated)
+    if (fineLength > 0) {
         float pointsPerPixel = float(fineLength) / max(framebufferSize.x, 1.0);
-        float weight = clamp((3.0 - pointsPerPixel) / 1.5, 0.0, 1.0);
+        float weight = clamp((12.0 - pointsPerPixel) / 4.0, 0.0, 1.0);
         if (weight > 0.0) {
             float point = uv.x * float(fineLength);
-            vec2 a = fineAt(floor(point - 0.5 * pointsPerPixel));
-            vec2 b = fineAt(floor(point + 0.5 * pointsPerPixel));
-            float lo = min(a.x, b.x);
-            float hi = max(a.y, b.y);
-            float y = (0.5 - uv.y) * 2.0 / max(heightGain, 0.05);
-            float px = 2.0 / max(framebufferSize.y, 1.0) / max(heightGain, 0.05);
+            float lo;
+            float hi;
+            if (pointsPerPixel >= 1.0) {
+                vec2 a = fineAt(floor(point - 0.5 * pointsPerPixel));
+                vec2 b = fineAt(floor(point));
+                vec2 c = fineAt(floor(point + 0.5 * pointsPerPixel));
+                lo = min(a.x, min(b.x, c.x));
+                hi = max(a.y, max(b.y, c.y));
+            } else {
+                // between two points: the line through their middles
+                float p0 = floor(point - 0.5);
+                vec2 a = fineAt(p0);
+                vec2 b = fineAt(p0 + 1.0);
+                float v = mix(0.5 * (a.x + a.y), 0.5 * (b.x + b.y), point - 0.5 - p0);
+                lo = v;
+                hi = v;
+            }
+            // half the lane's height for the song's peak (djay's line is low)
+            float scale = 0.5 * heightGain;
+            float y = (0.5 - uv.y) * 2.0;
+            float px = 2.0 / max(framebufferSize.y, 1.0);
             vec4 waveColor = vec4(0.0);
-            if (y >= lo - 1.5 * px && y <= hi + 1.5 * px) {
+            if (y >= lo * scale - 1.2 * px && y <= hi * scale + 1.2 * px) {
                 float idx2 = floor(firstVisualIndex + uv.x * (lastVisualIndex - firstVisualIndex)) * 2.0;
                 vec4 d = (getWaveformData(idx2) + getWaveformData(idx2 + 1.0)) * 0.5;
                 d.w = max(d.x, max(d.y, d.z));
                 vec3 c = djayColor(d * levelGain);
                 float l = dot(c, vec3(0.299, 0.587, 0.114));
                 c = clamp(vec3(l) + (c - vec3(l)) * 1.4, 0.0, 1.0);
-                waveColor = vec4(c * 0.9, 0.9);
+                waveColor = vec4(c, 1.0);
             }
             outputColor = mix(outputColor, waveColor, weight);
         }

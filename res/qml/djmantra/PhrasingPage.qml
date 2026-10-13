@@ -19,7 +19,8 @@ Item {
     // nothing)
     property real zoom: 3
     function setZoom(value) {
-        zoom = Math.min(12, Math.max(0.5, value));
+        // down to 0.04 s per 100 px (Marko 13.10.2026: djay's deep zoom, ~0.15 s across)
+        zoom = Math.min(12, Math.max(0.04, value));
         Mixxx.DJMantra.log("waveform zoom " + zoom.toFixed(2));
     }
 

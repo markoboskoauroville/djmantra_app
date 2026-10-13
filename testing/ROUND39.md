@@ -16,3 +16,6 @@ the button, nothing cut. Record Underwater and Cooldown at left / middle / right
 resonance bump there (V30 measured ~2 kHz), the middle ~4 kHz (simulated on djay's audio: 6-16 kHz -10.9 vs djay -8.5).
 Record Underwater right and Cooldown left / middle / right again (with the FX state clear: say when each tap was
 made and which log lines appeared; if a tap leaves no `FX:` line, note where on the screen it landed).
+## 4. V32 (the djay pairs, round 39): the zoom goes down to 0.04 s per 100 px (djay's deepest ~0.15 s across); from
+~12 points per pixel the lane draws the signed wave as ONE thin line (not filled, not mirrored, half the lane for the
+song's peak), djay's style. "Fine wave:" once per song now (one cache for all views). Pairs again at the deepest zoom.

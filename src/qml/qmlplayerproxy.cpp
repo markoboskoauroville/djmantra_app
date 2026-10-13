@@ -4,9 +4,6 @@
 #include <QDateTime>
 
 #include <QCoreApplication>
-#include <QPointer>
-#include <QTimer>
-#include <thread>
 
 #include "mixer/basetrackplayer.h"
 #include "qml/finewave.h"
@@ -278,39 +275,44 @@ int QmlPlayerProxy::getWaveformLength() const {
 }
 
 void QmlPlayerProxy::buildFineWave(const TrackPointer& pTrack) {
-    // round 39: the load signal came twice and two threads decoded the same song
-    if (pTrack && pTrack == m_fineWaveTrack) {
+    if (pTrack == m_fineWaveTrack) {
         return;
     }
     m_fineWaveTrack = pTrack;
-    const int request = ++m_fineWaveRequest;
     m_fineWave = QImage();
     m_fineWaveLength = 0;
     emit fineWaveChanged();
     if (!pTrack) {
         return;
     }
-    // after the load's own work (the engine reads, the analysis), at a low priority
-    QPointer<QmlPlayerProxy> self(this);
-    QTimer::singleShot(3000, this, [self, pTrack, request] {
-        if (!self || self->m_fineWaveRequest != request) {
+    auto* pCache = djmantra::FineWaveCache::instance();
+    const QString location = pTrack->getLocation();
+    const auto take = [this, location](const std::shared_ptr<const djmantra::FineWave>& pWave) {
+        if (!pWave || !m_fineWaveTrack || m_fineWaveTrack->getLocation() != location) {
             return;
         }
-        std::thread([self, pTrack, request] {
-            djmantra::FineWave wave = djmantra::FineWave::build(pTrack);
-            QMetaObject::invokeMethod(
-                    qApp,
-                    [self, request, wave]() {
-                        if (!self || self->m_fineWaveRequest != request) {
-                            return;
-                        }
-                        self->m_fineWave = wave.image;
-                        self->m_fineWaveLength = wave.length;
-                        emit self->fineWaveChanged();
-                    },
-                    Qt::QueuedConnection);
-        }).detach();
-    });
+        m_fineWave = pWave->image;
+        m_fineWaveLength = pWave->length;
+        emit fineWaveChanged();
+    };
+    if (const auto pWave = pCache->request(pTrack)) {
+        take(pWave);
+        return;
+    }
+    // one connection per proxy, kept: it ignores other songs' waves
+    if (!m_fineWaveConnected) {
+        m_fineWaveConnected = true;
+        connect(pCache, &djmantra::FineWaveCache::ready, this, [this](const QString& readyLocation) {
+            if (m_fineWaveTrack && m_fineWaveTrack->getLocation() == readyLocation) {
+                const auto pWave = djmantra::FineWaveCache::instance()->request(m_fineWaveTrack);
+                if (pWave) {
+                    m_fineWave = pWave->image;
+                    m_fineWaveLength = pWave->length;
+                    emit fineWaveChanged();
+                }
+            }
+        });
+    }
 }
 
 QString QmlPlayerProxy::getFineWaveTexture() const {

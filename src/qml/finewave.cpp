@@ -1,6 +1,10 @@
 #include "qml/finewave.h"
 
+#include <QCoreApplication>
+#include <QPointer>
+#include <QTimer>
 #include <QtDebug>
+#include <thread>
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -10,6 +14,7 @@
 #include "sources/soundsourceproxy.h"
 #include "track/track.h"
 #include "util/samplebuffer.h"
+#include "moc_finewave.cpp"
 
 namespace djmantra {
 
@@ -83,6 +88,47 @@ FineWave FineWave::build(const TrackPointer& pTrack) {
     qInfo() << "Fine wave:" << result.length << "points," << framesPerPoint << "frames each, for"
             << pTrack->getLocation();
     return result;
+}
+
+// static
+FineWaveCache* FineWaveCache::instance() {
+    static FineWaveCache* pInstance = new FineWaveCache();
+    return pInstance;
+}
+
+std::shared_ptr<const FineWave> FineWaveCache::request(const TrackPointer& pTrack) {
+    if (!pTrack) {
+        return nullptr;
+    }
+    const QString location = pTrack->getLocation();
+    const auto found = m_waves.constFind(location);
+    if (found != m_waves.constEnd()) {
+        return found.value();
+    }
+    if (m_building.contains(location)) {
+        return nullptr;
+    }
+    m_building.insert(location);
+    // after the load's own work (the engine reads, the analysis)
+    QTimer::singleShot(3000, this, [this, pTrack, location] {
+        std::thread([this, pTrack, location] {
+            auto pWave = std::make_shared<const FineWave>(FineWave::build(pTrack));
+            QMetaObject::invokeMethod(
+                    this,
+                    [this, location, pWave] {
+                        m_building.remove(location);
+                        m_waves.insert(location, pWave);
+                        m_order.removeAll(location);
+                        m_order.append(location);
+                        while (m_order.size() > 4) {
+                            m_waves.remove(m_order.takeFirst());
+                        }
+                        emit ready(location);
+                    },
+                    Qt::QueuedConnection);
+        }).detach();
+    });
+    return nullptr;
 }
 
 } // namespace djmantra
