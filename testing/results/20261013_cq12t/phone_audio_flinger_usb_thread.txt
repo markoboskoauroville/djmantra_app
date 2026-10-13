@@ -1,0 +1,51 @@
+   10-13 15:38:39.999 CFG_EVENT_RELEASE_AUDIO_PATCH: old device 0x80000080 (AUDIO_DEVICE_IN_BACK_MIC) new device 0x0 (AUDIO_DEVICE_NONE)
+   10-13 15:38:40.009 removeTrack_l (0xb4000075656dd4c0)     no    184   13497/  10335      81     407  T  0x004 00000001 00000010  48000      5 000C1D40   7680      0   n 64510.62 t
+   10-13 15:38:40.010 AT::add       (0xb4000075656dfb60)     no    211   13497/  10335      81     513  r1 0x000 00000001 00000010  48000      5 00000000   7680      0   n       new
+   10-13 15:38:40.018 CFG_EVENT_CREATE_AUDIO_PATCH: old device 0x0 (AUDIO_DEVICE_NONE) new device 0x80000004 (AUDIO_DEVICE_IN_BUILTIN_MIC)
+   10-13 15:38:40.702 CFG_EVENT_RELEASE_AUDIO_PATCH: old device 0x80000004 (AUDIO_DEVICE_IN_BUILTIN_MIC) new device 0x0 (AUDIO_DEVICE_NONE)
+   10-13 15:38:40.709 removeTrack_l (0xb4000075656dfb60)     no    211   13497/  10335      81     513  T  0x004 00000001 00000010  48000      5 00006540   7680      0   n  160.15 t
+   10-13 15:38:40.709 AT::add       (0xb4000075656de1a0)     no    214   13497/  10335      81     523  r1 0x000 00000001 00000010  48000      5 00000000   7680      0   n       new
+   10-13 15:38:40.716 CFG_EVENT_CREATE_AUDIO_PATCH: old device 0x0 (AUDIO_DEVICE_NONE) new device 0x80001000 (AUDIO_DEVICE_IN_USB_DEVICE)
+
+Output thread 0xb40000770571b590, name AudioMmapOut_6B, tid 31758, type 5 (MMAP_PLAYBACK):
+  I/O handle: 1725
+  Standby: no
+  Sample rate: 48000 Hz
+  HAL frame count: 48
+  HAL format: 0x5 (AUDIO_FORMAT_PCM_FLOAT)
+  HAL buffer size: 384 bytes
+  Channel count: 2
+  Channel mask: 0x00000003 (front-left, front-right)
+  Processing format: 0x5 (AUDIO_FORMAT_PCM_FLOAT)
+  Processing frame size: 8 bytes
+  Pending config events: none
+  Output devices: 0x4000 (AUDIO_DEVICE_OUT_USB_DEVICE)
+  Input device: 0 (AUDIO_DEVICE_NONE)
+  Audio source: 0 (AUDIO_SOURCE_DEFAULT)
+  AudioStreamOut: 0xb4000075f56ebc70 flags 0x4001 (AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_MMAP_NOIRQ)
+  Hal stream dump:
+      Standby: no
+      Retry: 0
+      Frames written: 0
+      UC Latency (us): 0
+      Request latency mode: 1
+      Fifo frame underruns: none
+      Start latency ms: (mean: 6.934895  min: 6.934895  max: 6.934895  last: 6.934895  n: 1)
+      Errors: 0
+      Signal power history: (none)
+      Signal power history: (none)
+  Attributes: content type 2 usage 1 source 0
+  Session: 2105 port Id: 858
+  HAL volume: 1.000000
+  Master volume: 1.000000 Master mute 0
+  TimerQueueCallbacks: 0
+  TimerQueueCallback Ms: 0.000000
+  1 Tracks
+    Client(pid/uid) Session Port Id   Format Chn mask  SRate Flags Usg/Src PortVol dB PortMuted
+      27602/  10358    2105     859 00000005 00000003  48000 0x8100    1  2          0       false
+  0 Effect Chains
+  Local log:
+                                                         Client(pid/uid) Session Port Id   Format Chn mask  SRate Flags Usg/Src PortVol dB PortMuted
+   10-13 15:40:33.717 CFG_EVENT_CREATE_AUDIO_PATCH: old device  (Empty device types) new device 0x4000 (AUDIO_DEVICE_OUT_USB_DEVICE)
+   10-13 15:40:33.727 AT::add       (0xb4000076a56e0598)   27602/  10358    2105     859 00000005 00000003  48000 0x8100    1  2          0       false
+Historical Thread Log 10-13 15:40:15.612 - 
