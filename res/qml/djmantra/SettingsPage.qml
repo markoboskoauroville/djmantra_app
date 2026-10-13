@@ -30,6 +30,7 @@ Rectangle {
     property int beatGridMode: Number(Mixxx.DJMantra.setting("beat_grid_mode", "0"))
     property bool beatOnKick: Mixxx.DJMantra.setting("beat_on_kick", "1") !== "0"
     property int cqTapKey: Number(Mixxx.DJMantra.setting("cq_tap_key", "0"))
+    property real stopTime: Number(Mixxx.DJMantra.setting("stop_time", "0"))
     property int cqFx: Number(Mixxx.DJMantra.setting("cq_fx", "1"))
     property int seenVersion: -1
     signal done()
@@ -139,6 +140,38 @@ Rectangle {
             // V8 (Marko 13.10.2026): sections and beats are a choice, to find the best
             // in practice. Each choice is written to the log ("Settings:", "Sections
             // options:", "Beats options:").
+            // STOP TIME (Marko 13.10.2026): 0 = a deck stops at once; more = the turntable
+            // effect, the record slowing down (TurntableStop.qml)
+            Text {
+                text: qsTr("STOP TIME: a stopped deck slows down as a turntable")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Row {
+                spacing: 6
+
+                Repeater {
+                    model: [0, 0.5, 1, 2, 3]
+
+                    delegate: DButton {
+                        required property real modelData
+
+                        objectName: "stopTime_" + modelData
+                        width: (column.width - 24) / 5
+                        height: 40
+                        text: modelData === 0 ? qsTr("OFF") : modelData + " s"
+                        fontSize: 13
+                        lit: root.stopTime === modelData
+                        onClicked: {
+                            root.stopTime = modelData;
+                            Mixxx.DJMantra.setSetting("stop_time", modelData);
+                        }
+                    }
+                }
+            }
+
             // the Allen & Heath CQ mixer on the network (Marko 13.10.2026): its delay
             // in time with the decks, triggered from the app
             Text {

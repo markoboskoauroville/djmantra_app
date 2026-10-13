@@ -6,6 +6,7 @@ AutoPhase 1.0 AutoPhase.qml
 BigWaveform 1.0 BigWaveform.qml
 DButton 1.0 DButton.qml
 CloseButton 1.0 CloseButton.qml
+TurntableStop 1.0 TurntableStop.qml
 DFader 1.0 DFader.qml
 DKnob 1.0 DKnob.qml
 DeckControls 1.0 DeckControls.qml

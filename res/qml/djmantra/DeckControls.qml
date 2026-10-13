@@ -12,6 +12,7 @@ Row {
     property color deckColor: Style.deck1
     property bool mirrored: false
     property var matrixDeck // its MatrixDeck (align, beat launch)
+    property var turntable // its TurntableStop (Settings -> STOP TIME)
     property var playlist   // the song list (LibraryPage): the next unplayed song
     readonly property int deck: group === "[Channel2]" ? 2 : 1
 
@@ -105,7 +106,13 @@ Row {
         litColor: root.deckColor
         onPressedDown: {
             if (playControl.value > 0) {
-                playControl.value = 0;
+                if (root.turntable && root.turntable.braking) {
+                    root.turntable.cancel(); // PLAY while slowing down: plays on
+                } else if (root.turntable) {
+                    root.turntable.stop(); // at once, or as a turntable (STOP TIME)
+                } else {
+                    playControl.value = 0;
+                }
                 Mixxx.DJMantra.log("button " + root.group + ",play 0");
             } else if (root.matrixDeck && (root.matrixDeck.startFromCue() || root.matrixDeck.align())) {
                 Mixxx.DJMantra.log("button " + root.group + ",play armed (aligned start)");

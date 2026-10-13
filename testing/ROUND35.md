@@ -13,3 +13,8 @@ style) and its zoom level.
 ## 2. Install Allen & Heath's CQ MixPad app on the Pixel (Play Store) and use it to control the CQ (Marko): it
 replaces the Mac's MixPad for the CQ tests on the phone.
 ## 3. Then testing/CQ12T.md part B and ROUND32 part 5 if not done.
+
+## 4. STOP TIME (new in V15, Marko): Settings -> STOP TIME OFF / 0.5 / 1 / 2 / 3 s. OFF: PLAY on a playing deck
+stops at once. 1 s and 3 s: the deck slows down as a turntable (the pitch falls) and stops after ~1 / 3 s (log
+`turntable stop [ChannelN] 1 s`; record the sound). PLAY again during the slow-down: it plays on at its speed. A
+synced deck (tempo not 100 %) starts the slow-down from its own tempo (no jump). The controller's PLAY does the same.

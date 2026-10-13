@@ -74,7 +74,7 @@ std::vector<std::unique_ptr<ControlObject>> s_controllerControls;
 void QmlDJMantra::registerUserSettings(UserSettingsPointer pConfig) {
     s_controllerControls.clear();
     if (pConfig) {
-        for (const char* key : {"browse_move", "browse_press", "browse_back", "load", "page"}) {
+        for (const char* key : {"browse_move", "browse_press", "browse_back", "load", "page", "stop_deck"}) {
             s_controllerControls.push_back(std::make_unique<ControlObject>(
                     ConfigKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(key))));
         }
@@ -84,7 +84,8 @@ void QmlDJMantra::registerUserSettings(UserSettingsPointer pConfig) {
                      {"section_algorithm", 0},
                      {"section_sensitivity", 3},
                      {"beat_grid_mode", 0},
-                     {"beat_on_kick", 1}}) {
+                     {"beat_on_kick", 1},
+                     {"stop_time", 0}}) {
             const ConfigKey configKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(key));
             auto pControl = std::make_unique<ControlObject>(configKey);
             pControl->set(pConfig->getValue(configKey, fallback));

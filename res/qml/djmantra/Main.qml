@@ -79,6 +79,19 @@ Window {
                 playlistPage.activate("");
         }
     }
+    TurntableStop { id: turntable1; group: "[Channel1]" }
+    TurntableStop { id: turntable2; group: "[Channel2]" }
+    Mixxx.ControlProxy {
+        // the controller's PLAY on a playing deck with a stop time (Mix Ultra script)
+        group: "[DJMantra]"; key: "stop_deck"
+        onValueChanged: if (value >= 1) {
+            const t = Math.round(value) === 2 ? turntable2 : turntable1;
+            if (t.braking)
+                t.cancel();
+            else
+                t.stop();
+        }
+    }
     Mixxx.ControlProxy {
         group: "[DJMantra]"; key: "browse_back"
         onValueChanged: if (value > 0 && window.browsing) playlistPage.back()
@@ -315,6 +328,7 @@ Window {
                     group: "[Channel1]"
                     deckColor: Style.deck1
                     matrixDeck: matrix1
+                    turntable: turntable1
                     playlist: playlistPage
                 }
 
@@ -325,6 +339,7 @@ Window {
                     deckColor: Style.deck2
                     mirrored: true
                     matrixDeck: matrix2
+                    turntable: turntable2
                     playlist: playlistPage
                 }
             }

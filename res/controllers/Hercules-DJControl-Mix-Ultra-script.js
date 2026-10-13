@@ -204,7 +204,13 @@ MixUltra.shiftButton = function(channel, control, value, status, group) {
 
 MixUltra.play = function(channel, control, value, status, group) {
     if (value > 0) {
-        script.toggleControl(group, "play");
+        // DJ Mantra: a playing deck with a STOP TIME (Settings) stops as a turntable,
+        // done by the app (TurntableStop.qml)
+        if (engine.getValue(group, "play") > 0 && engine.getValue("[DJMantra]", "stop_time") > 0) {
+            MixUltra.tellApp("stop_deck", group === "[Channel2]" ? 2 : 1);
+        } else {
+            script.toggleControl(group, "play");
+        }
     }
 };
 
