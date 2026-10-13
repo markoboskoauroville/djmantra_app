@@ -159,6 +159,8 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE QVariantList sections(const QString& group) const;
     /// Writes a line to the app's log (the phone tests read it)
     Q_INVOKABLE void log(const QString& text) const;
+    // Sets any control (effect unit routing from FxBar.qml); false if it does not exist.
+    Q_INVOKABLE bool setControl(const QString& group, const QString& key, double value) const;
 
     static QmlDJMantra* create(QQmlEngine* pQmlEngine, QJSEngine* pJsEngine);
     static inline void registerSoundManager(std::shared_ptr<SoundManager> pSoundManager) {

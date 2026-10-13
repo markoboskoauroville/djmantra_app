@@ -28,7 +28,7 @@ FATAL = ("Cannot assign", "unavailable", "is not a type", "Failed to load",
 
 STUB = {
     "qmldir": "module Mixxx\nControlProxy 1.0 ControlProxy.qml\n"
-              "singleton DJMantra 1.0 DJMantra.qml\nsingleton PlayerManager 1.0 PlayerManager.qml\n"
+              "singleton DJMantra 1.0 DJMantra.qml\nsingleton PlayerManager 1.0 PlayerManager.qml\nsingleton EffectsManager 1.0 EffectsManager.qml\n"
               "WaveformOverview 1.0 WaveformOverview.qml\n",
     "WaveformOverview.qml": "import QtQuick 2.12\nItem {\n enum Channels { LeftChannel, RightChannel, BothChannels }\n"
                             " enum Renderer { RGB, Filtered, HSV, Djay }\n property var player\n property int channels\n"
@@ -38,6 +38,8 @@ STUB = {
                         " property real value: 0\n property real parameter: 0\n property int maxRate: 0\n}\n",
     "PlayerManager.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
                          " function getPlayer(group) { return null; }\n}\n",
+    "EffectsManager.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
+                          " function getEffectSlot(u, s) { return null; }\n}\n",
     "DJMantra.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
                     " property int insetLeft: 0\n property int insetTop: 0\n property int insetRight: 0\n"
                     " property int insetBottom: 0\n property string version: \"0\"\n property int cornerRadius: 40\n property int analysisLeft: 0\n signal analysisChanged()\n"
@@ -48,7 +50,7 @@ STUB = {
                     " function freeDeck() { return \"[Channel1]\"; }\n function noteLoaded(g) {}\n"
                     " function musicRoots() { return []; }\n function listFolder(f) { return [{name: \"a\", path: \"/m/a.mp3\", isFolder: false}]; }\n function analyzeAhead(p) {}\n function analyzeDecksAgain() { return 0; }\n function cqConnect(h) {}\n function cqDisconnect() {}\n function cqSetDelay(o) {}\n function cqTapNow() {}\n property string cqStatus: \"not connected\"\n property bool cqConnected: true\n property bool cqDelayOn: false\n function waveformLevel(g) { return 2; }\n function audioOutputs() { return [{key: \"\", label: \"Phone\"}, {key: \"usb:X\", label: \"USB: X\", channels: 4}]; }\n function audioOutputsVersion() { return 1; }\n function audioRoute() { return ({master: \"usb:X\", masterPair: 0, headphones: \"usb:X\", headphonesPair: 1}); }\n function setAudioRoute(m, mp, h, hp) { return \"\"; }\n function setting(n, f) { return f; }\n function setSetting(n, v) {}\n function songInfo(p) { return ({artist: \"Artist\", title: \"Title\", bpm: 124, key: \"8A\", cover: \"\"}); }\n"
                     " function hideBars() {}\n function showBars() {}\n function barsVisible() { return false; }\n function usage() { return ({cpu: 34, gpu: -1}); }\n function sections(g) { return []; }\n function setQuickInterface(on) {}\n"
-                    " function quickInterface() { return true; }\n function log(t) {}\n}\n",
+                    " function quickInterface() { return true; }\n function log(t) {}\n function setControl(g, k, v) { return true; }\n}\n",
 }
 
 problems = []

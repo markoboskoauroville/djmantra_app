@@ -6,6 +6,7 @@
 #include "effects/backends/builtin/bessel8lvmixeqeffect.h"
 #include "effects/backends/builtin/biquadfullkilleqeffect.h"
 #include "effects/backends/builtin/stemeqeffect.h"
+#include "effects/backends/builtin/djayfxeffect.h"
 #include "effects/backends/builtin/bitcrushereffect.h"
 #include "effects/backends/builtin/filtereffect.h"
 #include "effects/backends/builtin/flangereffect.h"
@@ -52,6 +53,9 @@ BuiltInBackend::BuiltInBackend() {
     registerEffect<BalanceEffect>();
     // Fancy effects
     registerEffect<FlangerEffect>();
+    registerEffect<UnderwaterEffect>();
+    registerEffect<CooldownEffect>();
+    registerEffect<EchoOutEffect>();
     registerEffect<EchoEffect>();
     registerEffect<AutoPanEffect>();
 #ifndef __MACAPPSTORE__

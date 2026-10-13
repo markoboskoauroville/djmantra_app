@@ -925,6 +925,16 @@ void QmlDJMantra::log(const QString& text) const {
     qInfo().noquote() << "Quick:" << text;
 }
 
+bool QmlDJMantra::setControl(const QString& group, const QString& key, double value) const {
+    ControlObject* pControl = ControlObject::getControl(ConfigKey(group, key), ControlFlag::NoWarnIfMissing);
+    if (!pControl) {
+        qWarning() << "setControl: no control" << group << key;
+        return false;
+    }
+    pControl->set(value);
+    return true;
+}
+
 
 // ---- the Allen & Heath CQ (qml/cqlink.h; testing/results/20261013_cq12t/midi.md) ----
 

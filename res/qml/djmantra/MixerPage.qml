@@ -26,10 +26,24 @@ Item {
     }
 
     Row {
-        anchors.top: parent.top
+        // djay Pro's favourite FX, one bar per deck (FxBar.qml)
+        id: fxBars
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: cqDelay.visible ? cqDelay.top : parent.bottom
+        anchors.margins: Style.gap
+        spacing: Style.gap
+
+        FxBar { deck: 1; width: (fxBars.width - Style.gap) / 2 }
+        FxBar { deck: 2; width: (fxBars.width - Style.gap) / 2 }
+    }
+
+    Row {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: fxBars.top
         anchors.margins: Style.gap
         spacing: Style.gap
 
