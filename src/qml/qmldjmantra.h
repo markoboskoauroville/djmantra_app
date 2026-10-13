@@ -123,6 +123,8 @@ class QmlDJMantra : public QObject {
     /// Settings -> beats: the songs on the stopped decks analysed again with the
     /// options now chosen; returns how many
     Q_INVOKABLE int analyzeDecksAgain();
+    /// Stops the folder's analysis (the folder was left)
+    Q_INVOKABLE void stopAnalysis();
 
     /// Hides the status and navigation bars again
     Q_INVOKABLE void hideBars();

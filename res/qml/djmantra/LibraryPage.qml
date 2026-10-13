@@ -37,6 +37,63 @@ Rectangle {
                 if ((info.bpm || 0) !== r.bpm || (info.key || "") !== r.key)
                     songs.set(i, {bpm: info.bpm || 0, key: info.key || ""});
             }
+            root.updateStats();
+        }
+    }
+
+    // Marko 13.10.2026: the playlist's statistics (songs, total time, % analysed) and
+    // the analysis only of the open folder: it starts once the folder has been open
+    // for 3 s and stops when the folder is left (the next visit goes on)
+    property var missing: []
+    property int songCount: 0
+    property real totalSeconds: 0
+    property int analysedPercent: 0
+
+    function updateStats() {
+        let count = 0, total = 0, done = 0;
+        for (let i = 0; i < songs.count; ++i) {
+            const r = songs.get(i);
+            if (r.isFolder)
+                continue;
+            ++count;
+            total += r.duration || 0;
+            if (r.bpm > 0 && r.key !== "")
+                ++done;
+        }
+        songCount = count;
+        totalSeconds = total;
+        analysedPercent = count > 0 ? Math.floor(100 * done / count) : 0;
+    }
+
+    function totalText() {
+        const t = Math.round(totalSeconds);
+        const h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, sec = t % 60;
+        const two = (n) => (n < 10 ? "0" : "") + n;
+        return (h > 0 ? h + ":" + two(m) : String(m)) + ":" + two(sec);
+    }
+
+    onFolderChanged: {
+        analysisStart.stop();
+        missing = [];
+        Mixxx.DJMantra.stopAnalysis();
+        if (folder !== "")
+            analysisStart.restart();
+    }
+
+    Timer {
+        // 3 s in the folder, then its songs without a BPM / key are analysed
+        id: analysisStart
+
+        interval: 3000
+        onTriggered: {
+            if (root.filled < songs.count) {
+                restart(); // the list is still being read
+                return;
+            }
+            if (root.missing.length > 0) {
+                Mixxx.DJMantra.log("Analysis: folder " + root.folder + ", " + root.missing.length + " songs");
+                Mixxx.DJMantra.analyzeAhead(root.missing);
+            }
         }
     }
 
@@ -44,7 +101,7 @@ Rectangle {
         songs.clear();
         for (const e of entries)
             songs.append({name: e.name, path: e.path, isFolder: root.folder === "" || e.isFolder === true, artist: "", title: e.name,
-                          bpm: 0.0, key: "", cover: "", known: root.folder === "" || e.isFolder === true});
+                          bpm: 0.0, key: "", cover: "", duration: 0.0, known: root.folder === "" || e.isFolder === true});
         filled = 0;
         filler.restart();
     }
@@ -63,7 +120,8 @@ Rectangle {
                 if (!row.known) {
                     const i = Mixxx.DJMantra.songInfo(row.path);
                     songs.set(root.filled, {artist: i.artist || "", title: i.title || row.name,
-                                           bpm: i.bpm || 0, key: i.key || "", cover: i.cover || "", known: true});
+                                           bpm: i.bpm || 0, key: i.key || "", cover: i.cover || "",
+                                           duration: i.duration || 0, known: true});
                     ++done;
                 }
                 ++root.filled;
@@ -78,8 +136,8 @@ Rectangle {
                     if (!r.isFolder && (r.bpm <= 0 || r.key === ""))
                         missing.push(r.path);
                 }
-                if (missing.length > 0)
-                    Mixxx.DJMantra.analyzeAhead(missing);
+                root.missing = missing;
+                root.updateStats();
                 if (root.sortKey !== "")
                     root.sortBy(root.sortKey, root.sortUp);
             }
@@ -265,17 +323,30 @@ Rectangle {
             }
         }
 
-        Text {
+        Column {
+            // the playlist: songs, total time (matrix font, as the clock) and % analysed
             id: target
 
             anchors.right: closeButton.left
-            anchors.rightMargin: 12
+            anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            text: root.analysisLeft > 0 ? qsTr("analysing BPM / key: %1 left").arg(root.analysisLeft)
-                    : root.deck === "[Channel1]" ? qsTr("tap a song: deck 1")
-                    : root.deck === "[Channel2]" ? qsTr("tap a song: deck 2") : qsTr("tap a song: free deck")
-            color: root.deck !== "" ? Style.accent : Style.subText
-            font.pixelSize: 12
+            visible: root.folder !== ""
+            spacing: 3
+
+            MatrixText {
+                objectName: "playlistStats"
+                anchors.right: parent.right
+                height: 17
+                text: root.songCount + " " + root.totalText()
+            }
+
+            MatrixText {
+                objectName: "playlistAnalysed"
+                anchors.right: parent.right
+                height: 17
+                text: root.analysedPercent + "%"
+                litColor: root.analysedPercent >= 100 ? Style.earth : Style.accent
+            }
         }
 
         Text {

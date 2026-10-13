@@ -13,3 +13,7 @@ after. Log lines `AutoMix: ...`.
 ## 2. AUTOMIX: Songs -> open a folder with 4+ analysed songs, sort by BPM; AutoMix tab: 8 BEATS, START. Watch / record
 2 transitions: the crossfader, beat alignment (no flam), the bass swap, the next song loading; switch tabs during a mix
 (it goes on); STOP. Then 32 BEATS. The last song: "The playlist has ended".
+## 3. V35 (Marko): the Songs header shows, instead of "tap a song: free deck", the playlist in the clock's matrix font:
+"<songs> <total time>" and "<analysed %>" (green at 100 %). The analysis runs only in the open folder, starting 3 s
+after it is opened (log `Analysis: folder ...`), and stops when it is left (`Analysis: stopped`); opening it again
+goes on. Check: a new folder 0 % -> 100 %, leave halfway (stops), come back (goes on from where it was).

@@ -795,6 +795,7 @@ QVariantMap QmlDJMantra::songInfo(const QString& path) const {
     info[QStringLiteral("artist")] = pTrack->getArtist();
     info[QStringLiteral("title")] = pTrack->getTitle();
     info[QStringLiteral("bpm")] = pTrack->getBpm() > 0 ? pTrack->getBpm() : 0.0;
+    info[QStringLiteral("duration")] = pTrack->getDuration(); // seconds (the playlist's total)
     const auto code = djmantra::camelot::fromKey(pTrack->getKey());
     info[QStringLiteral("key")] = code.isValid() ? djmantra::camelot::text(code) : QString();
     info[QStringLiteral("cover")] = pTrack->getCoverInfo().hasImage()
@@ -847,6 +848,20 @@ void QmlDJMantra::analyzeAhead(const QStringList& paths) {
         tracks.append(AnalyzerScheduledTrack(pTrack->getId()));
     }
     scheduleAnalysis(tracks);
+}
+
+void QmlDJMantra::stopAnalysis() {
+    // Marko 13.10.2026: only the folder that is open is analysed; leaving it stops
+    // the analysis (the next visit goes on from the songs not done yet)
+    if (m_pAnalysis) {
+        m_pAnalysis->stop();
+        m_pAnalysis.reset();
+        qInfo() << "Analysis: stopped (the folder was left)";
+    }
+    if (m_analysisLeft != 0) {
+        m_analysisLeft = 0;
+        emit analysisChanged();
+    }
 }
 
 int QmlDJMantra::analyzeDecksAgain() {
