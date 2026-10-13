@@ -24,3 +24,11 @@ Quick: waveform shader [Channel1] made, status 1, level 1
 ## Seen
 - 4B shows 6A in the list and on the deck when loaded; while SYNCed to Nanana (126 -> 130 BPM) the header shows
   **1A** (the key moved by the tempo, +0.5 semitone rounds to +1): so round 31's "1A" was the tempo-shifted key, not a bug.
+
+## Part 2: GPU meter - FAIL
+- "G" shows `--` idle and with both decks playing on the Phrasing page (`gpu_meter_idle.png`, `gpu_meter_playing.png`).
+- The only GPU log line: `Quick: GPU load from "nowhere (the phone does not tell)"`. **No** `GPU time per frame from
+  the renderer's timestamps` line.
+- As shell: `cat /sys/devices/platform/28000000.mali/utilization` -> Permission denied (as in round 31).
+- For scale: `top` shows the app at 10.3 % CPU (of one core) with both decks playing; the meter's "C" says 2 %
+  (so "C" is of all 8 cores?).
