@@ -126,7 +126,9 @@ SoundDeviceStatus SoundDeviceOboe::open(bool isClkRefDevice, int syncBuffers) {
                         static_cast<int>(group.getChannelCount().value()));
     }
     if (!m_isClkRef) {
-        const int chunk = static_cast<int>(m_configFramesPerBuffer) * m_outputChannels;
+        // room for any channel count the stream may open with (a USB interface's
+        // own, up to 24); 48 = a multiple of every count, so the silence ends on a frame
+        const int chunk = static_cast<int>(m_configFramesPerBuffer) * 48;
         m_pFifo = std::make_unique<FIFO<CSAMPLE>>(chunk * 8);
         std::vector<CSAMPLE> silence(chunk * 2, 0);
         m_pFifo->write(silence.data(), static_cast<int>(silence.size()));
@@ -161,6 +163,22 @@ oboe::Result SoundDeviceOboe::openStream() {
         }
     }
 #endif
+    // Round 37: the CQ-12T (USB, 16 channels, 32-bit) played a 2-channel stream at
+    // ~0.27x real time and the CQ heard nothing: a USB interface with more channels is
+    // opened with all of them (the extra ones silent), as its own format
+    int channels = m_outputChannels;
+#if defined(Q_OS_ANDROID)
+    if (!m_twoChannelsOnly && (m_routeKey.isEmpty() || m_routeKey.startsWith(QStringLiteral("usb")))) {
+        const jint usb = QJniObject::callStaticMethod<jint>("com/djmantra/app/AudioRouter",
+                "usbOutputChannels",
+                "(Landroid/content/Context;)I",
+                QNativeInterface::QAndroidApplication::context().object());
+        if (usb > channels) {
+            channels = usb;
+            kLogger.info() << "USB output with" << usb << "channels: opening all of them";
+        }
+    }
+#endif
     builder.setDirection(oboe::Direction::Output)
             // None = Android's mixer path (no MMAP): for USB interfaces whose
             // MMAP stream times out (CQ-12T, 16 channels, round 35)
@@ -168,7 +186,7 @@ oboe::Result SoundDeviceOboe::openStream() {
                                              : oboe::PerformanceMode::LowLatency)
             ->setSharingMode(oboe::SharingMode::Shared)
             ->setFormat(oboe::AudioFormat::Float)
-            ->setChannelCount(m_outputChannels)
+            ->setChannelCount(channels)
             ->setSampleRate(static_cast<int32_t>(m_sampleRate.value()))
             ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Medium)
             ->setFramesPerDataCallback(static_cast<int32_t>(m_configFramesPerBuffer))
@@ -180,6 +198,13 @@ oboe::Result SoundDeviceOboe::openStream() {
             ->setErrorCallback(this);
     std::shared_ptr<oboe::AudioStream> pStream;
     oboe::Result result = builder.openStream(pStream);
+    if (result != oboe::Result::OK && channels > m_outputChannels) {
+        kLogger.warning() << "Could not open" << channels << "channels (" << resultText(result)
+                          << "), trying" << m_outputChannels;
+        m_twoChannelsOnly = true;
+        builder.setChannelCount(m_outputChannels);
+        result = builder.openStream(pStream);
+    }
     if (result != oboe::Result::OK) {
         return result;
     }
@@ -198,6 +223,7 @@ oboe::Result SoundDeviceOboe::openStream() {
             std::min(wanted, pStream->getBufferCapacityInFrames()));
     kLogger.info() << "Sound buffer:" << (sized ? sized.value() : -1) << "of"
                    << pStream->getBufferCapacityInFrames() << "frames";
+    m_streamChannels = pStream->getChannelCount();
     m_pStream = pStream;
     // Tell the engine the rate the phone really plays at, as the PortAudio
     // device does: the engine kept its 44.1 kHz default while the phone
@@ -256,7 +282,7 @@ void SoundDeviceOboe::writeProcess(SINT framesPerBuffer) {
     if (m_isClkRef || !m_pFifo) {
         return;
     }
-    const int channels = m_outputChannels;
+    const int channels = m_streamChannels;
     const int writeCount = std::min(static_cast<int>(framesPerBuffer) * channels,
             m_pFifo->writeAvailable() / channels * channels);
     if (writeCount <= 0) {
@@ -345,8 +371,24 @@ void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput,
         m_levelPeak = std::max(m_levelPeak, std::abs(pOutput[i]));
     }
     m_levelSamples += samples;
-    if (m_levelSamples < static_cast<SINT>(sampleRate) * 2 * 5) {
+    const int channels = std::max(1, static_cast<int>(pStream->getChannelCount()));
+    const auto now = std::chrono::steady_clock::now();
+    if (m_rateFrames == 0) {
+        m_rateStart = now;
+    }
+    m_rateFrames += samples / channels;
+    if (m_levelSamples < static_cast<SINT>(sampleRate) * channels * 5) {
         return;
+    }
+    {
+        // Round 37: the frames the output really takes per second (a deck at 0.27x
+        // speed on the CQ: the device took a quarter of the rate it claimed)
+        const double seconds = std::chrono::duration<double>(now - m_rateStart).count();
+        if (seconds > 0) {
+            kLogger.info() << "Output rate:" << static_cast<int>(m_rateFrames / seconds)
+                           << "frames/s of" << sampleRate << "," << channels << "channels";
+        }
+        m_rateFrames = 0;
     }
     if (m_levelPeak > 0.001f || m_levelWasAudible) {
         // Drops (Android's underrun count) and the engine's slowest callback

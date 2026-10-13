@@ -109,6 +109,22 @@ public final class AudioRouter {
         return false;
     }
 
+    /// The most channels a connected USB output offers, 0 without one (round 37: the
+    /// CQ-12T runs 16 channels; a 2-channel stream into it played at ~1/4 speed)
+    public static int usbOutputChannels(Context context) {
+        int most = 0;
+        for (AudioDeviceInfo device : devices(context)) {
+            String key = keyOf(device);
+            if (key == null || !key.startsWith("usb:")) {
+                continue;
+            }
+            for (int count : device.getChannelCounts()) {
+                most = Math.max(most, count);
+            }
+        }
+        return most;
+    }
+
     /// Android's current id of the output with this key, 0 if it is not there
     public static int idFor(Context context, String key) {
         for (AudioDeviceInfo device : devices(context)) {

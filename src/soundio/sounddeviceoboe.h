@@ -1,5 +1,7 @@
 #pragma once
 
+#include <chrono>
+
 #include <oboe/Oboe.h>
 
 #include <QMutex>
@@ -79,6 +81,11 @@ class SoundDeviceOboe : public SoundDevice,
     // V16 (CQ-12T on the Pixel's USB): the low-latency MMAP stream timed out every
     // ~1 s and wrote nothing; after one timeout the stream opens without MMAP.
     std::atomic<bool> m_avoidMmap{false};
+    // a USB interface's own channel count did not open: only the needed ones
+    bool m_twoChannelsOnly = false;
+    std::atomic<int> m_streamChannels{2}; // the open stream's channels
+    long long m_rateFrames = 0;
+    std::chrono::steady_clock::time_point m_rateStart;
     QString m_lastError;
     std::atomic<bool> m_closing;
     bool m_callbackThreadPrepared;

@@ -82,9 +82,11 @@ void main(void) {
         colour.g *= 1.0 - 0.45 * redness;
         colour.b = min(1.0, colour.b + 0.12 * redness);
         float highness = clamp((x.z - max(x.x, x.y)) * 3.0, 0.0, 1.0);
-        colour.r = min(1.0, colour.r + 0.35 * highness);
+        colour.r = min(1.0, colour.r + 0.15 * highness); // round 37: 0.35 was too magenta
         float dist = abs(uv.y - 0.5) * 2.0;
-        float outer = min(1.0, x.w * heightGain);
+        // round 37 (djay vs V17): djay shows one distinct burst per hit with a thin
+        // line between; an expansion (x^1.7) keeps the hits and thins what is between
+        float outer = min(1.0, pow(clamp(x.w, 0.0, 1.5), 1.7) * heightGain);
         float core = outer * 0.55;
         if (dist <= core) {
             // round 35: djay's wave is translucent even in its body

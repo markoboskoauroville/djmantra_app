@@ -1,4 +1,4 @@
-# Round 38 (V20 = V18 + the FX tuned to djay's recordings + the CQ over USB MIDI; tester "mantra dj app tester", Pixel 7 + Marko's Nothing Phone if he is back; rules: testing/PROTOCOL.md)
+# Round 38 (V21 = V18 + the FX tuned to djay's recordings + the CQ over USB MIDI + the CQ's 16 channels; tester "mantra dj app tester", Pixel 7 + Marko's Nothing Phone if he is back; rules: testing/PROTOCOL.md)
 
 Marko 13.10.2026 17:22 (testing/results/20261013_marko_ui/REQUEST.md): one EQ dropdown as djay Android, one FX button
 per deck (tap on/off, hold = drop-up chooser), nothing overlapping. V18 MIXER page: "EQ ▾" at the top (Equalizer /
@@ -23,3 +23,9 @@ once; ECHO OUT = runs while chosen; tap = the song stops at once and its LAST 2 
 `connected over USB MIDI (Allen&Heath Ltd CQ12T ...)`, log `DJMantraCQ: Open: ...`. Then MIXER -> CQ DELAY (shown when
 connected): the CQ's FX mute (FX1-4 per Settings) toggles in MixPad / on the CQ screen, and the tap tempo soft key
 blinks at the on-air deck's BPM. Report the log lines `CQ: mute ...` / `CQ: tap tempo ...` and what the CQ shows.
+## 7. V21: the CQ as the sound output plays at the right speed? (round 37: 0.27x). V21 opens a USB interface with
+all its channels (log `USB output with 16 channels: opening all of them`, `Sound output open: ... 16 channels`), and
+logs `Output rate: N frames/s of 48000` every ~5 s: N should be ~48000. Time 30 s of play against the wall clock;
+CQ MixPad Ip1/2 meters with deck 1 playing. If it falls back (`Could not open 16 channels`), report the error.
+## 8. Lanes (V21): the colour tails less magenta; a hit and the gap after it more distinct (expansion x^1.7): pairs
+again at Nanana bars 1-2.
