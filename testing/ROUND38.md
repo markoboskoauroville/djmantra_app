@@ -56,3 +56,5 @@ cut at once into its last 2 beats repeating quieter, `engaged false` = the song 
 ## 17. V28: the CQ keeps the fastest variant when none is real time (expect `No variant runs in real time; keeping
 variant 1 (~27900 frames/s)` and it stays there, ~0.58x). Echo Out: 2 beats now -6.9 dB a round (~7.5 dB/s as djay),
 1 beat -4.6 dB, the repeats thinned below 150 Hz: record and compare with djay as before.
+## 18. V29, Echo Out: the V28 lowcut removed (it compounded each round), 2 beats -6 dB a round (~6.5 dB/s), lows kept
+level: record and compare with djay (per-second rms and lows as in part 17).

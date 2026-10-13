@@ -67,8 +67,8 @@ class Cooldown {
 
 /// Echo Out (djay's, measured): the deck leaves on an echo of its last beats. While
 /// not engaged the input passes and fills a delay line; when engaged the input stops
-/// at once and the last `beats` beats repeat, thinner and quieter (2 beats -6.9 dB a
-/// round, 1 beat -4.6 dB), until
+/// at once and the last `beats` beats repeat, quieter each round (2 beats -6 dB, 1 beat
+/// -4.6 dB), until
 /// silence; disengaged = the song back at once. The echo time is fixed when engaged.
 class EchoOut {
   public:
@@ -91,7 +91,6 @@ class EchoOut {
     int m_write = 0;
     int m_delayFrames = 0; // fixed when engaged
     float m_wet = 0;       // 0 = dry, 1 = the echo (5 ms ramps)
-    Svf m_loopHigh;        // 150 Hz highpass on the repeats
 };
 
 } // namespace djmantra
