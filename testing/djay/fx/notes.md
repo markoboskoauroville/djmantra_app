@@ -1,5 +1,7 @@
 # djay Pro's four favourite FX, recorded on Marko's Mac (13.10.2026, tester "mantra dj app tester")
 
+**The audio files are in the private repo markoboskoauroville/djmantra-test-songs, folder `fx/djay_20261013/` (same names, .flac).**
+
 Song: **(It Goes Like) Nanana - Edit**, **130.0 BPM** (djay), key 6A. Every take starts at **0:58** of the song
 (Deck 1 -> Go to Beginning, Play, 58 s), djay's output -> **BlackHole 2ch** -> ffmpeg (avfoundation ":1"), 48 kHz stereo,
 FLAC. djay's FX bar in **MANUAL** mode, deck 1: slot 1 Flanger, slot 2 Underwater / Cooldown, slot 3 Echo Out
