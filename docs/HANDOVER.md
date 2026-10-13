@@ -5,6 +5,23 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## 13.10.2026 day (latest): V14, djay waveform, Neural Mix, CQ-12T, CPU
+
+- Tester: "mantra dj app tester" (session_01KmLixQnDquGdTPkysjRCNV) on Marko's Mac, Pixel 7 over Wi-Fi adb; voice to
+  Marko only for hands (his MANTRA_VOICE). Rounds: testing/ROUND30-34.md, results in testing/results/.
+- Done and passed on the phone: djay Pro waveform (colours fitted to djay's data: src/waveform/djaycolor.h + the
+  lanes' shader res/shaders/djaysignal_qml.frag; the lanes' texture is now built on load, qmlplayerproxy.cpp);
+  Neural Mix EQ mode (src/effects/backends/builtin/stemeq*); Settings -> SECTIONS / BEATS options; ✕ on every
+  overlay; PLAY drawn like NEXT; GPU meter (render-thread time: no GPU timestamps on the Pixel); CPU: the matrix
+  display paints only lit dots (interface thread 39-46 % -> 4-11 %; Phrasing page 48-52 %).
+- CQ-12T (Allen & Heath): USB multitrack 16x16 @48 kHz (app master -> USB 1-2 = Ip1/2, headphones -> 3-4 = Ip3/4);
+  CQ MIDI over TCP 51325 verified from the Mac (testing/results/20261013_cq12t/midi.md); the app has Settings -> CQ
+  MIXER + Mixer page CQ DELAY + tap tempo (qml/cqlink.h). Not yet tested on the phone: waits for the Pixel's USB on
+  the CQ and the CQ's network on the "mantra" router.
+- Open: lanes still a bit taller than djay's thin band; render thread 18-21 % (beat lines as one pass); the
+  Hercules as a CQ surface (CQ12T_FX.md); All-In-One run in /root/allin1run (the container restarts kill it:
+  restart with nohup setsid); landscape song list sizing.
+
 ## 13.10.2026 night (latest): V7, the analysis measured against rekordbox
 
 Read `docs/RESULTS_2026-10-13.md` first (results, "Summary for the morning"), `docs/HANDOVER_PHONE.md` (phone), `docs/COORDINATION.md` (the sessions: cloud builder,
