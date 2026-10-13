@@ -18,6 +18,7 @@ Item {
     // the song's level fills the lane; asked again until the analysis is done
     property real gain: 1
     property bool measured: false
+    property bool mirrored: Mixxx.DJMantra.setting("lane_style", "mirrored") !== "half"
 
     clip: true
 
@@ -48,11 +49,14 @@ Item {
         // V9: djay Pro's look (a thin wave, WaveformRow.heightGain)
         levelGain: root.gain
         // Marko's djay screenshots (zoomed lane): the wave fills ~90 % of the lane
-        heightGain: 0.9
+        // round 35 (djay vs the app at the same bars): djay draws each deck's wave
+        // centred in its own lane, mirrored up and down; Settings -> LANE "half"
+        // keeps round 18's big half wave (deck 1 up, deck 2 down from the middle)
+        heightGain: root.mirrored ? 0.8 : 0.9
         zoom: root.zoom
         showRoll: false
         width: root.width
-        height: root.height * 2
-        y: root.upper ? 0 : -root.height
+        height: root.mirrored ? root.height : root.height * 2
+        y: root.mirrored || root.upper ? 0 : -root.height
     }
 }

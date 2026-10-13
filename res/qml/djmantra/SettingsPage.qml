@@ -31,6 +31,7 @@ Rectangle {
     property bool beatOnKick: Mixxx.DJMantra.setting("beat_on_kick", "1") !== "0"
     property int cqTapKey: Number(Mixxx.DJMantra.setting("cq_tap_key", "0"))
     property real stopTime: Number(Mixxx.DJMantra.setting("stop_time", "0"))
+    property string laneStyle: Mixxx.DJMantra.setting("lane_style", "mirrored")
     property int cqFx: Number(Mixxx.DJMantra.setting("cq_fx", "1"))
     property int seenVersion: -1
     signal done()
@@ -140,6 +141,38 @@ Rectangle {
             // V8 (Marko 13.10.2026): sections and beats are a choice, to find the best
             // in practice. Each choice is written to the log ("Settings:", "Sections
             // options:", "Beats options:").
+            // LANE (round 35): djay draws each deck's wave centred and mirrored in its
+            // lane; "half" is round 18's big half wave (deck 1 up, deck 2 down)
+            Text {
+                text: qsTr("LANE: the Phrasing waveforms")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Row {
+                spacing: 6
+
+                Repeater {
+                    model: [["mirrored", qsTr("MIRRORED (djay)")], ["half", qsTr("HALF (big)")]]
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "laneStyle_" + modelData[0]
+                        width: (column.width - 6) / 2
+                        height: 40
+                        text: modelData[1]
+                        fontSize: 13
+                        lit: root.laneStyle === modelData[0]
+                        onClicked: {
+                            root.laneStyle = modelData[0];
+                            Mixxx.DJMantra.setSetting("lane_style", modelData[0]);
+                        }
+                    }
+                }
+            }
+
             // STOP TIME (Marko 13.10.2026): 0 = a deck stops at once; more = the turntable
             // effect, the record slowing down (TurntableStop.qml)
             Text {

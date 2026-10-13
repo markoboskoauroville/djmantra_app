@@ -75,15 +75,24 @@ void main(void) {
         float luma = dot(colour, vec3(0.299, 0.587, 0.114));
         colour = clamp(vec3(luma) + (colour - vec3(luma)) * 1.4, 0.0, 1.0);
         colour = min(colour * 1.2, vec3(1.0));
+        // round 35 (djay vs the app at the same bars): djay's kicks are crimson, not
+        // orange, and its hats pink / lilac, not blue: less green where red leads,
+        // some red where the highs lead
+        float redness = clamp((colour.r - max(colour.g, colour.b)) * 2.0, 0.0, 1.0);
+        colour.g *= 1.0 - 0.45 * redness;
+        colour.b = min(1.0, colour.b + 0.12 * redness);
+        float highness = clamp((x.z - max(x.x, x.y)) * 3.0, 0.0, 1.0);
+        colour.r = min(1.0, colour.r + 0.35 * highness);
         float dist = abs(uv.y - 0.5) * 2.0;
         float outer = min(1.0, x.w * heightGain);
         float core = outer * 0.55;
         if (dist <= core) {
-            outputColor = vec4(colour, 1.0);
+            // round 35: djay's wave is translucent even in its body
+            outputColor = vec4(colour * 0.85, 0.85);
         } else if (dist <= outer) {
             // the outer part fades out (djay: translucent streaks, no dark outline)
             float fade = 1.0 - (dist - core) / max(outer - core, 0.0001);
-            float a = 0.25 + 0.6 * fade;
+            float a = 0.15 + 0.55 * fade;
             outputColor = vec4(colour * a, a);
         }
     }
