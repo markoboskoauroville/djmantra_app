@@ -5,7 +5,21 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 13.10.2026 night (latest): V24-V29
+## 13.10.2026 late night (latest): V30-V33, stopping for the night
+
+- V30: the real sound wave at deep zoom (src/qml/finewave.*: a background decode, ~2000 signed points a second,
+  texture binding 2 in res/shaders/djaysignal_qml.frag) and the FX depth slider / Echo Out 1-2 beats in the FX
+  chooser (MixerPage.qml). Marko said yes to both. PASS on the phone (V30).
+- V31: Underwater right end 400 Hz. V32: zoom down to 0.04 s / 100 px, the deep zoom as djay's one thin signed line;
+  one FineWaveCache for all views. V33: lanes move every frame (FrameAnimation in WaveformRow.qml, smoothPosition),
+  for Marko's "zoomed view is stuttering". V32/V33 NOT yet tested on the phone.
+- Tomorrow, in order: (1) V33 smoothness at deep zoom (ROUND39 part 5) and the deep-zoom djay pair (part 4);
+  (2) ROUND39 part 3: Underwater right, Cooldown left/mid/right with a tap log (a state oddity: "off" logged but on);
+  (3) the CQ in Stereo vs Multitrack (Marko approved experimenting with both): speed (Output rate ~48000?), meters on
+  the "USB" source in Stereo, headphones pair; (4) the CQ Tap Delay + soft key, then the app's tap tempo;
+  (5) lane height question still open (djay 15 % vs ours 70-80 %); (6) All-In-One keeps dying (15 of 150 songs).
+
+## 13.10.2026 night: V24-V29
 
 - FX DONE (V25-V29): all four within a few dB of djay's recordings on the phone (tester's band tables, audio in
   djmantra-test-songs fx/app_v2x_20261013). Echo Out runs while chosen; the cause of "ON does nothing" was
