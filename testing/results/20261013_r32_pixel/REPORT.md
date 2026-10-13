@@ -39,7 +39,7 @@ Quick: waveform shader [Channel1] made, status 1, level 1
   to right: as set, HARMONY down, VOCALS down, DRUMS down, after double-tap reset: each back).
 - **The log is inverted**: switching to NEURAL logs `Neural Mix [Channel1] off`, switching back to EQ logs `... on`
   (checked twice). The sound follows the button (the knobs act as stems only in NEURAL).
-- Recorded from the phone (scrcpy audio, 8 s each, deck 1 Nanana, in `neural/*.mp3`). Each knob dragged down ~2/3
+- Recorded from the phone (scrcpy audio, 8 s each, deck 1 Nanana; the mp3s are in the private repo djmantra-test-songs, `recordings/r32_neural_v10/`). Each knob dragged down ~2/3
   (a swipe did not reach 0): overall level / band energy (dB) against `full`:
   | | rms | <100 Hz | 100-300 | 300-3k | 3k-12k |
   |---|---|---|---|---|---|
