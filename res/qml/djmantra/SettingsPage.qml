@@ -218,7 +218,7 @@ Rectangle {
                 spacing: 6
 
                 Rectangle {
-                    width: column.width - 6 - 120
+                    width: column.width - 12 - 120 - 70
                     height: 42
                     radius: Style.radius
                     color: Style.tile
@@ -248,12 +248,26 @@ Rectangle {
                     onClicked: Mixxx.DJMantra.cqConnected ? Mixxx.DJMantra.cqDisconnect()
                                                           : Mixxx.DJMantra.cqConnect(cqAddress.text)
                 }
+
+                DButton {
+                    // the CQ plugged into the phone: its own USB MIDI, no network
+                    objectName: "cqUsb"
+                    width: 70
+                    height: 42
+                    text: qsTr("USB")
+                    fontSize: 13
+                    lit: Mixxx.DJMantra.cqConnected && Mixxx.DJMantra.cqStatus.indexOf("USB") >= 0
+                    onClicked: {
+                        cqAddress.text = "usb";
+                        Mixxx.DJMantra.cqConnect("usb");
+                    }
+                }
             }
 
             Text {
                 width: parent.width
                 wrapMode: Text.WordWrap
-                text: Mixxx.DJMantra.cqStatus + qsTr("  (the CQ's IP address, e.g. 169.254.5.29)")
+                text: Mixxx.DJMantra.cqStatus + qsTr("  (the CQ's IP address, e.g. 169.254.5.29, or USB when it is plugged into the phone)")
                 color: Style.subText
                 font.pixelSize: 12
             }

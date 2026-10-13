@@ -1,4 +1,4 @@
-# Round 38 (V19 = V18 + the FX tuned to djay's recordings; tester "mantra dj app tester", Pixel 7 + Marko's Nothing Phone if he is back; rules: testing/PROTOCOL.md)
+# Round 38 (V20 = V18 + the FX tuned to djay's recordings + the CQ over USB MIDI; tester "mantra dj app tester", Pixel 7 + Marko's Nothing Phone if he is back; rules: testing/PROTOCOL.md)
 
 Marko 13.10.2026 17:22 (testing/results/20261013_marko_ui/REQUEST.md): one EQ dropdown as djay Android, one FX button
 per deck (tap on/off, hold = drop-up chooser), nothing overlapping. V18 MIXER page: "EQ ▾" at the top (Equalizer /
@@ -19,3 +19,7 @@ once; ECHO OUT = runs while chosen; tap = the song stops at once and its LAST 2 
 (0.6), silent after ~10 s; tap again = the song back at once. Record each from the phone the same way as djay's
 (same song, 0:58, ON 8 s) and run your band analysis on both: the numbers side by side in the report.
 ## 5. ROUND37's lane parts if not done (mirrored lanes, pairs).
+## 6. V20: the CQ over its own USB MIDI (the CQ on the phone's USB): Settings -> CQ MIXER -> USB. Expect the status
+`connected over USB MIDI (Allen&Heath Ltd CQ12T ...)`, log `DJMantraCQ: Open: ...`. Then MIXER -> CQ DELAY (shown when
+connected): the CQ's FX mute (FX1-4 per Settings) toggles in MixPad / on the CQ screen, and the tap tempo soft key
+blinks at the on-air deck's BPM. Report the log lines `CQ: mute ...` / `CQ: tap tempo ...` and what the CQ shows.

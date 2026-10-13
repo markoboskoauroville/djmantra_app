@@ -6,6 +6,12 @@
 #include <cmath>
 #include <utility>
 
+#if defined(Q_OS_ANDROID)
+#include <QCoreApplication>
+#include <QJniEnvironment>
+#include <QJniObject>
+#endif
+
 #include "moc_cqlink.cpp"
 
 namespace djmantra {
@@ -58,6 +64,8 @@ CqLink::CqLink(QObject* pParent)
             m_socket.connectToHost(m_host, kPort);
         }
     });
+    m_usbPoll.setInterval(2000);
+    connect(&m_usbPoll, &QTimer::timeout, this, &CqLink::pollUsb);
     m_tapTimer.setTimerType(Qt::PreciseTimer);
     connect(&m_tapTimer, &QTimer::timeout, this, &CqLink::tapOnce);
 }
@@ -77,6 +85,14 @@ void CqLink::tapOnce() {
 void CqLink::connectTo(const QString& host) {
     m_host = host.trimmed();
     m_socket.abort();
+    m_usbPoll.stop();
+    m_usbOpen = false;
+    if (usb()) {
+        setStatus(QStringLiteral("looking for the CQ on USB"));
+        m_usbPoll.start();
+        pollUsb();
+        return;
+    }
     if (m_host.isEmpty()) {
         setStatus(QStringLiteral("not connected"));
         return;
@@ -88,12 +104,40 @@ void CqLink::connectTo(const QString& host) {
 void CqLink::disconnectFrom() {
     m_host.clear();
     m_reconnect.stop();
+    m_usbPoll.stop();
+    m_usbOpen = false;
     m_socket.disconnectFromHost();
     setStatus(QStringLiteral("not connected"));
 }
 
 bool CqLink::isConnected() const {
+    if (usb()) {
+        return m_usbOpen;
+    }
     return m_socket.state() == QAbstractSocket::ConnectedState;
+}
+
+void CqLink::pollUsb() {
+#if defined(Q_OS_ANDROID)
+    const jint state = QJniObject::callStaticMethod<jint>("com/djmantra/app/CqMidi", "state", "()I");
+    const bool open = state == 1;
+    if (!open) {
+        QJniObject::callStaticMethod<void>("com/djmantra/app/CqMidi",
+                "open",
+                "(Landroid/content/Context;)V",
+                QNativeInterface::QAndroidApplication::context().object());
+    }
+    if (open != m_usbOpen) {
+        m_usbOpen = open;
+        const QString name = QJniObject::callStaticMethod<jstring>(
+                "com/djmantra/app/CqMidi", "name", "()Ljava/lang/String;")
+                                     .toString();
+        setStatus(open ? QStringLiteral("connected over USB MIDI (") + name + ")"
+                       : QStringLiteral("looking for the CQ on USB"));
+    }
+#else
+    setStatus(QStringLiteral("USB MIDI only on Android"));
+#endif
 }
 
 void CqLink::setStatus(const QString& status) {
@@ -105,6 +149,22 @@ void CqLink::setStatus(const QString& status) {
 }
 
 void CqLink::send(const QByteArray& bytes) {
+#if defined(Q_OS_ANDROID)
+    if (usb()) {
+        QJniEnvironment env;
+        jbyteArray array = env->NewByteArray(static_cast<jsize>(bytes.size()));
+        env->SetByteArrayRegion(array, 0, static_cast<jsize>(bytes.size()),
+                reinterpret_cast<const jbyte*>(bytes.constData()));
+        const jboolean sent = QJniObject::callStaticMethod<jboolean>(
+                "com/djmantra/app/CqMidi", "send", "([B)Z", array);
+        env->DeleteLocalRef(array);
+        if (!sent && m_usbOpen) {
+            m_usbOpen = false;
+            setStatus(QStringLiteral("USB MIDI lost, looking again"));
+        }
+        return;
+    }
+#endif
     if (isConnected()) {
         m_socket.write(bytes);
         m_socket.flush();

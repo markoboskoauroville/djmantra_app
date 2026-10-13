@@ -11,7 +11,8 @@
 /// MIDI over TCP on port 51325, one connection at a time, MIDI channel 1; NRPN
 /// `B0 63 MSB B0 62 LSB B0 06 VC B0 26 VF` for levels / mutes / pans; soft keys 1-3 =
 /// notes 0x30-0x32. No message sets a delay time, so the tempo goes in as taps on a
-/// soft key set to the delay's Tap Tempo.
+/// soft key set to the delay's Tap Tempo. The host "usb" = the same messages over the CQ's
+/// own USB MIDI (Android, CqMidi.java), when the CQ is plugged into the phone.
 namespace djmantra {
 
 class CqLink : public QObject {
@@ -45,11 +46,17 @@ class CqLink : public QObject {
     void send(const QByteArray& bytes);
     void nrpn(int msb, int lsb, int value14);
     void setStatus(const QString& status);
+    bool usb() const {
+        return m_host.compare(QStringLiteral("usb"), Qt::CaseInsensitive) == 0;
+    }
+    void pollUsb();
 
     QTcpSocket m_socket;
     QString m_host;
     QString m_status;
     QTimer m_reconnect;
+    QTimer m_usbPoll;
+    bool m_usbOpen = false;
     QTimer m_tapTimer;
     int m_tapsLeft = 0;
     int m_tapKey = 0;
