@@ -10,6 +10,11 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
 - V30: the real sound wave at deep zoom (src/qml/finewave.*: a background decode, ~2000 signed points a second,
   texture binding 2 in res/shaders/djaysignal_qml.frag) and the FX depth slider / Echo Out 1-2 beats in the FX
   chooser (MixerPage.qml). Marko said yes to both. PASS on the phone (V30).
+- V33 basics PASS on the Pixel (tester's last run, 13.10 night): both decks real time on the CQ in Stereo, FX tap
+  on/off, deepest zoom = one thin signed line as djay, the lanes move every frame (stutter fixed). OPEN for tomorrow:
+  deck 1's volume fader at the bottom left the logged output peak unchanged (0.309 -> 0.305): a pre-fader level
+  log or a fader bug: check by ear / the master VU first. Also the FX button glitches in
+  testing/results/20261013_handover_tester.md (taps right after the chooser closes; one hold+drag logged "off").
 - V31: Underwater right end 400 Hz. V32: zoom down to 0.04 s / 100 px, the deep zoom as djay's one thin signed line;
   one FineWaveCache for all views. V33: lanes move every frame (FrameAnimation in WaveformRow.qml, smoothPosition),
   for Marko's "zoomed view is stuttering". V32/V33 NOT yet tested on the phone.
