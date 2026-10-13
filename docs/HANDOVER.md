@@ -5,7 +5,19 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 13.10.2026 day (latest): V14, djay waveform, Neural Mix, CQ-12T, CPU
+## 13.10.2026 afternoon (latest): V16, djay FX, CQ USB without MMAP
+
+- V16 (c672e09, a82f54e): djay Pro's favourite FX (Marko): Flanger (Mixxx's), Underwater / Cooldown / Echo Out
+  (new, src/effects/backends/builtin/djayfx.h + djayfxeffect.h, tests src/test/djayfx_test.cpp); FX bar per deck on
+  the MIXER page (res/qml/djmantra/FxBar.qml: deck N = effect unit N slots 1-3 + unit N+2 slot 1 for Echo Out).
+  Tuned by ear; the tester records djay's own FX into testing/djay/fx/ to tune against.
+- CQ-12T on the Pixel's USB (16 ch, 32-bit, 48 kHz): the MMAP stream timed out every 1.1 s (no sound). V16 reopens
+  without MMAP after the first ErrorTimeout (sounddeviceoboe.cpp m_avoidMmap). Open: headphones on USB 3-4 opens 4
+  channels, which Android may map as quad, not as USB 3-4: ROUND36 part 6 checks it. The CQ is on the phone's USB.
+- After V16 (not yet in a build): beat lines only near the screen (WaveformRow.qml windowCenter), render-thread CPU.
+- Marko away ~2 h from 14:25 UTC: work on alone with the tester; ROUND36 first.
+
+## 13.10.2026 day: V14, djay waveform, Neural Mix, CQ-12T, CPU
 
 - Tester: "mantra dj app tester" (session_01KmLixQnDquGdTPkysjRCNV) on Marko's Mac, Pixel 7 over Wi-Fi adb; voice to
   Marko only for hands (his MANTRA_VOICE). Rounds: testing/ROUND30-34.md, results in testing/results/.
