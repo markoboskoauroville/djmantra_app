@@ -93,7 +93,10 @@ class SoundDeviceOboe : public SoundDevice,
     std::vector<CSAMPLE> m_scratch;
     oboe::AudioFormat variantFormat() const;
     bool variantPowerSaving() const;
-    void reopenNextVariant();
+    void reopenVariant(int variant);
+    bool m_variantsDone = false; // a variant ran in real time, or all were tried
+    double m_bestRate = 0;
+    int m_bestVariant = 0;
     long long m_rateFrames = 0;
     std::chrono::steady_clock::time_point m_rateStart;
     QString m_lastError;

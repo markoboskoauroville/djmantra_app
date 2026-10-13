@@ -93,7 +93,7 @@ TEST(DjayFxTest, EchoOutLoopsTheLastBeats) {
     const double first = rms(echo, 1000, second);
     const double second2 = rms(echo, second + 1000, 2 * second);
     EXPECT_GT(first, 0.3);                       // the last 2 beats again, full
-    EXPECT_NEAR(second2 / first, 0.6, 0.05);     // each round 0.6 as loud
+    EXPECT_NEAR(second2 / first, 0.45, 0.05);    // each round -6.9 dB (djay's 2 beats)
 }
 
 } // namespace

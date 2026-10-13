@@ -151,6 +151,7 @@ void EchoOut::setSampleRate(double sampleRate) {
     }
     m_sampleRate = sampleRate;
     m_buffer.assign(static_cast<std::size_t>(kMaxDelaySeconds * sampleRate) * 2, 0.0f);
+    m_loopHigh.set(sampleRate, 150, 0.707);
     reset();
 }
 
@@ -159,6 +160,7 @@ void EchoOut::reset() {
     m_write = 0;
     m_delayFrames = 0;
     m_wet = 0;
+    m_loopHigh.reset();
 }
 
 void EchoOut::process(const float* pIn,
@@ -175,7 +177,9 @@ void EchoOut::process(const float* pIn,
         const double seconds = std::max(0.05, beats * beatSeconds);
         m_delayFrames = std::clamp(static_cast<int>(seconds * m_sampleRate), 1, capacity - 1);
     }
-    constexpr float kFeedback = 0.6f;
+    // round 38 (the phone vs djay): djay's 2-beat echo dies ~7.5 dB a second (-6.9 dB a
+    // round), its 1-beat one ~10 dB a second (-4.6 dB a round); the repeats lose their lows
+    const float feedback = beats > 1.5 ? 0.45f : 0.59f;
     const float step = static_cast<float>(1.0 / (0.005 * m_sampleRate)); // 5 ms ramps
     const auto wetTarget = static_cast<float>(engaged ? mix : 0.0);
     for (int f = 0; f < frames; ++f) {
@@ -190,10 +194,12 @@ void EchoOut::process(const float* pIn,
         }
         for (int ch = 0; ch < 2; ++ch) {
             const float in = pIn[2 * f + ch];
-            const float echo = m_buffer[2 * read + ch];
+            float lowCut = 0;
+            m_loopHigh.process(m_buffer[2 * read + ch], ch, &lowCut);
+            const float echo = m_wet > 0 ? lowCut : m_buffer[2 * read + ch];
             // engaged: the loop of the last beats, each round 0.6 as loud;
             // not engaged: the input fills the line
-            m_buffer[2 * m_write + ch] = in * (1 - m_wet) + echo * kFeedback * m_wet;
+            m_buffer[2 * m_write + ch] = in * (1 - m_wet) + echo * feedback * m_wet;
             pOut[2 * f + ch] = in * (1 - m_wet) + echo * m_wet;
         }
         if (++m_write >= capacity) {

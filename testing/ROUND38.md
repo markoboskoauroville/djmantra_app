@@ -53,3 +53,6 @@ Expect `Echo Out: ... engaged false enable state 1 ...` when ECHO OUT is chosen,
 cut at once into its last 2 beats repeating quieter, `engaged false` = the song back. Record it as before.
 ## 16. V27, the CQ: the variants now start with Android's deep buffer (PowerSaving: 1 float, 2 16-bit), then 16-bit,
 32-bit, device rate. Send every `Output rate` / `variant` line and the USB MIXER thread (AudioOut_*) each variant gets.
+## 17. V28: the CQ keeps the fastest variant when none is real time (expect `No variant runs in real time; keeping
+variant 1 (~27900 frames/s)` and it stays there, ~0.58x). Echo Out: 2 beats now -6.9 dB a round (~7.5 dB/s as djay),
+1 beat -4.6 dB, the repeats thinned below 150 Hz: record and compare with djay as before.

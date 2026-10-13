@@ -445,12 +445,30 @@ void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput,
             // Round 38 (the CQ-12T: 0.30x whatever the buffer): an output that takes
             // far fewer frames than its rate is reopened in the next variant (see
             // variantFormat()) until one runs in real time
-            if (!m_rateChecked && m_isClkRef) {
+            if (!m_rateChecked && m_isClkRef && !m_variantsDone) {
                 m_rateChecked = true;
-                if (rate < 0.8 * sampleRate && m_variant < kVariants - 1) {
+                if (rate > m_bestRate) {
+                    m_bestRate = rate;
+                    m_bestVariant = m_variant;
+                }
+                if (rate >= 0.8 * sampleRate) {
+                    m_variantsDone = true;
+                } else if (m_variant < kVariants - 1) {
                     kLogger.warning() << "Output too slow (" << static_cast<int>(rate) << "of"
                                       << sampleRate << "): trying variant" << (m_variant + 1);
-                    std::thread([this] { reopenNextVariant(); }).detach();
+                    const int next = m_variant + 1;
+                    std::thread([this, next] { reopenVariant(next); }).detach();
+                } else {
+                    // round 38 (V27 ended on its last, slowest variant): none is real
+                    // time, keep the fastest
+                    m_variantsDone = true;
+                    kLogger.warning() << "No variant runs in real time; keeping variant"
+                                      << m_bestVariant << "(" << static_cast<int>(m_bestRate)
+                                      << "frames/s)";
+                    if (m_bestVariant != m_variant) {
+                        const int best = m_bestVariant;
+                        std::thread([this, best] { reopenVariant(best); }).detach();
+                    }
                 }
             }
         }
@@ -492,7 +510,7 @@ bool SoundDeviceOboe::variantPowerSaving() const {
     return m_variant == 1 || m_variant == 2;
 }
 
-void SoundDeviceOboe::reopenNextVariant() {
+void SoundDeviceOboe::reopenVariant(int variant) {
     // not from the callback thread: the stream is closed and opened again
     std::shared_ptr<oboe::AudioStream> pStream;
     {
@@ -505,7 +523,7 @@ void SoundDeviceOboe::reopenNextVariant() {
         pStream->close();
     }
     m_closing = false;
-    ++m_variant;
+    m_variant = variant;
     m_callbackThreadPrepared = false;
     m_rateFrames = 0;
     m_levelSamples = 0;
