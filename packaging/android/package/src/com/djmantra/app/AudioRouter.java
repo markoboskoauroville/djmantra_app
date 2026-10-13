@@ -109,7 +109,8 @@ public final class AudioRouter {
         return false;
     }
 
-    /// The most channels a connected USB output offers, 0 without one (round 37: the
+    /// The most channels a connected USB output offers, 0 without one, -1 when it
+    /// lists none (round 37: the
     /// CQ-12T runs 16 channels; a 2-channel stream into it played at ~1/4 speed)
     public static int usbOutputChannels(Context context) {
         int most = 0;
@@ -118,7 +119,13 @@ public final class AudioRouter {
             if (key == null || !key.startsWith("usb:")) {
                 continue;
             }
-            for (int count : device.getChannelCounts()) {
+            int[] counts = device.getChannelCounts();
+            if (counts.length == 0) {
+                // round 38: the CQ-12T comes with no profiles at all (Android could
+                // not read them) while its driver runs it at 16 channels
+                return -1;
+            }
+            for (int count : counts) {
                 most = Math.max(most, count);
             }
         }

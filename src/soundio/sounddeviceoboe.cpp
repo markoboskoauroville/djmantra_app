@@ -176,6 +176,10 @@ oboe::Result SoundDeviceOboe::openStream() {
         if (usb > channels) {
             channels = usb;
             kLogger.info() << "USB output with" << usb << "channels: opening all of them";
+        } else if (usb < 0) {
+            // no channel counts from Android (the CQ-12T): try the CQ's 16, else 2
+            channels = std::max(channels, 16);
+            kLogger.info() << "USB output without channel counts: trying" << channels << "channels";
         }
     }
 #endif

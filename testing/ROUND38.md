@@ -29,3 +29,6 @@ logs `Output rate: N frames/s of 48000` every ~5 s: N should be ~48000. Time 30 
 CQ MixPad Ip1/2 meters with deck 1 playing. If it falls back (`Could not open 16 channels`), report the error.
 ## 8. Lanes (V21): the colour tails less magenta; a hit and the gap after it more distinct (expansion x^1.7): pairs
 again at Nanana bars 1-2.
+## 9. V22: the CQ again: Android lists no channel counts for it, so V22 tries 16 channels anyway (log `USB output
+without channel counts: trying 16 channels`, then `Sound output open: ... 16 channels` or `Could not open 16`).
+`Output rate` ~48000? the speed right (30 s against the clock)? CQ MixPad Ip1/2 meters?
