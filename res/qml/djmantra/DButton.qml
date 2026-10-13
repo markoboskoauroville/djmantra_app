@@ -7,6 +7,7 @@ import QtQuick 2.12
 Rectangle {
     id: root
 
+    property bool wrap: false // long labels (Settings) wrap instead of shrinking
     property string text
     property string group
     property string key
@@ -85,6 +86,7 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
         fontSizeMode: Text.Fit
         minimumPixelSize: 8
+        wrapMode: root.wrap ? Text.WordWrap : Text.NoWrap
     }
 
     MouseArea {

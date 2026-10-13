@@ -36,10 +36,13 @@ class AnalyzerBeats : public Analyzer {
     static QHash<QString, QString> getExtraVersionInfo(
             const QString& pluginId, bool bPreferencesFastAnalysis);
 
+    UserSettingsPointer m_pConfig;
     BeatDetectionSettings m_bpmSettings;
     std::unique_ptr<mixxx::AnalyzerBeatsPlugin> m_pPlugin;
     /// DJ Mantra: the grid moved by half a beat when the off-beat lines up
     /// with the kick better than the grid does
+    int beatGridMode() const;
+    bool beatOnKick() const;
     mixxx::BeatsPointer onTheBeat(const mixxx::BeatsPointer& pBeats,
             const mixxx::AnalyzerQueenMaryBeats& plugin,
             const QString& fileName) const;

@@ -175,6 +175,19 @@ TEST(PhraseControlTest, detectorV3FindsKickBreakdownAndBass) {
     }
     beats.push_back(static_cast<double>(points.size()));
     EXPECT_EQ(QList<int>({64, 192, 256}), djmantra::sectionBeatsV3(points, beats, 4));
+    // V8: every algorithm of Settings finds these big changes, at every level
+    for (int algorithm = 0; algorithm <= 2; ++algorithm) {
+        for (int level = 1; level <= 5; ++level) {
+            djmantra::SectionOptions options;
+            options.algorithm = static_cast<djmantra::SectionAlgorithm>(algorithm);
+            options.sensitivity = level;
+            QList<double> strengths;
+            EXPECT_EQ(QList<int>({64, 192, 256}),
+                    djmantra::sectionBeatsV3(points, beats, 4, options, &strengths))
+                    << "algorithm " << algorithm << " level " << level;
+            EXPECT_EQ(3, strengths.size());
+        }
+    }
     std::vector<std::array<double, 3>> steady;
     std::vector<double> steadyBeats;
     for (int beat = 0; beat < 96 * 4; ++beat) {
@@ -184,6 +197,15 @@ TEST(PhraseControlTest, detectorV3FindsKickBreakdownAndBass) {
         }
     }
     EXPECT_TRUE(djmantra::sectionBeatsV3(steady, steadyBeats, 4).isEmpty());
+    for (int algorithm = 0; algorithm <= 2; ++algorithm) {
+        for (int level = 1; level <= 5; ++level) {
+            djmantra::SectionOptions options;
+            options.algorithm = static_cast<djmantra::SectionAlgorithm>(algorithm);
+            options.sensitivity = level;
+            EXPECT_TRUE(djmantra::sectionBeatsV3(steady, steadyBeats, 4, options).isEmpty())
+                    << "algorithm " << algorithm << " level " << level;
+        }
+    }
 }
 
 TEST(PhraseControlTest, sectionsWhereTheArrangementChanges) {

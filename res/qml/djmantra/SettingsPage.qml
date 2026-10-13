@@ -25,6 +25,10 @@ Rectangle {
         return 2;
     }
     property string status: ""
+    property int sectionAlgorithm: Number(Mixxx.DJMantra.setting("section_algorithm", "0"))
+    property int sectionSensitivity: Number(Mixxx.DJMantra.setting("section_sensitivity", "3"))
+    property int beatGridMode: Number(Mixxx.DJMantra.setting("beat_grid_mode", "0"))
+    property bool beatOnKick: Mixxx.DJMantra.setting("beat_on_kick", "1") !== "0"
     property int seenVersion: -1
     signal done()
 
@@ -118,6 +122,132 @@ Rectangle {
                 fontSize: 13
                 lit: root.autoCue ? root.autoCue.active : false
                 onClicked: if (root.autoCue) root.autoCue.active = !root.autoCue.active
+            }
+
+            // V8 (Marko 13.10.2026): sections and beats are a choice, to find the best
+            // in practice. Each choice is written to the log ("Settings:", "Sections
+            // options:", "Beats options:").
+            Text {
+                text: qsTr("SECTIONS: how they are found")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Repeater {
+                model: [{value: 0, label: qsTr("ENERGY CHANGES (default)"),
+                         about: qsTr("Phrases learned from rekordbox, kept only where the energy changes a lot (kick in / out, breakdown, drop). About 8 per song.")},
+                        {value: 1, label: qsTr("PHRASES"),
+                         about: qsTr("Every phrase start, as rekordbox marks them (verse, chorus, bridge). About 20 per song.")},
+                        {value: 2, label: qsTr("ENERGY ONLY"),
+                         about: qsTr("No learned model: every 4 bars is a candidate, kept where the energy changes a lot.")},
+                        {value: 3, label: qsTr("CLASSIC 8-BAR"),
+                         about: qsTr("The first detector: kick and band changes on an 8-bar grid. Sensitivity does not change it.")}]
+
+                delegate: DButton {
+                    required property var modelData
+
+                    objectName: "sectionAlgorithm_" + modelData.value
+                    width: column.width
+                    height: 58
+                    text: modelData.label + "\n" + modelData.about
+                    fontSize: 12
+                    wrap: true
+                    lit: root.sectionAlgorithm === modelData.value
+                    onClicked: {
+                        root.sectionAlgorithm = modelData.value;
+                        Mixxx.DJMantra.setSetting("section_algorithm", modelData.value);
+                    }
+                }
+            }
+
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: qsTr("Sensitivity: 1 = only the strongest changes, 5 = the most changes")
+                color: Style.subText
+                font.pixelSize: 13
+            }
+
+            Row {
+                spacing: 6
+
+                Repeater {
+                    model: 5
+
+                    delegate: DButton {
+                        required property int index
+
+                        objectName: "sectionSensitivity_" + (index + 1)
+                        width: (column.width - 24) / 5
+                        height: 42
+                        text: String(index + 1)
+                        lit: root.sectionSensitivity === index + 1
+                        onClicked: {
+                            root.sectionSensitivity = index + 1;
+                            Mixxx.DJMantra.setSetting("section_sensitivity", index + 1);
+                        }
+                    }
+                }
+            }
+
+            Text {
+                text: qsTr("BEATS: the grid")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Repeater {
+                model: [{value: 0, label: qsTr("AUTO (default)"),
+                         about: qsTr("A steady grid; a beat map that follows the drummer when the tempo drifts (live drums).")},
+                        {value: 1, label: qsTr("ALWAYS A STEADY GRID"),
+                         about: qsTr("One tempo for the whole song, even with live drums.")}]
+
+                delegate: DButton {
+                    required property var modelData
+
+                    objectName: "beatGridMode_" + modelData.value
+                    width: column.width
+                    height: 58
+                    text: modelData.label + "\n" + modelData.about
+                    fontSize: 12
+                    wrap: true
+                    lit: root.beatGridMode === modelData.value
+                    onClicked: {
+                        root.beatGridMode = modelData.value;
+                        Mixxx.DJMantra.setSetting("beat_grid_mode", modelData.value);
+                    }
+                }
+            }
+
+            DButton {
+                objectName: "beatOnKick"
+                width: parent.width
+                height: 58
+                text: qsTr("GRID ON THE KICK") + "\n"
+                        + qsTr("The grid moves half a beat when the kick drum lines up better (hi-hat songs).")
+                fontSize: 12
+                wrap: true
+                lit: root.beatOnKick
+                onClicked: {
+                    root.beatOnKick = !root.beatOnKick;
+                    Mixxx.DJMantra.setSetting("beat_on_kick", root.beatOnKick ? 1 : 0);
+                }
+            }
+
+            DButton {
+                objectName: "analyzeAgain"
+                width: parent.width
+                height: 48
+                text: qsTr("ANALYSE THE STOPPED DECKS AGAIN (beat options apply to new analyses)")
+                fontSize: 12
+                wrap: true
+                onClicked: {
+                    const count = Mixxx.DJMantra.analyzeDecksAgain();
+                    root.status = count > 0 ? qsTr("Analysing %1 song(s) again ...").arg(count)
+                                            : qsTr("No stopped deck with a song.");
+                }
             }
 
             Repeater {

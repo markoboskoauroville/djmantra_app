@@ -76,6 +76,18 @@ void QmlDJMantra::registerUserSettings(UserSettingsPointer pConfig) {
             s_controllerControls.push_back(std::make_unique<ControlObject>(
                     ConfigKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(key))));
         }
+        // V8: the analysis options of Settings, read by the engine (sections) and
+        // the analyzer (beats), remembered in the user settings
+        for (const auto& [key, fallback] : std::initializer_list<std::pair<const char*, double>>{
+                     {"section_algorithm", 0},
+                     {"section_sensitivity", 3},
+                     {"beat_grid_mode", 0},
+                     {"beat_on_kick", 1}}) {
+            const ConfigKey configKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(key));
+            auto pControl = std::make_unique<ControlObject>(configKey);
+            pControl->set(pConfig->getValue(configKey, fallback));
+            s_controllerControls.push_back(std::move(pControl));
+        }
     }
     s_pUserSettings = std::move(pConfig);
 }
@@ -501,10 +513,16 @@ void QmlDJMantra::setSetting(const QString& name, const QVariant& value) {
     if (!m_pConfig) {
         return;
     }
-    m_pConfig->setValue(ConfigKey(QStringLiteral("[DJMantra]"), name),
+    const ConfigKey key(QStringLiteral("[DJMantra]"), name);
+    m_pConfig->setValue(key,
             value.typeId() == QMetaType::Bool ? QString(value.toBool() ? "1" : "0")
                                               : value.toString());
     m_pConfig->save();
+    // an option the engine reads (sections, beats): it follows at once
+    if (ControlObject* pControl = ControlObject::getControl(key, ControlFlag::AllowMissingOrInvalid)) {
+        pControl->set(value.toDouble());
+    }
+    qInfo().noquote() << "Settings:" << name << "=" << value.toString();
 }
 
 bool QmlDJMantra::barsVisible() const {
@@ -766,7 +784,33 @@ void QmlDJMantra::analyzeAhead(const QStringList& paths) {
         }
         tracks.append(AnalyzerScheduledTrack(pTrack->getId()));
     }
-    if (tracks.isEmpty()) {
+    scheduleAnalysis(tracks);
+}
+
+int QmlDJMantra::analyzeDecksAgain() {
+    const auto pLibrary = QmlLibraryProxy::library();
+    if (!pLibrary) {
+        return 0;
+    }
+    QList<AnalyzerScheduledTrack> tracks;
+    for (int deck = 1; deck <= 4; ++deck) {
+        const QString group = QStringLiteral("[Channel%1]").arg(deck);
+        const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
+        if (!pTrack || isPlaying(group) || pTrack->isBpmLocked()) {
+            continue;
+        }
+        // without beats the analyzer runs again, with the options of Settings
+        pTrack->trySetBeats(mixxx::BeatsPointer());
+        tracks.append(AnalyzerScheduledTrack(pTrack->getId()));
+        qInfo().noquote() << "Settings: analysing again" << group << pTrack->getLocation();
+    }
+    scheduleAnalysis(tracks);
+    return static_cast<int>(tracks.size());
+}
+
+void QmlDJMantra::scheduleAnalysis(const QList<AnalyzerScheduledTrack>& tracks) {
+    const auto pLibrary = QmlLibraryProxy::library();
+    if (tracks.isEmpty() || !pLibrary) {
         return;
     }
     if (!m_pAnalysis) {

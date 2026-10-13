@@ -97,6 +97,41 @@ void PhraseControl::connectCues() {
         m_sectionCues.push_back(std::make_unique<ControlProxy>(
                 group, name, this, ControlFlag::AllowMissingOrInvalid));
     }
+    // V8: the section options from Settings ([DJMantra]); a change detects again
+    m_pSectionAlgorithm = std::make_unique<ControlProxy>(QStringLiteral("[DJMantra]"),
+            QStringLiteral("section_algorithm"),
+            this,
+            ControlFlag::AllowMissingOrInvalid);
+    m_pSectionSensitivity = std::make_unique<ControlProxy>(QStringLiteral("[DJMantra]"),
+            QStringLiteral("section_sensitivity"),
+            this,
+            ControlFlag::AllowMissingOrInvalid);
+    m_pSectionAlgorithm->connectValueChanged(this, &PhraseControl::slotSectionOptionsChanged);
+    m_pSectionSensitivity->connectValueChanged(this, &PhraseControl::slotSectionOptionsChanged);
+}
+
+void PhraseControl::slotSectionOptionsChanged(double) {
+    if (m_pSectionTrack) {
+        m_detectTries = 0;
+        slotDetectSections();
+    }
+}
+
+djmantra::SectionOptions PhraseControl::sectionOptions() const {
+    djmantra::SectionOptions options;
+    if (m_pSectionAlgorithm) {
+        const int algorithm = static_cast<int>(m_pSectionAlgorithm->get());
+        if (algorithm >= 0 && algorithm <= 3) {
+            options.algorithm = static_cast<djmantra::SectionAlgorithm>(algorithm);
+        }
+    }
+    if (m_pSectionSensitivity) {
+        const int sensitivity = static_cast<int>(m_pSectionSensitivity->get());
+        if (sensitivity >= 1 && sensitivity <= 5) {
+            options.sensitivity = sensitivity;
+        }
+    }
+    return options;
 }
 
 void PhraseControl::trackLoaded(TrackPointer pNewTrack) {
@@ -131,6 +166,16 @@ void PhraseControl::trackBeatsUpdated(mixxx::BeatsPointer pBeats) {
     m_nextBeat = mixxx::audio::kInvalidFramePos;
     m_beat = -1;
     m_pBeatInPhrase->forceSet(-1);
+    // V8: new beats (Settings -> analyse again): the sections follow them
+    QMetaObject::invokeMethod(
+            this,
+            [this] {
+                if (m_pSectionTrack && m_detectTries >= 1000) {
+                    m_detectTries = 0;
+                    slotDetectSections();
+                }
+            },
+            Qt::QueuedConnection);
 }
 
 void PhraseControl::slotDetectSections() {
@@ -157,11 +202,15 @@ void PhraseControl::slotDetectSections() {
         return;
     }
     const auto end = mixxx::audio::FramePos::fromEngineSamplePos(m_pTrackSamples->get());
+    const djmantra::SectionOptions options = sectionOptions();
+    QList<double> strengths;
     const auto sections = djmantra::detectSections(*pWaveform,
             pBeats,
             anchor(),
             static_cast<int>(m_pBeatsPerBar->get()),
-            end);
+            end,
+            options,
+            &strengths);
     if (sections.isEmpty() && pWaveform->getCompletion() < pWaveform->getDataSize()) {
         retry(); // not analysed yet
         return;
@@ -181,6 +230,16 @@ void PhraseControl::slotDetectSections() {
     }
     qInfo().noquote() << "Sections:" << getGroup() << sections.size() << "changes, at"
                       << at.join(QStringLiteral(" s, ")) << "s";
+    // V8, verbose: the options and each change's strength (the energy change, log)
+    QStringList strong;
+    for (double strength : strengths) {
+        strong << QString::number(strength, 'f', 2);
+    }
+    qInfo().noquote() << QStringLiteral("Sections options: %1\t%2\tlevel %3\tstrength %4")
+                                 .arg(getGroup(),
+                                         djmantra::sectionAlgorithmName(options.algorithm))
+                                 .arg(options.sensitivity)
+                                 .arg(strong.join(QStringLiteral(" ")));
 }
 
 void PhraseControl::slotParametersChanged(double) {

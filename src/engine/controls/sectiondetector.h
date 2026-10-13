@@ -49,9 +49,35 @@ QList<int> sectionBeatsV2(const std::vector<std::array<double, 3>>& points,
 /// over 1 / 2 / 4 bars, the 4 / 8 / 16-bar position and the energy; peaks at
 /// least 3 bars apart. Out: the beats (indices into `beats`) where a phrase
 /// starts. Against rekordbox's phrase starts, within one bar: F1 0.50 (v2 0.31).
+///
+/// V8 (Marko 13.10.2026): sections are a choice in Settings, an algorithm and a
+/// sensitivity (1 = only the strongest changes .. 5 = the most changes):
+/// - kEnergy (default): v3's phrase starts, then only those with a big change of
+///   energy (majorOnly: the weakest change goes until every one left changes a band
+///   by the level's minimum; ~8 per song at level 3)
+/// - kPhrases: every phrase start, as rekordbox (~20 per song at level 3)
+/// - kEnergyOnly: no learned model: every 4 bars a candidate, then as kEnergy
+/// - kClassic: detector v2 (the 8-bar grid; the sensitivity does not change it)
+enum class SectionAlgorithm {
+    kEnergy = 0,
+    kPhrases = 1,
+    kEnergyOnly = 2,
+    kClassic = 3,
+};
+
+struct SectionOptions {
+    SectionAlgorithm algorithm = SectionAlgorithm::kEnergy;
+    int sensitivity = 3; // 1..5
+};
+
+QString sectionAlgorithmName(SectionAlgorithm algorithm);
+
+/// `strengths` (optional): per section found, its energy change (log; the low band x1.5)
 QList<int> sectionBeatsV3(const std::vector<std::array<double, 3>>& points,
         const std::vector<double>& beats,
-        int beatsPerBar = 4);
+        int beatsPerBar = 4,
+        const SectionOptions& options = SectionOptions(),
+        QList<double>* strengths = nullptr);
 
 /// The section starts of a whole track (frames), empty while the waveform
 /// is not complete or without beats
@@ -59,7 +85,9 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         const mixxx::BeatsPointer& pBeats,
         mixxx::audio::FramePos one,
         int beatsPerBar,
-        mixxx::audio::FramePos trackEnd);
+        mixxx::audio::FramePos trackEnd,
+        const SectionOptions& options = SectionOptions(),
+        QList<double>* strengths = nullptr);
 
 /// The detected section starts of each deck's track, as fractions of the
 /// track (0..1), for the interface's overview (round 18: "sections need to

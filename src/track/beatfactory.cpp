@@ -52,7 +52,8 @@ mixxx::BeatsPointer BeatFactory::makePreferredBeats(
         const QVector<mixxx::audio::FramePos>& beats,
         const QHash<QString, QString>& extraVersionInfo,
         bool fixedTempo,
-        mixxx::audio::SampleRate sampleRate) {
+        mixxx::audio::SampleRate sampleRate,
+        bool allowBeatMap) {
     DEBUG_ASSERT(sampleRate.isValid());
 #ifdef DEBUG_PRINT_BEATS
     for (mixxx::audio::FramePos beat : beats) {
@@ -79,7 +80,7 @@ mixxx::BeatsPointer BeatFactory::makePreferredBeats(
         mixxx::audio::FramePos firstBeat = mixxx::audio::kStartFramePos;
         const mixxx::Bpm constBPM = BeatUtils::makeConstBpm(
                 constantRegions, sampleRate, &firstBeat);
-        if (firstBeat.isValid() &&
+        if (firstBeat.isValid() && allowBeatMap &&
                 !BeatUtils::followsOneTempo(constantRegions, constBPM, firstBeat, sampleRate)) {
             // DJ Mantra: the tempo drifts (a live drummer): a beat map
             return mixxx::Beats::fromBeatPositions(

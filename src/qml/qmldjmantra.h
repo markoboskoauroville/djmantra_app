@@ -98,6 +98,9 @@ class QmlDJMantra : public QObject {
     /// without them are analysed in the background, one at a time, at low
     /// priority, without their waveform; the results go into the library.
     Q_INVOKABLE void analyzeAhead(const QStringList& paths);
+    /// Settings -> beats: the songs on the stopped decks analysed again with the
+    /// options now chosen; returns how many
+    Q_INVOKABLE int analyzeDecksAgain();
 
     /// Hides the status and navigation bars again
     Q_INVOKABLE void hideBars();
@@ -153,6 +156,7 @@ class QmlDJMantra : public QObject {
     bool eventFilter(QObject* pObject, QEvent* pEvent) override;
 
   private:
+    void scheduleAnalysis(const QList<AnalyzerScheduledTrack>& tracks);
     void followInsets();
     /// A song without a genre: MusicBrainz is asked (Android, GenreLookup.java)
     void lookUpGenre(const QString& group, TrackPointer pTrack);

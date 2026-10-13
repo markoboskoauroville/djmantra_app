@@ -20,5 +20,6 @@ class BeatFactory {
             const QVector<mixxx::audio::FramePos>& beats,
             const QHash<QString, QString>& extraVersionInfo,
             bool fixedTempo,
-            mixxx::audio::SampleRate sampleRate);
+            mixxx::audio::SampleRate sampleRate,
+            bool allowBeatMap = true);
 };

@@ -31,7 +31,8 @@ mixxx::AnalyzerPluginInfo AnalyzerBeats::defaultPlugin() {
 }
 
 AnalyzerBeats::AnalyzerBeats(UserSettingsPointer pConfig, bool enforceBpmDetection)
-        : m_bpmSettings(pConfig),
+        : m_pConfig(pConfig),
+          m_bpmSettings(pConfig),
           m_enforceBpmDetection(enforceBpmDetection),
           m_bPreferencesReanalyzeOldBpm(false),
           m_bPreferencesReanalyzeImported(false),
@@ -231,7 +232,8 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
                 beats,
                 extraVersionInfo,
                 m_bPreferencesFixedTempo,
-                m_sampleRate);
+                m_sampleRate,
+                beatGridMode() == 0);
         qDebug() << "AnalyzerBeats plugin detected" << beats.size()
                  << "beats. Predominant BPM:"
                  << (pBeats ? pBeats->getBpmInRange(
@@ -250,15 +252,36 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
     // onto the hi-hats in ~27 % of Marko's test songs (half a beat off
     // rekordbox's grid); the kick band's onsets decide between the grid and
     // the grid moved by half a beat (right on 74 of 78 songs).
-    if (pBeats && pBeats->hasConstantTempo()) {
+    if (pBeats && pBeats->hasConstantTempo() && beatOnKick()) {
         if (const auto* pQm = dynamic_cast<const mixxx::AnalyzerQueenMaryBeats*>(m_pPlugin.get())) {
             pBeats = onTheBeat(pBeats, *pQm, QFileInfo(pTrack->getLocation()).fileName());
         }
-    } else if (pBeats) {
+    } else if (pBeats && !pBeats->hasConstantTempo()) {
         qInfo().noquote() << QStringLiteral("Beats: %1\tthe tempo is not constant, a beat map")
                                      .arg(QFileInfo(pTrack->getLocation()).fileName());
     }
+    // V8, verbose: the beat options of Settings for this song
+    qInfo().noquote() << QStringLiteral("Beats options: %1\tgrid %2\ton the kick %3")
+                                 .arg(QFileInfo(pTrack->getLocation()).fileName(),
+                                         beatGridMode() == 0 ? QStringLiteral("auto (beat map for live drums)")
+                                                             : QStringLiteral("constant"),
+                                         beatOnKick() ? QStringLiteral("on") : QStringLiteral("off"));
     pTrack->trySetBeats(pBeats);
+}
+
+// V8: Settings -> beats ([DJMantra] in the user settings; 0 = auto, 1 = constant)
+int AnalyzerBeats::beatGridMode() const {
+    return m_pConfig ? m_pConfig->getValue(ConfigKey(QStringLiteral("[DJMantra]"),
+                                                   QStringLiteral("beat_grid_mode")),
+                               0)
+                     : 0;
+}
+
+bool AnalyzerBeats::beatOnKick() const {
+    return m_pConfig ? m_pConfig->getValue(ConfigKey(QStringLiteral("[DJMantra]"),
+                                                   QStringLiteral("beat_on_kick")),
+                               1) != 0
+                     : true;
 }
 
 mixxx::BeatsPointer AnalyzerBeats::onTheBeat(const mixxx::BeatsPointer& pBeats,

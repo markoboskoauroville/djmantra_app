@@ -399,35 +399,51 @@ constexpr int kV3Gap = 3;
 // neighbouring sections (each at most kMajorBars bars) goes, again and again, until
 // every one left changes a band by at least kMajorChange (log; the low band x1.5).
 // ~8 per song, as many as rekordbox's changes of phrase kind (intro, verse, chorus ...).
-constexpr double kMajorChange = 0.5;
+constexpr double kMajorChange = 0.5; // level 3
+constexpr double kMajorChangeByLevel[5] = {0.8, 0.65, kMajorChange, 0.4, 0.3};
+constexpr double kV3ThresholdByLevel[5] = {0.75, 0.62, kV3Threshold, 0.46, 0.43};
+// phrases: the model's 4 / 8 / 16-bar prior alone must not make a phrase (a steady
+// song at level 5 had one every 4 bars): some change of energy is needed
+constexpr double kPhraseMinChange = 0.05;
 constexpr int kMajorBars = 8;
 constexpr double kMajorWeight[3] = {1.5, 1.0, 1.0};
 
-std::vector<int> majorOnly(const std::vector<Bands>& b3, std::vector<int> starts) {
+int levelIndex(int sensitivity) {
+    return std::clamp(sensitivity, 1, 5) - 1;
+}
+
+double energyChange(const std::vector<Bands>& b3, const std::vector<int>& starts, size_t i) {
+    const int nb = static_cast<int>(b3.size());
+    const int lo = i > 0 ? starts[i - 1] : 0;
+    const int hi = i + 1 < starts.size() ? starts[i + 1] : nb;
+    const int k = starts[i];
+    const int from = std::max(lo, k - kMajorBars);
+    const int to = std::min(hi, k + kMajorBars);
+    double best = 0;
+    for (int c = 0; c < 3; ++c) {
+        double before = 0;
+        double after = 0;
+        for (int j = from; j < k; ++j) {
+            before += b3[j][c] / (k - from);
+        }
+        for (int j = k; j < to; ++j) {
+            after += b3[j][c] / (to - k);
+        }
+        best = std::max(best,
+                kMajorWeight[c] * std::fabs(std::log((after + kFloor) / (before + kFloor))));
+    }
+    return best;
+}
+
+std::vector<int> majorOnly(const std::vector<Bands>& b3,
+        std::vector<int> starts,
+        double minChange) {
     const int nb = static_cast<int>(b3.size());
     starts.erase(std::remove_if(starts.begin(), starts.end(),
                          [nb](int k) { return k <= 0 || k >= nb; }),
             starts.end());
     const auto score = [&](size_t i) {
-        const int lo = i > 0 ? starts[i - 1] : 0;
-        const int hi = i + 1 < starts.size() ? starts[i + 1] : nb;
-        const int k = starts[i];
-        const int from = std::max(lo, k - kMajorBars);
-        const int to = std::min(hi, k + kMajorBars);
-        double best = 0;
-        for (int c = 0; c < 3; ++c) {
-            double before = 0;
-            double after = 0;
-            for (int j = from; j < k; ++j) {
-                before += b3[j][c] / (k - from);
-            }
-            for (int j = k; j < to; ++j) {
-                after += b3[j][c] / (to - k);
-            }
-            best = std::max(best,
-                    kMajorWeight[c] * std::fabs(std::log((after + kFloor) / (before + kFloor))));
-        }
-        return best;
+        return energyChange(b3, starts, i);
     };
     while (!starts.empty()) {
         size_t weakest = 0;
@@ -439,7 +455,7 @@ std::vector<int> majorOnly(const std::vector<Bands>& b3, std::vector<int> starts
                 weakest = i;
             }
         }
-        if (weakestScore >= kMajorChange) {
+        if (weakestScore >= minChange) {
             break;
         }
         starts.erase(starts.begin() + weakest);
@@ -449,9 +465,25 @@ std::vector<int> majorOnly(const std::vector<Bands>& b3, std::vector<int> starts
 
 } // namespace
 
+QString sectionAlgorithmName(SectionAlgorithm algorithm) {
+    switch (algorithm) {
+    case SectionAlgorithm::kEnergy:
+        return QStringLiteral("energy changes");
+    case SectionAlgorithm::kPhrases:
+        return QStringLiteral("phrases");
+    case SectionAlgorithm::kEnergyOnly:
+        return QStringLiteral("energy only");
+    case SectionAlgorithm::kClassic:
+        return QStringLiteral("classic 8-bar");
+    }
+    return QString();
+}
+
 QList<int> sectionBeatsV3(const std::vector<std::array<double, 3>>& points,
         const std::vector<double>& beats,
-        int beatsPerBar) {
+        int beatsPerBar,
+        const SectionOptions& options,
+        QList<double>* strengths) {
     QList<int> result;
     if (beatsPerBar < 1) {
         beatsPerBar = 4;
@@ -611,9 +643,13 @@ QList<int> sectionBeatsV3(const std::vector<std::array<double, 3>>& points,
         order[k] = k;
     }
     std::stable_sort(order.begin(), order.end(), [&](int a, int b) { return prob[a] > prob[b]; });
+    const int level = levelIndex(options.sensitivity);
+    const double threshold = options.algorithm == SectionAlgorithm::kPhrases
+            ? kV3ThresholdByLevel[level]
+            : kV3Threshold;
     std::vector<int> peaks;
     for (int k : order) {
-        if (prob[k] < kV3Threshold) {
+        if (prob[k] < threshold) {
             break;
         }
         if (std::all_of(peaks.begin(), peaks.end(), [k](int p) { return std::abs(k - p) >= kV3Gap; })) {
@@ -621,8 +657,30 @@ QList<int> sectionBeatsV3(const std::vector<std::array<double, 3>>& points,
         }
     }
     std::sort(peaks.begin(), peaks.end());
-    for (int k : majorOnly(b3, peaks)) {
-        result.append(barBeat[k]);
+    if (options.algorithm == SectionAlgorithm::kEnergyOnly) {
+        peaks.clear();
+        for (int k = 4; k < nb; k += 4) {
+            peaks.push_back(k);
+        }
+    }
+    if (options.algorithm != SectionAlgorithm::kPhrases) {
+        peaks = majorOnly(b3, peaks, kMajorChangeByLevel[level]);
+    } else {
+        peaks.erase(std::remove_if(peaks.begin(), peaks.end(), [nb](int k) { return k <= 0 || k >= nb; }),
+                peaks.end());
+        std::vector<int> kept;
+        for (size_t i = 0; i < peaks.size(); ++i) {
+            if (energyChange(b3, peaks, i) >= kPhraseMinChange) {
+                kept.push_back(peaks[i]);
+            }
+        }
+        peaks = kept;
+    }
+    for (size_t i = 0; i < peaks.size(); ++i) {
+        result.append(barBeat[peaks[i]]);
+        if (strengths) {
+            strengths->append(energyChange(b3, peaks, i));
+        }
     }
     return result;
 }
@@ -631,7 +689,9 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         const mixxx::BeatsPointer& pBeats,
         mixxx::audio::FramePos one,
         int beatsPerBar,
-        mixxx::audio::FramePos trackEnd) {
+        mixxx::audio::FramePos trackEnd,
+        const SectionOptions& options,
+        QList<double>* strengths) {
     Q_UNUSED(one); // v2 finds the downbeat and the phrase "1" itself
     QList<mixxx::audio::FramePos> result;
     const int size = waveform.getDataSize();
@@ -661,7 +721,10 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         }
         beat = next;
     }
-    for (int index : sectionBeatsV3(points, beats, beatsPerBar)) {
+    const QList<int> found = options.algorithm == SectionAlgorithm::kClassic
+            ? sectionBeatsV2(points, beats, beatsPerBar)
+            : sectionBeatsV3(points, beats, beatsPerBar, options, strengths);
+    for (int index : found) {
         result.append(beatFrames[index]);
     }
     return result;

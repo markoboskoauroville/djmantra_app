@@ -15,6 +15,9 @@
 class ControlObject;
 class ControlProxy;
 class ControlPushButton;
+namespace djmantra {
+struct SectionOptions;
+} // namespace djmantra
 
 /// DJ Mantra: where the deck is in its phrase, one count per beat, for the
 /// beat lights that align two songs "1 with 1" (djay-style slicer lights).
@@ -95,9 +98,11 @@ class PhraseControl : public EngineControl {
     void slotJump(double value);
     void slotSectionJump(double value);
     void slotParametersChanged(double);
+    void slotSectionOptionsChanged(double);
 
   private:
     mixxx::audio::FramePos anchor() const;
+    djmantra::SectionOptions sectionOptions() const;
     void updateSection(mixxx::audio::FramePos position);
 
     std::unique_ptr<ControlObject> m_pBeatInPhrase;
@@ -125,6 +130,8 @@ class PhraseControl : public EngineControl {
     std::atomic<double> m_nextSection{-1};
     std::unique_ptr<ControlProxy> m_pCuePoint;
     std::unique_ptr<ControlProxy> m_pTrackSamples;
+    std::unique_ptr<ControlProxy> m_pSectionAlgorithm;
+    std::unique_ptr<ControlProxy> m_pSectionSensitivity;
     // Section starts: intro / outro markers and hot cues
     std::vector<std::unique_ptr<ControlProxy>> m_sectionCues;
     // Section starts found in the arrangement: written by the main thread,
