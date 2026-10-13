@@ -1,11 +1,27 @@
 # DJ Mantra handover
 
 Read this first in any new session (any account). It is kept current by every session before it
-stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
+stops; the newest state wins over older notes. Last update: **2026-10-14 00:00 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 13.10.2026 after midnight (latest): V34-V36 built untested, the cloud emulator
+## 14.10.2026 ~00:00 UTC (latest): V37-V41 built untested
+
+- V37 fixes (FrameAnimation needs an unversioned `import QtQuick`; AutoMix DeckControls binding loop). V38 smooth
+  lanes: container x and beat lines on whole device pixels, engine-position corrections only past a 4 ms deadband
+  with an 8 % gain (WaveformRow.qml). V39: long press on a MIXER volume fader flips it to PITCH
+  (PitchVolumeFader.qml: blue handle with the BPM, scale BPM left / % right, follows sync and tempo blend).
+- V40: a Pioneer DJM-style FILTER (djmantra::DjmFilter in djayfx.cpp, effect org.djmantra.effects.djmfilter,
+  loaded into every deck's QuickEffect by QmlDJMantra::useDjmFilter): middle off, a resonant LP 20 kHz -> 45 Hz
+  left, an HP 20 Hz -> 9 kHz right. A long press on GAIN flips the knob to FILTER (setting gain_filter_N).
+- V41: the classic DJM-600 BEAT EFFECTS in the FX chooser (2 columns now): DJM DELAY / ECHO (Mixxx echo, 1 beat,
+  feedback 0 / 0.55), DJM TRANS (tremolo, square, 2 per beat), DJM PAN (autopan, 2 beats); presets in
+  MixerPage.qml `effects[].params`, the DEPTH slider on `effects[].depth`. Pioneer does not publish its filter
+  curves; the values are by ear and from manuals (DJM-600/800).
+- Test plan: testing/ROUND40.md parts 0-8 (V34-V41). Open from the tester: the fader vs output peak, FX tap
+  glitches after the chooser closes, Cooldown state, CQ USB-input meters in Stereo, CQ tap delay.
+
+## 13.10.2026 after midnight: V34-V36 built untested, the cloud emulator
 
 - V34 (Marko): MIXER without FILTER, bigger knobs / buttons; double tap on EQ knobs = middle (0 dB; was the
   maximum); a 5th tab AUTOMIX (res/qml/djmantra/AutoMixPage.qml, always alive in Main.qml): the Songs tab's
