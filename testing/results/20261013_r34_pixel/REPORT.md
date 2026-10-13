@@ -37,3 +37,16 @@ xruns 0, late 0, slowest callback 3.3-5.2 ms. Meter: C 8 %, G 5 %.
   | CachingReaderWorker x2 | 3.5 each, now and then |
   | everything else (57 threads) | 0 |
   So the main thread (QML bindings / timers / JS) costs most, not the GPU render thread or the audio.
+
+## Part 5 (V14 fc2e0fa): the matrix paints only its lit dots - PASS
+- **The matrix looks the same** (`v14_matrix_v13_top_v14_bottom.png`: V13 above, V14 below, both decks playing):
+  same digits, dim grid, the yellow / dim-yellow / blue phrase cells.
+- CPU, both decks playing, 3 samples each (`top`, `top -H`; % of one core):
+  | page | process | qtMainLoopThread | QtThread (render) | AAudio_1 |
+  |---|---|---|---|---|
+  | Phrasing (V13) | 62-76 | **39-46** | 11-14 | 11 |
+  | **Phrasing (V14)** | **48-52** | **3.5-11** | 18-21 | 7-11 |
+  | Songs (V14) | 21-32 | 3.5-7 | 0-7 | 11-14 |
+  | Mixer (V14) | 28-32 | 0-7 | 11-18 | 7-15 |
+  Binder and CachingReaderWorker threads 3.5 % now and then. The interface thread dropped by ~35 points; the
+  render thread is now the biggest on Phrasing (the lanes). xruns 0.
