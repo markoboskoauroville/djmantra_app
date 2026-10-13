@@ -11,3 +11,8 @@
 
 ## Stereo mode
 Not yet measured: Marko has to switch the mixer (Configuration -> USB -> streaming mode); the voice was down.
+
+## CQ MixPad 1.2.2 on the MacBook Pro's built-in display (Color LCD, `screencapture -D 2`)
+- Screenshot works: `cqmixpad_processing.png` (PROCESSING page: Ip1/2 0 dB fader -3 dB, Ip3/4 and Ip5 off; main Ip1/2 -3 dB; USB and Bluetooth icons lit).
+- The USB streaming mode and the input sources are on the CONFIG page: reaching it needs a click. Clicking moves Marko's
+  pointer, so by his rule (MANTRA_MANIFEST marko-tests.md) it waits for his "done".
