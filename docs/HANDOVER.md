@@ -15,8 +15,10 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   for Marko's "zoomed view is stuttering". V32/V33 NOT yet tested on the phone.
 - Tomorrow, in order: (1) V33 smoothness at deep zoom (ROUND39 part 5) and the deep-zoom djay pair (part 4);
   (2) ROUND39 part 3: Underwater right, Cooldown left/mid/right with a tap log (a state oddity: "off" logged but on);
-  (3) the CQ in Stereo vs Multitrack (Marko approved experimenting with both): speed (Output rate ~48000?), meters on
-  the "USB" source in Stereo, headphones pair; (4) the CQ Tap Delay + soft key, then the app's tap tempo;
+  (3) DONE: the CQ in STEREO plays at real speed (Android: 1 profile PCM 32-bit 48 kHz; V31 LowLatency 2 ch, Output
+  rate ~48200, xruns 0). The CQ is LEFT IN STEREO: master only over USB, no headphones on USB 3-4 (cue on the phone).
+  Multitrack (16 ch, Android lists no profiles) stays at ~0.58x: only an own USB driver would fix it. Still check the
+  CQ meters on its "USB" input in Stereo; (4) the CQ Tap Delay + soft key, then the app's tap tempo;
   (5) lane height question still open (djay 15 % vs ours 70-80 %); (6) All-In-One keeps dying (15 of 150 songs).
 
 ## 13.10.2026 night: V24-V29
