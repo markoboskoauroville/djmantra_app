@@ -8,7 +8,10 @@ How the app does it today (since V7): Settings -> MASTER / HEADPHONES lists ever
 on a 4+ channel output it shows the pairs "1-2", "3-4" ... and APPLY opens one Oboe (AAudio) stream with 4 channels
 (src/soundio/sounddeviceoboe.cpp). Open question: does Android pass 4 channels to USB tracks 1-4 as they are (a
 channel index mask) or treat them as quad surround and remix?
-Voice to Marko (MANTRA_VOICE) only for hands on the mixer or cables, one action at a time.
+**The CQ-12T is on the Mac's LAN too (Marko 13.10.2026), and Allen & Heath's CQ app on the Mac controls it
+(CQ-MixPad): use that app (screenshots / clicks) for the USB streaming mode, the channels' input sources (USB 1-4),
+the routing and the meters, instead of asking Marko.** Voice to Marko (MANTRA_VOICE) only for what the app cannot
+do (moving a cable, a hardware switch), one action at a time.
 
 ## A. On the Mac (the CQ-12T on the Mac's USB now)
 1. Mixer in Stereo mode, then in Multitrack mode (Marko switches: Configuration -> USB -> streaming mode). For each:
