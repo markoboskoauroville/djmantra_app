@@ -31,6 +31,15 @@ Item {
         return path ? path.substring(path.lastIndexOf("/") + 1) : "";
     }
 
+    // true once `group` holds songs[i] (not the song it had before the load)
+    function holds(group, i) {
+        const player = Mixxx.PlayerManager.getPlayer(group);
+        if (!player || !player.isLoaded || i < 0 || i >= songs.length)
+            return false;
+        const here = decodeURIComponent(String(player.trackLocationUrl).replace(/^file:\/\//, ""));
+        return here === songs[i] && c(group).duration.value > 0;
+    }
+
     function c(group) {
         return group === "[Channel1]" ? deck1 : deck2;
     }
@@ -115,7 +124,7 @@ Item {
             const a = root.c(root.active);
             const b = root.c(root.other);
             if (root.waitingToPlay) {
-                if (a.duration.value > 0) {
+                if (root.holds(root.active, root.index)) {
                     a.play.value = 1;
                     root.waitingToPlay = false;
                 }
@@ -144,7 +153,7 @@ Item {
             const left = (end - a.position.value) * duration / rate;
             const bpm = a.bpm.value > 0 ? a.bpm.value : 120;
             const mixSeconds = root.beats * 60 / bpm;
-            const hasNext = root.index + 1 < root.songs.length && b.duration.value > 0;
+            const hasNext = root.holds(root.other, root.index + 1);
             if (hasNext && left <= mixSeconds) {
                 root.beginMix();
             } else if (!hasNext && a.play.value === 0) {
