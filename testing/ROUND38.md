@@ -32,3 +32,4 @@ again at Nanana bars 1-2.
 ## 9. V22: the CQ again: Android lists no channel counts for it, so V22 tries 16 channels anyway (log `USB output
 without channel counts: trying 16 channels`, then `Sound output open: ... 16 channels` or `Could not open 16`).
 `Output rate` ~48000? the speed right (30 s against the clock)? CQ MixPad Ip1/2 meters?
+## 10. V23: the EQ button's ▾ is drawn (no box); the FX button's hold is a 0.45 s timer (a finger may move a little).

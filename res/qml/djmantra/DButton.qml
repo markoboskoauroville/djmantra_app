@@ -23,10 +23,14 @@ Rectangle {
         playIcon.requestPaint();
         closeIcon.requestPaint();
         nextIcon.requestPaint();
+        dropIcon.requestPaint();
     }
     signal pressedDown()
-    // a long press (0.5 s): the FX button's chooser; clicked() still follows on release
+    // a long press (0.45 s, a finger may move a little): the FX button's chooser;
+    // clicked() still follows on release
     signal longPressed()
+    // a ▾ after the text, drawn (round 38: the font's ▾ was a box)
+    property bool dropdown: false
     signal releasedUp()
 
     radius: Style.radius
@@ -145,11 +149,42 @@ Rectangle {
         wrapMode: root.wrap ? Text.WordWrap : Text.NoWrap
     }
 
+    Timer {
+        id: holdTimer
+
+        interval: 450
+        onTriggered: root.longPressed()
+    }
+
+    Canvas {
+        id: dropIcon
+
+        visible: root.dropdown
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        width: 10
+        height: 6
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.fillStyle = String(root.lit ? Style.inkOnAccent : Style.text);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(width, 0);
+            ctx.lineTo(width / 2, height);
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
     MouseArea {
         id: area
 
         anchors.fill: parent
+        preventStealing: true
         onPressed: {
+            holdTimer.restart();
             root.pressedDown();
             if (root.key !== "" && root.mode === "push") {
                 control.value = 1;
@@ -165,16 +200,17 @@ Rectangle {
             }
         }
         onReleased: {
+            holdTimer.stop();
             if (root.key !== "" && root.mode === "push")
                 control.value = 0;
             root.releasedUp();
         }
         onCanceled: {
+            holdTimer.stop();
             if (root.key !== "" && root.mode === "push")
                 control.value = 0;
             root.releasedUp();
         }
         onClicked: root.clicked()
-        onPressAndHold: root.longPressed()
     }
 }

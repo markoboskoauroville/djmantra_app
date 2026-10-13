@@ -93,7 +93,8 @@ Item {
         width: 150
         height: 36
         mode: ""
-        text: (root.stems ? qsTr("NEURAL MIX") : qsTr("EQ")) + " ▾"
+        text: root.stems ? qsTr("NEURAL MIX") : qsTr("EQ")
+        dropdown: true
         fontSize: 13
         lit: eqMenu.visible
         onClicked: eqMenu.visible = !eqMenu.visible
