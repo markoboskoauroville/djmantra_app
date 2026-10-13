@@ -102,3 +102,13 @@ Output rate: 14236 frames/s of 48000 , 2 channels      (and 14138)
 - Cooldown: within ~4 dB per band of djay. PASS (close)
 - Flanger: close (both mild). PASS
 - **Echo Out: still no effect**: `FX: deck 1 ECHO OUT on` at 4.2 s, the level stays -16 dB for 12 s, then `off`.
+
+## CORRECTION (19:15): Android's own path to the CQ is slow too - not only our stream
+- YouTube (com.google.android.youtube) playing to the CQ (DJ Mantra stopped): Android's USB MIXER thread `AudioOut_15`
+  (Output devices 0x4000 USB_DEVICE, 48000 Hz, 2 ch, float, HAL frame count 960, Standby no) wrote
+  **25,485 and 26,025 frames/s** over two 20 s windows (`dumpsys media.audio_flinger` "Frames written" deltas):
+  **~0.54x of 48000**. So the platform (USB HAL with the CQ at 16 ch 32-bit) does not run the CQ at real time either.
+- RS Audio Player's 1.0x clock earlier was most likely its own wall clock (or its own USB driver), not proof of the
+  platform: my conclusion "it is our stream" above was wrong. DJ Mantra's 0.30x may be the platform's 0.54x plus our
+  callback pattern.
+- (YouTube showed "Allow YouTube to send you notifications?": left unanswered for Marko.)
