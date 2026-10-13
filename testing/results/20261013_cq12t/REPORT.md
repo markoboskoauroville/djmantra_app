@@ -11,13 +11,15 @@
 - The app opens `Phone audio output (speaker, USB or Bluetooth)` -> AAudio **MMAP** stream on device 515 (the CQ),
   48000 Hz, **2 channels**, burst 96, `perf = LL`; audio_flinger: MMAP_PLAYBACK thread, 2 ch float, "Frames written: 0".
 - About 1.1 s later: `SoundDeviceOboe - Sound output disconnected ( "ErrorTimeout" ), reopening on the current route`,
-  then open again: **0 times** in the phone log (`phone_app_oboe_loop.log`), the stream number was s#124 by 15:40.
+  then open again: again and again (`phone_app_oboe_loop.log`: the stream number had reached s#124 by 15:40; the phone log rolled over before a count).
 - CQ MixPad (Mac) with deck 1 playing: **no signal on Ip1/2 (USB 1-2)** (`phone_cq_mixpad_meters_no_usb_signal.png`).
 - So no sound reaches the CQ. Likely the MMAP (exclusive, low latency) path with a 2-channel stream on a 16-channel
   USB device: suggest opening without MMAP (AAudio sharing / no LowLatency, or AAUDIO_POLICY_NEVER) and/or opening
   the device's own 16 channels with an index mask, master in 1-2, headphones in 3-4.
 - Settings -> MASTER / HEADPHONES (USB 1-2 / 3-4) not tested: no working output to choose yet.
 
-## CQ MixPad on the phone - blocked
-Play Store: "Can't install CQ Mixpad" (package com.allenheath.minimicro.mixpad): Finsky `AuthFailureError: User needs to
-(re)enter credentials`, status 1400: the phone's Google account must be signed in again (Marko's password).
+## CQ MixPad on the phone - installed
+First "Can't install CQ Mixpad" (Finsky `AuthFailureError: User needs to (re)enter credentials`, status 1400): the
+phone's second Google account had been signed out. Marko removed that account himself (16:06); with his Gmail account
+the Play Store installed **CQ Mixpad 1.2.2 (com.allenheath.minimicro.mixpad)** at 16:17. It can reach the CQ only once
+the CQ is on the phone's network ("mantra" router) or the phone joins the CQ's own Wi-Fi.
