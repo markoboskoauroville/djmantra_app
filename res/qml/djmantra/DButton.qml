@@ -25,6 +25,8 @@ Rectangle {
         nextIcon.requestPaint();
     }
     signal pressedDown()
+    // a long press (0.5 s): the FX button's chooser; clicked() still follows on release
+    signal longPressed()
     signal releasedUp()
 
     radius: Style.radius
@@ -173,5 +175,6 @@ Rectangle {
             root.releasedUp();
         }
         onClicked: root.clicked()
+        onPressAndHold: root.longPressed()
     }
 }
