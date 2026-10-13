@@ -11,11 +11,27 @@ import QtQuick 2.12
 Item {
     id: root
 
+    // djay's four, then the classic Pioneer DJM beat effects (Marko 13.10.2026: "take some
+    // classic old Pioneer ... the most important ones"; the DJM-600's BEAT EFFECTS: DELAY
+    // repeats once, ECHO repeats fading, TRANS cuts the sound on the beat, PAN moves it left
+    // and right), on Mixxx's beat-synced effects with DJM-like settings (`params`, real
+    // units) and the DEPTH slider on `depth`
     readonly property var effects: [
-        { name: "FLANGER", id: "org.mixxx.effects.flanger" },
-        { name: "UNDERWATER", id: "org.djmantra.effects.underwater" },
-        { name: "COOLDOWN", id: "org.djmantra.effects.cooldown" },
-        { name: "ECHO OUT", id: "org.djmantra.effects.echoout" }
+        { name: "FLANGER", id: "org.mixxx.effects.flanger", depth: "parameter2" },
+        { name: "UNDERWATER", id: "org.djmantra.effects.underwater", depth: "parameter1" },
+        { name: "COOLDOWN", id: "org.djmantra.effects.cooldown", depth: "parameter1" },
+        { name: "ECHO OUT", id: "org.djmantra.effects.echoout", depth: "parameter1" },
+        // echo: parameter1 time (beats), 2 feedback, 3 ping pong, 4 send; button 1 quantize
+        { name: "DJM DELAY", id: "org.mixxx.effects.echo", depth: "parameter4",
+          params: { parameter1: 1, parameter2: 0, parameter3: 0, parameter4: 0.8, button_parameter1: 1 } },
+        { name: "DJM ECHO", id: "org.mixxx.effects.echo", depth: "parameter2",
+          params: { parameter1: 1, parameter2: 0.55, parameter3: 0, parameter4: 0.8, button_parameter1: 1 } },
+        // tremolo: parameter1 depth, 2 rate (per beat), 3 width, 4 waveform (low = square)
+        { name: "DJM TRANS", id: "org.mixxx.effects.tremolo", depth: "parameter1",
+          params: { parameter1: 1, parameter2: 2, parameter3: 0.5, parameter4: 0.005, button_parameter1: 1 } },
+        // autopan: parameter1 period (beats), 2 smoothing, 3 width
+        { name: "DJM PAN", id: "org.mixxx.effects.autopan", depth: "parameter3",
+          params: { parameter1: 2, parameter2: 0.5, parameter3: 1 } }
     ]
     // both decks' EQ mode (EqualizerRack1_[ChannelN]_Effect1, button_parameter4)
     readonly property bool stems: stems1.value > 0
@@ -49,6 +65,10 @@ Item {
             slot.effectId = effects[index].id;
             Mixxx.DJMantra.log("FX: deck " + deck + " " + effects[index].name);
         }
+        // the DJM effects' settings (also when the same Mixxx effect was there already)
+        const params = effects[index].params || {};
+        for (const key in params)
+            Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + deck + "_Effect1]", key, params[key]);
         // Echo Out runs while chosen (it keeps the last beats, as djay's); its
         // button_parameter1 is the ON that cuts the song into the echo
         if (index === 3)
@@ -298,7 +318,7 @@ Item {
         x: root.chooserX
         // above the FX button, whatever its height (the depth row adds to it)
         y: Math.max(Style.gap, root.chooserY - height - 4)
-        width: 170
+        width: 2 * 158 + 4 + 12
         height: fxItems.height + 12
         radius: Style.radius
         color: Style.surface
@@ -309,6 +329,10 @@ Item {
 
             anchors.centerIn: parent
             spacing: 4
+
+            Grid {
+                columns: 2
+                spacing: 4
 
             Repeater {
                 model: root.effects
@@ -335,12 +359,15 @@ Item {
                 }
             }
 
+            }
+
             // Marko 13.10.2026: the depth of the deck's effect (djay's slider): Flanger
             // = its width, Underwater / Cooldown = amount (0.5 = djay's middle; Cooldown
-            // fades the deck out at the right end), Echo Out = 1 or 2 beats
+            // fades the deck out at the right end), Echo Out = 1 or 2 beats; the DJM ones:
+            // DELAY the send, ECHO the feedback, TRANS the depth, PAN the width
             Text {
                 visible: root.chooserDeck > 0
-                width: 158
+                width: 2 * 158 + 4
                 horizontalAlignment: Text.AlignHCenter
                 text: root.chooserEffect === 3 ? qsTr("ECHO") : qsTr("DEPTH")
                 color: Style.subText
@@ -351,11 +378,11 @@ Item {
             DFader {
                 objectName: "fxDepth"
                 visible: root.chooserDeck > 0 && root.chooserEffect !== 3
-                width: 158
+                width: 2 * 158 + 4
                 height: 36
                 vertical: false
                 group: "[EffectRack1_EffectUnit" + Math.max(1, root.chooserDeck) + "_Effect1]"
-                key: root.chooserEffect === 0 ? "parameter2" : "parameter1"
+                key: root.chooserEffect >= 0 ? root.effects[root.chooserEffect].depth : "parameter1"
                 barColor: Style.accent
             }
 
@@ -376,7 +403,7 @@ Item {
                     delegate: DButton {
                         required property int modelData
 
-                        width: 77
+                        width: 158
                         height: 36
                         mode: ""
                         text: modelData === 1 ? qsTr("1 BEAT") : qsTr("2 BEATS")

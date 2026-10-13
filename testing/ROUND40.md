@@ -34,3 +34,8 @@ FILTER = a Pioneer DJM Color FX filter on every deck (log `DJM filter: loaded on
 dead zone), left a resonant low-pass sweeping 20 kHz -> 45 Hz, right a resonant high-pass 20 Hz -> 9 kHz (Q ~2),
 exponential travel. The controller's FILTER knob drives the same. Record a slow sweep left and right (the peak should
 sing like a DJM), double tap = middle.
+## 8. V41 (Marko: "emulate the classic DJM mixer effects"): the FX chooser (long press FX) has 2 columns: FLANGER,
+UNDERWATER, COOLDOWN, ECHO OUT, then the DJM-600's BEAT EFFECTS: DJM DELAY (one repeat, 1 beat, DEPTH = send),
+DJM ECHO (repeats fading, 1 beat, DEPTH = feedback), DJM TRANS (the sound cut on 1/2 beats, square, DEPTH = depth),
+DJM PAN (left-right over 2 beats, DEPTH = width). Each: choose, tap on/off, move DEPTH; in time with the beat?
+Log `FX: deck N DJM ...`.
