@@ -22,3 +22,18 @@
 - **Note on recording:** while scrcpy captures the phone's sound, Android moves the app's output off the CQ
   (`Sound output disconnected ( "ErrorDisconnected" )`, reopen, Output rate ~48,000) and back afterwards: all FX
   recordings ran at full speed but did not go to the CQ.
+
+## V31 (67477d3), 23:24-23:32: djay pairs (Mac awake again)
+- **Fine wave built once?** No: `Fine wave:` still logged **2 times** on load (Nanana).
+- **Lanes, bars 1 to 2.6** (`pairs/nanana_bar01-02.6_djay_vs_v31.png`, djay above): colours and the kick / hat pattern
+  as djay; djay ~15 % of its lane, V31 ~70 % of its half; djay's hits are separate short bursts with a thin line between,
+  V31's are fuller and run together. (Bars 9-11: same look as in round 37, not repeated.)
+- **Deepest zoom** (`pairs/nanana_deepest_zoom_first_beat_djay_vs_v31.png`): the first beat of bar 1 (kick, then the
+  off-beat hat), both at their deepest zoom (djay View -> Waveforms -> Waveform Zoom + x8; the app's zoom 0.50, which
+  goes deeper than djay: one beat is ~half its lane, djay's ~1/8):
+  - **djay draws the signed waveform as one thin line**: the kick is ~9 clear sine cycles shrinking, then a thin flat
+    line, the blue hat's small wiggle, the next hit; tiny height (~15 % of the lane), no fill.
+  - **V31 draws filled, mirrored columns** (a peak envelope per pixel column, symmetric up and down): no single line,
+    the kick's cycles not readable; its height ~80 %.
+  - To look like djay at deep zoom: draw the signed samples as a polyline (min / max per pixel only when there are more
+    samples than pixels), not mirrored, thin, at djay's height.
