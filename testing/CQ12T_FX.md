@@ -22,3 +22,12 @@ What is known (A&H forums; the cloud cannot reach the PDF):
    (one connection only). Push the script (tools/cq/cq_midi.py) and the results; message the coder.
 ## Then the app (the coder builds it): Settings -> CQ mixer (IP, soft key), a DELAY button per deck (FX send on
    / off from that deck's USB input), and the taps on the master deck's beats whenever its BPM changes.
+
+## Later: the Hercules Mix Ultra as a surface for the CQ (Marko 13.10.2026: "control with the surface of the
+Hercules the faders and other functions inside the CQ")
+The app is the hub: it reads the Mix Ultra (Bluetooth / USB MIDI) and talks to the CQ (TCP 51325). A "CQ mode"
+on the controller (e.g. SHIFT + a pad mode button) sends the Mix Ultra's faders, crossfader and knobs to the CQ
+as NRPN (channel fader levels, mutes, pans, FX sends) with soft takeover (the CQ's faders have no motors); back
+to the app's decks with the same buttons. For that, also copy from the PDF in step 1: the NRPN for every input's
+fader level, mute and pan (Ip1/2, Ip3/4 ... Main LR), the value scale (dB per value), and whether the CQ sends
+NRPN back when its own faders move (so the app can follow them). Test one fader level and one mute from the Mac.
