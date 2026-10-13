@@ -5,7 +5,25 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 13.10.2026 afternoon (latest): V16, djay FX, CQ USB without MMAP
+## 13.10.2026 evening (latest): V17-V23 while Marko was out
+
+- Lanes (V17, V21): mirrored per deck (Settings -> LANE MIRRORED / HALF), translucent, crimson kicks, less magenta,
+  hits more distinct (x^1.7). Open: djay's two-deck lane is ~15 % high (ours 0.8), and djay draws the real wave at deep
+  zoom (Mixxx keeps 441 peaks/s, unsigned): ask Marko.
+- Mixer (V18, V23, Marko 17:22): one EQ dropdown (Equalizer / Neural Mix EQ, both decks), one FX button per deck under
+  FILTER (tap on/off, hold 0.45 s = drop-up chooser), unit N slot 1; FxBar.qml removed. ROUND38 parts 1-3 PASS on V21.
+  Neural Mix Crossfaders (djay's 3rd entry) not built.
+- FX (V19) measured from djay's recordings (djmantra-test-songs fx/djay_20261013, testing/djay/fx/notes.md):
+  Underwater lowpass 16k->3.3k (middle)->700 Hz; Cooldown band-pass 400 Hz-3 kHz, -6.5 dB, fade-out above 0.6;
+  Echo Out runs while chosen, button_parameter1 = ON: the last 1/2 beats loop, x0.6 a round. No sliders in the UI yet
+  (the FX run at djay's middle). Flanger = Mixxx's.
+- CQ (V20-V22): CQ link over its USB MIDI (Settings -> CQ MIXER -> USB, CqMidi.java). USB audio: the CQ on the
+  phone plays at ~0.3x (Output rate log ~14000 of 48000 frames/s) and the CQ hears nothing; Android lists no channel
+  counts for it (Profiles 0) while its driver runs 16 ch 32-bit. V22 forces 16 channels for such a device (untested).
+  If other apps also play slow on it, it is Android's USB audio: then the way is a direct USB audio driver (big).
+- All-In-One: keeps dying on "Beyond Strings.mp3" (11 songs done): skip it in run.py if it dies again.
+
+## 13.10.2026 afternoon: V16, djay FX, CQ USB without MMAP
 
 - V16 (c672e09, a82f54e): djay Pro's favourite FX (Marko): Flanger (Mixxx's), Underwater / Cooldown / Echo Out
   (new, src/effects/backends/builtin/djayfx.h + djayfxeffect.h, tests src/test/djayfx_test.cpp); FX bar per deck on
