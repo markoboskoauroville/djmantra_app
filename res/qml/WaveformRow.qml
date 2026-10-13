@@ -184,10 +184,28 @@ Item {
             visible: root.deckPlayer.isLoaded
 
             Skin.DjayWaveformShader {
+                id: djayShader
+
                 group: root.group
                 anchors.fill: parent
                 levelGain: root.levelGain
                 heightGain: root.heightGain
+                // round 31: the lanes stayed empty and a release build says nothing
+                // about a shader: its status goes to the log, and on an error the
+                // classic waveform takes over
+                onStatusChanged: Mixxx.DJMantra.log("waveform shader " + root.group + ": "
+                        + (status === ShaderEffect.Compiled ? "compiled"
+                           : status === ShaderEffect.Error ? "ERROR " + log : "status " + status))
+                Component.onCompleted: Mixxx.DJMantra.log("waveform shader " + root.group
+                        + " made, status " + status + ", level " + root.levelGain)
+            }
+
+            WaveformShader {
+                // the classic one, only if djay's shader does not compile on this GPU
+                group: root.group
+                anchors.fill: parent
+                visible: djayShader.status === ShaderEffect.Error
+                visualGain: Math.max(1, root.levelGain) * 1.5
             }
 
             Shape {
