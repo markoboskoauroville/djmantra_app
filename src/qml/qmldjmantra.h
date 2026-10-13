@@ -175,6 +175,8 @@ class QmlDJMantra : public QObject {
     qint64 m_lastCpuAtMs = 0;
     QString m_gpuSource; // the GPU load file that works on this phone
     bool m_gpuProbed = false;
+    long long m_lastGpuBusyUs = -1; // qml/gputime.h, at the last usage()
+    qint64 m_lastGpuAtMs = 0;
     TrackAnalysisScheduler::Pointer m_pAnalysis = TrackAnalysisScheduler::NullPointer();
     int m_analysisLeft = 0;
 };

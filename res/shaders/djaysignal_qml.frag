@@ -5,6 +5,8 @@
 // bands (src/waveform/djaycolor.h holds the same fitted numbers), a waveform
 // mirrored around the middle: a bright body and a darker outline, so every hit
 // reads as a coloured arrow (kicks red, hats blue / violet), on djay's #141414.
+// No names of GLSL built-ins (index, distance ...): round 31, the phone's GPU
+// drew nothing.
 
 layout(location = 0) in vec2 qt_TexCoord0;
 layout(location = 0) out vec4 fragColor;
@@ -31,10 +33,10 @@ layout(std140, binding = 0) uniform buf {
 
 layout(binding = 1) uniform sampler2D waveformTexture;
 
-vec4 getWaveformData(float index) {
+vec4 getWaveformData(float position) {
     vec2 uv_data;
-    uv_data.y = floor(index / float(textureStride));
-    uv_data.x = floor(index - uv_data.y * float(textureStride));
+    uv_data.y = floor(position / float(textureStride));
+    uv_data.x = floor(position - uv_data.y * float(textureStride));
     return texture(waveformTexture, uv_data / float(textureStride));
 }
 
@@ -53,21 +55,21 @@ void main(void) {
     vec2 uv = qt_TexCoord0.st;
     vec4 outputColor = vec4(0.0);
 
-    float index = floor(firstVisualIndex + uv.x * (lastVisualIndex - firstVisualIndex)) * 2.0;
-    if (index >= 0.0 && index <= float(waveformLength) - 2.0) {
+    float idx = floor(firstVisualIndex + uv.x * (lastVisualIndex - firstVisualIndex)) * 2.0;
+    if (idx >= 0.0 && idx <= float(waveformLength) - 2.0) {
         // both channels as one (djay draws mono)
-        vec4 data = (getWaveformData(index) + getWaveformData(index + 1.0)) * 0.5;
+        vec4 data = (getWaveformData(idx) + getWaveformData(idx + 1.0)) * 0.5;
         vec4 x = data * levelGain;
         x.x *= lowGain;
         x.y *= midGain;
         x.z *= highGain;
         vec3 colour = djayColor(x);
-        float distance = abs(uv.y - 0.5) * 2.0;
+        float dist = abs(uv.y - 0.5) * 2.0;
         float outer = x.w * heightGain;
         float inner = outer * 0.6;
-        if (distance <= inner) {
+        if (dist <= inner) {
             outputColor = vec4(min(colour * 1.15, vec3(1.0)), 1.0);
-        } else if (distance <= outer) {
+        } else if (dist <= outer) {
             outputColor = vec4(colour * 0.6, 1.0);
         }
     }

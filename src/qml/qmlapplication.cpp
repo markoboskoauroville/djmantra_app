@@ -1,11 +1,13 @@
 #include "qmlapplication.h"
 
 #include <QQmlEngineExtensionPlugin>
+#include <QQuickWindow>
 
 #include "control/controlsortfiltermodel.h"
 #include "controllers/controllermanager.h"
 #include "moc_qmlapplication.cpp"
 #include "qml/asyncimageprovider.h"
+#include "qml/gputime.h"
 #include "qml/qmlconfigproxy.h"
 #include "qml/qmldjmantra.h"
 #include "qml/qmlcontrolproxy.h"
@@ -130,6 +132,13 @@ void QmlApplication::loadQml(const QString& path) {
             m_pCoreServices->getTrackCollectionManager());
     m_pAppEngine->addImageProvider(AsyncImageProvider::kProviderName, pImageProvider);
 
+    // DJ Mantra: the GPU monitor's own measure (qml/gputime.h), before the first frame
+    QObject::connect(m_pAppEngine.get(),
+            &QQmlApplicationEngine::objectCreated,
+            m_pAppEngine.get(),
+            [](QObject* pObject, const QUrl&) {
+                djmantra::gputime::watch(qobject_cast<QQuickWindow*>(pObject));
+            });
     m_pAppEngine->load(path);
     if (m_pAppEngine->rootObjects().isEmpty()) {
         qCritical() << "Failed to load QML file" << path;

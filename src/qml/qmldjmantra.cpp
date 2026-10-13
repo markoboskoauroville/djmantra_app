@@ -40,6 +40,7 @@
 extern const QString kOboeHostApi;
 #endif
 #include "qml/asyncimageprovider.h"
+#include "qml/gputime.h"
 #include "qml/qmllibraryproxy.h"
 #include "moc_qmldjmantra.cpp"
 #include "sources/soundsourceproxy.h"
@@ -309,7 +310,7 @@ QVariantMap QmlDJMantra::usage() {
     // The GPU: the first driver file this phone lets the app read
     if (!m_gpuProbed) {
         m_gpuProbed = true;
-        const QStringList candidates = {
+        QStringList candidates = {
                 QStringLiteral("/sys/class/kgsl/kgsl-3d0/gpu_busy_percentage"),
                 QStringLiteral("/sys/class/kgsl/kgsl-3d0/gpubusy"),
                 QStringLiteral("/sys/kernel/ged/hal/gpu_utilization"),
@@ -318,6 +319,14 @@ QVariantMap QmlDJMantra::usage() {
                 QStringLiteral("/sys/class/misc/mali0/device/utilization"),
                 QStringLiteral("/sys/devices/platform/mali.0/utilization"),
         };
+        // Pixel (Tensor, Mali): /sys/devices/platform/<address>.mali/utilization
+        QStringList pixel;
+        const QDir platform(QStringLiteral("/sys/devices/platform"));
+        for (const auto& name : platform.entryList({QStringLiteral("*.mali")}, QDir::Dirs)) {
+            pixel << platform.filePath(name + QStringLiteral("/utilization"))
+                  << platform.filePath(name + QStringLiteral("/gpu_busy"));
+        }
+        candidates = pixel + candidates;
         for (const auto& path : candidates) {
             if (gpuLoadFrom(path) >= 0) {
                 m_gpuSource = path;
@@ -330,7 +339,23 @@ QVariantMap QmlDJMantra::usage() {
     }
 #endif
     result[QStringLiteral("cpu")] = cpu;
-    result[QStringLiteral("gpu")] = m_gpuSource.isEmpty() ? -1 : gpuLoadFrom(m_gpuSource);
+    int gpu = m_gpuSource.isEmpty() ? -1 : gpuLoadFrom(m_gpuSource);
+    if (gpu < 0) {
+        // no driver file for the app: the app's own frames, measured by the GPU
+        // (qml/gputime.h): busy time / wall time since the last look
+        const long long busy = djmantra::gputime::busyMicroseconds();
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        if (busy >= 0 && m_lastGpuBusyUs >= 0 && now > m_lastGpuAtMs) {
+            gpu = static_cast<int>(std::lround(std::clamp(
+                    (busy - m_lastGpuBusyUs) / (10.0 * (now - m_lastGpuAtMs)), 0.0, 100.0)));
+        }
+        m_lastGpuBusyUs = busy;
+        m_lastGpuAtMs = now;
+    }
+    result[QStringLiteral("gpu")] = gpu;
+    result[QStringLiteral("gpuSource")] = !m_gpuSource.isEmpty() ? QStringLiteral("driver")
+            : gpu >= 0                                            ? QStringLiteral("app frames")
+                                                                  : QString();
     return result;
 }
 

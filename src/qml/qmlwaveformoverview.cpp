@@ -105,6 +105,11 @@ void QmlWaveformOverview::setCurrentTrack(TrackPointer pTrack) {
                 &Track::waveformSummaryUpdated,
                 this,
                 &QmlWaveformOverview::slotWaveformUpdated);
+        // DJ Mantra: the djay look draws from the full waveform
+        connect(pTrack.get(),
+                &Track::waveformUpdated,
+                this,
+                &QmlWaveformOverview::slotWaveformUpdated);
     }
     slotWaveformUpdated();
 }
@@ -145,7 +150,14 @@ void QmlWaveformOverview::paint(QPainter* pPainter) {
     const int nextCompletion = actualCompletion + completionIncrement;
 
     if (m_renderer == Renderer::Djay) {
-        drawDjay(pPainter, pWaveform, std::min(waveformCompletion, dataSize));
+        // the full waveform once analysed (the summary averages the colours away)
+        const ConstWaveformPointer pFull = pTrack->getWaveform();
+        if (pFull && pFull->getDataSize() > 0 &&
+                pFull->getCompletion() >= pFull->getDataSize()) {
+            drawDjay(pPainter, pFull, pFull->getDataSize());
+        } else {
+            drawDjay(pPainter, pWaveform, std::min(waveformCompletion, dataSize));
+        }
         return;
     }
 
@@ -275,54 +287,81 @@ void QmlWaveformOverview::drawFiltered(QPainter* pPainter,
 }
 
 // DJ Mantra: djay Pro's overview (testing/djay/screenshots): mirrored around the
-// middle, a darker outline from the local peak and a brighter body from the level,
-// each column in djay's colour; the song's loud parts fill the height.
+// middle, a darker outline (the peak) and a brighter body (the level), on #141414.
+// Round 31: averaged colours came out beige / grey; djay takes each column's colour
+// from one moment (its colours are per 5.8 ms) and its peaks from short windows
+// (~1/18 s, its overview's rate), so the columns read saturated and spiky. Here:
+// per column a window of ~1/18 s of the full waveform, its colour from the loudest
+// point in it, its outline from that point and its body from the window's mean.
 void QmlWaveformOverview::drawDjay(QPainter* pPainter,
         ConstWaveformPointer pWaveform,
         int completion) const {
     const int points = completion / 2;
-    if (points < 2 || width() <= 0 || height() <= 0) {
+    const int columns = static_cast<int>(width());
+    if (points < 2 || columns < 2 || height() <= 0) {
         return;
     }
-    std::vector<double> level(points);
-    std::vector<int> sorted(points);
-    for (int i = 0; i < points; ++i) {
-        level[i] = (pWaveform->getAll(2 * i) + pWaveform->getAll(2 * i + 1)) / 2.0;
-        sorted[i] = static_cast<int>(level[i]);
+    const auto all = [&](int i) {
+        return (pWaveform->getAll(2 * i) + pWaveform->getAll(2 * i + 1)) / 2.0;
+    };
+    const double perColumn = static_cast<double>(points) / columns;
+    const double seconds = m_pCurrentTrack ? m_pCurrentTrack->getDuration() : 0.0;
+    const int window = std::max(1,
+            static_cast<int>(seconds > 0 ? points / (seconds * 17.7) : perColumn));
+    struct Column {
+        int loudest;
+        double peak;
+        double mean;
+    };
+    std::vector<Column> cols(columns);
+    std::vector<int> peaks(columns);
+    for (int x = 0; x < columns; ++x) {
+        const int centre = static_cast<int>((x + 0.5) * perColumn);
+        const int from = std::clamp(centre - window / 2, 0, points - 1);
+        const int to = std::clamp(from + window, from + 1, points);
+        Column c{from, 0.0, 0.0};
+        for (int i = from; i < to; ++i) {
+            const double v = all(i);
+            c.mean += v;
+            if (v > c.peak) {
+                c.peak = v;
+                c.loudest = i;
+            }
+        }
+        c.mean /= (to - from);
+        cols[x] = c;
+        peaks[x] = static_cast<int>(c.peak);
     }
     const auto at = [&](int percent) {
-        auto nth = sorted.begin() + static_cast<std::ptrdiff_t>((points - 1) * percent / 100);
-        std::nth_element(sorted.begin(), nth, sorted.end());
+        std::vector<int> v = peaks;
+        auto nth = v.begin() + static_cast<std::ptrdiff_t>((v.size() - 1) * percent / 100);
+        std::nth_element(v.begin(), nth, v.end());
         return std::max(1, *nth);
     };
     const double colourScale = 1.0 / at(99); // the colour's inputs, as fitted
     const double heightScale = 0.75 / at(97); // djay: the loud parts reach 3/4
     const double middle = height() / 2;
-    const double step = width() / points;
     pPainter->save();
     pPainter->setClipRect(boundingRect());
     pPainter->setRenderHint(QPainter::Antialiasing, false);
     QPen pen;
-    pen.setWidthF(std::max(1.0, step + 0.5));
-    for (int i = 0; i < points; ++i) {
-        double peak = level[i];
-        for (int j = std::max(0, i - 2); j <= std::min(points - 1, i + 2); ++j) {
-            peak = std::max(peak, level[j]);
-        }
+    pen.setWidthF(1.0);
+    for (int x = 0; x < columns; ++x) {
+        const Column& c = cols[x];
+        const int i = c.loudest;
         const QColor colour = djmantra::djayColor(
                 (pWaveform->getLow(2 * i) + pWaveform->getLow(2 * i + 1)) / 2.0 * colourScale,
                 (pWaveform->getMid(2 * i) + pWaveform->getMid(2 * i + 1)) / 2.0 * colourScale,
                 (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0 * colourScale,
-                level[i] * colourScale);
-        const double x = (i + 0.5) * step;
-        const double outer = std::min(1.0, peak * heightScale) * middle;
-        const double inner = std::min(1.0, level[i] * heightScale) * middle * 0.7;
-        pen.setColor(colour.darker(170));
+                c.peak * colourScale);
+        const double outer = std::min(1.0, c.peak * heightScale) * middle;
+        const double inner = std::min(1.0, c.mean * heightScale) * middle;
+        pen.setColor(colour.darker(140));
         pPainter->setPen(pen);
-        pPainter->drawLine(QPointF(x, middle - outer), QPointF(x, middle + outer));
-        pen.setColor(colour.lighter(115));
+        pPainter->drawLine(QPointF(x + 0.5, middle - outer), QPointF(x + 0.5, middle + outer));
+        pen.setColor(colour);
         pPainter->setPen(pen);
-        pPainter->drawLine(QPointF(x, middle - inner), QPointF(x, middle + inner));
+        pPainter->drawLine(QPointF(x + 0.5, middle - inner), QPointF(x + 0.5, middle + inner));
     }
     pPainter->restore();
 }
