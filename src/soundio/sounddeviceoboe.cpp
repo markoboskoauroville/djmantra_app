@@ -162,7 +162,10 @@ oboe::Result SoundDeviceOboe::openStream() {
     }
 #endif
     builder.setDirection(oboe::Direction::Output)
-            ->setPerformanceMode(oboe::PerformanceMode::LowLatency)
+            // None = Android's mixer path (no MMAP): for USB interfaces whose
+            // MMAP stream times out (CQ-12T, 16 channels, round 35)
+            ->setPerformanceMode(m_avoidMmap ? oboe::PerformanceMode::None
+                                             : oboe::PerformanceMode::LowLatency)
             ->setSharingMode(oboe::SharingMode::Shared)
             ->setFormat(oboe::AudioFormat::Float)
             ->setChannelCount(m_outputChannels)
@@ -211,7 +214,10 @@ oboe::Result SoundDeviceOboe::openStream() {
                    << (m_isClkRef ? "(clock)" : "(second output)") << pStream->getSampleRate() << "Hz,"
                    << pStream->getChannelCount() << "channels,"
                    << pStream->getFramesPerDataCallback() << "frames per callback, burst"
-                   << pStream->getFramesPerBurst() << ", API"
+                   << pStream->getFramesPerBurst() << ", perf"
+                   << (pStream->getPerformanceMode() == oboe::PerformanceMode::LowLatency
+                                      ? "LowLatency"
+                                      : "None") << ", API"
                    << (pStream->getAudioApi() == oboe::AudioApi::AAudio
                                       ? "AAudio"
                                       : "OpenSL ES")
@@ -366,6 +372,11 @@ void SoundDeviceOboe::onErrorAfterClose(oboe::AudioStream* pStream, oboe::Result
     // went. Oboe has closed the stream; open it again on the new route.
     kLogger.info() << "Sound output disconnected (" << resultText(error)
                    << "), reopening on the current route";
+    if (error == oboe::Result::ErrorTimeout && !m_avoidMmap) {
+        m_avoidMmap = true;
+        kLogger.info() << "Sound output: the low-latency (MMAP) stream timed out, "
+                          "reopening without MMAP (PerformanceMode None)";
+    }
     {
         const auto locker = QMutexLocker(&m_streamMutex);
         m_pStream.reset();

@@ -76,6 +76,9 @@ class SoundDeviceOboe : public SoundDevice,
     std::unique_ptr<FIFO<CSAMPLE>> m_pFifo;
     int m_fifoUnderflows = 0;
     int m_outputChannels;
+    // V16 (CQ-12T on the Pixel's USB): the low-latency MMAP stream timed out every
+    // ~1 s and wrote nothing; after one timeout the stream opens without MMAP.
+    std::atomic<bool> m_avoidMmap{false};
     QString m_lastError;
     std::atomic<bool> m_closing;
     bool m_callbackThreadPrepared;

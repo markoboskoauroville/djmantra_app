@@ -16,3 +16,10 @@ echo rings on and dies down (each repeat darker). Press again: the song is back 
 deck 2 (deck 1 plays dry meanwhile).
 ## 4. Same FX in djay vs the app (your recordings in testing/djay/fx/): what differs (speed, depth, colour, level)?
 ## 5. CPU with all 4 FX on (the usage meter), and any crackle.
+
+## 6. CQ-12T on the Pixel's USB again (CQ12T.md part B; V14 failed: an MMAP stream on the CQ timed out every ~1.1 s
+and wrote nothing). V16: after the first ErrorTimeout the output reopens WITHOUT MMAP (PerformanceMode None, Android's
+mixer). Expect in the log: `the low-latency (MMAP) stream timed out, reopening without MMAP`, then `Sound output open:
+... perf None ...` and NO more reopen loop; CQ MixPad shows deck 1's signal on Ip1/2. dumpsys media.audio_flinger:
+which thread (MIXER / DIRECT, not MMAP_PLAYBACK) and its channel count. If still silent: report and also try
+Settings -> MASTER = the CQ (USB 1-2).
