@@ -16,6 +16,9 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   Full fix needs Marko: CQ USB Stream Mode -> Stereo (MixPad CONFIG -> USB/SD), or our own USB audio driver (libusb).
   Asked Marko (yes/no), no answer yet. Do not switch the CQ without him.
 - Open questions for Marko: lane height (djay 15 % vs ours 80 %), deep-zoom real wave, FX sliders.
+- Also PASS on V29: STOP TIME (OFF / 1 s / 3 s, cancel), render thread 7-15 % (was 18-21), CQ over USB MIDI (CQ
+  DELAY sets Ip1->FX1 0 dB and unmutes FX1, read back from the CQ). Blocked on Marko: the CQ Stereo decision, the djay
+  waveform pairs (his Mac's screen is locked), a Tap Delay + soft key set up on the CQ for the tap tempo.
 
 ## 13.10.2026 evening: V17-V23 while Marko was out
 
