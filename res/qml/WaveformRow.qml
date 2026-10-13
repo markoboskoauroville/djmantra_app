@@ -56,6 +56,22 @@ Item {
 
     onBeatSamplesChanged: updateOne()
 
+    // V17 (render thread, round 34: 18-21 % CPU): every beat of the song was a
+    // Rectangle in the scene (500-1000 per deck, with bar numbers), all moved each
+    // frame. Only the beats near the screen are shown now; the window moves only
+    // when the play position has gone half a screen, so the bindings rarely run.
+    property real windowCenter: -1
+    readonly property real windowHalf: waveform.width > 0
+            ? waveformContainer.width / waveform.width * samplesControl.value : 0
+
+    function updateWindow(force) {
+        const s = playPositionControl.value * samplesControl.value;
+        if (force || Math.abs(s - root.windowCenter) > root.windowHalf / 2)
+            root.windowCenter = s;
+    }
+
+    onWindowHalfChanged: updateWindow(true)
+
     Mixxx.ControlProxy {
         id: beatsPerBarControl
 
@@ -106,6 +122,7 @@ Item {
             // DJ Mantra round 25: the engine moves it with every audio buffer;
             // the screen draws 60 frames a second, more is wasted work
             maxRate: 60
+            onValueChanged: root.updateWindow(false)
         }
 
         Mixxx.ControlProxy {
@@ -297,6 +314,7 @@ Item {
                             ? Math.round((framePosition * 2 - root.oneSample) / root.beatSamples) : 1
                     readonly property bool bar: ((beat % perBar) + perBar) % perBar === 0
 
+                    visible: Math.abs(framePosition * 2 - root.windowCenter) <= root.windowHalf * 1.6
                     width: 1
                     height: waveform.height
                     x: (framePosition * 2 / samplesControl.value) * waveform.width
