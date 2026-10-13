@@ -35,3 +35,9 @@ faders and VU; **nothing overlaps, no cut labels** (Pixel 7 portrait, 411 dp). T
   Picking UNDERWATER: `FX: deck 1 UNDERWATER`, the button reads UNDERWATER and is on; same for COOLDOWN, ECHO OUT.
   (A hold with 1 px of movement did not open it: fine for a finger? to check by Marko.)
 - After an app restart the button still reads ECHO OUT. PASS. Deck 2's button unchanged meanwhile (FLANGER).
+
+## Other app on the CQ (is it Android or our stream?) - Android plays the CQ at the RIGHT speed
+- DJ Mantra stopped; 4B.mp3 opened in RS Audio Player (RS File Manager) with the CQ on the phone's USB: its clock went
+  **00:26 -> 00:49 in 22 s of wall time** (1.0x). Android's own MIXER thread on USB_DEVICE (2 ch, 48 kHz) plays at
+  real time for another app, so the 0.3x is in DJ Mantra's stream (its AAudio settings / callback), not the platform.
+- (Whether it was audible on the CQ: not checked, MixPad meters unreliable; the speed is the point.)
