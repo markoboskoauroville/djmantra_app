@@ -40,10 +40,11 @@ std::vector<float> run(Fx& fx, const std::vector<float>& in, Args... args) {
 TEST(DjayFxTest, UnderwaterKeepsTheLowsAndDrownsTheHighs) {
     const int frames = static_cast<int>(kRate);
     djmantra::Underwater low(kRate), high(kRate);
-    const auto lows = run(low, sine(80, frames), 0.5, 1.0);
-    const auto highs = run(high, sine(5000, frames), 0.5, 1.0);
-    EXPECT_GT(rms(lows, frames / 2, frames), 0.25);
+    const auto lows = run(low, sine(80, frames), 1.0, 1.0);
+    const auto highs = run(high, sine(5000, frames), 1.0, 1.0);
+    EXPECT_GT(rms(lows, frames / 2, frames), 0.3);
     EXPECT_LT(rms(highs, frames / 2, frames), 0.01);
+    EXPECT_NEAR(djmantra::Underwater::cutoffFor(0.5), 3347, 50); // djay's middle
 }
 
 TEST(DjayFxTest, UnderwaterDryIsUnchanged) {
@@ -53,25 +54,46 @@ TEST(DjayFxTest, UnderwaterDryIsUnchanged) {
     EXPECT_EQ(in, out);
 }
 
-TEST(DjayFxTest, CooldownGlidesTheHighsAway) {
-    const int frames = static_cast<int>(kRate * 2);
-    djmantra::Cooldown fx(kRate);
-    const auto out = run(fx, sine(8000, frames), 1.0, 1.0);
-    // At once it still sounds; after the glide the highs are gone.
-    EXPECT_GT(rms(out, 0, 2400), 0.1);
-    EXPECT_LT(rms(out, frames - 24000, frames), 0.02);
+TEST(DjayFxTest, CooldownIsABandPassAndQuieter) {
+    const int frames = static_cast<int>(kRate);
+    const double full = 0.5 / std::sqrt(2.0);
+    djmantra::Cooldown a(kRate), b(kRate), c(kRate);
+    const auto mid = run(a, sine(1000, frames), 0.5, 1.0);
+    const auto low = run(b, sine(60, frames), 0.5, 1.0);
+    const auto high = run(c, sine(9000, frames), 0.5, 1.0);
+    // 1 kHz: about 6.5 dB quieter; 60 Hz and 9 kHz: far down
+    EXPECT_NEAR(20 * std::log10(rms(mid, frames / 2, frames) / full), -6.5, 1.5);
+    EXPECT_LT(rms(low, frames / 2, frames), full * 0.06);
+    EXPECT_LT(rms(high, frames / 2, frames), full * 0.1);
 }
 
-TEST(DjayFxTest, EchoOutFadesTheSongAndRingsOn) {
+TEST(DjayFxTest, CooldownAtTheRightEndFadesOut) {
     const int frames = static_cast<int>(kRate * 4);
-    djmantra::EchoOut fx(kRate);
-    // 2 beats at 120 BPM = 1 s.
-    const auto out = run(fx, sine(440, frames), 2.0, 0.5, 1.0);
+    djmantra::Cooldown fx(kRate);
+    const auto out = run(fx, sine(1000, frames), 1.0, 1.0);
+    EXPECT_GT(rms(out, 0, 4800), 0.1);
+    EXPECT_LT(rms(out, frames - 4800, frames), 0.5 * std::pow(10.0, -45 / 20.0));
+}
+
+TEST(DjayFxTest, EchoOutLoopsTheLastBeats) {
     const int second = static_cast<int>(kRate);
-    EXPECT_GT(rms(out, 0, second / 10), 0.3);             // the song plays on at first
-    EXPECT_GT(rms(out, second + 100, 2 * second), 0.1);  // the first echo, no dry
-    // Each repeat is quieter than the one before.
-    EXPECT_LT(rms(out, 3 * second + 100, 4 * second), rms(out, second + 100, 2 * second));
+    djmantra::EchoOut fx(kRate);
+    // 2 beats at 120 BPM = 1 s. One second of song, then engaged for three seconds.
+    const auto song = sine(440, second);
+    std::vector<float> out(song.size());
+    fx.process(song.data(), out.data(), second, false, 2.0, 0.5, 1.0);
+    EXPECT_EQ(song, out); // not engaged: the song as it is
+    const std::vector<float> silence(2 * 3 * second, 0.0f);
+    // the input goes on but is cut: feed noise-free silence to see only the echo
+    std::vector<float> echo(silence.size());
+    for (int f = 0; f < 3 * second; f += kBuffer) {
+        fx.process(silence.data() + 2 * f, echo.data() + 2 * f, std::min(kBuffer, 3 * second - f),
+                true, 2.0, 0.5, 1.0);
+    }
+    const double first = rms(echo, 1000, second);
+    const double second2 = rms(echo, second + 1000, 2 * second);
+    EXPECT_GT(first, 0.3);                       // the last 2 beats again, full
+    EXPECT_NEAR(second2 / first, 0.6, 0.05);     // each round 0.6 as loud
 }
 
 } // namespace

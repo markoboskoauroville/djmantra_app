@@ -28,44 +28,27 @@ class Svf {
     std::array<double, 2> m_ic2{0, 0};
 };
 
-/// A small stereo reverb: four delay lines with a Hadamard feedback matrix and
-/// damping in the loop (a feedback delay network).
-class SmallReverb {
-  public:
-    explicit SmallReverb(double sampleRate = 44100);
-    void setSampleRate(double sampleRate);
-    void clear();
-    // Adds the reverb of (inL, inR) to *pL, *pR at the given level.
-    void process(float inL, float inR, float decay, float level, float* pL, float* pR);
-
-  private:
-    static constexpr int kLines = 4;
-    std::array<std::vector<float>, kLines> m_lines;
-    std::array<int, kLines> m_pos{0, 0, 0, 0};
-    std::array<float, kLines> m_damp{0, 0, 0, 0};
-};
-
-/// Underwater: the song heard from below the surface: a resonant 24 dB lowpass
-/// (two cascaded filters) whose corner drifts slowly (0.35 Hz) like a wave.
-/// amount 0 = 1.2 kHz, 1 = 180 Hz.
+/// Underwater (djay's, measured from its recordings, testing/djay/fx/notes.md): a
+/// resonant 24 dB lowpass, the level kept. amount 0 = open (16 kHz), 0.5 (djay's
+/// middle) = 3.3 kHz, 1 = 700 Hz.
 class Underwater {
   public:
     explicit Underwater(double sampleRate = 44100);
     void setSampleRate(double sampleRate);
     void reset();
     void process(const float* pIn, float* pOut, int frames, double amount, double mix);
+    static double cutoffFor(double amount);
 
   private:
     double m_sampleRate;
-    double m_phase = 0;
-    double m_cutoff = 1200; // smoothed
+    double m_cutoff = 16000; // smoothed
     Svf m_a, m_b;
 };
 
-/// Cooldown: the energy drops: the highs are filtered away (a lowpass sliding down
-/// from 16 kHz over ~0.6 s), the lows thin out (a highpass up to 120 Hz), a reverb
-/// washes in and the level falls a little. amount 0 = mild (lowpass 3 kHz),
-/// 1 = deep (lowpass 400 Hz, more reverb).
+/// Cooldown (djay's, measured): the deck steps back: a band-pass (the lows below
+/// ~400 Hz and the highs above ~3 kHz cut) and 6.5 dB quieter, at once (~0.1 s), back
+/// at once when off. amount 0 = no change, 0.5 = as above, above 0.6 it also fades the
+/// deck out (1 = ~15 dB a second, near silence in ~3 s).
 class Cooldown {
   public:
     explicit Cooldown(double sampleRate = 44100);
@@ -75,27 +58,28 @@ class Cooldown {
 
   private:
     double m_sampleRate;
-    double m_lowpass = 16000; // smoothed
+    double m_lowpass = 20000; // smoothed
     double m_highpass = 20;   // smoothed
-    double m_wet = 0;         // smoothed 0..1, the glide in
+    double m_level = 1;       // smoothed gain
+    double m_fadeDb = 0;      // the fade-out so far (amount > 0.6)
     Svf m_lp, m_hp;
-    SmallReverb m_reverb;
 };
 
-/// Echo Out: press it and the deck leaves on its own echo: the next `beats` beats
-/// are sent into a beat-synced delay while the dry signal fades out over them;
-/// then only the echoes ring on, each repeat darker and quieter (feedback 0.62,
-/// a lowpass and a highpass in the loop). mix = the echo level.
+/// Echo Out (djay's, measured): the deck leaves on an echo of its last beats. While
+/// not engaged the input passes and fills a delay line; when engaged the input stops
+/// at once and the last `beats` beats repeat, each 0.6 as loud (-4.4 dB), until
+/// silence; disengaged = the song back at once. The echo time is fixed when engaged.
 class EchoOut {
   public:
-    static constexpr double kMaxDelaySeconds = 4.0; // 4 beats down to 60 BPM
+    static constexpr double kMaxDelaySeconds = 4.0; // 2 beats down to 30 BPM
 
     explicit EchoOut(double sampleRate = 44100);
     void setSampleRate(double sampleRate);
-    void reset(); // call when the FX is switched on: starts a new echo out
+    void reset();
     void process(const float* pIn,
             float* pOut,
             int frames,
+            bool engaged,
             double beats,
             double beatSeconds,
             double mix);
@@ -104,10 +88,8 @@ class EchoOut {
     double m_sampleRate;
     std::vector<float> m_buffer; // interleaved stereo
     int m_write = 0;
-    long m_elapsed = 0;   // frames since reset()
-    int m_delayFrames = 0; // fixed at the first buffer after reset()
-    Svf m_loop;
-    Svf m_loopHigh;
+    int m_delayFrames = 0; // fixed when engaged
+    float m_wet = 0;       // 0 = dry, 1 = the echo (5 ms ramps)
 };
 
 } // namespace djmantra

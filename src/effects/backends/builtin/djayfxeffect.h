@@ -33,6 +33,7 @@ class DjayFxEffectBase : public EffectProcessorImpl<DjayFxGroupState> {
 
     EngineEffectParameterPointer m_pAmount;
     EngineEffectParameterPointer m_pMix;
+    EngineEffectParameterPointer m_pEngaged; // Echo Out only
 };
 
 class UnderwaterEffect : public DjayFxEffectBase {

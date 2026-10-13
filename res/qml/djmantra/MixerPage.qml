@@ -48,6 +48,15 @@ Item {
             slot.effectId = effects[index].id;
             Mixxx.DJMantra.log("FX: deck " + deck + " " + effects[index].name);
         }
+        // Echo Out runs while chosen (it keeps the last beats, as djay's); its
+        // button_parameter1 is the ON that cuts the song into the echo
+        if (index === 3)
+            Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + deck + "_Effect1]", "enabled", 1);
+    }
+
+    // the control the FX button switches: Echo Out's "engaged", the others' "enabled"
+    function fxKey(index) {
+        return index === 3 ? "button_parameter1" : "enabled";
     }
 
     Component.onCompleted: {
@@ -113,7 +122,7 @@ Item {
                 // knobs and two buttons share the column's height
                 readonly property real knobHeight: (knobs.height - 2 * 40 - 6 * knobs.spacing) / 5
 
-                Mixxx.ControlProxy { id: fxEnabled; group: deck.fxGroup; key: "enabled" }
+                Mixxx.ControlProxy { id: fxEnabled; group: deck.fxGroup; key: root.fxKey(deck.choice) }
 
                 width: (root.width - 3 * Style.gap) / 2
                 height: parent.height
@@ -300,7 +309,7 @@ Item {
                         Mixxx.DJMantra.setSetting("fx_choice_" + n, index);
                         root.loadEffect(n, index);
                         // choosing turns it on, as in djay
-                        Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + n + "_Effect1]", "enabled", 1);
+                        Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + n + "_Effect1]", root.fxKey(index), 1);
                         root.chooserDeck = 0;
                     }
                 }

@@ -7,6 +7,7 @@ void DjayFxEffectBase::loadEngineEffectParameters(
         const QMap<QString, EngineEffectParameterPointer>& parameters) {
     m_pAmount = parameters.value(parameters.contains("beats") ? "beats" : "amount");
     m_pMix = parameters.value("mix");
+    m_pEngaged = parameters.value("engaged");
 }
 
 // static
@@ -30,7 +31,7 @@ EffectManifestPointer DjayFxEffectBase::makeManifest(const QString& id,
         amount->setShortName(QObject::tr("Beats"));
         amount->setDescription(QObject::tr("The echo time in beats, fixed when pressed"));
         amount->setUnitsHint(EffectManifestParameter::UnitsHint::Beats);
-        amount->setRange(0.25, 2, 4);
+        amount->setRange(0.25, 2, 2); // djay: 1 or 2 beats
     } else {
         amount->setId("amount");
         amount->setName(QObject::tr("Amount"));
@@ -49,6 +50,19 @@ EffectManifestPointer DjayFxEffectBase::makeManifest(const QString& id,
     mix->setValueScaler(EffectManifestParameter::ValueScaler::Linear);
     mix->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
     mix->setRange(0, 1, 1);
+
+    if (beats) {
+        // Echo Out runs while chosen (it keeps the last beats); this button cuts
+        // the song into its echo (djay's ON), [..._EffectN],button_parameter1
+        EffectManifestParameterPointer engaged = pManifest->addParameter();
+        engaged->setId("engaged");
+        engaged->setName(QObject::tr("Echo out"));
+        engaged->setShortName(QObject::tr("Out"));
+        engaged->setDescription(QObject::tr("On: the song stops and its last beats echo on"));
+        engaged->setValueScaler(EffectManifestParameter::ValueScaler::Toggle);
+        engaged->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+        engaged->setRange(0, 0, 1);
+    }
     return pManifest;
 }
 
@@ -124,8 +138,8 @@ QString EchoOutEffect::getId() {
 EffectManifestPointer EchoOutEffect::getManifest() {
     return makeManifest(getId(),
             QObject::tr("Echo Out"),
-            QObject::tr("Leave on an echo: the next beats echo on while the "
-                        "song fades out"),
+            QObject::tr("Leave on an echo: the song stops and its last beats "
+                        "echo on, fading"),
             true);
 }
 
@@ -145,6 +159,7 @@ void EchoOutEffect::processChannel(DjayFxGroupState* pState,
     pState->echoOut.process(pInput,
             pOutput,
             static_cast<int>(engineParameters.framesPerBuffer()),
+            m_pEngaged && m_pEngaged->toBool(),
             m_pAmount->value(),
             beatSeconds,
             m_pMix->value());
