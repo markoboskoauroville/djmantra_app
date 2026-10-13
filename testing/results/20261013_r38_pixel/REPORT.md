@@ -65,3 +65,40 @@ Same band analysis as djay's (`p4_fx_djay_vs_app_bands.txt`), change ON minus dr
 - Cooldown: about twice djay's depth (-13 vs -6 dB overall, lows -32 vs -16, low-mids -15 vs -5).
 - **Echo Out: no change at all**: the level stays at -16 dB for the 12 s it was on (`FX: deck 1 ECHO OUT on` logged);
   djay drops ~22 dB in the same window (the song cut, echoes dying).
+
+## V25 (5e01717), 19:05-19:15
+### Parts 9 + 11: the CQ as output - FAIL, still 0.3x
+```
+USB output without channel counts: trying 16 channels
+Could not open 16 channels ( "ErrorOutOfRange" ), trying 2
+Sound buffer: 3072 of 4128 frames
+Sound output open: "Phone audio output ..." 48000 Hz, 2 channels, 1024 frames per callback, burst 96, perf LowLatency
+Sound output disconnected ( "ErrorTimeout" ) ... reopening without MMAP (PerformanceMode None)
+Sound buffer: 16384 of 16384 frames
+Sound output open: ... 2 channels, 1024 frames per callback, burst 8192 , perf None
+Output rate: 14236 frames/s of 48000 , 2 channels      (and 14138)
+```
+- 30 s of play: -3:51 -> -3:42 = 9 s of song. The bigger buffer (16384, burst 8192) did not change the speed.
+- 16 channels refused with ErrorOutOfRange (AAudio rejects a channel count the device does not report).
+- RS Audio Player is still 1.0x on the same route. Ideas: our callback has `1024 frames per callback` fixed: try
+  leaving framesPerCallback unspecified (Oboe kUnspecified) on the no-MMAP stream, or a blocking write() stream;
+  or `setSampleRate` unspecified and let AAudio resample.
+### Part 10: PASS. The ▾ is drawn (`p10_eq_arrow_drawn.png`); a hold of 0.6 s with 12 px movement opens the chooser.
+### Part 12: the FX after retuning (MASTER = Phone default, scrcpy capture, ~48,000 frames/s during the takes)
+`p12_fx_djay_vs_v25_bands.txt`; audio: djmantra-test-songs `fx/app_v25_20261013/`. ON minus dry, dB:
+
+| | rms | <150 | 150-400 | 400-2k | 2k-6k | 6k-16k |
+|---|---|---|---|---|---|---|
+| Flanger djay | -0.8 | -1.6 | -3.2 | +2.3 | +2.4 | -1.5 |
+| Flanger V25 | +0.2 | -0.1 | +0.1 | +3.2 | +1.2 | -0.3 |
+| Underwater djay | +0.1 | +0.1 | -0.7 | +2.2 | +2.1 | -8.5 |
+| Underwater V25 | +0.2 | -0.1 | 0.0 | +3.3 | +3.3 | **-6.8** |
+| Cooldown djay | -5.8 | -15.9 | -5.1 | +1.5 | -3.1 | -27.0 |
+| Cooldown V25 | **-4.6** | **-19.6** | -4.1 | +3.3 | +0.2 | -22.6 |
+| Echo Out djay | -21.9 | -22.8 | -19.8 | -20.0 | -20.6 | -19.3 |
+| Echo Out V25 | **0.0** | -0.8 | +2.1 | +0.9 | +0.6 | +1.8 |
+
+- Underwater: now within 2 dB of djay. PASS
+- Cooldown: within ~4 dB per band of djay. PASS (close)
+- Flanger: close (both mild). PASS
+- **Echo Out: still no effect**: `FX: deck 1 ECHO OUT on` at 4.2 s, the level stays -16 dB for 12 s, then `off`.
