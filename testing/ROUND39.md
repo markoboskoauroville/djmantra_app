@@ -19,3 +19,7 @@ made and which log lines appeared; if a tap leaves no `FX:` line, note where on 
 ## 4. V32 (the djay pairs, round 39): the zoom goes down to 0.04 s per 100 px (djay's deepest ~0.15 s across); from
 ~12 points per pixel the lane draws the signed wave as ONE thin line (not filled, not mirrored, half the lane for the
 song's peak), djay's style. "Fine wave:" once per song now (one cache for all views). Pairs again at the deepest zoom.
+## 5. V33 (Marko: "the zoomed view is stuttering"): the lanes move every screen frame from the deck's speed (the engine's
+position came every ~21 ms = ~50 px jumps at the deep zoom), corrected gently by each engine update; a seek snaps.
+Screen-record the deepest zoom and a normal zoom while playing (scrcpy --record, 60 fps) and look for jumps; also
+with tempo +8 % and during a turntable stop; CPU before / after.

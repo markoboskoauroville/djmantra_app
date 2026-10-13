@@ -1,6 +1,6 @@
 import "." as Skin
 import Mixxx 1.0 as Mixxx
-import QtQuick 2.14
+import QtQuick
 import QtQuick.Shapes 1.12
 import "Theme"
 
@@ -72,6 +72,47 @@ Item {
 
     onWindowHalfChanged: updateWindow(true)
 
+    // Marko 13.10.2026 ("the zoomed view is stuttering"): the engine moves the play
+    // position once per audio buffer (~21 ms); at the deep zoom (~2500 px a second)
+    // that is a jump of ~50 px each time. The lane now moves every screen frame from
+    // the deck's own speed, and each new engine position only corrects it gently
+    // (a seek or a jump > 0.25 s snaps).
+    property real smoothPosition: 0
+    property real pendingCorrection: 0 // in track fractions, applied over a few frames
+
+    function takeEnginePosition() {
+        const target = playPositionControl.value;
+        const duration = waveformContainer.duration;
+        if (!(duration > 0) || !smoothMotion.running
+                || Math.abs(target - root.smoothPosition) * duration > 0.25) {
+            root.smoothPosition = target;
+            root.pendingCorrection = 0;
+        } else {
+            root.pendingCorrection = target - root.smoothPosition;
+        }
+    }
+
+    Mixxx.ControlProxy {
+        id: playControl
+
+        group: root.group
+        key: "play"
+    }
+
+    FrameAnimation {
+        id: smoothMotion
+
+        running: root.visible && playControl.value > 0 && waveformContainer.duration > 0
+        onTriggered: {
+            const dt = Math.min(frameTime, 0.05);
+            const speed = rateRatioControl.value / waveformContainer.duration;
+            const step = root.pendingCorrection * 0.25;
+            root.pendingCorrection -= step;
+            root.smoothPosition = Math.max(0, Math.min(1, root.smoothPosition + speed * dt + step));
+        }
+        onRunningChanged: root.takeEnginePosition()
+    }
+
     Mixxx.ControlProxy {
         id: beatsPerBarControl
 
@@ -122,7 +163,10 @@ Item {
             // DJ Mantra round 25: the engine moves it with every audio buffer;
             // the screen draws 60 frames a second, more is wasted work
             maxRate: 60
-            onValueChanged: root.updateWindow(false)
+            onValueChanged: {
+                root.updateWindow(false);
+                root.takeEnginePosition();
+            }
         }
 
         Mixxx.ControlProxy {
@@ -202,7 +246,7 @@ Item {
 
             width: waveformContainer.duration * effectiveZoomFactor
             height: parent.height
-            x: playMarker.screenPosition * waveformContainer.width - playPositionControl.value * width
+            x: playMarker.screenPosition * waveformContainer.width - root.smoothPosition * width
             visible: root.deckPlayer.isLoaded
 
             Skin.DjayWaveformShader {
