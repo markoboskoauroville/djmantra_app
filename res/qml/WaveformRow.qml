@@ -26,7 +26,7 @@ Item {
     // V9 djay Pro's look (DjayWaveformShader): the bands / the song's loudest level
     // (Mixxx.DJMantra.waveformLevel) and how far the loud parts reach
     property real levelGain: 1.0
-    property real heightGain: 0.3 // djay: a thin wave, hits read as arrows
+    property real heightGain: 0.22 // djay: a thin wave, hits read as arrows (round 34)
     // V9: bar lines orange with the bar number (djay), beat lines grey. The bar of
     // each beat comes from the deck's beat_number (beats since "1") at the last
     // beat: oneSample only changes when the count does, not every frame
@@ -44,9 +44,14 @@ Item {
     }
 
     function updateOne() {
-        if (root.beatSamples > 0 && samplesControl.value > 0)
-            root.oneSample = Math.round(playPositionControl.value * samplesControl.value
+        if (root.beatSamples > 0 && samplesControl.value > 0) {
+            const one = Math.round(playPositionControl.value * samplesControl.value
                     - beatNumberControl.value * root.beatSamples);
+            // only a real change: every beat's few-sample jitter re-evaluated all the
+            // beat lines' bindings (CPU, round 34)
+            if (root.oneSample < 0 || Math.abs(one - root.oneSample) > root.beatSamples / 4)
+                root.oneSample = one;
+        }
     }
 
     onBeatSamplesChanged: updateOne()

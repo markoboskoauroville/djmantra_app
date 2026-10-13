@@ -10,3 +10,7 @@ orange numbered bar lines. Screenshots next to djay (Nanana, 4B, Brick House, Lo
 first time on the phone too (a new file): the wave appears when the analysis ends.
 ## 2. CPU on the Phrasing page, both decks playing (`top`), vs 48-72 % in round 32.
 ## 3. Then the CQ parts (round 32 parts 4-5) when the Pixel's cable is on the CQ.
+
+## 4. (V13) Thinner as djay: lanes 0.35 / scrub 0.22 of the height, the overview's body 0.6 of before. Screenshots
+vs djay. CPU: `top -H -n 1 -b -p $(pidof com.djmantra.app)` on the Phrasing page, both playing: which threads
+use the most (render / main / audio / analysis)?

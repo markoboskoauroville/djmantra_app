@@ -360,7 +360,8 @@ void QmlWaveformOverview::drawDjay(QPainter* pPainter,
                 (pWaveform->getMid(2 * i) + pWaveform->getMid(2 * i + 1)) / 2.0 * colourScale,
                 (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0 * colourScale);
         const double outer = std::min(1.0, c.peak * heightScale) * middle;
-        const double inner = std::min(1.0, c.mean * heightScale) * middle;
+        // round 34: djay's body is thinner than its spikes
+        const double inner = std::min(1.0, c.mean * heightScale) * middle * 0.6;
         pen.setColor(colour.darker(140));
         pPainter->setPen(pen);
         pPainter->drawLine(QPointF(x + 0.5, middle - outer), QPointF(x + 0.5, middle + outer));
