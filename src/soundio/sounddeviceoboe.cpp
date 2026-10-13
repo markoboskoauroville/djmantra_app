@@ -195,7 +195,11 @@ oboe::Result SoundDeviceOboe::openStream() {
             ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Medium)
             ->setFramesPerDataCallback(static_cast<int32_t>(m_configFramesPerBuffer))
             // room for 3 callbacks (round 19: the capacity was 2 callbacks)
-            ->setBufferCapacityInFrames(static_cast<int32_t>(4 * m_configFramesPerBuffer))
+            // round 38 (the CQ-12T: Android's USB path pulls ~3367 frames a period): a
+            // capacity of 4 callbacks (4096) let only one 1024-frame callback through per
+            // period, 0.30x real time; without MMAP room for 4 periods of any size
+            ->setBufferCapacityInFrames(static_cast<int32_t>(
+                    (m_avoidMmap ? 16 : 4) * m_configFramesPerBuffer))
             ->setUsage(oboe::Usage::Media)
             ->setContentType(oboe::ContentType::Music)
             ->setDataCallback(this)
@@ -221,8 +225,10 @@ oboe::Result SoundDeviceOboe::openStream() {
     // buffer was the low-latency default (about 2 bursts), less than one of
     // our 1024-frame callbacks, so any late callback was a drop. Three
     // callbacks of room now (~64 ms at 48 kHz): a DJ app's usual safety.
-    const int32_t wanted = 3 * std::max<int32_t>(pStream->getFramesPerDataCallback(),
-                                       static_cast<int32_t>(m_configFramesPerBuffer));
+    // and at least 2 of the device's bursts (a USB period can be larger than 3 callbacks)
+    const int32_t wanted = std::max(3 * std::max<int32_t>(pStream->getFramesPerDataCallback(),
+                                            static_cast<int32_t>(m_configFramesPerBuffer)),
+            2 * pStream->getFramesPerBurst());
     const auto sized = pStream->setBufferSizeInFrames(
             std::min(wanted, pStream->getBufferCapacityInFrames()));
     kLogger.info() << "Sound buffer:" << (sized ? sized.value() : -1) << "of"

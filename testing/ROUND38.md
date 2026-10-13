@@ -33,3 +33,7 @@ again at Nanana bars 1-2.
 without channel counts: trying 16 channels`, then `Sound output open: ... 16 channels` or `Could not open 16`).
 `Output rate` ~48000? the speed right (30 s against the clock)? CQ MixPad Ip1/2 meters?
 ## 10. V23: the EQ button's ▾ is drawn (no box); the FX button's hold is a 0.45 s timer (a finger may move a little).
+## 11. V24 (the CQ speed, round 38: RS Audio Player plays at 1.0x, so it is our stream): without MMAP the stream's
+capacity is now 16 callbacks and its buffer at least 2 device bursts (V23: capacity 4096 < one USB period of ~3367
+frames x2, so one 1024-frame callback per period = 0.30x). Expect `Sound buffer: N of M frames` with N >= 2 x burst,
+`Output rate` ~48000, the right speed (30 s vs the clock), CQ Ip1/2 meters moving.
