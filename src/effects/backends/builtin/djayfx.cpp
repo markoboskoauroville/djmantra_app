@@ -57,12 +57,13 @@ void Underwater::setSampleRate(double sampleRate) {
 void Underwater::reset() {
     m_cutoff = 16000;
     m_a.reset();
-    m_b.reset();
 }
 
 // static
 double Underwater::cutoffFor(double amount) {
-    return 16000.0 * std::pow(700.0 / 16000.0, clamp01(amount));
+    // round 38 (the phone vs djay): at djay's middle 6-16 kHz are only ~8.5 dB down,
+    // so a gentle 12 dB slope near 5 kHz; the right end ~700 Hz
+    return 16000.0 * std::pow(700.0 / 16000.0, std::pow(clamp01(amount), 1.4));
 }
 
 void Underwater::process(
@@ -76,11 +77,10 @@ void Underwater::process(
         const int n = std::min(kControlFrames, frames - start);
         m_cutoff = glide(m_cutoff, target, 0.05, n, m_sampleRate);
         m_a.set(m_sampleRate, m_cutoff, q);
-        m_b.set(m_sampleRate, m_cutoff, 0.707);
         for (int f = start; f < start + n; ++f) {
             for (int ch = 0; ch < 2; ++ch) {
                 const float dry = pIn[2 * f + ch];
-                const float wet = m_b.process(m_a.process(dry, ch), ch);
+                const float wet = m_a.process(dry, ch);
                 pOut[2 * f + ch] = static_cast<float>(dry * (1 - mix) + wet * mix);
             }
         }
@@ -102,6 +102,7 @@ void Cooldown::reset() {
     m_level = 1;
     m_fadeDb = 0;
     m_lp.reset();
+    m_lp2.reset();
     m_hp.reset();
 }
 
@@ -111,24 +112,28 @@ void Cooldown::process(
     mix = clamp01(mix);
     // the band-pass and the level reach djay's middle at 0.5 and stay there
     const double depth = std::min(1.0, amount / 0.5);
-    const double lowTarget = 20000.0 * std::pow(3000.0 / 20000.0, depth);
-    const double highTarget = 20.0 * std::pow(400.0 / 20.0, depth);
+    // round 38 (the phone was ~2x deeper than djay), fitted on djay's own recording
+    // (within ~3 dB per band): highpass 300 Hz (12 dB), lowpass 4 kHz (24 dB), the
+    // 400 Hz - 2 kHz band slightly up (+1 dB) as djay's
+    const double lowTarget = 20000.0 * std::pow(4000.0 / 20000.0, depth);
+    const double highTarget = 20.0 * std::pow(300.0 / 20.0, depth);
     const double fadeRate = 15.0 * std::max(0.0, (amount - 0.6) / 0.4); // dB a second
     for (int start = 0; start < frames; start += kControlFrames) {
         const int n = std::min(kControlFrames, frames - start);
         m_fadeDb = std::min(90.0, m_fadeDb + fadeRate * n / m_sampleRate);
-        const double levelTarget = std::pow(10.0, (-6.5 * depth - m_fadeDb) / 20.0);
+        const double levelTarget = std::pow(10.0, (1.0 * depth - m_fadeDb) / 20.0);
         m_lowpass = glide(m_lowpass, lowTarget, 0.05, n, m_sampleRate);
         m_highpass = glide(m_highpass, highTarget, 0.05, n, m_sampleRate);
         m_level = glide(m_level, levelTarget, 0.05, n, m_sampleRate);
         m_lp.set(m_sampleRate, m_lowpass, 0.707);
+        m_lp2.set(m_sampleRate, m_lowpass, 0.707);
         m_hp.set(m_sampleRate, m_highpass, 0.707);
         const auto level = static_cast<float>(m_level);
         for (int f = start; f < start + n; ++f) {
             for (int ch = 0; ch < 2; ++ch) {
                 float high = 0;
                 m_hp.process(pIn[2 * f + ch], ch, &high);
-                const float wet = m_lp.process(high, ch) * level;
+                const float wet = m_lp2.process(m_lp.process(high, ch), ch) * level;
                 pOut[2 * f + ch] = static_cast<float>(pIn[2 * f + ch] * (1 - mix) + wet * mix);
             }
         }

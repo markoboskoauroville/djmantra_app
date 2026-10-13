@@ -44,7 +44,7 @@ TEST(DjayFxTest, UnderwaterKeepsTheLowsAndDrownsTheHighs) {
     const auto highs = run(high, sine(5000, frames), 1.0, 1.0);
     EXPECT_GT(rms(lows, frames / 2, frames), 0.3);
     EXPECT_LT(rms(highs, frames / 2, frames), 0.01);
-    EXPECT_NEAR(djmantra::Underwater::cutoffFor(0.5), 3347, 50); // djay's middle
+    EXPECT_NEAR(djmantra::Underwater::cutoffFor(0.5), 4870, 100); // djay's middle
 }
 
 TEST(DjayFxTest, UnderwaterDryIsUnchanged) {
@@ -61,10 +61,10 @@ TEST(DjayFxTest, CooldownIsABandPassAndQuieter) {
     const auto mid = run(a, sine(1000, frames), 0.5, 1.0);
     const auto low = run(b, sine(60, frames), 0.5, 1.0);
     const auto high = run(c, sine(9000, frames), 0.5, 1.0);
-    // 1 kHz: about 6.5 dB quieter; 60 Hz and 9 kHz: far down
-    EXPECT_NEAR(20 * std::log10(rms(mid, frames / 2, frames) / full), -6.5, 1.5);
-    EXPECT_LT(rms(low, frames / 2, frames), full * 0.06);
-    EXPECT_LT(rms(high, frames / 2, frames), full * 0.1);
+    // 1 kHz: kept (djay: +1.5 dB there); 60 Hz and 9 kHz: well down
+    EXPECT_NEAR(20 * std::log10(rms(mid, frames / 2, frames) / full), 0.5, 1.5);
+    EXPECT_LT(rms(low, frames / 2, frames), full * 0.12);
+    EXPECT_LT(rms(high, frames / 2, frames), full * 0.15);
 }
 
 TEST(DjayFxTest, CooldownAtTheRightEndFadesOut) {

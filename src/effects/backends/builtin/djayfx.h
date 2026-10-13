@@ -29,8 +29,8 @@ class Svf {
 };
 
 /// Underwater (djay's, measured from its recordings, testing/djay/fx/notes.md): a
-/// resonant 24 dB lowpass, the level kept. amount 0 = open (16 kHz), 0.5 (djay's
-/// middle) = 3.3 kHz, 1 = 700 Hz.
+/// slightly resonant 12 dB lowpass, the level kept. amount 0 = open (16 kHz), 0.5
+/// (djay's middle) = ~5 kHz, 1 = 700 Hz.
 class Underwater {
   public:
     explicit Underwater(double sampleRate = 44100);
@@ -42,11 +42,11 @@ class Underwater {
   private:
     double m_sampleRate;
     double m_cutoff = 16000; // smoothed
-    Svf m_a, m_b;
+    Svf m_a;
 };
 
 /// Cooldown (djay's, measured): the deck steps back: a band-pass (the lows below
-/// ~400 Hz and the highs above ~3 kHz cut) and 6.5 dB quieter, at once (~0.1 s), back
+/// ~300 Hz and the highs above ~4 kHz cut; ~6 dB quieter overall), at once (~0.1 s), back
 /// at once when off. amount 0 = no change, 0.5 = as above, above 0.6 it also fades the
 /// deck out (1 = ~15 dB a second, near silence in ~3 s).
 class Cooldown {
@@ -62,7 +62,7 @@ class Cooldown {
     double m_highpass = 20;   // smoothed
     double m_level = 1;       // smoothed gain
     double m_fadeDb = 0;      // the fade-out so far (amount > 0.6)
-    Svf m_lp, m_hp;
+    Svf m_lp, m_lp2, m_hp;
 };
 
 /// Echo Out (djay's, measured): the deck leaves on an echo of its last beats. While

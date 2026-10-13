@@ -175,6 +175,10 @@ Item {
                         onClicked: {
                             if (held)
                                 return;
+                            // Echo Out: its slot must run to keep the last beats (round 38:
+                            // the ON did nothing when the slot was off)
+                            if (deck.choice === 3)
+                                Mixxx.DJMantra.setControl(deck.fxGroup, "enabled", 1);
                             fxEnabled.value = fxEnabled.value > 0 ? 0 : 1;
                             Mixxx.DJMantra.log("FX: deck " + deck.number + " " + text
                                     + (fxEnabled.value > 0 ? " on" : " off"));

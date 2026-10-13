@@ -37,3 +37,7 @@ without channel counts: trying 16 channels`, then `Sound output open: ... 16 cha
 capacity is now 16 callbacks and its buffer at least 2 device bursts (V23: capacity 4096 < one USB period of ~3367
 frames x2, so one 1024-frame callback per period = 0.30x). Expect `Sound buffer: N of M frames` with N >= 2 x burst,
 `Output rate` ~48000, the right speed (30 s vs the clock), CQ Ip1/2 meters moving.
+## 12. V25: the FX after your phone recordings (part 4): Underwater = 12 dB lowpass ~4.9 kHz at the middle (was 24 dB
+3.3 kHz: 6-16 kHz -28 vs djay -8.5); Cooldown fitted on djay's own recording (HP 300 Hz, LP 4 kHz 24 dB, mids kept:
+simulated on djay's dry audio -5.6/-19.3/-4.4/+0.7/-2.5/-23.0 vs djay -5.8/-15.9/-5.1/+1.5/-3.1/-27); Echo Out: the FX
+tap now also switches its slot on (V21: ON did nothing). Record all 4 again (same way) + the band table.
