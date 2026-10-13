@@ -147,6 +147,8 @@ Rectangle {
         Mixxx.DJMantra.log("songs sorted by " + key + (up ? " up" : " down"));
     }
     signal done()
+    // the ✕: closed without loading a song (Marko 13.10.2026: "I'm stuck")
+    signal closed()
 
     color: Style.background
 
@@ -237,10 +239,25 @@ Rectangle {
             onClicked: root.back()
         }
 
+        CloseButton {
+            id: closeButton
+
+            objectName: "libraryClose"
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            visible: root.closable
+            width: visible ? 48 : 0
+            onClicked: {
+                Mixxx.DJMantra.log("song list closed (✕)");
+                root.closed();
+            }
+        }
+
         Text {
             id: target
 
-            anchors.right: parent.right
+            anchors.right: closeButton.left
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
             text: root.analysisLeft > 0 ? qsTr("analysing BPM / key: %1 left").arg(root.analysisLeft)

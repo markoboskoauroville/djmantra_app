@@ -30,6 +30,15 @@ Rectangle {
             anchors.fill: parent
         }
 
+        CloseButton {
+            objectName: "menuClose"
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.margins: 8
+            z: 1
+            onClicked: root.done()
+        }
+
         Column {
             id: column
 

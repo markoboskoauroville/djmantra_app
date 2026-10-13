@@ -90,11 +90,21 @@ Rectangle {
         }
     }
 
+    CloseButton {
+        id: settingsClose
+
+        objectName: "settingsClose"
+        anchors.right: parent.right
+        anchors.rightMargin: 12
+        anchors.verticalCenter: header.verticalCenter
+        onClicked: root.done()
+    }
+
     VersionLink {
         // the version, top right: a tap opens the newest release (update)
         objectName: "settingsVersion"
-        anchors.right: parent.right
-        anchors.rightMargin: 20
+        anchors.right: settingsClose.left
+        anchors.rightMargin: 12
         anchors.verticalCenter: header.verticalCenter
     }
 

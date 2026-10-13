@@ -26,6 +26,11 @@ Voice to Marko only for a hand on the controller (his MANTRA_VOICE).
 - Switching EQ <-> NEURAL while playing: a short smooth change, no click, no jump in time against the other deck.
 - CPU with both decks in NEURAL and knobs off centre (`top`), compared with EQ mode.
 
+## 1c. Every overlay closes (Marko: "I'm stuck")
+- Landscape: tap a deck's cover -> the song list in front; open a folder; tap ✕ (top right of the list): back to
+  the decks, nothing loaded (`song list closed (✕)`). Again, then Android's back gesture: the same.
+- Menu: ✕ closes it; Settings: ✕ closes it. Portrait too.
+
 ## 2. Smoke + basics: PLAY / pause both decks, faders, knobs, aligned start, 30 s both playing: xruns, late 0.
 CPU of the Phrasing page with both lanes playing (`top -n 1 -b | grep djmantra`) vs round 25 (65 %).
 

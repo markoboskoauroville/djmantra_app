@@ -138,7 +138,12 @@ Window {
         Keys.onBackPressed: (event) => {
             // Android's back: closes what is open, never the app
             event.accepted = true;
-            window.overlay = "";
+            if (window.overlay !== "")
+                window.overlay = "";
+            else if (window.browsing) {
+                window.libraryDeck = "";
+                window.closeBrowser();
+            }
         }
 
         MouseArea {
@@ -420,6 +425,10 @@ Window {
                     deck: window.libraryDeck
                     onDone: {
                         window.libraryDeck = ""; // loaded: the next song to the free deck
+                        window.closeBrowser();
+                    }
+                    onClosed: {
+                        window.libraryDeck = "";
                         window.closeBrowser();
                     }
                 }
