@@ -30,7 +30,7 @@ class Svf {
 
 /// Underwater (djay's, measured from its recordings, testing/djay/fx/notes.md): a
 /// slightly resonant 12 dB lowpass, the level kept. amount 0 = open (16 kHz), 0.5
-/// (djay's middle) = ~5 kHz, 1 = 700 Hz.
+/// (djay's middle) = ~4 kHz, 1 = 400 Hz.
 class Underwater {
   public:
     explicit Underwater(double sampleRate = 44100);

@@ -147,6 +147,7 @@ class QmlPlayerProxy : public QObject {
     QImage m_fineWave;
     int m_fineWaveLength = 0;
     int m_fineWaveRequest = 0; // the newest load; older builds are dropped
+    TrackPointer m_fineWaveTrack; // the song the fine wave is (being) built for
     void buildFineWave(const TrackPointer& pTrack);
     qint64 m_lastTextureMs = -1; // DJ Mantra: the last texture build (throttle)
     QPointer<BaseTrackPlayer> m_pTrackPlayer;

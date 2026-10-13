@@ -63,7 +63,9 @@ void Underwater::reset() {
 double Underwater::cutoffFor(double amount) {
     // round 38 (the phone vs djay): at djay's middle 6-16 kHz are only ~8.5 dB down,
     // so a gentle 12 dB slope near 5 kHz; the right end ~700 Hz
-    return 16000.0 * std::pow(700.0 / 16000.0, std::pow(clamp01(amount), 1.4));
+    // round 39: the right end measured ~2 kHz with 700 Hz here (the resonance bump):
+    // 400 Hz now, and the bump only around the middle
+    return 16000.0 * std::pow(400.0 / 16000.0, std::pow(clamp01(amount), 1.4));
 }
 
 void Underwater::process(
@@ -72,7 +74,7 @@ void Underwater::process(
     mix = clamp01(mix);
     const double target = cutoffFor(amount);
     // djay: a small bump at the corner (+3 dB at 500 Hz - 1 kHz in the recordings)
-    const double q = 0.9 + 0.6 * amount;
+    const double q = 0.9 + 2.4 * amount * (1.0 - amount);
     for (int start = 0; start < frames; start += kControlFrames) {
         const int n = std::min(kControlFrames, frames - start);
         m_cutoff = glide(m_cutoff, target, 0.05, n, m_sampleRate);

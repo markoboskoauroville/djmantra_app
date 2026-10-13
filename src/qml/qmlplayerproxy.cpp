@@ -278,6 +278,11 @@ int QmlPlayerProxy::getWaveformLength() const {
 }
 
 void QmlPlayerProxy::buildFineWave(const TrackPointer& pTrack) {
+    // round 39: the load signal came twice and two threads decoded the same song
+    if (pTrack && pTrack == m_fineWaveTrack) {
+        return;
+    }
+    m_fineWaveTrack = pTrack;
     const int request = ++m_fineWaveRequest;
     m_fineWave = QImage();
     m_fineWaveLength = 0;

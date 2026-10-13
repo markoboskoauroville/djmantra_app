@@ -12,3 +12,7 @@ load to the log line on the Pixel, and any stutter while it is built (CPU, xruns
 Flanger: the slider = width (sweep depth); Underwater: left = open, middle = djay's, right = ~700 Hz; Cooldown: right
 of ~60 % the deck fades out. Echo Out 1 beat vs 2 beats (log `FX: deck 1 ECHO OUT 1 beats`). The chooser opens above
 the button, nothing cut. Record Underwater and Cooldown at left / middle / right.
+## 3. V31: the fine wave is built once per song (V30: twice, two threads); Underwater's right end 400 Hz with no
+resonance bump there (V30 measured ~2 kHz), the middle ~4 kHz (simulated on djay's audio: 6-16 kHz -10.9 vs djay -8.5).
+Record Underwater right and Cooldown left / middle / right again (with the FX state clear: say when each tap was
+made and which log lines appeared; if a tap leaves no `FX:` line, note where on the screen it landed).

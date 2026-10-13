@@ -44,7 +44,7 @@ TEST(DjayFxTest, UnderwaterKeepsTheLowsAndDrownsTheHighs) {
     const auto highs = run(high, sine(5000, frames), 1.0, 1.0);
     EXPECT_GT(rms(lows, frames / 2, frames), 0.3);
     EXPECT_LT(rms(highs, frames / 2, frames), 0.01);
-    EXPECT_NEAR(djmantra::Underwater::cutoffFor(0.5), 4870, 100); // djay's middle
+    EXPECT_NEAR(djmantra::Underwater::cutoffFor(0.5), 3950, 100); // djay's middle
 }
 
 TEST(DjayFxTest, UnderwaterDryIsUnchanged) {
