@@ -3,7 +3,13 @@
 #include <QBuffer>
 #include <QDateTime>
 
+#include <QCoreApplication>
+#include <QPointer>
+#include <QTimer>
+#include <thread>
+
 #include "mixer/basetrackplayer.h"
+#include "qml/finewave.h"
 #include "moc_qmlplayerproxy.cpp"
 #include "qml/asyncimageprovider.h"
 
@@ -138,6 +144,7 @@ void QmlPlayerProxy::slotTrackLoaded(TrackPointer pTrack) {
         m_lastTextureMs = -1;
         slotWaveformChanged();
     }
+    buildFineWave(pTrack);
     emit trackChanged();
     emit trackLoaded();
 }
@@ -268,6 +275,48 @@ int QmlPlayerProxy::getWaveformLength() const {
         }
     }
     return 0;
+}
+
+void QmlPlayerProxy::buildFineWave(const TrackPointer& pTrack) {
+    const int request = ++m_fineWaveRequest;
+    m_fineWave = QImage();
+    m_fineWaveLength = 0;
+    emit fineWaveChanged();
+    if (!pTrack) {
+        return;
+    }
+    // after the load's own work (the engine reads, the analysis), at a low priority
+    QPointer<QmlPlayerProxy> self(this);
+    QTimer::singleShot(3000, this, [self, pTrack, request] {
+        if (!self || self->m_fineWaveRequest != request) {
+            return;
+        }
+        std::thread([self, pTrack, request] {
+            djmantra::FineWave wave = djmantra::FineWave::build(pTrack);
+            QMetaObject::invokeMethod(
+                    qApp,
+                    [self, request, wave]() {
+                        if (!self || self->m_fineWaveRequest != request) {
+                            return;
+                        }
+                        self->m_fineWave = wave.image;
+                        self->m_fineWaveLength = wave.length;
+                        emit self->fineWaveChanged();
+                    },
+                    Qt::QueuedConnection);
+        }).detach();
+    });
+}
+
+QString QmlPlayerProxy::getFineWaveTexture() const {
+    if (m_fineWave.isNull()) {
+        return QString();
+    }
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    m_fineWave.save(&buffer, "png");
+    return QStringLiteral("data:image/png;base64,") + QString::fromLatin1(byteArray.toBase64());
 }
 
 QString QmlPlayerProxy::getWaveformTexture() const {

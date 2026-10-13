@@ -22,6 +22,14 @@ ShaderEffect {
     // how far the loud parts reach (1 = the lane's edge)
     property real heightGain: 1.0
     property Image waveformTexture
+    // Marko 13.10.2026: the real sound wave at deep zoom (qml/finewave.h); 0 = not built
+    property int fineLength: root.deckPlayer.fineWaveLength
+    property int fineStride: 4096
+    property Image fineTexture: Image {
+        visible: false
+        layer.enabled: false
+        source: root.deckPlayer.fineWaveTexture
+    }
 
     fragmentShader: "qrc:/shaders/djaysignal_qml.frag.qsb"
 

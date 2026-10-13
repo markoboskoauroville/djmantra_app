@@ -29,9 +29,22 @@ layout(std140, binding = 0) uniform buf {
     float highGain;
     float firstVisualIndex;
     float lastVisualIndex;
+    int fineLength;    // the real wave's points (0 = not built yet), qml/finewave.h
+    int fineStride;
 };
 
 layout(binding = 1) uniform sampler2D waveformTexture;
+// the real wave: R = min, G = max (0.5 = silence), mono, scaled to the song's peak
+layout(binding = 2) uniform sampler2D fineTexture;
+
+vec2 fineAt(float point) {
+    point = clamp(point, 0.0, float(fineLength - 1));
+    float row = floor(point / float(fineStride));
+    float col = point - row * float(fineStride);
+    float rows = ceil(float(fineLength) / float(fineStride));
+    vec4 t = texture(fineTexture, vec2((col + 0.5) / float(fineStride), (row + 0.5) / rows));
+    return vec2(t.r, t.g) * 2.0 - 1.0;
+}
 
 vec4 getWaveformData(float position) {
     vec2 uv_data;
@@ -98,6 +111,34 @@ void main(void) {
             outputColor = vec4(colour * a, a);
         }
     }
+    // Marko 13.10.2026 (djay's deep zoom): when a pixel holds fewer than ~3 points of
+    // the real wave, the signed wave itself takes over (each kick's wiggle), in the
+    // same colour, as a line between the min and the max of the points it covers
+    if (fineLength > 0 && outputColor.a >= 0.0) {
+        float pointsPerPixel = float(fineLength) / max(framebufferSize.x, 1.0);
+        float weight = clamp((3.0 - pointsPerPixel) / 1.5, 0.0, 1.0);
+        if (weight > 0.0) {
+            float point = uv.x * float(fineLength);
+            vec2 a = fineAt(floor(point - 0.5 * pointsPerPixel));
+            vec2 b = fineAt(floor(point + 0.5 * pointsPerPixel));
+            float lo = min(a.x, b.x);
+            float hi = max(a.y, b.y);
+            float y = (0.5 - uv.y) * 2.0 / max(heightGain, 0.05);
+            float px = 2.0 / max(framebufferSize.y, 1.0) / max(heightGain, 0.05);
+            vec4 waveColor = vec4(0.0);
+            if (y >= lo - 1.5 * px && y <= hi + 1.5 * px) {
+                float idx2 = floor(firstVisualIndex + uv.x * (lastVisualIndex - firstVisualIndex)) * 2.0;
+                vec4 d = (getWaveformData(idx2) + getWaveformData(idx2 + 1.0)) * 0.5;
+                d.w = max(d.x, max(d.y, d.z));
+                vec3 c = djayColor(d * levelGain);
+                float l = dot(c, vec3(0.299, 0.587, 0.114));
+                c = clamp(vec3(l) + (c - vec3(l)) * 1.4, 0.0, 1.0);
+                waveColor = vec4(c * 0.9, 0.9);
+            }
+            outputColor = mix(outputColor, waveColor, weight);
+        }
+    }
+
     // the middle line, thin
     if (outputColor.a == 0.0 && abs(framebufferSize.y / 2.0 - gl_FragCoord.y) <= 0.5) {
         outputColor = vec4(axesColor.rgb * axesColor.a, axesColor.a);

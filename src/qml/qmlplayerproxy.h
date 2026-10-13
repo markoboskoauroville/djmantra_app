@@ -44,6 +44,9 @@ class QmlPlayerProxy : public QObject {
                     waveformTextureSizeChanged)
     Q_PROPERTY(int waveformTextureStride READ getWaveformTextureStride NOTIFY
                     waveformTextureStrideChanged)
+    // DJ Mantra: the real sound wave for the deep zoom (qml/finewave.h)
+    Q_PROPERTY(QString fineWaveTexture READ getFineWaveTexture NOTIFY fineWaveChanged)
+    Q_PROPERTY(int fineWaveLength READ getFineWaveLength NOTIFY fineWaveChanged)
 
     Q_PROPERTY(mixxx::qml::QmlBeatsModel* beatsModel MEMBER m_pBeatsModel CONSTANT);
     Q_PROPERTY(mixxx::qml::QmlCuesModel* hotcuesModel MEMBER m_pHotcuesModel CONSTANT);
@@ -73,6 +76,10 @@ class QmlPlayerProxy : public QObject {
     QString getWaveformTexture() const;
     int getWaveformTextureSize() const;
     int getWaveformTextureStride() const;
+    QString getFineWaveTexture() const;
+    int getFineWaveLength() const {
+        return m_fineWaveLength;
+    }
 
     /// Needed for interacting with the raw track player object.
     BaseTrackPlayer* internalTrackPlayer() const {
@@ -133,9 +140,14 @@ class QmlPlayerProxy : public QObject {
     void waveformTextureChanged();
     void waveformTextureSizeChanged();
     void waveformTextureStrideChanged();
+    void fineWaveChanged();
 
   private:
     QImage m_waveformTexture;
+    QImage m_fineWave;
+    int m_fineWaveLength = 0;
+    int m_fineWaveRequest = 0; // the newest load; older builds are dropped
+    void buildFineWave(const TrackPointer& pTrack);
     qint64 m_lastTextureMs = -1; // DJ Mantra: the last texture build (throttle)
     QPointer<BaseTrackPlayer> m_pTrackPlayer;
     TrackPointer m_pCurrentTrack;

@@ -20,6 +20,7 @@ Item {
     // both decks' EQ mode (EqualizerRack1_[ChannelN]_Effect1, button_parameter4)
     readonly property bool stems: stems1.value > 0
     property int chooserDeck: 0 // the deck whose FX chooser is open, 0 = none
+    readonly property int chooserEffect: chooserDeck > 0 ? effectIndex(chooserDeck) : -1
     property real chooserX: 0
     property real chooserY: 0
 
@@ -169,7 +170,7 @@ Item {
                             const p = fxButton.mapToItem(root, 0, 0);
                             root.chooserX = Math.max(Style.gap, Math.min(root.width - fxChooser.width - Style.gap,
                                     deck.index === 0 ? p.x : p.x + fxButton.width - fxChooser.width));
-                            root.chooserY = Math.max(Style.gap, p.y - fxChooser.height - 4);
+                            root.chooserY = p.y; // the chooser opens above this
                             root.chooserDeck = deck.number;
                         }
                         onClicked: {
@@ -285,7 +286,8 @@ Item {
         objectName: "fxChooser"
         visible: root.chooserDeck > 0
         x: root.chooserX
-        y: root.chooserY
+        // above the FX button, whatever its height (the depth row adds to it)
+        y: Math.max(Style.gap, root.chooserY - height - 4)
         width: 170
         height: fxItems.height + 12
         radius: Style.radius
@@ -319,6 +321,61 @@ Item {
                         // choosing turns it on, as in djay
                         Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + n + "_Effect1]", root.fxKey(index), 1);
                         root.chooserDeck = 0;
+                    }
+                }
+            }
+
+            // Marko 13.10.2026: the depth of the deck's effect (djay's slider): Flanger
+            // = its width, Underwater / Cooldown = amount (0.5 = djay's middle; Cooldown
+            // fades the deck out at the right end), Echo Out = 1 or 2 beats
+            Text {
+                visible: root.chooserDeck > 0
+                width: 158
+                horizontalAlignment: Text.AlignHCenter
+                text: root.chooserEffect === 3 ? qsTr("ECHO") : qsTr("DEPTH")
+                color: Style.subText
+                font.pixelSize: 11
+                font.bold: true
+            }
+
+            DFader {
+                objectName: "fxDepth"
+                visible: root.chooserDeck > 0 && root.chooserEffect !== 3
+                width: 158
+                height: 36
+                vertical: false
+                group: "[EffectRack1_EffectUnit" + Math.max(1, root.chooserDeck) + "_Effect1]"
+                key: root.chooserEffect === 0 ? "parameter2" : "parameter1"
+                barColor: Style.accent
+            }
+
+            Row {
+                visible: root.chooserDeck > 0 && root.chooserEffect === 3
+                spacing: 4
+
+                Mixxx.ControlProxy {
+                    id: echoBeats
+
+                    group: "[EffectRack1_EffectUnit" + Math.max(1, root.chooserDeck) + "_Effect1]"
+                    key: "parameter1"
+                }
+
+                Repeater {
+                    model: [1, 2]
+
+                    delegate: DButton {
+                        required property int modelData
+
+                        width: 77
+                        height: 36
+                        mode: ""
+                        text: modelData === 1 ? qsTr("1 BEAT") : qsTr("2 BEATS")
+                        fontSize: 12
+                        lit: Math.round(echoBeats.value) === modelData
+                        onClicked: {
+                            echoBeats.value = modelData;
+                            Mixxx.DJMantra.log("FX: deck " + root.chooserDeck + " ECHO OUT " + modelData + " beats");
+                        }
                     }
                 }
             }
