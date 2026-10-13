@@ -112,3 +112,32 @@ Output rate: 14236 frames/s of 48000 , 2 channels      (and 14138)
   platform: my conclusion "it is our stream" above was wrong. DJ Mantra's 0.30x may be the platform's 0.54x plus our
   callback pattern.
 - (YouTube showed "Allow YouTube to send you notifications?": left unanswered for Marko.)
+
+## V26 (8733cea), 19:30-19:36
+### Part 13: format variants on the CQ - all ~0.3x
+```
+Could not open 16 channels ( "ErrorOutOfRange" ), trying 2
+... reopening without MMAP (PerformanceMode None); Sound buffer: 16384 of 16384; burst 8192
+19:31:03 Output rate: 13648 of 48000 -> Output too slow: trying variant 1   (format I16, 48000 Hz)
+19:31:19 Output rate: 14982            -> variant 2 (format I32, 48000 Hz)
+19:31:36 Output rate: 14727            -> variant 3 (format I16, 48000 Hz)
+19:31:52 Output rate: 14890
+```
+- Android's USB threads, "Frames written" deltas over 20 s windows while **our** deck played:
+  **AudioOut_D** (MIXER, USB_DEVICE, HAL frame count 480, HAL buffer 3840 bytes) +285,120 / 20 s = **14,256 frames/s**
+  (= our Output rate); **AudioOut_15** (MIXER, USB_DEVICE, HAL frame count 960, buffer 7680 bytes) unchanged.
+- With **YouTube** (round 38 correction) the audio went through **AudioOut_15** at ~26,000 frames/s.
+- So Android has two USB output threads for the CQ: ours lands on AudioOut_D (480-frame periods) at 0.30x,
+  YouTube's on AudioOut_15 (960-frame periods) at 0.54x. Both slow; the one with the longer period is faster:
+  the CQ's USB seems to accept a fixed number of HAL writes per second, not frames.
+  (AudioOut_D is likely the "fast"/low-latency USB mix port, AudioOut_15 the normal one; our stream may be
+  routed to the fast one because of its usage / flags.)
+### Part 14: Echo Out diagnostics - the effect itself logs nothing
+```
+19:35:35.107 FX: deck 1 ECHO OUT on  (slot org.djmantra.effects.echoout, button_parameter1)
+19:35:39.274 FX: deck 1 ECHO OUT off (slot org.djmantra.effects.echoout, button_parameter1)
+19:35:42.444 FX: deck 1 ECHO OUT on  (...)
+19:35:46.557 FX: deck 1 ECHO OUT off (...)
+```
+No `Echo Out:` line at all from the effect (deck 1 playing): the slot's button_parameter1 is set, but the effect
+does not seem to process / log (not loaded in the chain? disabled slot? wrong parameter index?).
