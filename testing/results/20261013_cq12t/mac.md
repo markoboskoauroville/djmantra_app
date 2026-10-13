@@ -16,3 +16,13 @@ Not yet measured: Marko has to switch the mixer (Configuration -> USB -> streami
 - Screenshot works: `cqmixpad_processing.png` (PROCESSING page: Ip1/2 0 dB fader -3 dB, Ip3/4 and Ip5 off; main Ip1/2 -3 dB; USB and Bluetooth icons lit).
 - The USB streaming mode and the input sources are on the CONFIG page: reaching it needs a click. Clicking moves Marko's
   pointer, so by his rule (MANTRA_MANIFEST marko-tests.md) it waits for his "done".
+
+## CONFIG in CQ MixPad (11:40, Marko said "done" / "let it click"; nothing changed, page put back to PROCESSING)
+- **USB / SD page** (`cq_config_usb.png`): **Stream Mode = Multitrack** (Stereo the other choice), **Sample Rate = 48 kHz**
+  (96 kHz offered on the mixer; the Mac sees 48000 only at this setting), Source Point = Post Preamp.
+  Channel assignment of the mixer's sends to the computer: USB 11/12 = ST IN, 13/14 = Out5/Out6, 15/16 = Main LR.
+- **INPUTS** (`cq_config_inputs_ip12.png`, `..._ip34.png`): **Ip1/2 = Stereo Link, Input Source SD/USB**;
+  **Ip3/4 = Stereo Link, Input Source SD/USB**. So USB tracks 1-2 and 3-4 already arrive on two stereo channels:
+  nothing needed setting. Before: as found, identical (no change made).
+- On PROCESSING (earlier screenshot) Ip1/2's fader is -3 dB, **Ip3/4's fader Off**: right for a headphone-only
+  channel if Ip3/4 is sent to the headphones (PFL / an aux) and not to Main LR. To check in part B with the phone.
