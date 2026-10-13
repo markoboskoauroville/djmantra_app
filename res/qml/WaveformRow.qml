@@ -2,6 +2,7 @@ import "." as Skin
 import Mixxx 1.0 as Mixxx
 import QtQuick
 import QtQuick.Shapes 1.12
+import QtQuick.Window
 import "Theme"
 
 Item {
@@ -88,7 +89,12 @@ Item {
             root.smoothPosition = target;
             root.pendingCorrection = 0;
         } else {
-            root.pendingCorrection = target - root.smoothPosition;
+            // V38 (Marko: "as smooth as possible ... no shaking"): the engine's
+            // positions arrive with a few ms of jitter; a gap under 4 ms of song is
+            // that jitter, not drift, and is left alone (each correction is a
+            // speed wobble you can see at the deep zoom)
+            const gap = target - root.smoothPosition;
+            root.pendingCorrection = Math.abs(gap) * duration < 0.004 ? 0 : gap;
         }
     }
 
@@ -106,7 +112,9 @@ Item {
         onTriggered: {
             const dt = Math.min(frameTime, 0.05);
             const speed = rateRatioControl.value / waveformContainer.duration;
-            const step = root.pendingCorrection * 0.25;
+            // a slow pull (8 % a frame) instead of 25 %: drift is fixed within a few
+            // frames without the speed jumping when an engine update lands
+            const step = root.pendingCorrection * 0.08;
             root.pendingCorrection -= step;
             root.smoothPosition = Math.max(0, Math.min(1, root.smoothPosition + speed * dt + step));
         }
@@ -246,7 +254,11 @@ Item {
 
             width: waveformContainer.duration * effectiveZoomFactor
             height: parent.height
-            x: playMarker.screenPosition * waveformContainer.width - root.smoothPosition * width
+            // V38: on whole device pixels: a fractional position made the shader sample the
+            // waveform differently every frame (the wave shimmered) and the 1 px beat lines
+            // blur between two pixels (flicker); whole pixels move the picture as one
+            x: Math.round((playMarker.screenPosition * waveformContainer.width - root.smoothPosition * width)
+                    * Screen.devicePixelRatio) / Screen.devicePixelRatio
             visible: root.deckPlayer.isLoaded
 
             Skin.DjayWaveformShader {
@@ -359,9 +371,10 @@ Item {
                     readonly property bool bar: ((beat % perBar) + perBar) % perBar === 0
 
                     visible: Math.abs(framePosition * 2 - root.windowCenter) <= root.windowHalf * 1.6
-                    width: 1
+                    width: Math.max(1, Math.round(Screen.devicePixelRatio)) / Screen.devicePixelRatio // whole device pixels
                     height: waveform.height
-                    x: (framePosition * 2 / samplesControl.value) * waveform.width
+                    x: Math.round((framePosition * 2 / samplesControl.value) * waveform.width
+                            * Screen.devicePixelRatio) / Screen.devicePixelRatio
                     color: bar ? "#c8922c" : "#444444"
 
                     Text {

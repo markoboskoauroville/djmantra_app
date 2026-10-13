@@ -19,3 +19,8 @@ after it is opened (log `Analysis: folder ...`), and stops when it is left (`Ana
 goes on. Check: a new folder 0 % -> 100 %, leave halfway (stops), come back (goes on from where it was).
 ## 4. V36 (Marko: the waveform as the references): the Phrasing lanes thin as djay's (0.3 of the lane: every djay
 reference shows ~20-25 %, one arrow per hit); Settings -> LANE HEIGHT: THIN (djay, default) / TALL. Pairs vs djay.
+## 5. V38 smoothness (Marko: "as smooth as possible ... no flickering or shaking of lines"): the lane and its beat
+lines move on whole device pixels (no shimmer of the wave, no 1 px lines blurring between two pixels); the engine's
+position jitter (< 4 ms) no longer corrects the motion, drift is pulled in slowly (8 % a frame). Screen-record 60 fps
+at zoom 3, 0.5 and 0.04 while playing; per frame the lane's shift (should be even: e.g. 41-42 px at 0.04, never
+0 then 80); beat lines steady (no flicker); the play head still.
