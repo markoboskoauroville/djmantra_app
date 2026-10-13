@@ -203,3 +203,9 @@ Settings -> STOP TIME (OFF / 0.5 / 1 / 2 / 3 s). Deck 1 Nanana playing, PLAY pre
   level, no gap (recording continuous at -15..-18 dB). The log then prints `button [Channel1],play 0` right after
   "cancelled" though the deck plays (the log line's value looks wrong; the sound is right).
 - Not checked: a synced deck at another tempo, and the controller's PLAY (needs the Mix Ultra on).
+
+## V29: ROUND37 part 4, CPU on Phrasing with both decks playing (Nanana + 4B, lanes drawn)
+Process 40, 48, 47 % of a core (V14: 48-52, V13: 62-76). Per thread (`top -H`, 3 samples): **QtThread (render) 15, 8, 7 %**
+(V16: 18-21), AudioTrack 15, 4, 4 % (the audio callback; on the CQ route it now runs on Android's AudioTrack /
+PowerSaving variant), qtMainLoopThread 11, 0, 4 %, mali / binder 4 % now and then. `cpu_v29_phrasing_both_playing.png`.
+Note: the output is the CQ (0.55x), so the decks advance slower than real time in this measurement.
