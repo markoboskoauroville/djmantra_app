@@ -68,13 +68,23 @@ void main(void) {
         x.y *= midGain;
         x.z *= highGain;
         vec3 colour = djayColor(x);
+        // round 34 (Marko's djay screenshots of the zoomed lane): djay's lane colours
+        // are far more saturated than the fitted average (red kicks, beige mids,
+        // blue / violet highs, green breaks): 1.4x the distance from the grey (1.8
+        // turned the drops green / cyan in the cloud preview)
+        float luma = dot(colour, vec3(0.299, 0.587, 0.114));
+        colour = clamp(vec3(luma) + (colour - vec3(luma)) * 1.4, 0.0, 1.0);
+        colour = min(colour * 1.2, vec3(1.0));
         float dist = abs(uv.y - 0.5) * 2.0;
-        float outer = x.w * heightGain;
-        float inner = outer * 0.6;
-        if (dist <= inner) {
-            outputColor = vec4(min(colour * 1.15, vec3(1.0)), 1.0);
+        float outer = min(1.0, x.w * heightGain);
+        float core = outer * 0.55;
+        if (dist <= core) {
+            outputColor = vec4(colour, 1.0);
         } else if (dist <= outer) {
-            outputColor = vec4(colour * 0.6, 1.0);
+            // the outer part fades out (djay: translucent streaks, no dark outline)
+            float fade = 1.0 - (dist - core) / max(outer - core, 0.0001);
+            float a = 0.25 + 0.6 * fade;
+            outputColor = vec4(colour * a, a);
         }
     }
     // the middle line, thin

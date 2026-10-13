@@ -26,7 +26,7 @@ Item {
     // V9 djay Pro's look (DjayWaveformShader): the bands / the song's loudest level
     // (Mixxx.DJMantra.waveformLevel) and how far the loud parts reach
     property real levelGain: 1.0
-    property real heightGain: 0.22 // djay: a thin wave, hits read as arrows (round 34)
+    property real heightGain: 0.85 // djay's zoomed lane: tall arrows (Marko's screenshots)
     // V9: bar lines orange with the bar number (djay), beat lines grey. The bar of
     // each beat comes from the deck's beat_number (beats since "1") at the last
     // beat: oneSample only changes when the count does, not every frame

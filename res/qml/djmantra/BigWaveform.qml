@@ -47,9 +47,8 @@ Item {
         group: root.group
         // V9: djay Pro's look (a thin wave, WaveformRow.heightGain)
         levelGain: root.gain
-        // round 34: 0.6 looked much fuller than djay's thin band (each deck shows half
-        // of its mirrored wave)
-        heightGain: 0.35
+        // Marko's djay screenshots (zoomed lane): the wave fills ~90 % of the lane
+        heightGain: 0.9
         zoom: root.zoom
         showRoll: false
         width: root.width
