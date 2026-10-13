@@ -234,6 +234,30 @@ V3_SD = [0.258823, 0.205962, 0.18109, 0.195467, 0.280045, 0.298463, 0.354939, 0.
          0.27281, 0.264326, 0.316374, 0.358401, 0.434617, 0.334144, 0.248061, 0.119109, 0.119109, 0.716047]
 V3_THRESHOLD = 0.5
 V3_GAP = 3
+# a section only at a big change of energy (Marko 13.10.2026); = majorOnly() in sectiondetector.cpp
+MAJOR_CHANGE = 0.5
+MAJOR_BARS = 8
+MAJOR_WEIGHT = (1.5, 1.0, 1.0)
+
+
+def major_only(b3, starts):
+    nb = len(b3)
+    bs = [k for k in starts if 0 < k < nb]
+
+    def score(i):
+        lo = bs[i - 1] if i > 0 else 0
+        hi = bs[i + 1] if i + 1 < len(bs) else nb
+        k = bs[i]
+        a = b3[max(lo, k - MAJOR_BARS):k].mean(0)
+        b = b3[k:min(hi, k + MAJOR_BARS)].mean(0)
+        return max(w * abs(np.log((b[c] + 4.0) / (a[c] + 4.0))) for c, w in enumerate(MAJOR_WEIGHT))
+    while bs:
+        s = [score(i) for i in range(len(bs))]
+        i = int(np.argmin(s))
+        if s[i] >= MAJOR_CHANGE:
+            break
+        bs.pop(i)
+    return bs
 
 
 def bar_features(b3, q):
@@ -286,7 +310,7 @@ def detector_v3(lmh, beats, n_frames):
             break
         if all(abs(i - j) >= V3_GAP for j in out):
             out.append(int(i))
-    return starts, sorted(out)
+    return starts, major_only(b3, sorted(out))
 
 
 def compare(found, truth, tol=0):

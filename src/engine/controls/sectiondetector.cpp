@@ -394,6 +394,58 @@ constexpr double kV3Sd[kV3Features] = {0.258823, 0.205962, 0.18109, 0.195467, 0.
         0.334144, 0.248061, 0.119109, 0.119109, 0.716047};
 constexpr double kV3Threshold = 0.5;
 constexpr int kV3Gap = 3;
+// DJ Mantra (Marko, 13.10.2026): a section only at a big change of energy. The v3
+// phrase starts are thinned: the start with the smallest energy change between its
+// neighbouring sections (each at most kMajorBars bars) goes, again and again, until
+// every one left changes a band by at least kMajorChange (log; the low band x1.5).
+// ~8 per song, as many as rekordbox's changes of phrase kind (intro, verse, chorus ...).
+constexpr double kMajorChange = 0.5;
+constexpr int kMajorBars = 8;
+constexpr double kMajorWeight[3] = {1.5, 1.0, 1.0};
+
+std::vector<int> majorOnly(const std::vector<Bands>& b3, std::vector<int> starts) {
+    const int nb = static_cast<int>(b3.size());
+    starts.erase(std::remove_if(starts.begin(), starts.end(),
+                         [nb](int k) { return k <= 0 || k >= nb; }),
+            starts.end());
+    const auto score = [&](size_t i) {
+        const int lo = i > 0 ? starts[i - 1] : 0;
+        const int hi = i + 1 < starts.size() ? starts[i + 1] : nb;
+        const int k = starts[i];
+        const int from = std::max(lo, k - kMajorBars);
+        const int to = std::min(hi, k + kMajorBars);
+        double best = 0;
+        for (int c = 0; c < 3; ++c) {
+            double before = 0;
+            double after = 0;
+            for (int j = from; j < k; ++j) {
+                before += b3[j][c] / (k - from);
+            }
+            for (int j = k; j < to; ++j) {
+                after += b3[j][c] / (to - k);
+            }
+            best = std::max(best,
+                    kMajorWeight[c] * std::fabs(std::log((after + kFloor) / (before + kFloor))));
+        }
+        return best;
+    };
+    while (!starts.empty()) {
+        size_t weakest = 0;
+        double weakestScore = score(0);
+        for (size_t i = 1; i < starts.size(); ++i) {
+            const double v = score(i);
+            if (v < weakestScore) {
+                weakestScore = v;
+                weakest = i;
+            }
+        }
+        if (weakestScore >= kMajorChange) {
+            break;
+        }
+        starts.erase(starts.begin() + weakest);
+    }
+    return starts;
+}
 
 } // namespace
 
@@ -569,7 +621,7 @@ QList<int> sectionBeatsV3(const std::vector<std::array<double, 3>>& points,
         }
     }
     std::sort(peaks.begin(), peaks.end());
-    for (int k : peaks) {
+    for (int k : majorOnly(b3, peaks)) {
         result.append(barBeat[k]);
     }
     return result;
