@@ -190,3 +190,16 @@ Change vs dry (`p18_echoout_djay_vs_v29.txt`), V29 vs djay:
 - 6-10 s: rms -49.5 vs -52.4, every band within 3.5 dB
 All four FX now within a few dB of djay's recordings (Flanger, Underwater, Cooldown on V25; Echo Out on V29).
 Small remaining difference: in the first 2 s djay dips the lows more and V29 the mids.
+
+## V29: ROUND35 part 4, STOP TIME - PASS
+Settings -> STOP TIME (OFF / 0.5 / 1 / 2 / 3 s). Deck 1 Nanana playing, PLAY pressed to stop, the phone's sound recorded
+(scrcpy; djmantra-test-songs `recordings/stop_time_v29/`), level / spectral centroid every 0.25 s:
+- **OFF**: no `turntable` line; the sound ends within 0.25 s.
+- **1 s**: `turntable stop [Channel1] 1 s`; the level falls -16 -> -21 -> -29 -> -45 dB and silent within ~0.75 s,
+  the centroid 870 -> 420 -> 385 Hz (the pitch falls).
+- **3 s**: `turntable stop [Channel1] 3 s`; ~2.5 s of slow-down: -17 ... -22, -25, -25, -35, -26, -35, -96 dB, centroid
+  at the end 1075 -> 822 -> 410 -> 261 Hz (the pitch falls).
+- **PLAY again during the 3 s slow-down** (1.3 s in): `turntable stop [Channel1] cancelled` and the deck plays on at its
+  level, no gap (recording continuous at -15..-18 dB). The log then prints `button [Channel1],play 0` right after
+  "cancelled" though the deck plays (the log line's value looks wrong; the sound is right).
+- Not checked: a synced deck at another tempo, and the controller's PLAY (needs the Mix Ultra on).
