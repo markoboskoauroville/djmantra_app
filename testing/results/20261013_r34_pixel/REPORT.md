@@ -21,3 +21,19 @@ Tester "mantra dj app tester"; Pixel 7 over adb Wi-Fi, portrait. 13.10.2026 14:1
 xruns 0, late 0, slowest callback 3.3-5.2 ms. Meter: C 8 %, G 5 %.
 
 ## Part 3: CQ parts - waiting: the Pixel's USB cable is on the Mac, not on the CQ.
+
+## Part 4 (V13 dad7107): thinner as djay, CPU per thread
+- **Lanes** (`v13_phrasing_lanes.png`): about half the height of V12: deck 1's arrows above the centre, deck 2's
+  below, both thin bands now; nearer djay's thin lane (`djay_nanana_zoomed_for_reference.png`), still taller than djay's.
+- **Scrub window** (`v13_scrub_window.png`) and **overview** (`v13_cmp_nanana.png`): the bright body thinner, the
+  darker outline as before; breaks and colours as djay.
+- **CPU**, Phrasing page, both decks playing: process 62, 76, 62 % (V12: 48-83 %). Per thread (`top -H`, 3 samples,
+  names from /proc/<pid>/task/<tid>/comm):
+  | thread | % of a core |
+  |---|---|
+  | qtMainLoopThread (Qt's main / GUI thread on Android) | 39, 46, 39 |
+  | QtThread (render thread) | 14, 14, 11 |
+  | AAudio_1 (the sound callback) | 11, 11, 11 |
+  | CachingReaderWorker x2 | 3.5 each, now and then |
+  | everything else (57 threads) | 0 |
+  So the main thread (QML bindings / timers / JS) costs most, not the GPU render thread or the audio.
