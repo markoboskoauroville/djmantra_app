@@ -180,8 +180,11 @@ Item {
                             if (deck.choice === 3)
                                 Mixxx.DJMantra.setControl(deck.fxGroup, "enabled", 1);
                             fxEnabled.value = fxEnabled.value > 0 ? 0 : 1;
+                            const slot = Mixxx.EffectsManager.getEffectSlot(deck.number, 1);
                             Mixxx.DJMantra.log("FX: deck " + deck.number + " " + text
-                                    + (fxEnabled.value > 0 ? " on" : " off"));
+                                    + (fxEnabled.value > 0 ? " on" : " off")
+                                    + " (slot " + (slot ? slot.effectId : "?") + ", "
+                                    + root.fxKey(deck.choice) + ")");
                         }
                     }
                     DButton { width: knobs.width; height: 40; text: "🎧"; group: deck.modelData; key: "pfl" }

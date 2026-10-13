@@ -41,3 +41,9 @@ frames x2, so one 1024-frame callback per period = 0.30x). Expect `Sound buffer:
 3.3 kHz: 6-16 kHz -28 vs djay -8.5); Cooldown fitted on djay's own recording (HP 300 Hz, LP 4 kHz 24 dB, mids kept:
 simulated on djay's dry audio -5.6/-19.3/-4.4/+0.7/-2.5/-23.0 vs djay -5.8/-15.9/-5.1/+1.5/-3.1/-27); Echo Out: the FX
 tap now also switches its slot on (V21: ON did nothing). Record all 4 again (same way) + the band table.
+## 13. V26, the CQ speed: the output measures itself after ~5 s; too slow (< 80 %) -> it reopens as 16-bit, then
+32-bit, then 16-bit at the device's own rate (log `Output too slow ... trying variant N`, `Sound output variant N:
+format ..., rate`). Report every `Output rate` line and which variant (if any) reaches ~48000; the speed by ear.
+## 14. V26, Echo Out: the log now says what the engine sees: `Echo Out: engaged true/false enable state N beats B
+mix M` (or "(no engaged parameter)") and the tap line names the slot's effect and key. Tap ECHO OUT on/off twice and
+send those lines.

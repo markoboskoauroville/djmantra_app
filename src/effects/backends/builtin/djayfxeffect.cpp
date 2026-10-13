@@ -3,6 +3,8 @@
 #include "effects/backends/effectmanifest.h"
 #include "engine/effects/engineeffectparameter.h"
 
+#include <QtDebug>
+
 void DjayFxEffectBase::loadEngineEffectParameters(
         const QMap<QString, EngineEffectParameterPointer>& parameters) {
     m_pAmount = parameters.value(parameters.contains("beats") ? "beats" : "amount");
@@ -156,10 +158,18 @@ void EchoOutEffect::processChannel(DjayFxGroupState* pState,
     const double beatSeconds = groupFeatures.beat_length.has_value()
             ? groupFeatures.beat_length->seconds
             : 0.5; // no tempo: 120 BPM
+    // round 38: Echo Out's ON did nothing on the phone: say when the engine sees it
+    const bool engaged = m_pEngaged && m_pEngaged->toBool();
+    if (engaged != pState->lastEngaged || enableState == EffectEnableState::Enabling) {
+        qInfo() << "Echo Out:" << (m_pEngaged ? "" : "(no engaged parameter)")
+                << "engaged" << engaged << "enable state" << static_cast<int>(enableState)
+                << "beats" << m_pAmount->value() << "mix" << m_pMix->value();
+        pState->lastEngaged = engaged;
+    }
     pState->echoOut.process(pInput,
             pOutput,
             static_cast<int>(engineParameters.framesPerBuffer()),
-            m_pEngaged && m_pEngaged->toBool(),
+            engaged,
             m_pAmount->value(),
             beatSeconds,
             m_pMix->value());

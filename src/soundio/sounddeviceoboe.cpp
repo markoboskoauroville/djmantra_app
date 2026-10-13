@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cfloat>
 #include <chrono>
+#include <thread>
 #include <cmath>
 #include <vector>
 
@@ -189,9 +190,10 @@ oboe::Result SoundDeviceOboe::openStream() {
             ->setPerformanceMode(m_avoidMmap ? oboe::PerformanceMode::None
                                              : oboe::PerformanceMode::LowLatency)
             ->setSharingMode(oboe::SharingMode::Shared)
-            ->setFormat(oboe::AudioFormat::Float)
+            ->setFormat(variantFormat())
             ->setChannelCount(channels)
-            ->setSampleRate(static_cast<int32_t>(m_sampleRate.value()))
+            ->setSampleRate(m_variant == 3 ? oboe::kUnspecified
+                                           : static_cast<int32_t>(m_sampleRate.value()))
             ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Medium)
             ->setFramesPerDataCallback(static_cast<int32_t>(m_configFramesPerBuffer))
             // room for 3 callbacks (round 19: the capacity was 2 callbacks)
@@ -234,6 +236,17 @@ oboe::Result SoundDeviceOboe::openStream() {
     kLogger.info() << "Sound buffer:" << (sized ? sized.value() : -1) << "of"
                    << pStream->getBufferCapacityInFrames() << "frames";
     m_streamChannels = pStream->getChannelCount();
+    // a non-float stream (a slow-output variant): the engine mixes into floats here
+    m_scratch.assign(static_cast<std::size_t>(std::max<int32_t>(pStream->getBufferCapacityInFrames(),
+                             4 * static_cast<int32_t>(m_configFramesPerBuffer)) *
+                             pStream->getChannelCount()),
+            0.0f);
+    m_rateChecked = false;
+    if (m_variant > 0) {
+        kLogger.info() << "Sound output variant" << m_variant << ": format"
+                       << oboe::convertToText(pStream->getFormat()) << ","
+                       << pStream->getSampleRate() << "Hz";
+    }
     m_pStream = pStream;
     // Tell the engine the rate the phone really plays at, as the PortAudio
     // device does: the engine kept its 44.1 kHz default while the phone
@@ -335,9 +348,32 @@ oboe::DataCallbackResult SoundDeviceOboe::onAudioReady(
         prepareCallbackThread();
         kLogger.info() << "First sound callback:" << numFrames << "frames";
     }
-    auto* pOutput = static_cast<CSAMPLE*>(pAudioData);
     const int channels = pStream->getChannelCount();
     const SINT frames = numFrames;
+    const oboe::AudioFormat format = pStream->getFormat();
+    const bool isFloat = format == oboe::AudioFormat::Float;
+    if (!isFloat && m_scratch.size() < static_cast<std::size_t>(frames * channels)) {
+        std::fill_n(static_cast<char*>(pAudioData),
+                frames * channels * pStream->getBytesPerSample(),
+                0);
+        return oboe::DataCallbackResult::Continue;
+    }
+    auto* pOutput = isFloat ? static_cast<CSAMPLE*>(pAudioData) : m_scratch.data();
+    const auto convert = [&] {
+        const SINT samples = frames * channels;
+        if (format == oboe::AudioFormat::I16) {
+            auto* pOut = static_cast<int16_t*>(pAudioData);
+            for (SINT i = 0; i < samples; ++i) {
+                pOut[i] = static_cast<int16_t>(std::lround(std::clamp(pOutput[i], -1.0f, 1.0f) * 32767.0f));
+            }
+        } else if (format == oboe::AudioFormat::I32) {
+            auto* pOut = static_cast<int32_t*>(pAudioData);
+            for (SINT i = 0; i < samples; ++i) {
+                pOut[i] = static_cast<int32_t>(std::llround(
+                        static_cast<double>(std::clamp(pOutput[i], -1.0f, 1.0f)) * 2147483647.0));
+            }
+        }
+    };
     if (!m_isClkRef) {
         // A second output: the samples the engine left in the FIFO
         const int wanted = static_cast<int>(frames) * channels;
@@ -348,6 +384,9 @@ oboe::DataCallbackResult SoundDeviceOboe::onAudioReady(
         if (got < wanted) {
             std::fill(pOutput + got, pOutput + wanted, 0.0f);
             ++m_fifoUnderflows;
+        }
+        if (!isFloat) {
+            convert();
         }
         return oboe::DataCallbackResult::Continue;
     }
@@ -368,6 +407,9 @@ oboe::DataCallbackResult SoundDeviceOboe::onAudioReady(
         ++m_callbacksLate;
     }
     logOutputLevel(pOutput, frames * channels, pStream->getSampleRate(), pStream);
+    if (!isFloat) {
+        convert();
+    }
     return oboe::DataCallbackResult::Continue;
 }
 
@@ -395,8 +437,20 @@ void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput,
         // speed on the CQ: the device took a quarter of the rate it claimed)
         const double seconds = std::chrono::duration<double>(now - m_rateStart).count();
         if (seconds > 0) {
-            kLogger.info() << "Output rate:" << static_cast<int>(m_rateFrames / seconds)
+            const double rate = m_rateFrames / seconds;
+            kLogger.info() << "Output rate:" << static_cast<int>(rate)
                            << "frames/s of" << sampleRate << "," << channels << "channels";
+            // Round 38 (the CQ-12T: 0.30x whatever the buffer): an output that takes
+            // far fewer frames than its rate is reopened in the next variant (16-bit,
+            // 32-bit, 16-bit at the device's own rate) until one runs in real time
+            if (!m_rateChecked && m_isClkRef) {
+                m_rateChecked = true;
+                if (rate < 0.8 * sampleRate && m_variant < kVariants - 1) {
+                    kLogger.warning() << "Output too slow (" << static_cast<int>(rate) << "of"
+                                      << sampleRate << "): trying variant" << (m_variant + 1);
+                    std::thread([this] { reopenNextVariant(); }).detach();
+                }
+            }
         }
         m_rateFrames = 0;
     }
@@ -413,6 +467,44 @@ void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput,
     m_levelWasAudible = m_levelPeak > 0.001f;
     m_levelPeak = 0;
     m_levelSamples = 0;
+}
+
+oboe::AudioFormat SoundDeviceOboe::variantFormat() const {
+    switch (m_variant) {
+    case 1:
+    case 3:
+        return oboe::AudioFormat::I16;
+    case 2:
+        return oboe::AudioFormat::I32;
+    default:
+        return oboe::AudioFormat::Float;
+    }
+}
+
+void SoundDeviceOboe::reopenNextVariant() {
+    // not from the callback thread: the stream is closed and opened again
+    std::shared_ptr<oboe::AudioStream> pStream;
+    {
+        const auto locker = QMutexLocker(&m_streamMutex);
+        pStream.swap(m_pStream);
+    }
+    m_closing = true;
+    if (pStream) {
+        pStream->stop();
+        pStream->close();
+    }
+    m_closing = false;
+    ++m_variant;
+    m_callbackThreadPrepared = false;
+    m_rateFrames = 0;
+    m_levelSamples = 0;
+    const oboe::Result result = openStream();
+    if (result != oboe::Result::OK) {
+        kLogger.warning() << "Variant" << m_variant << "did not open:" << resultText(result)
+                          << ", back to the first";
+        m_variant = 0;
+        openStream();
+    }
 }
 
 void SoundDeviceOboe::onErrorAfterClose(oboe::AudioStream* pStream, oboe::Result error) {

@@ -18,6 +18,7 @@ class DjayFxGroupState final : public EffectState {
     djmantra::Underwater underwater;
     djmantra::Cooldown cooldown;
     djmantra::EchoOut echoOut;
+    bool lastEngaged = false;
 };
 
 class DjayFxEffectBase : public EffectProcessorImpl<DjayFxGroupState> {
