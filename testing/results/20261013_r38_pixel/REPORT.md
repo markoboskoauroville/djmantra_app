@@ -41,3 +41,27 @@ faders and VU; **nothing overlaps, no cut labels** (Pixel 7 portrait, 411 dp). T
   **00:26 -> 00:49 in 22 s of wall time** (1.0x). Android's own MIXER thread on USB_DEVICE (2 ch, 48 kHz) plays at
   real time for another app, so the 0.3x is in DJ Mantra's stream (its AAudio settings / callback), not the platform.
 - (Whether it was audible on the CQ: not checked, MixPad meters unreliable; the speed is the point.)
+
+## Part 4: the app's FX against djay's recordings (V21) - Flanger close, Underwater / Cooldown too strong, Echo Out does nothing
+Recorded from the Pixel with scrcpy (audio capture), Nanana from 0:58 (overview tap: `jump [Channel1] to 57.86 s`),
+FX via the FX button (choose by hold, tap on at 8 s, off at 16 s; Echo Out on at 4 s, off at 16 s), D/W n/a.
+Output rate during the takes ~48,000 frames/s (MASTER = Phone default; with "Phone speaker" pinned, Android's
+playback capture got only silence, so the first attempt was void). Audio: djmantra-test-songs `fx/app_v21_20261013/`.
+Same band analysis as djay's (`p4_fx_djay_vs_app_bands.txt`), change ON minus dry in dB:
+
+| | rms | <150 | 150-400 | 400-2k | 2k-6k | 6k-16k |
+|---|---|---|---|---|---|---|
+| Flanger djay | -0.8 | -1.6 | -3.2 | +2.3 | +2.4 | -1.5 |
+| Flanger app | +0.2 | -0.1 | 0.0 | +3.2 | +1.7 | -0.2 |
+| Underwater djay | +0.1 | +0.1 | -0.7 | +2.2 | +2.1 | **-8.5** |
+| Underwater app | +0.2 | 0.0 | +0.3 | +2.8 | +1.4 | **-28.1** |
+| Cooldown djay | **-5.8** | **-15.9** | -5.1 | +1.5 | -3.1 | -27.0 |
+| Cooldown app | **-13.1** | **-32.1** | -15.1 | -4.1 | -8.1 | -24.4 |
+| Echo Out djay (2-6 s after ON) | **-21.9** | -22.8 | -19.8 | -20.0 | -20.6 | -19.3 |
+| Echo Out app | **+0.1** | -0.7 | +2.0 | +1.1 | +0.8 | +1.7 |
+
+- Flanger: close to djay (both mild band changes). OK
+- Underwater: the lowpass cuts far too much above 6 kHz (-28 vs djay -8.5); the rest matches.
+- Cooldown: about twice djay's depth (-13 vs -6 dB overall, lows -32 vs -16, low-mids -15 vs -5).
+- **Echo Out: no change at all**: the level stays at -16 dB for the 12 s it was on (`FX: deck 1 ECHO OUT on` logged);
+  djay drops ~22 dB in the same window (the song cut, echoes dying).
