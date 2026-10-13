@@ -9,6 +9,8 @@ Fixes for round 32:
 - GPU meter: the Pixel gave no GPU timestamps; now the render thread's time per frame when there are none. Log:
   `Quick: GPU meter watches the window`, `Quick: renderer <api> GPU timestamps supported / NOT supported`.
 
+- Round 32 bugs: the ✕ is drawn (two strokes; the phone's font had no ✕), the Neural Mix log says on / off the right way.
+
 ## 1. Waveform vs djay (Nanana, 4B, Brick House, Lovely Day): lanes, scrub window, overview colours. Screenshots.
 ## 2. GPU meter: the "G" value idle / both decks playing; the two log lines above.
 ## 3. Round 32 parts not done yet (3: Neural Mix, overlays, basics + CPU; 4: CQ12T part B; 5: CQ DELAY).

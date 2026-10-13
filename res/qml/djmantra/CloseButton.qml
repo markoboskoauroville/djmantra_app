@@ -6,7 +6,6 @@ import QtQuick 2.12
 DButton {
     width: 48
     height: 40
-    text: "✕"
-    fontSize: 20
+    icon: "close"
     mode: ""
 }

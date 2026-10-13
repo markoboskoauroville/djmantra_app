@@ -21,6 +21,7 @@ Rectangle {
     signal clicked()
     onLitChanged: {
         playIcon.requestPaint();
+        closeIcon.requestPaint();
         nextIcon.requestPaint();
     }
     signal pressedDown()
@@ -52,6 +53,30 @@ Rectangle {
                 radius: 2
                 color: root.lit ? Style.inkOnAccent : Style.text
             }
+        }
+    }
+
+    Canvas {
+        // "close": an ✕ of two strokes (round 32: the phone's font has no ✕ glyph)
+        id: closeIcon
+
+        anchors.centerIn: parent
+        width: root.height * 0.36
+        height: width
+        visible: root.icon === "close"
+        onVisibleChanged: requestPaint()
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.strokeStyle = String(root.lit ? Style.inkOnAccent : Style.text);
+            ctx.lineWidth = Math.max(2, width * 0.14);
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(width, height);
+            ctx.moveTo(width, 0);
+            ctx.lineTo(0, height);
+            ctx.stroke();
         }
     }
 
@@ -106,7 +131,7 @@ Rectangle {
     Text {
         anchors.fill: parent
         anchors.margins: 4
-        visible: root.icon !== "pause" && root.icon !== "next" && root.icon !== "play"
+        visible: root.icon !== "pause" && root.icon !== "next" && root.icon !== "play" && root.icon !== "close"
         text: root.text
         color: root.lit ? Style.inkOnAccent : Style.text
         font.pixelSize: root.fontSize

@@ -82,7 +82,7 @@ Item {
                         fontSize: 12
                         group: deck.eq
                         key: "button_parameter4"
-                        onClicked: Mixxx.DJMantra.log("Neural Mix " + deck.modelData + " " + (deck.stems ? "off" : "on"))
+                        onClicked: Mixxx.DJMantra.log("Neural Mix " + deck.modelData + " " + (deck.stems ? "on" : "off"))
                     }
                     DButton { width: 58; height: 36; text: "\uD83C\uDFA7"; group: deck.modelData; key: "pfl" }
                 }
