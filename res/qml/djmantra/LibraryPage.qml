@@ -120,6 +120,17 @@ Rectangle {
         Mixxx.DJMantra.noteLoaded(group);
     }
 
+    // the AutoMix tab plays this folder in the order shown (Marko 13.10.2026)
+    function songPaths() {
+        const paths = [];
+        for (let i = 0; i < songs.count; ++i) {
+            const r = songs.get(i);
+            if (!r.isFolder)
+                paths.push(r.path);
+        }
+        return paths;
+    }
+
     function sortBy(key, up) {
         sortKey = key;
         sortUp = up;

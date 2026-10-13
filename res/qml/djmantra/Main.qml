@@ -448,6 +448,14 @@ Window {
                     }
                 }
 
+                // AutoMix (Marko 13.10.2026): always made, so the mix goes on on every tab
+                AutoMixPage {
+                    objectName: "automix"
+                    library: playlistPage
+                    anchors.fill: parent
+                    visible: window.page === 4
+                }
+
                 // round 22: ~80 % CPU on every tab: a hidden tab costs nothing
                 // now, it is only made while it is shown
                 Loader {

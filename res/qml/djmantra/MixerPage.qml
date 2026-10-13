@@ -2,7 +2,7 @@ import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// The mixer, as on the Mix Ultra: per deck GAIN, HIGH, MID, LOW, FILTER, the FX
+// The mixer, as on the Mix Ultra: per deck GAIN, HIGH, MID, LOW (V34: no FILTER), the FX
 // button and the headphone button; the VU meters and the volume faders in the middle.
 // V18 (Marko 13.10.2026, djay Android): ONE "EQ" dropdown at the top switches both
 // decks' knobs (Equalizer / Neural Mix EQ: drums, vocals, harmonies); per deck ONE FX
@@ -122,7 +122,8 @@ Item {
                 readonly property string fxGroup: "[EffectRack1_EffectUnit" + number + "_Effect1]"
                 property int choice: root.effectIndex(number)
                 // knobs and two buttons share the column's height
-                readonly property real knobHeight: (knobs.height - 2 * 40 - 6 * knobs.spacing) / 5
+                // Marko 13.10.2026: the FILTER knob is gone, the rest grows (4 knobs, 2 buttons)
+                readonly property real knobHeight: (knobs.height - 2 * 52 - 5 * knobs.spacing) / 4
 
                 Mixxx.ControlProxy { id: fxEnabled; group: deck.fxGroup; key: root.fxKey(deck.choice) }
 
@@ -132,7 +133,7 @@ Item {
                 Column {
                     id: knobs
 
-                    width: 64
+                    width: 84
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
                     anchors.left: deck.index === 0 ? parent.left : undefined
@@ -140,17 +141,9 @@ Item {
                     spacing: 2
 
                     DKnob { width: knobs.width; height: deck.knobHeight; group: deck.modelData; key: "pregain"; label: "GAIN"; arcColor: Style.text }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; defaultParameter: 1; arcColor: Style.water }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; defaultParameter: 1; arcColor: Style.earth }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; defaultParameter: 1; arcColor: Style.fire }
-                    DKnob {
-                        width: knobs.width
-                        height: deck.knobHeight
-                        group: "[QuickEffectRack1_" + deck.modelData + "]"
-                        key: "super1"
-                        label: "FILTER"
-                        arcColor: Style.accent
-                    }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire }
                     DButton {
                         // tap = on / off, hold = choose the effect
                         id: fxButton
@@ -159,10 +152,10 @@ Item {
 
                         objectName: "fx" + deck.number
                         width: knobs.width
-                        height: 40
+                        height: 52
                         mode: ""
                         text: root.effects[deck.choice].name
-                        fontSize: 11
+                        fontSize: 13
                         lit: fxEnabled.value > 0
                         onPressedDown: held = false
                         onLongPressed: {
@@ -188,7 +181,7 @@ Item {
                                     + root.fxKey(deck.choice) + ")");
                         }
                     }
-                    DButton { width: knobs.width; height: 40; text: "🎧"; group: deck.modelData; key: "pfl" }
+                    DButton { width: knobs.width; height: 52; text: "🎧"; fontSize: 20; group: deck.modelData; key: "pfl" }
                 }
 
                 Connections {

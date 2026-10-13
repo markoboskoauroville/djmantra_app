@@ -3,7 +3,7 @@ import QtQuick 2.12
 
 // The bottom navigation of the horoscope app: icon + label, the selected one
 // yellow. Pages: SONGS (the playlist), PHRASING (big waveforms and beat
-// LEDs), MIXER, KEYS (Camelot wheel, key match).
+// LEDs), MIXER, KEYS (Camelot wheel, key match), AUTOMIX.
 Rectangle {
     id: root
 
@@ -17,7 +17,7 @@ Rectangle {
         anchors.fill: parent
 
         Repeater {
-            model: [qsTr("Songs"), qsTr("Phrasing"), qsTr("Mixer"), qsTr("Keys")]
+            model: [qsTr("Songs"), qsTr("Phrasing"), qsTr("Mixer"), qsTr("Keys"), qsTr("AutoMix")]
 
             delegate: Item {
                 id: tab
@@ -27,7 +27,7 @@ Rectangle {
                 readonly property color tint: root.current === index ? Style.accent : Style.subText
 
                 objectName: "tab" + index
-                width: root.width / 4
+                width: root.width / 5
                 height: root.height
 
                 Item {
@@ -92,6 +92,33 @@ Rectangle {
                                 width: 4; height: 6; radius: 1
                                 color: index === 0 ? Style.accent : tab.tint
                             }
+                        }
+                    }
+
+                    Canvas {
+                        // AutoMix: two arrows crossing over, one song into the next
+                        visible: tab.index === 4
+                        anchors.fill: parent
+                        property color ink: tab.tint
+                        onInkChanged: requestPaint()
+                        onPaint: {
+                            const ctx = getContext("2d");
+                            ctx.reset();
+                            ctx.strokeStyle = String(ink);
+                            ctx.fillStyle = String(ink);
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(1, 4);
+                            ctx.lineTo(width - 6, 4);
+                            ctx.moveTo(width - 1, height - 4);
+                            ctx.lineTo(6, height - 4);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(width - 1, 4); ctx.lineTo(width - 7, 0); ctx.lineTo(width - 7, 8);
+                            ctx.closePath();
+                            ctx.moveTo(1, height - 4); ctx.lineTo(7, height - 8); ctx.lineTo(7, height);
+                            ctx.closePath();
+                            ctx.fill();
                         }
                     }
 

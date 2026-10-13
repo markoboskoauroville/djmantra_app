@@ -27,3 +27,4 @@ UsageMeter 1.0 UsageMeter.qml
 VersionLink 1.0 VersionLink.qml
 VuBar 1.0 VuBar.qml
 WheelPage 1.0 WheelPage.qml
+AutoMixPage 1.0 AutoMixPage.qml
