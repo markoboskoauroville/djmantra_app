@@ -187,12 +187,13 @@ oboe::Result SoundDeviceOboe::openStream() {
     builder.setDirection(oboe::Direction::Output)
             // None = Android's mixer path (no MMAP): for USB interfaces whose
             // MMAP stream times out (CQ-12T, 16 channels, round 35)
-            ->setPerformanceMode(m_avoidMmap ? oboe::PerformanceMode::None
-                                             : oboe::PerformanceMode::LowLatency)
+            ->setPerformanceMode(variantPowerSaving() ? oboe::PerformanceMode::PowerSaving
+                            : m_avoidMmap                   ? oboe::PerformanceMode::None
+                                                            : oboe::PerformanceMode::LowLatency)
             ->setSharingMode(oboe::SharingMode::Shared)
             ->setFormat(variantFormat())
             ->setChannelCount(channels)
-            ->setSampleRate(m_variant == 3 ? oboe::kUnspecified
+            ->setSampleRate(m_variant == 5 ? oboe::kUnspecified
                                            : static_cast<int32_t>(m_sampleRate.value()))
             ->setSampleRateConversionQuality(oboe::SampleRateConversionQuality::Medium)
             ->setFramesPerDataCallback(static_cast<int32_t>(m_configFramesPerBuffer))
@@ -244,7 +245,8 @@ oboe::Result SoundDeviceOboe::openStream() {
     m_rateChecked = false;
     if (m_variant > 0) {
         kLogger.info() << "Sound output variant" << m_variant << ": format"
-                       << oboe::convertToText(pStream->getFormat()) << ","
+                       << oboe::convertToText(pStream->getFormat()) << ", perf"
+                       << oboe::convertToText(pStream->getPerformanceMode()) << ","
                        << pStream->getSampleRate() << "Hz";
     }
     m_pStream = pStream;
@@ -441,8 +443,8 @@ void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput,
             kLogger.info() << "Output rate:" << static_cast<int>(rate)
                            << "frames/s of" << sampleRate << "," << channels << "channels";
             // Round 38 (the CQ-12T: 0.30x whatever the buffer): an output that takes
-            // far fewer frames than its rate is reopened in the next variant (16-bit,
-            // 32-bit, 16-bit at the device's own rate) until one runs in real time
+            // far fewer frames than its rate is reopened in the next variant (see
+            // variantFormat()) until one runs in real time
             if (!m_rateChecked && m_isClkRef) {
                 m_rateChecked = true;
                 if (rate < 0.8 * sampleRate && m_variant < kVariants - 1) {
@@ -469,16 +471,25 @@ void SoundDeviceOboe::logOutputLevel(const CSAMPLE* pOutput,
     m_levelSamples = 0;
 }
 
+// Round 38 (the CQ-12T): Android's USB path takes a fixed number of writes a second
+// (a mix port with 960-frame periods ran ~2x the 480-frame one), so the deep buffer
+// (PowerSaving) comes first: 1 PowerSaving float, 2 PowerSaving 16-bit, 3 16-bit,
+// 4 32-bit, 5 16-bit at the device's rate
 oboe::AudioFormat SoundDeviceOboe::variantFormat() const {
     switch (m_variant) {
-    case 1:
-    case 3:
-        return oboe::AudioFormat::I16;
     case 2:
+    case 3:
+    case 5:
+        return oboe::AudioFormat::I16;
+    case 4:
         return oboe::AudioFormat::I32;
     default:
         return oboe::AudioFormat::Float;
     }
+}
+
+bool SoundDeviceOboe::variantPowerSaving() const {
+    return m_variant == 1 || m_variant == 2;
 }
 
 void SoundDeviceOboe::reopenNextVariant() {

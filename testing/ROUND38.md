@@ -47,3 +47,9 @@ format ..., rate`). Report every `Output rate` line and which variant (if any) r
 ## 14. V26, Echo Out: the log now says what the engine sees: `Echo Out: engaged true/false enable state N beats B
 mix M` (or "(no engaged parameter)") and the tap line names the slot's effect and key. Tap ECHO OUT on/off twice and
 send those lines.
+## 15. V27, Echo Out: the cause found: the app set controls with ControlObject::set(), which an effect slot never
+hears (Mixxx skips the sender itself), so Echo Out's slot never ran (no `Echo Out:` line). Now set through a proxy.
+Expect `Echo Out: ... engaged false enable state 1 ...` when ECHO OUT is chosen, `engaged true` on the tap, the song
+cut at once into its last 2 beats repeating quieter, `engaged false` = the song back. Record it as before.
+## 16. V27, the CQ: the variants now start with Android's deep buffer (PowerSaving: 1 float, 2 16-bit), then 16-bit,
+32-bit, device rate. Send every `Output rate` / `variant` line and the USB MIXER thread (AudioOut_*) each variant gets.

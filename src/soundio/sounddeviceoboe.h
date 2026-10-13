@@ -85,13 +85,14 @@ class SoundDeviceOboe : public SoundDevice,
     // a USB interface's own channel count did not open: only the needed ones
     bool m_twoChannelsOnly = false;
     std::atomic<int> m_streamChannels{2}; // the open stream's channels
-    // round 38: an output that runs slow is reopened as 16-bit, 32-bit, then 16-bit at
-    // the device's rate (variants 1-3); 0 = float at the engine's rate
-    static constexpr int kVariants = 4;
+    // round 38: an output that runs slow is reopened in variants 1-5 (deep buffer,
+    // 16-bit, 32-bit, the device's rate; sounddeviceoboe.cpp variantFormat())
+    static constexpr int kVariants = 6;
     std::atomic<int> m_variant{0};
     bool m_rateChecked = false;
     std::vector<CSAMPLE> m_scratch;
     oboe::AudioFormat variantFormat() const;
+    bool variantPowerSaving() const;
     void reopenNextVariant();
     long long m_rateFrames = 0;
     std::chrono::steady_clock::time_point m_rateStart;

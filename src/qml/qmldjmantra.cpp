@@ -926,12 +926,15 @@ void QmlDJMantra::log(const QString& text) const {
 }
 
 bool QmlDJMantra::setControl(const QString& group, const QString& key, double value) const {
-    ControlObject* pControl = ControlObject::getControl(ConfigKey(group, key), ControlFlag::NoWarnIfMissing);
-    if (!pControl) {
+    // Through a proxy, as a controller or QML does: ControlObject::set() names the
+    // object itself as the sender, so its owner (an effect slot's "enabled", a unit's
+    // routing) never hears of the change (round 38: Echo Out never ran)
+    ControlProxy proxy(ConfigKey(group, key), nullptr, ControlFlag::NoWarnIfMissing);
+    if (!proxy.valid()) {
         qWarning() << "setControl: no control" << group << key;
         return false;
     }
-    pControl->set(value);
+    proxy.set(value);
     return true;
 }
 
