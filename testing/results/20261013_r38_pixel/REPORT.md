@@ -166,3 +166,18 @@ Recorded (scrcpy, Nanana 0:58, ON at 4.2 s, OFF at 16.4 s; djmantra-test-songs `
 Band change vs dry (`p15_echoout_djay_vs_v27.txt`): 2-6 s after ON djay -21.9 dB, V27 -17.6; 6-10 s djay -52.4,
 V27 -36.7: **djay dies faster (~7.5 dB/s vs ~5 dB/s)**; the first 2 s: djay drops the lows more (-7 vs -2 dB at <150 Hz),
 V27 the mids (-7 at 400-2k).
+
+## V28 (abefba6), 20:21-20:26 - part 17
+### The CQ keeps the fastest variant - PASS (at Android's 0.55x ceiling)
+- Variants as V27 (1: Float PowerSaving 27,813; 2: I16 PowerSaving 27,237; 3-5 perf None ~14,700), then
+  `No variant runs in real time; keeping variant 1 ( 27813 frames/s)`, and it stays: 27,735, 25,894, 26,130, 25,758,
+  25,568, 25,560 frames/s (0.53-0.58x). 122 s of play = 54 s of song (the first 67 s include the variant search).
+### Echo Out decay - now faster and thinner than djay
+Per second after ON (4.2 s): -18, -23, -31, -39, -48, -55, -62, -70, -79, -87, -94, -105 (~8 dB/s); OFF -> -24 / -16.
+Band change vs dry (`p17_echoout_djay_vs_v28.txt`), V28 vs djay:
+- 0-2 s after ON: rms -10.4 vs -4.4; lows (<150) -16.8 vs -7.1
+- 2-6 s: rms -33.9 vs -21.9; lows **-59.1 vs -22.8**
+- 6-10 s: rms -63.9 vs -52.4; lows -97.3 vs -54.5
+So V28 overshoots: ~8 dB/s vs djay's ~7.5 is close, but it starts ~6 dB lower in the first 2 s and the lows are
+thinned far more than djay's (djay keeps the lows at the same level as the other bands while it dies).
+(V27 was the other way: ~5 dB/s, lows kept.) Halfway between, with lows kept like the other bands, would match.
