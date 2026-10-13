@@ -5,7 +5,18 @@ stops; the newest state wins over older notes. Last update: **2026-10-12 07:15 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 13.10.2026 late night (latest): V30-V33, stopping for the night
+## 13.10.2026 after midnight (latest): V34-V36 built untested, the cloud emulator
+
+- V34 (Marko): MIXER without FILTER, bigger knobs / buttons; double tap on EQ knobs = middle (0 dB; was the
+  maximum); a 5th tab AUTOMIX (res/qml/djmantra/AutoMixPage.qml, always alive in Main.qml): the Songs tab's
+  folder in its sort order (LibraryPage.songPaths()), beat-synced crossfades over 4-64 beats with a bass swap,
+  the next song loaded. V35: the Songs header = songs, total time, % analysed in the matrix font (MatrixText.qml);
+  the analysis only in the open folder, 3 s after opening, stopped when left (QmlDJMantra::stopAnalysis).
+  V36: the lanes thin as djay (heightGain 0.3), Settings -> LANE HEIGHT THIN / TALL. Test plan: testing/ROUND40.md.
+- Marko asked to test in a Pixel 7 emulator in the cloud overnight: /root/android-sdk (API 34 google_apis x86_64,
+  AVD pixel7, -accel off: no KVM here, very slow). Use the x86_64 APK artifact from the Android CI run.
+
+## 13.10.2026 late night: V30-V33, stopping for the night
 
 - V30: the real sound wave at deep zoom (src/qml/finewave.*: a background decode, ~2000 signed points a second,
   texture binding 2 in res/shaders/djaysignal_qml.frag) and the FX depth slider / Echo Out 1-2 beats in the FX
