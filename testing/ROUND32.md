@@ -12,6 +12,8 @@ Build: V10 (android-latest shows "V10"). Fixes for round 31:
 ## 1. Waveform vs djay Pro (as round 31 part 1): overview colours and spikes; the Phrasing lanes and the scrub
 window now show the thin mirrored wave with coloured arrows. Screenshots side by side with djay (Nanana, 4B,
 Brick House, Lovely Day). Log: `waveform shader [ChannelN]: compiled` (or `ERROR <Qt's message>`: then the classic waveform shows instead; send me the line).
+## 1b. PLAY and NEXT look alike (Marko): PLAY's triangle drawn as NEXT's (same size and fill), pause bars as before;
+screenshot both decks' buttons, playing and paused.
 ## 2. GPU meter: the "G" number moves (idle vs both decks playing on the Phrasing page). Which log line says the
 source? Compare with `adb shell cat /sys/devices/platform/*.mali/utilization` (as shell) while playing.
 ## 3. Round 31's parts 1b (Neural Mix), 1c (every overlay closes with ✕ / back), 2 (basics, CPU).
