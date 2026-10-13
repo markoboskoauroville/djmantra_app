@@ -5,6 +5,7 @@
 #include "effects/backends/builtin/bessel4lvmixeqeffect.h"
 #include "effects/backends/builtin/bessel8lvmixeqeffect.h"
 #include "effects/backends/builtin/biquadfullkilleqeffect.h"
+#include "effects/backends/builtin/stemeqeffect.h"
 #include "effects/backends/builtin/bitcrushereffect.h"
 #include "effects/backends/builtin/filtereffect.h"
 #include "effects/backends/builtin/flangereffect.h"
@@ -38,6 +39,7 @@ BuiltInBackend::BuiltInBackend() {
     registerEffect<LinkwitzRiley8EQEffect>();
     registerEffect<ThreeBandBiquadEQEffect>();
     registerEffect<BiquadFullKillEQEffect>();
+    registerEffect<StemEQEffect>();
     // Compensations EQs
     registerEffect<GraphicEQEffect>();
     registerEffect<ParametricEQEffect>();

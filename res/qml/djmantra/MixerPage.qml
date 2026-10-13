@@ -1,4 +1,5 @@
 import "."
+import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
 // The mixer, as on the Mix Ultra: per deck GAIN, HIGH, MID, LOW, FILTER and
@@ -20,6 +21,11 @@ Item {
                 required property string modelData
                 required property int index
                 readonly property string eq: "[EqualizerRack1_" + modelData + "_Effect1]"
+                // V9 Neural Mix (as djay Pro): the EQ's STEMS button turns the knobs
+                // into drums / vocals / harmonies (src/effects/backends/builtin/stemeq.h)
+                readonly property bool stems: stemsControl.value > 0
+
+                Mixxx.ControlProxy { id: stemsControl; group: deck.eq; key: "button_parameter4" }
 
                 width: (root.width - 3 * Style.gap) / 2
                 height: root.height - 2 * Style.gap
@@ -34,17 +40,28 @@ Item {
                     anchors.right: deck.index === 1 ? parent.right : undefined
                     spacing: 2
 
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.modelData; key: "pregain"; label: "GAIN"; arcColor: Style.text }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter3"; label: "HIGH"; defaultParameter: 1; arcColor: Style.water }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter2"; label: "MID"; defaultParameter: 1; arcColor: Style.earth }
-                    DKnob { width: 58; height: (knobs.height - 46) / 5; group: deck.eq; key: "parameter1"; label: "LOW"; defaultParameter: 1; arcColor: Style.fire }
+                    DKnob { width: 58; height: (knobs.height - 84) / 5; group: deck.modelData; key: "pregain"; label: "GAIN"; arcColor: Style.text }
+                    DKnob { width: 58; height: (knobs.height - 84) / 5; group: deck.eq; key: "parameter3"; label: deck.stems ? "HARMONY" : "HIGH"; defaultParameter: 1; arcColor: Style.water }
+                    DKnob { width: 58; height: (knobs.height - 84) / 5; group: deck.eq; key: "parameter2"; label: deck.stems ? "VOCALS" : "MID"; defaultParameter: 1; arcColor: Style.earth }
+                    DKnob { width: 58; height: (knobs.height - 84) / 5; group: deck.eq; key: "parameter1"; label: deck.stems ? "DRUMS" : "LOW"; defaultParameter: 1; arcColor: Style.fire }
                     DKnob {
                         width: 58
-                        height: (knobs.height - 46) / 5
+                        height: (knobs.height - 84) / 5
                         group: "[QuickEffectRack1_" + deck.modelData + "]"
                         key: "super1"
                         label: "FILTER"
                         arcColor: Style.accent
+                    }
+                    DButton {
+                        // EQ <-> NEURAL MIX
+                        objectName: "neuralMix" + deck.index
+                        width: 58
+                        height: 36
+                        text: deck.stems ? "NEURAL" : "EQ"
+                        fontSize: 12
+                        group: deck.eq
+                        key: "button_parameter4"
+                        onClicked: Mixxx.DJMantra.log("Neural Mix " + deck.modelData + " " + (deck.stems ? "off" : "on"))
                     }
                     DButton { width: 58; height: 36; text: "\uD83C\uDFA7"; group: deck.modelData; key: "pfl" }
                 }

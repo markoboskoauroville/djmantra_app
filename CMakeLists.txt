@@ -846,6 +846,8 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/effects/backends/builtin/bessel4lvmixeqeffect.cpp
   src/effects/backends/builtin/bessel8lvmixeqeffect.cpp
   src/effects/backends/builtin/biquadfullkilleqeffect.cpp
+  src/effects/backends/builtin/stemeq.cpp
+  src/effects/backends/builtin/stemeqeffect.cpp
   src/effects/backends/builtin/bitcrushereffect.cpp
   src/effects/backends/builtin/builtinbackend.cpp
   src/effects/backends/builtin/distortioneffect.cpp
@@ -2382,6 +2384,7 @@ if(BUILD_TESTING)
     src/test/folderfeature_test.cpp
     src/test/externalcontent_test.cpp
     src/test/phrasecontrol_test.cpp
+    src/test/stemeq_test.cpp
     src/test/camelot_test.cpp
     src/test/brandtranslator_test.cpp
     src/test/androidmidicontroller_test.cpp

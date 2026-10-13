@@ -6,6 +6,7 @@
 #include <QMessageBox>
 
 #include "effects/backends/builtin/biquadfullkilleqeffect.h"
+#include "effects/backends/builtin/stemeqeffect.h"
 #include "effects/backends/builtin/filtereffect.h"
 #include "effects/backends/effectmanifest.h"
 #include "effects/effectchain.h"
@@ -685,8 +686,14 @@ EffectChainPresetPointer EffectChainPresetManager::createEmptyNamelessChainPrese
 }
 
 EffectManifestPointer EffectChainPresetManager::getDefaultEqEffect() {
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: the deck EQ with the Neural Mix mode (stemeqeffect.h)
+    EffectManifestPointer pDefaultEqEffect = m_pBackendManager->getManifest(
+            StemEQEffect::getId(), EffectBackendType::BuiltIn);
+#else
     EffectManifestPointer pDefaultEqEffect = m_pBackendManager->getManifest(
             BiquadFullKillEQEffect::getId(), EffectBackendType::BuiltIn);
+#endif
     DEBUG_ASSERT(!pDefaultEqEffect.isNull());
     return pDefaultEqEffect;
 }
@@ -857,6 +864,12 @@ EffectsXmlData EffectChainPresetManager::readEffectsXml(
         }
     }
 
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: every deck has the Neural Mix EQ, whatever an older version saved
+    for (const auto& deckString : deckStrings) {
+        eqEffectManifests.insert(deckString, pDefaultEqEffect);
+    }
+#endif
     return EffectsXmlData{
             eqEffectManifests, quickEffectPresets, standardEffectChainPresets, mainEqPreset};
 }
