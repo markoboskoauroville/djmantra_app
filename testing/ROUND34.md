@@ -14,3 +14,7 @@ first time on the phone too (a new file): the wave appears when the analysis end
 ## 4. (V13) Thinner as djay: lanes 0.35 / scrub 0.22 of the height, the overview's body 0.6 of before. Screenshots
 vs djay. CPU: `top -H -n 1 -b -p $(pidof com.djmantra.app)` on the Phrasing page, both playing: which threads
 use the most (render / main / audio / analysis)?
+
+## 5. (V14) CPU: the matrix display paints only its lit dots (the unlit grid and dim cells once, as a layer):
+the same per-thread `top -H` on the Phrasing page, both playing; and on the Songs and Mixer pages. The matrix must
+look exactly as before (screenshot).

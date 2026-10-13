@@ -10,7 +10,7 @@ import QtQuick 2.12
 //   the running lights: one LED cell per beat of the phrase (8 / 16 / 32),
 //   bars set apart, beat 1 yellow. A tap on a cell launches that beat
 //   (cellTapped); an armed cell blinks until its start.
-Canvas {
+Item {
     id: root
 
     // [{remaining, barBeat, countdown, beat, cells, armed, color}] per deck
@@ -23,8 +23,9 @@ Canvas {
     readonly property int columns: Math.floor(width / pitch)
     readonly property color glass: "#04060e"
     readonly property color unlit: "#121735"
+    readonly property string dimCell: "#252d5c"
+    readonly property string dimFirst: "#4a4326"
     signal cellTapped(int deck, int cell)
-
 
     // where the cells are: the first column of each and their width; a
     // 1-dot gap between beats, 3 between bars (4 beats)
@@ -50,6 +51,12 @@ Canvas {
         return false;
     }
 
+    function dotAt(ctx, x, y) {
+        const p = pitch;
+        const dot = p * 0.78;
+        ctx.fillRect(x * p + (p - dot) / 2, y * p + (p - dot) / 2, dot, dot);
+    }
+
     Timer {
         // an armed cell blinks
         interval: 250
@@ -57,7 +64,7 @@ Canvas {
         running: root.anyArmed()
         onTriggered: {
             root.blink = !root.blink;
-            root.requestPaint();
+            lights.requestPaint();
         }
     }
 
@@ -83,64 +90,98 @@ Canvas {
     // Paint only when what it shows changed (round 18: ~100 % of a core; the
     // deck info is rebuilt on every play position update, many times a second)
     property string shown: ""
+    property string gridShown: ""
     onDecksChanged: {
         const now = JSON.stringify(decks);
         if (now !== shown) {
             shown = now;
-            requestPaint();
+            lights.requestPaint();
+        }
+        const cells = decks.map(d => d.cells).join(",");
+        if (cells !== gridShown) {
+            gridShown = cells;
+            grid.requestPaint();
         }
     }
-    onWidthChanged: requestPaint()
-    onHeightChanged: requestPaint()
 
-    onPaint: {
-        const ctx = getContext("2d");
-        ctx.reset();
-        const p = pitch;
-        const dot = p * 0.78;
-        ctx.fillStyle = glass;
-        ctx.fillRect(0, 0, width, height);
-        const lit = {}; // "x,y" -> colour
-        const text = (string, column, top, color) => {
-            for (let i = 0; i < string.length; ++i) {
-                const g = PixelFont.glyph(string[i]);
-                for (let gx = 0; gx < 5; ++gx) {
-                    const x = column + i * 6 + gx;
-                    if (x < 0 || x >= columns)
-                        continue;
-                    for (let gy = 0; gy < 7; ++gy) {
-                        if (g[gy] & (16 >> gx))
-                            lit[x + "," + (top + gy)] = color;
-                    }
+    Canvas {
+        // round 34 (the interface thread 39-46 % of a core): the glass, every unlit
+        // dot and the dim beat cells: painted only when the size or the cells change
+        id: grid
+
+        anchors.fill: parent
+        onWidthChanged: requestPaint()
+        onHeightChanged: requestPaint()
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.fillStyle = root.glass;
+            ctx.fillRect(0, 0, width, height);
+            const dim = {};
+            for (let d = 0; d < Math.min(2, root.decks.length); ++d) {
+                const layout = root.cellColumns(root.decks[d].cells);
+                const cellTop = d * root.deckRows + 1 + 7 + 1;
+                for (let c = 0; c < root.decks[d].cells; ++c)
+                    for (let dx = 0; dx < layout.width; ++dx)
+                        for (let dy = 0; dy < root.cellRows; ++dy)
+                            dim[(layout.starts[c] + dx) + "," + (cellTop + dy)] = c === 0 ? root.dimFirst : root.dimCell;
+            }
+            for (let y = 0; y < root.totalRows; ++y) {
+                for (let x = 0; x < root.columns; ++x) {
+                    const c = dim[x + "," + y];
+                    ctx.fillStyle = c !== undefined ? c : root.unlit;
+                    root.dotAt(ctx, x, y);
                 }
             }
-        };
-        const textWidth = (string) => string.length * 6 - 1;
-        const dimCell = "#252d5c";
-        const dimFirst = "#4a4326";
-        for (let d = 0; d < Math.min(2, decks.length); ++d) {
-            const deck = decks[d];
-            const top = d * deckRows;
-            text(deck.remaining, 1, top + 1, deck.color);
-            text(deck.barBeat, Math.floor((columns - textWidth(deck.barBeat)) / 2), top + 1, deck.color);
-            text(deck.countdown, columns - 1 - textWidth(deck.countdown), top + 1, String(Style.text));
-            const layout = cellColumns(deck.cells);
-            const cellTop = top + 1 + 7 + 1;
-            for (let c = 0; c < deck.cells; ++c) {
-                const armed = c === deck.armed;
-                const on = c === deck.beat || (armed && blink);
-                const fill = on ? (c === 0 || armed ? String(Style.marked) : deck.color)
-                        : (c === 0 ? dimFirst : dimCell);
-                for (let dx = 0; dx < layout.width; ++dx)
-                    for (let dy = 0; dy < cellRows; ++dy)
-                        lit[(layout.starts[c] + dx) + "," + (cellTop + dy)] = fill;
-            }
         }
-        for (let y = 0; y < totalRows; ++y) {
-            for (let x = 0; x < columns; ++x) {
-                const c = lit[x + "," + y];
-                ctx.fillStyle = c !== undefined ? c : unlit;
-                ctx.fillRect(x * p + (p - dot) / 2, y * p + (p - dot) / 2, dot, dot);
+    }
+
+    Canvas {
+        // only the lit dots: the numbers and the beat's cell, on a clear layer
+        id: lights
+
+        anchors.fill: parent
+        onWidthChanged: requestPaint()
+        onHeightChanged: requestPaint()
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.clearRect(0, 0, width, height);
+            const columns = root.columns;
+            const text = (string, column, top, color) => {
+                ctx.fillStyle = color;
+                for (let i = 0; i < string.length; ++i) {
+                    const g = PixelFont.glyph(string[i]);
+                    for (let gx = 0; gx < 5; ++gx) {
+                        const x = column + i * 6 + gx;
+                        if (x < 0 || x >= columns)
+                            continue;
+                        for (let gy = 0; gy < 7; ++gy) {
+                            if (g[gy] & (16 >> gx))
+                                root.dotAt(ctx, x, top + gy);
+                        }
+                    }
+                }
+            };
+            const textWidth = (string) => string.length * 6 - 1;
+            for (let d = 0; d < Math.min(2, root.decks.length); ++d) {
+                const deck = root.decks[d];
+                const top = d * root.deckRows;
+                text(deck.remaining, 1, top + 1, deck.color);
+                text(deck.barBeat, Math.floor((columns - textWidth(deck.barBeat)) / 2), top + 1, deck.color);
+                text(deck.countdown, columns - 1 - textWidth(deck.countdown), top + 1, String(Style.text));
+                const layout = root.cellColumns(deck.cells);
+                const cellTop = top + 1 + 7 + 1;
+                for (let c = 0; c < deck.cells; ++c) {
+                    const armed = c === deck.armed;
+                    const on = c === deck.beat || (armed && root.blink);
+                    if (!on)
+                        continue;
+                    ctx.fillStyle = c === 0 || armed ? String(Style.marked) : deck.color;
+                    for (let dx = 0; dx < layout.width; ++dx)
+                        for (let dy = 0; dy < root.cellRows; ++dy)
+                            root.dotAt(ctx, layout.starts[c] + dx, cellTop + dy);
+                }
             }
         }
     }
