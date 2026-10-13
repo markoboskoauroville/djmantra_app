@@ -16,3 +16,22 @@
   setChannelCount(16) (or an index mask 0xFFFF) and fall back on error; or read the count from UsbManager's
   interface / alsa card. Also the MASTER / HEADPHONES lists then need the pairs without a reported count.
 - MASTER left on the CQ for now.
+
+## Part 1: MIXER page - PASS (one glyph)
+`p1_mixer_page.png`: "EQ" at the top, per deck GAIN / HIGH / MID / LOW / FILTER, the FX button, headphones, the
+faders and VU; **nothing overlaps, no cut labels** (Pixel 7 portrait, 411 dp). The FX bar of V16 is gone.
+- The **"▾" after EQ / NEURAL MIX is a missing-glyph box** (`p1_eq_arrow_glyph_missing.png`): the font has no ▾
+  (same problem as the ✕ in round 32): draw it.
+
+## Part 2: EQ dropdown - PASS (one small)
+- Tap "EQ": a menu below it, Equalizer (lit) / Neural Mix EQ. Neural Mix EQ: `EQ mode: Neural Mix EQ`, the button
+  reads NEURAL MIX, **both** decks' labels HARMONY / VOCALS / DRUMS (`p2_neural_p3_chooser.png`, left).
+  Equalizer: `EQ mode: Equalizer`, labels back.
+- A tap outside closes the menu when it lands on the matrix / top; **a tap near the crossfader (lower screen) did not
+  close it** (the menu stayed open).
+## Part 3: the FX button - PASS
+- Tap: `FX: deck 1 FLANGER on` (lit yellow), tap: `... off` (dark). A still hold of ~1 s opens the drop-up chooser
+  above the button (FLANGER / UNDERWATER / COOLDOWN / ECHO OUT, the current one lit) (`p2_neural_p3_chooser.png`, right).
+  Picking UNDERWATER: `FX: deck 1 UNDERWATER`, the button reads UNDERWATER and is on; same for COOLDOWN, ECHO OUT.
+  (A hold with 1 px of movement did not open it: fine for a finger? to check by Marko.)
+- After an app restart the button still reads ECHO OUT. PASS. Deck 2's button unchanged meanwhile (FLANGER).
