@@ -296,7 +296,7 @@ void QmlWaveformOverview::drawDjay(QPainter* pPainter,
         return std::max(1, *nth);
     };
     const double colourScale = 1.0 / at(99); // the colour's inputs, as fitted
-    const double heightScale = 0.95 / at(97); // the loud parts fill the height
+    const double heightScale = 0.75 / at(97); // djay: the loud parts reach 3/4
     const double middle = height() / 2;
     const double step = width() / points;
     pPainter->save();

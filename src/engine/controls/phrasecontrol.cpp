@@ -180,7 +180,9 @@ void PhraseControl::trackBeatsUpdated(mixxx::BeatsPointer pBeats) {
 
 void PhraseControl::slotDetectSections() {
     const TrackPointer pTrack = m_pSectionTrack;
-    if (!pTrack) {
+    if (!pTrack || m_detectTries >= 1000) {
+        // done for this track (round 30: each waveform update logged the same
+        // sections again); new options or new beats reset m_detectTries
         return;
     }
     const ConstWaveformPointer pWaveform = pTrack->getWaveform();

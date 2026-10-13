@@ -45,7 +45,7 @@ Item {
 
     Skin.WaveformRow {
         group: root.group
-        // V9: djay Pro's look; the song's loudest level reaches 90 % of the lane
+        // V9: djay Pro's look (a thin wave, WaveformRow.heightGain)
         levelGain: root.gain
         zoom: root.zoom
         showRoll: false
