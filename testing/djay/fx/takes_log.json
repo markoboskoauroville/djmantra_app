@@ -1,0 +1,234 @@
+{
+ "flanger_dry8_on8_off4": [
+  [
+   0.0,
+   "rec start, song at 58.0 s, level before -22.8 dB"
+  ],
+  [
+   0.0,
+   "dry"
+  ],
+  [
+   8.17,
+   "ON"
+  ],
+  [
+   16.37,
+   "OFF"
+  ],
+  [
+   22.07,
+   "rec end, level after -22.4 dB"
+  ],
+  [
+   null,
+   "after pause level -91.0 dB"
+  ]
+ ],
+ "flanger_slider_left_mid_right": [
+  [
+   0.0,
+   "rec start, song at 58.0 s, level before -22.9 dB"
+  ],
+  [
+   1.13,
+   "dry, slider left"
+  ],
+  [
+   4.33,
+   "ON slider left"
+  ],
+  [
+   9.53,
+   "slider mid"
+  ],
+  [
+   14.69,
+   "slider right"
+  ],
+  [
+   18.91,
+   "OFF"
+  ],
+  [
+   24.68,
+   "rec end, level after -22.5 dB"
+  ],
+  [
+   null,
+   "after pause level -91.0 dB"
+  ]
+ ],
+ "cooldown_dry8_on8_off4": [
+  [
+   0.0,
+   "rec start, song at 58.0 s, level before -22.9 dB"
+  ],
+  [
+   0.0,
+   "dry"
+  ],
+  [
+   8.21,
+   "ON"
+  ],
+  [
+   16.38,
+   "OFF"
+  ],
+  [
+   22.15,
+   "rec end, level after -22.2 dB"
+  ],
+  [
+   null,
+   "after pause level -91.0 dB"
+  ]
+ ],
+ "cooldown_slider_left_mid_right": [
+  [
+   0.0,
+   "rec start, song at 58.2 s, level before -22.7 dB"
+  ],
+  [
+   1.15,
+   "dry, slider left"
+  ],
+  [
+   4.38,
+   "ON slider left"
+  ],
+  [
+   9.52,
+   "slider mid"
+  ],
+  [
+   14.69,
+   "slider right"
+  ],
+  [
+   18.91,
+   "OFF"
+  ],
+  [
+   24.67,
+   "rec end, level after -22.6 dB"
+  ],
+  [
+   null,
+   "after pause level -91.0 dB"
+  ]
+ ],
+ "underwater_dry8_on8_off4": [
+  [
+   0.0,
+   "rec start, song at 58.0 s, level before -23.0 dB"
+  ],
+  [
+   0.0,
+   "dry"
+  ],
+  [
+   8.21,
+   "ON"
+  ],
+  [
+   16.42,
+   "OFF"
+  ],
+  [
+   22.19,
+   "rec end, level after -22.2 dB"
+  ],
+  [
+   null,
+   "after pause level -91.0 dB"
+  ]
+ ],
+ "underwater_slider_left_mid_right": [
+  [
+   0.0,
+   "rec start, song at 58.0 s, level before -22.9 dB"
+  ],
+  [
+   1.14,
+   "dry, slider left"
+  ],
+  [
+   4.34,
+   "ON slider left"
+  ],
+  [
+   9.5,
+   "slider mid"
+  ],
+  [
+   14.66,
+   "slider right"
+  ],
+  [
+   18.88,
+   "OFF"
+  ],
+  [
+   24.65,
+   "rec end, level after -22.4 dB"
+  ],
+  [
+   null,
+   "after pause level -91.0 dB"
+  ]
+ ],
+ "echoout_1beat_dry4_on12_off4": [
+  [
+   0.0,
+   "rec start, song at 58.0 s, level before -22.9 dB"
+  ],
+  [
+   0.0,
+   "dry"
+  ],
+  [
+   4.2,
+   "ON"
+  ],
+  [
+   16.4,
+   "OFF"
+  ],
+  [
+   22.15,
+   "rec end, level after -21.9 dB"
+  ],
+  [
+   null,
+   "after pause level -91.0 dB"
+  ]
+ ],
+ "echoout_2beats_dry4_on12_off4": [
+  [
+   0.0,
+   "rec start, song at 58.0 s, level before -22.8 dB"
+  ],
+  [
+   0.0,
+   "dry"
+  ],
+  [
+   4.2,
+   "ON"
+  ],
+  [
+   16.4,
+   "OFF"
+  ],
+  [
+   22.2,
+   "rec end, level after -22.2 dB"
+  ],
+  [
+   null,
+   "after pause level -91.0 dB"
+  ]
+ ]
+}
