@@ -1,6 +1,7 @@
 #include "qml/qmlplayerproxy.h"
 
 #include <QBuffer>
+#include <QDateTime>
 
 #include "mixer/basetrackplayer.h"
 #include "moc_qmlplayerproxy.cpp"
@@ -131,6 +132,11 @@ void QmlPlayerProxy::slotTrackLoaded(TrackPointer pTrack) {
                 &QmlPlayerProxy::slotHotcuesChanged);
         slotBeatsChanged();
         slotHotcuesChanged();
+        // DJ Mantra round 33: a track whose waveform was analysed before sends no
+        // waveformUpdated after loading: the lanes' texture stayed empty (no wave in
+        // the scrolling lanes or the scrub window, classic or djay shader alike)
+        m_lastTextureMs = -1;
+        slotWaveformChanged();
     }
     emit trackChanged();
     emit trackLoaded();
@@ -196,10 +202,24 @@ void QmlPlayerProxy::slotWaveformChanged() {
     if (!pWaveform) {
         return;
     }
+    if (pWaveform->getTextureStride() <= 0 || pWaveform->getDataSize() <= 0) {
+        return;
+    }
+    // DJ Mantra: while the analysis runs, at most every 2 s (the texture goes to QML
+    // as a PNG: encoding it for every update cost CPU on slow phones)
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    const bool complete = pWaveform->getCompletion() >= pWaveform->getDataSize();
+    if (!complete && m_lastTextureMs >= 0 && now - m_lastTextureMs < 2000) {
+        return;
+    }
+    m_lastTextureMs = now;
     const int textureWidth = pWaveform->getTextureStride();
     const int textureHeight = pWaveform->getTextureSize() / pWaveform->getTextureStride();
     const uchar* data = reinterpret_cast<const uchar*>(pWaveform->data());
-    m_waveformTexture = QImage(data, textureWidth, textureHeight, QImage::Format_RGBA8888);
+    // opaque (RGBX): the "all" byte in the alpha made the PNG's loader multiply the
+    // bands by it (dim) or drop them (all = 0); the shaders use only low / mid / high
+    m_waveformTexture = QImage(data, textureWidth, textureHeight, QImage::Format_RGBA8888)
+                                .convertToFormat(QImage::Format_RGBX8888);
     emit waveformTextureChanged();
 }
 

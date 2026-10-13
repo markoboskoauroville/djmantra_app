@@ -136,6 +136,7 @@ class QmlPlayerProxy : public QObject {
 
   private:
     QImage m_waveformTexture;
+    qint64 m_lastTextureMs = -1; // DJ Mantra: the last texture build (throttle)
     QPointer<BaseTrackPlayer> m_pTrackPlayer;
     TrackPointer m_pCurrentTrack;
     QmlBeatsModel* m_pBeatsModel;
