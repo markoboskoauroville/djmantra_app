@@ -19,6 +19,10 @@ Rectangle {
     // glyph (round 13: the pause sign was tofu; round 16b: JUMP's too)
     property string icon: ""
     signal clicked()
+    onLitChanged: {
+        playIcon.requestPaint();
+        nextIcon.requestPaint();
+    }
     signal pressedDown()
     signal releasedUp()
 
@@ -52,6 +56,31 @@ Rectangle {
     }
 
     Canvas {
+        // "play": the same triangle as "next", drawn the same way (Marko 13.10.2026:
+        // one design language; the font's ▶ looked different from ▸|)
+        id: playIcon
+
+        anchors.centerIn: parent
+        width: root.height * 0.42
+        height: width
+        visible: root.icon === "play"
+        onVisibleChanged: requestPaint()
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.fillStyle = String(root.lit ? Style.inkOnAccent : Style.text);
+            ctx.beginPath();
+            // as wide as next's triangle, centred
+            const left = width * 0.14;
+            ctx.moveTo(left, 0);
+            ctx.lineTo(left + width * 0.72, height / 2);
+            ctx.lineTo(left, height);
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
+    Canvas {
         // "next": a triangle against a bar, ▸|
         id: nextIcon
 
@@ -77,8 +106,8 @@ Rectangle {
     Text {
         anchors.fill: parent
         anchors.margins: 4
-        visible: root.icon !== "pause" && root.icon !== "next"
-        text: root.icon === "play" ? "\u25B6" : root.text
+        visible: root.icon !== "pause" && root.icon !== "next" && root.icon !== "play"
+        text: root.text
         color: root.lit ? Style.inkOnAccent : Style.text
         font.pixelSize: root.fontSize
         font.bold: true
