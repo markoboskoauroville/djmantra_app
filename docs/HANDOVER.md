@@ -1,11 +1,29 @@
 # DJ Mantra handover
 
 Read this first in any new session (any account). It is kept current by every session before it
-stops; the newest state wins over older notes. Last update: **2026-10-14 00:00 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
+stops; the newest state wins over older notes. Last update: **2026-10-14 10:20 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 14.10.2026 ~00:00 UTC (latest): V37-V41 built untested
+## 14.10.2026 10:20 UTC (latest): V42 green (2d135b4), round 40 done in parts, round 41 next
+
+- Tester now: the Mac session "Pixel wireless debugging connection" (session_01NA5hr4KrMJbJix74JCBFvL), the real
+  Pixel 7 (adb over Wi-Fi 192.168.1.103:5555, the phone's USB has the Mix Ultra), djay 5.6.9 on the same phone.
+- Round 40 (V41): parts 0-8 reported; fixed since: EQ starts flat (cut only: the TOP is 0 dB), song lengths lost
+  by a sort, the NEXT UP list under the crossfader, the PITCH scale (local_bpm; deck 2's BPM hidden under the VU).
+- V42 (Marko 14.10.2026): length badge on covers + THUMBNAILS view; LENGTH sort; knob rules (long press resets,
+  double tap where the long press flips) + toasts (Toasts.qml); RECORDING (Recorder.qml, FLAC/WAV into
+  Music/DJ Mantra Recordings, "<name> - <date> <time>", long press the clock = REC, red clock); AUTOMIX = an action
+  (crossfader glide over N beats / seconds, Settings), EQ / TEMPO BLEND always on the crossfader when lit;
+  crossfader AUTO-PLAY (djay's); controller badge USB/BT on the menu button ([DJMantra],controller_link) and USB
+  taking over from Bluetooth; console SYNC = sync lock; tabs Songs|Phrasing|Mixer|AutoMix|Keys = the pad-mode
+  buttons HOT CUE / LOOP / FX / NEURAL MIX / SAMPLER; FILTER + FIND ON PHONE (MediaStore, StorageBridge.findSongs);
+  a steady beat grid by default as djay (beat_grid_mode 0 = steady now; old beat maps analysed again).
+- djay: docs/DJAY_MANUAL.md (94 pages read twice), docs/DJAY_COMPARE.md (analysis: BPM within 2, keys 4/7).
+- Next: round 41 (testing/ROUND41.md parts 0-16), the djay waveform and sound compare (recordings into
+  djmantra-test-songs/compare/), the key detector (cura, test tones), the waveform colours as djay's.
+
+## 14.10.2026 ~00:00 UTC: V37-V41 built untested
 
 - V37 fixes (FrameAnimation needs an unversioned `import QtQuick`; AutoMix DeckControls binding loop). V38 smooth
   lanes: container x and beat lines on whole device pixels, engine-position corrections only past a 4 ms deadband
