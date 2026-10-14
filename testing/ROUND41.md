@@ -156,3 +156,6 @@ HOUSE), READ CHART: the bar says "<chart>: N songs read" (logcat DJMantraBeatSta
 shows the chart (rank, title, artist, label), the charts read as buttons to flip between; per song SPOT / TIDAL / YT M
 open that service's search for artist + title (YouTube MUSIC, not videos); + adds it to a download queue (Spotify /
 TIDAL / YouTube Music) -> Menu -> DOWNLOAD QUEUES shows it, in djmantra_app/Download_Queue/<service>.txt.
+## 43. (V53) The app's ROOT moved INTO Music (Marko 14.10.2026: "one master folder of this app"): /sdcard/Music/djmantra_app
+with Playlists/<name>/ + Playlists/<name>.m3u8, Library/, Recordings/, Test/, Download_Queue/, BeatStats/. The Songs tab
+opens in it; ← shows djmantra_app, Music, Download.

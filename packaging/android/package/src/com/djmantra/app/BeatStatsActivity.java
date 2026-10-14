@@ -40,7 +40,7 @@ import java.io.ByteArrayOutputStream;
 public final class BeatStatsActivity extends Activity {
     private static final String TAG = "DJMantraBeatStats";
     private static final String HOME = "https://www.beatstats.com/";
-    private static final String DIR = "/sdcard/djmantra_app/BeatStats";
+    private static final String DIR = "/sdcard/Music/djmantra_app/BeatStats";
 
     private WebView mWeb;
     private TextView mStatus;

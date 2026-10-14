@@ -755,10 +755,11 @@ QVariantList QmlDJMantra::musicRoots() const {
 #if defined(Q_OS_ANDROID)
     // (not QStandardPaths' MusicLocation: on Android that is a second "Music",
     // the app's own folder; round 14 listed Music twice)
-    // Marko 14.10.2026: the app's own root first, djmantra_app (underscores, no spaces):
+    // Marko 14.10.2026: the app's own root first, Music/djmantra_app (one master folder;
+    // underscores, no spaces):
     // Playlists/<name>/ songs + Playlists/<name>.m3u8, Recordings/; Music and Download stay
-    QDir().mkpath(QStringLiteral("/sdcard/djmantra_app"));
-    paths << QStringLiteral("/sdcard/djmantra_app") << QStringLiteral("/sdcard/Music")
+    QDir().mkpath(QStringLiteral("/sdcard/Music/djmantra_app"));
+    paths << QStringLiteral("/sdcard/Music/djmantra_app") << QStringLiteral("/sdcard/Music")
           << QStringLiteral("/sdcard/Download");
 #else
     paths << QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
@@ -816,7 +817,7 @@ int findPlaylist(const QJsonArray& playlists, const QString& name) {
 QStringList playlistsFolders() {
 #if defined(Q_OS_ANDROID)
     // the app's root first (Marko 14.10.2026), then Music/Playlists
-    return {QStringLiteral("/sdcard/djmantra_app/Playlists"), QStringLiteral("/sdcard/Music/Playlists")};
+    return {QStringLiteral("/sdcard/Music/djmantra_app/Playlists"), QStringLiteral("/sdcard/Music/Playlists")};
 #else
     const QString music = QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
     return {music + QStringLiteral("/djmantra_app/Playlists"), music + QStringLiteral("/Playlists")};
@@ -874,7 +875,7 @@ namespace {
 
 QString queueFile(const QString& service) {
 #if defined(Q_OS_ANDROID)
-    const QString dir = QStringLiteral("/sdcard/djmantra_app/Download_Queue");
+    const QString dir = QStringLiteral("/sdcard/Music/djmantra_app/Download_Queue");
 #else
     const QString dir = QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
             QStringLiteral("/djmantra_app/Download_Queue");
@@ -980,7 +981,7 @@ void QmlDJMantra::openBeatStats() {
 
 QVariantList QmlDJMantra::beatStatsCharts() const {
 #if defined(Q_OS_ANDROID)
-    QFile file(QStringLiteral("/sdcard/djmantra_app/BeatStats/charts.json"));
+    QFile file(QStringLiteral("/sdcard/Music/djmantra_app/BeatStats/charts.json"));
 #else
     QFile file(QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
             QStringLiteral("/djmantra_app/BeatStats/charts.json"));
@@ -1318,7 +1319,7 @@ QString QmlDJMantra::startRecording(const QString& format, const QString& name) 
     }
 #if defined(Q_OS_ANDROID)
     // the app's root (Marko 14.10.2026): djmantra_app/Recordings
-    const QString dir = QStringLiteral("/sdcard/djmantra_app/Recordings");
+    const QString dir = QStringLiteral("/sdcard/Music/djmantra_app/Recordings");
 #else
     const QString dir = QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
             QStringLiteral("/djmantra_app/Recordings");
