@@ -1,8 +1,12 @@
 #include "qml/qmlplayerproxy.h"
 
 #include <QBuffer>
+#include <QDateTime>
+
+#include <QCoreApplication>
 
 #include "mixer/basetrackplayer.h"
+#include "qml/finewave.h"
 #include "moc_qmlplayerproxy.cpp"
 #include "qml/asyncimageprovider.h"
 
@@ -131,7 +135,13 @@ void QmlPlayerProxy::slotTrackLoaded(TrackPointer pTrack) {
                 &QmlPlayerProxy::slotHotcuesChanged);
         slotBeatsChanged();
         slotHotcuesChanged();
+        // DJ Mantra round 33: a track whose waveform was analysed before sends no
+        // waveformUpdated after loading: the lanes' texture stayed empty (no wave in
+        // the scrolling lanes or the scrub window, classic or djay shader alike)
+        m_lastTextureMs = -1;
+        slotWaveformChanged();
     }
+    buildFineWave(pTrack);
     emit trackChanged();
     emit trackLoaded();
 }
@@ -196,10 +206,24 @@ void QmlPlayerProxy::slotWaveformChanged() {
     if (!pWaveform) {
         return;
     }
+    if (pWaveform->getTextureStride() <= 0 || pWaveform->getDataSize() <= 0) {
+        return;
+    }
+    // DJ Mantra: while the analysis runs, at most every 2 s (the texture goes to QML
+    // as a PNG: encoding it for every update cost CPU on slow phones)
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    const bool complete = pWaveform->getCompletion() >= pWaveform->getDataSize();
+    if (!complete && m_lastTextureMs >= 0 && now - m_lastTextureMs < 2000) {
+        return;
+    }
+    m_lastTextureMs = now;
     const int textureWidth = pWaveform->getTextureStride();
     const int textureHeight = pWaveform->getTextureSize() / pWaveform->getTextureStride();
     const uchar* data = reinterpret_cast<const uchar*>(pWaveform->data());
-    m_waveformTexture = QImage(data, textureWidth, textureHeight, QImage::Format_RGBA8888);
+    // opaque (RGBX): the "all" byte in the alpha made the PNG's loader multiply the
+    // bands by it (dim) or drop them (all = 0); the shaders use only low / mid / high
+    m_waveformTexture = QImage(data, textureWidth, textureHeight, QImage::Format_RGBA8888)
+                                .convertToFormat(QImage::Format_RGBX8888);
     emit waveformTextureChanged();
 }
 
@@ -248,6 +272,58 @@ int QmlPlayerProxy::getWaveformLength() const {
         }
     }
     return 0;
+}
+
+void QmlPlayerProxy::buildFineWave(const TrackPointer& pTrack) {
+    if (pTrack == m_fineWaveTrack) {
+        return;
+    }
+    m_fineWaveTrack = pTrack;
+    m_fineWave = QImage();
+    m_fineWaveLength = 0;
+    emit fineWaveChanged();
+    if (!pTrack) {
+        return;
+    }
+    auto* pCache = djmantra::FineWaveCache::instance();
+    const QString location = pTrack->getLocation();
+    const auto take = [this, location](const std::shared_ptr<const djmantra::FineWave>& pWave) {
+        if (!pWave || !m_fineWaveTrack || m_fineWaveTrack->getLocation() != location) {
+            return;
+        }
+        m_fineWave = pWave->image;
+        m_fineWaveLength = pWave->length;
+        emit fineWaveChanged();
+    };
+    if (const auto pWave = pCache->request(pTrack)) {
+        take(pWave);
+        return;
+    }
+    // one connection per proxy, kept: it ignores other songs' waves
+    if (!m_fineWaveConnected) {
+        m_fineWaveConnected = true;
+        connect(pCache, &djmantra::FineWaveCache::ready, this, [this](const QString& readyLocation) {
+            if (m_fineWaveTrack && m_fineWaveTrack->getLocation() == readyLocation) {
+                const auto pWave = djmantra::FineWaveCache::instance()->request(m_fineWaveTrack);
+                if (pWave) {
+                    m_fineWave = pWave->image;
+                    m_fineWaveLength = pWave->length;
+                    emit fineWaveChanged();
+                }
+            }
+        });
+    }
+}
+
+QString QmlPlayerProxy::getFineWaveTexture() const {
+    if (m_fineWave.isNull()) {
+        return QString();
+    }
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    m_fineWave.save(&buffer, "png");
+    return QStringLiteral("data:image/png;base64,") + QString::fromLatin1(byteArray.toBase64());
 }
 
 QString QmlPlayerProxy::getWaveformTexture() const {

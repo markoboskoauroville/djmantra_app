@@ -94,6 +94,28 @@ public final class MidiBridge {
         }
     }
 
+    /**
+     * The link to use (Marko 14.10.2026: "one or the other", Settings): "usb" or "bluetooth".
+     * Remembered; a change drops the current link and looks for the controller on the new one.
+     */
+    public static void setLink(Context context, String link) {
+        String value = "bluetooth".equals(link) ? "bluetooth" : "usb";
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString("link", value).apply();
+        Log.i(TAG, "Link: " + value);
+        MidiBridge bridge = sInstance;
+        if (bridge != null) {
+            bridge.mHandler.post(() -> {
+                bridge.stopScan();
+                bridge.closeDevice();
+                bridge.connect();
+            });
+        }
+    }
+
+    private boolean wantsBluetooth() {
+        return "bluetooth".equals(prefs().getString("link", "usb"));
+    }
+
     /** Sends MIDI bytes to the controller. */
     public static void send(byte[] data) {
         MidiBridge bridge = sInstance;
@@ -119,7 +141,8 @@ public final class MidiBridge {
         mMidi.registerDeviceCallback(new MidiManager.DeviceCallback() {
             @Override
             public void onDeviceAdded(MidiDeviceInfo info) {
-                if (mDevice == null && matches(info)) {
+                // only the link chosen in Settings (USB or Bluetooth, never both)
+                if (mDevice == null && matches(info) && isChosenType(info)) {
                     open(info);
                 }
             }
@@ -142,18 +165,27 @@ public final class MidiBridge {
         closeDevice();
     }
 
-    /** USB (or an already connected Bluetooth device) first, then a Bluetooth scan. */
+    /** The link chosen in Settings: USB (waits for the cable) or Bluetooth (scans). */
     private void connect() {
         if (mStopped || mDevice != null) {
             return;
         }
         for (MidiDeviceInfo info : mMidi.getDevices()) {
-            if (matches(info)) {
+            if (matches(info) && isChosenType(info)) {
                 open(info);
                 return;
             }
         }
-        startScan();
+        if (wantsBluetooth()) {
+            startScan();
+        } else {
+            Log.i(TAG, "Waiting for the controller on USB");
+        }
+    }
+
+    private boolean isChosenType(MidiDeviceInfo info) {
+        return wantsBluetooth() ? info.getType() == MidiDeviceInfo.TYPE_BLUETOOTH
+                                : info.getType() == MidiDeviceInfo.TYPE_USB;
     }
 
     private boolean matches(MidiDeviceInfo info) {
@@ -244,7 +276,7 @@ public final class MidiBridge {
             String last = prefs().getString("last_address", "");
             boolean wanted = device.getAddress().equals(last)
                     || (name != null && name.toLowerCase(Locale.ROOT).contains(mName));
-            if (!wanted || mDevice != null) {
+            if (!wanted || mDevice != null || !wantsBluetooth()) {
                 return;
             }
             Log.i(TAG, "Found " + name + " " + device.getAddress() + " over Bluetooth");

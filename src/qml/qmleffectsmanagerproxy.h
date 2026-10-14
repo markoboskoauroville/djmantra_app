@@ -28,6 +28,10 @@ class QmlEffectsManagerProxy : public QObject {
     static void registerEffectsManager(std::shared_ptr<EffectsManager> pEffectsManager) {
         s_pEffectManager = std::move(pEffectsManager);
     }
+    /// DJ Mantra: for QmlDJMantra (the DJM filter in the decks' quick effect slots)
+    static std::shared_ptr<EffectsManager> effectsManager() {
+        return s_pEffectManager;
+    }
 
   private:
     static inline std::shared_ptr<EffectsManager> s_pEffectManager;

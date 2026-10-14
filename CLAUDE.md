@@ -16,6 +16,14 @@ Phone testing: `testing/README.md` (`/test-on-phone`, results in `testing/result
   `allowed_warning` (get_session → rate_limit_info) or the work is near a limit, update
   `docs/HANDOVER.md` (state, next steps, open questions), commit and push everything, and stop
   cleanly, so any session on any account can continue from the files alone.
+- **The test loop (owner's rule 12.10.2026, `testing/PROTOCOL.md`):** after every green build send the phone
+  tester one line naming the run and `testing/ROUND<N>.md`, a list ordered from the most basic (PLAY / pause,
+  sliders, knobs, LEDs) to the specific features. The tester pushes and messages each part's result at once and
+  sends "round N finished"; then fix everything, next round. Forever, until bug-free. Speed and credits first.
+- **Versions are V1, V2, V3 ... (owner's rule 12.10.2026):** bump `DJMANTRA_VERSION_NUMBER` in `CMakeLists.txt`
+  by one in every build that goes to the phone (each new test round), and name the version (e.g. "V2") in the
+  round file and the message to the tester. Only the Qt Quick interface exists in the app; the classic (widget)
+  screens are gone from Android (desktop Linux keeps Mixxx's own for the test suite).
 - **Keep the public progress page current.** After every app milestone, update
   `assets/app/progress.json` in the website repo `markoboskoauroville/djmantra-ecstatic-dance`
   (djmantra.pages.dev): step `status` (done / doing / todo), `hr` and `en` text, and the `updated`

@@ -1,6 +1,10 @@
 #pragma once
 
+#include <QList>
+#include <atomic>
+#include <QStringList>
 #include <memory>
+#include <vector>
 
 #include "audio/frame.h"
 #include "engine/controls/enginecontrol.h"
@@ -11,6 +15,9 @@
 class ControlObject;
 class ControlProxy;
 class ControlPushButton;
+namespace djmantra {
+struct SectionOptions;
+} // namespace djmantra
 
 /// DJ Mantra: where the deck is in its phrase, one count per beat, for the
 /// beat lights that align two songs "1 with 1" (djay-style slicer lights).
@@ -23,6 +30,19 @@ class ControlPushButton;
 ///   phrase_set_one   button: the beat closest to the play position is "1"
 ///   phrase_jump      set to n (1-based) to jump to beat n of the current
 ///                    phrase, keeping the position within the beat
+///   beat_number      beats since "1" (0-based, negative before it); valid
+///                    while beat_in_phrase >= 0 (read-only). With
+///                    beats_per_bar it gives Ableton's bar.beat counter.
+///   beats_per_bar    the time signature's upper number, 1..16 (default 4)
+///   beat_unit        its lower number: 2, 4 (default), 8 or 16
+///   section_beats_left  beats from the current beat to the next section
+///                    (read-only), -1 without beats
+///   section_jump     button: to the start of the next section (a found
+///                    change or a cue), the same place within the beat
+///                    while playing, exactly on the beat while stopped
+///   section_found    1: section_beats_left counts to a section start (a
+///                    change found in the arrangement, intro / outro
+///                    markers, hot cues); 0: to the end of the track
 ///
 /// Counted on the beat grid itself, so beat maps and tempo changes work.
 class PhraseControl : public EngineControl {
@@ -33,6 +53,32 @@ class PhraseControl : public EngineControl {
 
     void trackLoaded(TrackPointer pNewTrack) override;
     void trackBeatsUpdated(mixxx::BeatsPointer pBeats) override;
+
+    /// Beats from "1" (the beat closest to `anchor`) to the beat that
+    /// `position` is in: 0 on "1", negative before it. Returns false
+    /// without beats.
+    static bool beatNumber(const mixxx::BeatsPointer& pBeats,
+            mixxx::audio::FramePos anchor,
+            mixxx::audio::FramePos position,
+            int* pNumber);
+
+    /// The start of the next section after `position`: the first of
+    /// `boundaries` (frames, in any order; invalid ones are skipped) that is
+    /// more than half a beat ahead. Invalid if none.
+    static mixxx::audio::FramePos nextSection(const mixxx::BeatsPointer& pBeats,
+            mixxx::audio::FramePos position,
+            const QList<mixxx::audio::FramePos>& boundaries);
+
+    /// The start of the section `position` is in: the last of `boundaries`
+    /// at or before it (a start up to half a beat ahead counts as reached).
+    /// Invalid before the first one.
+    static mixxx::audio::FramePos prevSection(const mixxx::BeatsPointer& pBeats,
+            mixxx::audio::FramePos position,
+            const QList<mixxx::audio::FramePos>& boundaries);
+
+    /// The cue controls are made after this control: EngineBuffer calls
+    /// this once they exist.
+    void connectCues();
 
     /// Called with the play position after every buffer (like ClockControl).
     void updatePosition(mixxx::audio::FramePos position);
@@ -45,19 +91,55 @@ class PhraseControl : public EngineControl {
             int phraseLength);
 
   private slots:
+    /// Finds the arrangement changes once the track's waveform is complete
+    /// (main thread)
+    void slotDetectSections();
     void slotSetOne(double value);
     void slotJump(double value);
+    void slotSectionJump(double value);
     void slotParametersChanged(double);
+    void slotSectionOptionsChanged(double);
 
   private:
     mixxx::audio::FramePos anchor() const;
+    djmantra::SectionOptions sectionOptions() const;
+    void updateSection(mixxx::audio::FramePos position);
 
     std::unique_ptr<ControlObject> m_pBeatInPhrase;
     std::unique_ptr<ControlObject> m_pPhraseLength;
     std::unique_ptr<ControlObject> m_pPhraseAnchor;
     std::unique_ptr<ControlPushButton> m_pSetOne;
     std::unique_ptr<ControlObject> m_pJump;
+    std::unique_ptr<ControlObject> m_pBeatNumber;
+    std::unique_ptr<ControlObject> m_pBeatsPerBar;
+    std::unique_ptr<ControlObject> m_pBeatUnit;
+    std::unique_ptr<ControlObject> m_pSectionBeatsLeft;
+    std::unique_ptr<ControlObject> m_pSectionFound;
+    // Beats since the current section started (0 on its first beat; from
+    // the track's "1" before the first section): the matrix's bar.beat
+    // starts at 1.1 on every section (Marko, 12.10.2026)
+    std::unique_ptr<ControlObject> m_pSectionBeat;
+    std::unique_ptr<ControlPushButton> m_pSectionJump;
+    // How many sections the detection found (-1: not yet): the interface
+    // reads them (djmantra::publishedSections) when this changes
+    std::unique_ptr<ControlObject> m_pSectionCount;
+    int m_detectTries = 0; // main thread: the detection's retries for this track
+    std::unique_ptr<ControlProxy> m_pPlay;
+    // The next section start found by updateSection() (engine sample pos,
+    // -1 none): read by slotSectionJump() on the main thread
+    std::atomic<double> m_nextSection{-1};
     std::unique_ptr<ControlProxy> m_pCuePoint;
+    std::unique_ptr<ControlProxy> m_pTrackSamples;
+    std::unique_ptr<ControlProxy> m_pSectionAlgorithm;
+    std::unique_ptr<ControlProxy> m_pSectionSensitivity;
+    // Section starts: intro / outro markers and hot cues
+    std::vector<std::unique_ptr<ControlProxy>> m_sectionCues;
+    // Section starts found in the arrangement: written by the main thread,
+    // read by the engine (atomic shared_ptr)
+    std::shared_ptr<const QList<mixxx::audio::FramePos>> m_pSections;
+    // Main thread only
+    TrackPointer m_pSectionTrack;
+    QMetaObject::Connection m_waveformConnection;
 
     mixxx::BeatsPointer m_pBeats;
     mixxx::audio::FramePos m_position;
@@ -65,4 +147,9 @@ class PhraseControl : public EngineControl {
     mixxx::audio::FramePos m_prevBeat;
     mixxx::audio::FramePos m_nextBeat;
     int m_beat = -1;
+    // phrase_jump while playing: the beat (0-based) to jump to on the next
+    // beat, -1: none (set by the control, done by the engine)
+    std::atomic<int> m_pendingJump{-1};
+    std::atomic<int> m_beatsJumped{0};
+    int m_beatNumber = 0;
 };

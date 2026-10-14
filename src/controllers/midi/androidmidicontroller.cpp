@@ -1,5 +1,6 @@
 #include "controllers/midi/androidmidicontroller.h"
 
+#include "control/controlobject.h"
 #include "controllers/scripting/legacy/controllerscriptenginelegacy.h"
 #include "moc_androidmidicontroller.cpp"
 #include "util/time.h"
@@ -75,6 +76,14 @@ JNIEXPORT void JNICALL Java_com_djmantra_app_MidiBridge_nativeConnected(
 } // extern "C"
 #endif
 
+namespace {
+QAtomicInt s_link = 0;
+} // namespace
+
+int androidMidiControllerLink() {
+    return s_link.loadRelaxed();
+}
+
 AndroidMidiController::AndroidMidiController(const QString& name)
         : MidiController(name) {
     setInputDevice(true);
@@ -123,15 +132,38 @@ int AndroidMidiController::close() {
 }
 
 void AndroidMidiController::receiveFromJava(const QByteArray& data) {
-    const auto locker = QMutexLocker(&m_mutex);
-    m_incoming.enqueue(data);
+    {
+        const auto locker = QMutexLocker(&m_mutex);
+        m_incoming.enqueue(data);
+    }
+    wake();
+}
+
+void AndroidMidiController::wake() {
+    if (m_wakePending.testAndSetOrdered(0, 1)) {
+        QMetaObject::invokeMethod(
+                this,
+                [this] {
+                    m_wakePending.storeRelease(0);
+                    if (isOpen()) {
+                        poll();
+                    }
+                },
+                Qt::QueuedConnection);
+    }
 }
 
 void AndroidMidiController::connectedFromJava(bool connected, const QString& transport) {
     kLogger.info() << getName() << (connected ? "connected over" : "disconnected from")
                    << transport;
+    // the screen's badge ([DJMantra],controller_link, made by QmlDJMantra at the start)
+    s_link.storeRelaxed(connected ? (transport == QStringLiteral("bluetooth") ? 2 : 1) : 0);
+    m_bluetooth.storeRelaxed(connected && transport == QStringLiteral("bluetooth") ? 1 : 0);
+    ControlObject::set(ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("controller_link")),
+            s_link.loadRelaxed());
     if (connected) {
         m_connectedEvents.ref();
+        wake();
     }
 }
 
@@ -220,6 +252,11 @@ void AndroidMidiController::processBytes(const QByteArray& data) {
             data,
             [this, timestamp](unsigned char status, unsigned char data1, unsigned char data2) {
                 receivedShortMessage(status, data1, data2, timestamp);
+                // Bluetooth: the MSB of a 14-bit pair (CC 0-31) comes alone; its LSB
+                // (CC + 32) as 0, so the 14-bit mapping takes it (over USB both come)
+                if (m_bluetooth.loadRelaxed() && (status & 0xF0) == 0xB0 && data1 < 0x20) {
+                    receivedShortMessage(status, data1 + 0x20, 0, timestamp);
+                }
             },
             [this, timestamp](const QByteArray& sysex) {
                 receive(sysex, timestamp);

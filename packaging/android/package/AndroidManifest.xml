@@ -11,12 +11,16 @@
     <!-- DJ Mantra's permissions, written here: qt_add_android_permission()
          in CMake did not reach the APK (the "All files access" switch was
          greyed out and Bluetooth scans failed on the phones). -->
+    <!-- The genre of a song without one, from MusicBrainz (GenreLookup.java) -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- Music on USB drives and SD cards through plain file paths -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!-- ROOM EQ: the microphone hears the room's answer to the test signal -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- Bluetooth LE MIDI (Hercules DJControl Mix Ultra), no location -->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
@@ -66,6 +70,19 @@
                 android:name="android.app.arguments"
                 android:value="-- %%INSERT_APP_ARGUMENTS%% --" />
         </activity>
+
+        <!-- BEATSTATS (Marko 14.10.2026): beatstats.com in a WebView, READ CHART -->
+        <activity
+            android:name="com.djmantra.app.BeatStatsActivity"
+            android:theme="@android:style/Theme.Material.NoActionBar"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:exported="false" />
+
+        <activity
+            android:name="com.djmantra.app.SunoActivity"
+            android:theme="@android:style/Theme.Material.NoActionBar"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -11,9 +11,13 @@ package com.djmantra.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.BatteryManager;
 import android.graphics.Insets;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.SystemClock;
+import android.util.Log;
+import android.view.DisplayCutout;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
@@ -29,6 +33,11 @@ public final class WindowBridge {
     private static long sShownSince = 0;
     // left, top, right, bottom in pixels: read from the Qt thread
     private static volatile int[] sInsets = new int[] {0, 0, 0, 0};
+    private static volatile boolean sVisible = false;
+    // The screen's rounded corner radius in pixels (0 if square or unknown)
+    private static volatile int sCorner = 0;
+    private static boolean sErrorLogged = false;
+    private static final String TAG = "DJMantra";
 
     public static void immersive(Context context) {
         if (!(context instanceof Activity)) {
@@ -36,7 +45,9 @@ public final class WindowBridge {
         }
         final Activity activity = (Activity) context;
         activity.runOnUiThread(() -> {
+            Log.i(TAG, "WindowBridge: hiding the system bars");
             Window window = activity.getWindow();
+            limitFrameRate(activity, window);
             if (Build.VERSION.SDK_INT >= 30) {
                 // The app draws edge to edge (Android 15 does so anyway) and
                 // keeps out of the bars itself, with insets()
@@ -63,10 +74,98 @@ public final class WindowBridge {
         });
     }
 
-    /// The room the visible system bars take: left, top, right, bottom (px).
-    /// 0 everywhere while they are hidden.
+    /// Round 23: on a 90 / 120 Hz screen the scrolling waveforms and the VU
+    /// meters redrew up to 120 times a second (the Phrasing and Mixer tabs at
+    /// ~75 % CPU); 60 frames a second look the same and cost half
+    private static void limitFrameRate(Activity activity, Window window) {
+        try {
+            android.view.Display display = activity.getWindowManager().getDefaultDisplay();
+            android.view.Display.Mode current = display.getMode();
+            android.view.Display.Mode best = null;
+            for (android.view.Display.Mode mode : display.getSupportedModes()) {
+                if (mode.getPhysicalWidth() != current.getPhysicalWidth()
+                        || mode.getPhysicalHeight() != current.getPhysicalHeight()) {
+                    continue;
+                }
+                float rate = mode.getRefreshRate();
+                if (rate >= 59 && (best == null || rate < best.getRefreshRate())) {
+                    best = mode;
+                }
+            }
+            android.view.WindowManager.LayoutParams params = window.getAttributes();
+            if (best != null) {
+                params.preferredDisplayModeId = best.getModeId();
+            }
+            params.preferredRefreshRate = 60;
+            window.setAttributes(params);
+            Log.i(TAG, "WindowBridge: frame rate " + current.getRefreshRate() + " Hz -> "
+                    + (best == null ? 60 : best.getRefreshRate()) + " Hz");
+        } catch (Exception e) {
+            Log.w(TAG, "WindowBridge: frame rate not limited: " + e);
+        }
+    }
+
+    /// The bars back on a tap on the empty part of the app (Marko, round 18:
+    /// "tapping on empty space with no buttons will invite this navigation");
+    /// the next touch (or SHOW_MS) hides them again
+    public static void show(Context context) {
+        if (!(context instanceof Activity) || Build.VERSION.SDK_INT < 30) {
+            return;
+        }
+        final Activity activity = (Activity) context;
+        activity.runOnUiThread(() -> {
+            WindowInsetsController controller = activity.getWindow().getInsetsController();
+            if (controller != null) {
+                // the navigation bar only: the status bar stays hidden
+                Log.i(TAG, "WindowBridge: showing the navigation bar");
+                controller.show(WindowInsets.Type.navigationBars());
+                sShownSince = 0;
+            }
+        });
+    }
+
+    /// The radius of the screen's rounded corners in pixels (round 19: the
+    /// top right meter was cut by the corner)
+    /** The battery's charge in % (Marko 14.10.2026: the battery line by the clock), -1 unknown. */
+    public static int battery(Context context) {
+        BatteryManager manager = context.getSystemService(BatteryManager.class);
+        return manager != null ? manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) : -1;
+    }
+
+    public static int cornerRadius() {
+        return sCorner;
+    }
+
+    /// Whether the system bars are on screen (from the last watch pass)
+    public static boolean visible() {
+        return sVisible;
+    }
+
+    /// The room the visible system bars and the camera hole take: left, top,
+    /// right, bottom (px). Bars: 0 while they are hidden.
     public static int[] insets() {
         return sInsets;
+    }
+
+    /// One pass of the bars watch, on Android's UI thread: called by the app
+    /// every 300 ms (round 14: the decor's own postDelayed loop never ran, so
+    /// the bars a swipe brought stayed over the app and it made no room)
+    public static void poll(Context context) {
+        if (!(context instanceof Activity) || Build.VERSION.SDK_INT < 30) {
+            return;
+        }
+        final Activity activity = (Activity) context;
+        activity.runOnUiThread(() -> {
+            try {
+                Window window = activity.getWindow();
+                update(window, window.getDecorView());
+            } catch (Throwable error) {
+                if (!sErrorLogged) {
+                    sErrorLogged = true;
+                    Log.e(TAG, "WindowBridge: insets update failed", error);
+                }
+            }
+        });
     }
 
     // Every 300 ms: note the bars' room for the app, and hide the bars again
@@ -80,8 +179,18 @@ public final class WindowBridge {
         decor.postDelayed(new Runnable() {
             @Override
             public void run() {
-                update(window, decor);
-                decor.postDelayed(this, 300);
+                // Round 12 (0a52eb0): the bars stayed over the app; whatever
+                // goes wrong in one pass, the watch goes on (and says why)
+                try {
+                    update(window, decor);
+                } catch (Throwable error) {
+                    if (!sErrorLogged) {
+                        sErrorLogged = true;
+                        Log.e(TAG, "WindowBridge: insets update failed", error);
+                    }
+                } finally {
+                    decor.postDelayed(this, 300);
+                }
             }
         }, 300);
     }
@@ -94,11 +203,64 @@ public final class WindowBridge {
         // The bars' full room while they are visible, nothing while hidden:
         // not the animated value (round 10: the margins went to 0 while the
         // bar was still on screen)
-        final boolean visible = insets.isVisible(WindowInsets.Type.systemBars());
-        Insets bars = visible
-                ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
-                : Insets.NONE;
-        sInsets = new int[] {bars.left, bars.top, bars.right, bars.bottom};
+        // Either bar counts (round 18: isVisible(systemBars()) needs BOTH, so
+        // the navigation bar alone, brought by a tap, was never seen: it never
+        // hid and the app made no room for it)
+        final boolean navVisible = insets.isVisible(WindowInsets.Type.navigationBars());
+        final boolean statusVisible = insets.isVisible(WindowInsets.Type.statusBars());
+        final boolean visible = navVisible || statusVisible;
+        sVisible = visible;
+        if (Build.VERSION.SDK_INT >= 31) {
+            int corner = 0;
+            for (int position : new int[] {android.view.RoundedCorner.POSITION_TOP_LEFT,
+                         android.view.RoundedCorner.POSITION_TOP_RIGHT}) {
+                android.view.RoundedCorner rounded = insets.getRoundedCorner(position);
+                if (rounded != null) {
+                    corner = Math.max(corner, rounded.getRadius());
+                }
+            }
+            sCorner = corner;
+        }
+        Insets bars = Insets.max(
+                navVisible ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars())
+                           : Insets.NONE,
+                statusVisible ? insets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars())
+                              : Insets.NONE);
+        // The camera hole (display cutout): nothing may sit under it (Marko,
+        // 12.10.2026: "spread the user interface around this hole"). A hole on
+        // a side (landscape) or off centre at the top: the app keeps out of
+        // that edge's band. A hole in the middle of the top edge (the Nothing
+        // phones, most phones): no band, the skin's top row keeps its middle
+        // free (logo left, key badge right).
+        Insets cutout = Insets.NONE;
+        int cutTop = 0;
+        try {
+            cutout = insets.getInsets(WindowInsets.Type.displayCutout());
+            cutTop = cutout.top;
+            DisplayCutout shape = insets.getDisplayCutout();
+            if (shape != null && cutTop > 0) {
+                Rect hole = shape.getBoundingRectTop();
+                int width = decor.getWidth();
+                if (hole != null && !hole.isEmpty() && width > 0
+                        && hole.left >= width * 3 / 8 && hole.right <= width * 5 / 8) {
+                    cutTop = 0;
+                }
+            }
+        } catch (Throwable error) {
+            if (!sErrorLogged) {
+                sErrorLogged = true;
+                Log.e(TAG, "WindowBridge: display cutout unknown", error);
+            }
+            cutout = Insets.NONE;
+            cutTop = 0;
+        }
+        int[] next = new int[] {Math.max(bars.left, cutout.left), Math.max(bars.top, cutTop),
+                Math.max(bars.right, cutout.right), Math.max(bars.bottom, cutout.bottom)};
+        if (!java.util.Arrays.equals(next, sInsets)) {
+            Log.i(TAG, "WindowBridge: bars " + (visible ? "shown" : "hidden") + ", insets "
+                    + java.util.Arrays.toString(next) + " (cutout " + cutout + ")");
+        }
+        sInsets = next;
         if (!visible) {
             sShownSince = 0;
             return;

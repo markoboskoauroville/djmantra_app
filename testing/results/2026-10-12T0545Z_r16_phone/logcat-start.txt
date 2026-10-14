@@ -1,0 +1,5 @@
+10-12 07:46:08.567  8824  8850 I DJMantra: info [Main] Interface: Qt Quick (GPU)
+10-12 07:46:09.535  8824  8850 I DJMantra: info [Main] Deck 2 playing
+10-12 07:46:09.535  8824  8850 I DJMantra: info [Main] Deck 1 playing
+10-12 07:46:09.871  8824  8850 I DJMantra: info [Main] Sections: [Channel1] 3 changes, at 32.2 s, 160.2 s, 192.2 s
+10-12 07:46:09.887  8824  8850 I DJMantra: info [Main] Sections: [Channel2] 5 changes, at 67.3 s, 83.8 s, 133.5 s, 150.0 s, 191.4 s

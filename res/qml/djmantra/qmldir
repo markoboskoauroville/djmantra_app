@@ -1,0 +1,38 @@
+singleton Style 1.0 Style.qml
+singleton PixelFont 1.0 PixelFont.qml
+singleton Toasts 1.0 Toasts.qml
+singleton Recorder 1.0 Recorder.qml
+AutoCue 1.0 AutoCue.qml
+AutoMix 1.0 AutoMix.qml
+AutoPhase 1.0 AutoPhase.qml
+BigWaveform 1.0 BigWaveform.qml
+DButton 1.0 DButton.qml
+CloseButton 1.0 CloseButton.qml
+Chevron 1.0 Chevron.qml
+RoomEqPage 1.0 RoomEqPage.qml
+TurntableStop 1.0 TurntableStop.qml
+DFader 1.0 DFader.qml
+DKnob 1.0 DKnob.qml
+DeckControls 1.0 DeckControls.qml
+DeckHeader 1.0 DeckHeader.qml
+KeyBadge 1.0 KeyBadge.qml
+KeyTools 1.0 KeyTools.qml
+LibraryPage 1.0 LibraryPage.qml
+MatrixDeck 1.0 MatrixDeck.qml
+MatrixDisplay 1.0 MatrixDisplay.qml
+MenuSheet 1.0 MenuSheet.qml
+BeatStatsPage 1.0 BeatStatsPage.qml
+DownloadQueuePage 1.0 DownloadQueuePage.qml
+MixerPage 1.0 MixerPage.qml
+NavBar 1.0 NavBar.qml
+Overview 1.0 Overview.qml
+PhrasingPage 1.0 PhrasingPage.qml
+SettingsPage 1.0 SettingsPage.qml
+ClockDisplay 1.0 ClockDisplay.qml
+UsageMeter 1.0 UsageMeter.qml
+VersionLink 1.0 VersionLink.qml
+VuBar 1.0 VuBar.qml
+WheelPage 1.0 WheelPage.qml
+AutoMixPage 1.0 AutoMixPage.qml
+MatrixText 1.0 MatrixText.qml
+PitchVolumeFader 1.0 PitchVolumeFader.qml

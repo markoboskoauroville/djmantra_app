@@ -1,0 +1,150 @@
+Analysis: (It Goes Like) Nanana - Edit.mp3	bpm 130.0000	key 6A	first_beat_s 0.1341	const 1
+Analysis: 4B.mp3	bpm 126.0000	key 6A	first_beat_s 0.2636	const 1
+Analysis: About Damn Time - Purple Disco Machine Remix.mp3	bpm 119.0000	key 3A	first_beat_s 0.1269	const 1
+Analysis: About You.mp3	bpm 125.0000	key 4A	first_beat_s 0.0654	const 1
+Analysis: Ai No Corrida.mp3	bpm 122.5000	key 9A	first_beat_s 0.1365	const 1
+Analysis: Ain't No Mountain High Enough.mp3	bpm 129.2000	key 9A	first_beat_s 0.1103	const 0
+Analysis: Ain't Nobody.mp3	bpm 104.3333	key 2A	first_beat_s 0.1629	const 1
+Analysis: Always There - David Morales Remix.mp3	bpm 115.0833	key 4A	first_beat_s 0.4107	const 1
+Analysis: Anchor Point.mp3	bpm 123.0000	key 8A	first_beat_s 0.0252	const 1
+Analysis: Baby Got Back.mp3	bpm 128.5000	key 6A	first_beat_s 0.1784	const 1
+Analysis: Best of My Love.mp3	bpm 117.7500	key 8A	first_beat_s 0.0987	const 0
+Analysis: Beyond Strings.mp3	bpm 118.0000	key 5A	first_beat_s 0.3700	const 1
+Analysis: Body Moving - Riordan Remix.mp3	bpm 131.0000	key 3A	first_beat_s 0.3605	const 1
+Analysis: Brick House.mp3	bpm 107.9200	key 8A	first_beat_s 0.0406	const 0
+Analysis: Careful (From The Original Motion Picture 'Magic Mike's Last Dance').mp3	bpm 102.0000	key 1A	first_beat_s 0.2841	const 1
+Analysis: Cheap Thrills.mp3	bpm 90.0000	key 11A	first_beat_s 0.3803	const 1
+Analysis: Children.mp3	bpm 137.0833	key 4A	first_beat_s 0.2602	const 1
+Analysis: Club Tropicana.mp3	bpm 117.0000	key 6B	first_beat_s 0.3507	const 1
+Analysis: Come Together - Extended Mix.mp3	bpm 120.0000	key 7A	first_beat_s 0.0978	const 1
+Analysis: Dance The Night - From Barbie The Album.mp3	bpm 110.0000	key 10A	first_beat_s 0.0684	const 1
+Analysis: Diamonds - Dave Aude 100 Extended.mp3	bpm 100.0000	key 10A	first_beat_s 0.0354	const 1
+Analysis: Diamonds - Remix.mp3	bpm 92.0000	key 10A	first_beat_s 0.0566	const 1
+Analysis: Do You See the Light (Looking For) [feat. Niki Harris] - 7' Edit.mp3	bpm 131.9781	key 11A	first_beat_s 0.2537	const 1
+Analysis: Don't Call Me Baby.mp3	bpm 125.0000	key 3A	first_beat_s 0.0734	const 1
+Analysis: Don't You Want Me - Hooj Mix Edit.mp3	bpm 128.0000	key 8A	first_beat_s 0.0447	const 1
+Analysis: El Layali.mp3	bpm 122.0000	key 4B	first_beat_s 0.0410	const 1
+Analysis: En Su Lugar.mp3	bpm 124.0000	key 12A	first_beat_s 0.0251	const 1
+Analysis: Escape (feat. Hayla).mp3	bpm 126.0000	key 8A	first_beat_s 0.0432	const 1
+Analysis: Everybody (Backstreet's Back) [From 'This is The End'].mp3	bpm 108.0595	key 3A	first_beat_s 0.3651	const 1
+Analysis: Everywhere - 2017 Remaster.mp3	bpm 114.8400	key 12B	first_beat_s 0.1567	const 0
+Analysis: Exterminate (feat. Niki Haris) - Endzeit 7.mp3	bpm 125.9704	key 8A	first_beat_s 0.1300	const 1
+Analysis: Fever - 2000 Remastered Version.mp3	bpm 136.3800	key 8A	first_beat_s 0.0174	const 0
+Analysis: Fever - Gabin 'Fever' Remix  2003 Digital Remaster.mp3	bpm 125.0000	key 8A	first_beat_s 0.1691	const 1
+Analysis: Fever(1).mp3	bpm 136.0000	key 8A	first_beat_s 0.2148	const 0
+Analysis: Fever.mp3	bpm 115.0000	key 11A	first_beat_s 0.0391	const 1
+Analysis: Flyin Away.mp3	bpm 99.9167	key 4A	first_beat_s 0.1983	const 1
+Analysis: Forget Me Nots - Remastered.mp3	bpm 113.8333	key 11A	first_beat_s 0.1605	const 1
+Analysis: Free (Live Your Life) - Felix Da Housecat x Chris Trucher Remix.mp3	bpm 126.0000	key 4A	first_beat_s 0.0706	const 1
+Analysis: Free (Mood II Swing Radio Edit).mp3	bpm 125.0000	key 4A	first_beat_s 0.0598	const 1
+Analysis: Free.mp3	bpm 125.0119	key 4A	first_beat_s 0.3740	const 1
+Analysis: Fresh.mp3	bpm 117.7081	key 10A	first_beat_s 0.0911	const 1
+Analysis: Gangsta's Paradise.mp3	bpm 159.9167	key 5A	first_beat_s 0.3543	const 1
+Analysis: Get Down On It.mp3	bpm 112.6700	key 10A	first_beat_s 0.1451	const 0
+Analysis: Get Down Saturday Night.mp3	bpm 116.5000	key 10A	first_beat_s 0.2225	const 1
+Analysis: Give It To Me - Full Vocal Mix.mp3	bpm 126.0000	key 1A	first_beat_s 0.0322	const 1
+Analysis: Groovejet (If This Ain't Love) [feat. Sophie Ellis-Bextor].mp3	bpm 123.0000	key 8A	first_beat_s 0.0880	const 1
+Analysis: He Wasn't Man Enough.mp3	bpm 88.0000	key 9A	first_beat_s 0.2920	const 1
+Analysis: Heroes (we could be).mp3	bpm 126.0236	key 7B	first_beat_s 0.0897	const 1
+Analysis: Hey Hey.mp3	bpm 126.0000	key 2A	first_beat_s 0.0231	const 1
+Analysis: Hold Me.mp3	bpm 120.0000	key 8A	first_beat_s 0.0244	const 1
+Analysis: How Deep Is Your Love.mp3	bpm 122.0000	key 9A	first_beat_s 0.0334	const 1
+Analysis: Hung Up - Bill Hamel Remix.mp3	bpm 130.0000	key 7A	first_beat_s 0.0860	const 1
+Analysis: I Believe In Love Again - Jex Opolis Remix Edit.mp3	bpm 129.0000	key 6A	first_beat_s 0.2673	const 1
+Analysis: I Believe In Love Again(1).mp3	bpm 102.0000	key 6A	first_beat_s 0.4504	const 1
+Analysis: I Believe In Love Again.mp3	bpm 102.0000	key 6A	first_beat_s 0.4504	const 1
+Analysis: I Could Be The One (Avicii Vs. Nicky Romero) - Radio Edit.mp3	bpm 128.0000	key 11B	first_beat_s 0.0206	const 1
+Analysis: I Heard It Through The Grapevine.mp3	bpm 117.9100	key 2A	first_beat_s 0.1800	const 0
+Analysis: I Like To Move It (feat. The Mad Stuntman) ( Erick 'More' Album Mix).mp3	bpm 123.0000	key 5A	first_beat_s 0.0208	const 1
+Analysis: I Need A Miracle.mp3	bpm 126.0000	key 11B	first_beat_s 0.0470	const 1
+Analysis: I Want Your Love - Dimitri from Paris Remix; 2018 Remaster.mp3	bpm 122.0000	key 8A	first_beat_s 0.2614	const 1
+Analysis: I'll Be Around.mp3	bpm 112.8100	key 1A	first_beat_s 0.0522	const 0
+Analysis: I'm Coming Out.mp3	bpm 109.0600	key 7A	first_beat_s 0.0871	const 0
+Analysis: I'm Every Woman.mp3	bpm 113.7500	key 5A	first_beat_s 0.0290	const 0
+Analysis: I'm Good (Blue).mp3	bpm 128.0000	key 6A	first_beat_s 0.1210	const 1
+Analysis: It Makes You Forget (Itgehane) - Edit.mp3	bpm 125.0000	key 6A	first_beat_s 0.0266	const 1
+Analysis: It's Not Right - Radio Edit.mp3	bpm 123.0000	key 4A	first_beat_s 0.0207	const 1
+Analysis: Jack Had A Groove - Glen Horsborough Edit.mp3	bpm 124.0000	key 8A	first_beat_s 0.0299	const 1
+Analysis: Leave The World Behind - Radio Edit.mp3	bpm 128.0000	key 2A	first_beat_s 0.0241	const 1
+Analysis: Let Me Love You (Until You Learn To Love Yourself).mp3	bpm 125.0000	key 8B	first_beat_s 0.1663	const 1
+Analysis: Let the sunshine in - Remix.mp3	bpm 126.0000	key 10A	first_beat_s 0.1100	const 1
+Analysis: Live Without Your Love (with Steve Lacy).mp3	bpm 128.0000	key 10A	first_beat_s 0.2540	const 1
+Analysis: Lost in Music - Dimitri from Paris Remix.mp3	bpm 124.0000	key 7A	first_beat_s 0.3810	const 1
+Analysis: Lotus Heart - Kalya Scintilla Remix.mp3	bpm 90.0000	key 10A	first_beat_s 0.2621	const 1
+Analysis: Love Don't Let Me Go.mp3	bpm 127.0000	key 4A	first_beat_s 0.0770	const 1
+Analysis: Love Me Again.mp3	bpm 126.0000	key 6A	first_beat_s 0.1342	const 1
+Analysis: Love Unlimited.mp3	bpm 94.0833	key 11A	first_beat_s 0.4457	const 1
+Analysis: Lovely Day.mp3	bpm 97.8900	key 12B	first_beat_s 0.0871	const 0
+Analysis: Make Luv - Live.mp3	bpm 124.7828	key 4A	first_beat_s 0.0376	const 1
+Analysis: Mercy (Lady Bee Remix).mp3	bpm 98.0000	key 9A	first_beat_s 0.0216	const 1
+Analysis: Mi Casa.mp3	bpm 124.0000	key 11A	first_beat_s 0.4030	const 1
+Analysis: Miss You.mp3	bpm 123.0000	key 12A	first_beat_s 0.0264	const 1
+Analysis: Missing - Todd Terry Remix.mp3	bpm 123.5000	key 8A	first_beat_s 0.2171	const 1
+Analysis: More Than A Woman - SG's Paradise Edit.mp3	bpm 105.3993	key 3A	first_beat_s 0.0198	const 1
+Analysis: Mosaic - Yohan & David Remix.mp3	bpm 122.0000	key 10B	first_beat_s 0.0223	const 1
+Analysis: Mwaki.mp3	bpm 120.0000	key 6A	first_beat_s 0.1621	const 1
+Analysis: No Scrubs.mp3	bpm 92.9167	key 1A	first_beat_s 0.1429	const 1
+Analysis: Oh Honey.mp3	bpm 122.0000	key 2A	first_beat_s 0.0234	const 1
+Analysis: On My Love.mp3	bpm 123.0500	key 3A	first_beat_s 0.0871	const 0
+Analysis: Only Human.mp3	bpm 148.0000	key 7A	first_beat_s 0.0819	const 1
+Analysis: Plastic Dreams - David Morales Club Mix.mp3	bpm 129.5578	key 5A	first_beat_s 0.0373	const 1
+Analysis: Please Don't Go - DJ Leao Remix.mp3	bpm 114.0000	key 6B	first_beat_s 0.0285	const 1
+Analysis: Pony (From 'Magic Mike').mp3	bpm 142.0315	key 12A	first_beat_s 0.3965	const 1
+Analysis: Pony.mp3	bpm 142.0319	key 12A	first_beat_s 0.1047	const 1
+Analysis: Red Room.mp3	bpm 81.0000	key 10A	first_beat_s 0.3895	const 1
+Analysis: Redlight.mp3	bpm 125.0000	key 6A	first_beat_s 0.0267	const 1
+Analysis: Rock with You - Single Version.mp3	bpm 114.0434	key 3A	first_beat_s 0.1099	const 1
+Analysis: Running Blind.mp3	bpm 126.0000	key 11A	first_beat_s 0.0248	const 1
+Analysis: Sauce.mp3	bpm 127.0000	key 11A	first_beat_s 0.0316	const 1
+Analysis: September (Remix).mp3	bpm 123.1074	key 11B	first_beat_s 0.3137	const 1
+Analysis: Show Me Love (2020 Remaster) - StoneBridge Club Mix.mp3	bpm 122.6858	key 8A	first_beat_s 0.0407	const 1
+Analysis: Sing Hallelujah!.mp3	bpm 124.6949	key 4A	first_beat_s 0.0662	const 1
+Analysis: Stayin' Alive.mp3	bpm 103.6667	key 4A	first_beat_s 0.0609	const 1
+Analysis: Stop Movin'.mp3	bpm 125.0000	key 3A	first_beat_s 0.0244	const 1
+Analysis: Street Player - Dance Mix.mp3	bpm 123.8900	key 7A	first_beat_s 0.0174	const 0
+Analysis: Street Player - Dimitri From Paris Special Dubwize Mix.mp3	bpm 126.0128	key 7A	first_beat_s 0.0538	const 1
+Analysis: Sugar (feat. Francesco Yates).mp3	bpm 123.0500	key 3A	first_beat_s 0.2496	const 0
+Analysis: Summertime Sadness (Lana Del Rey Vs. Cedric Gervais) - Cedric Gervais Remix.mp3	bpm 126.0000	key 12A	first_beat_s 0.2366	const 1
+Analysis: Superstition - Sami Dee's Flamantic Remix.mp3	bpm 124.0000	key 2A	first_beat_s 0.0378	const 1
+Analysis: Surge - PROFF & Igor Garanin Remix.mp3	bpm 122.0000	key 5A	first_beat_s 0.0273	const 1
+Analysis: Swamp Related (2023 Remastered).mp3	bpm 160.0000	key 5A	first_beat_s 0.0225	const 1
+Analysis: Sweat.mp3	bpm 126.0000	key 3A	first_beat_s 0.0266	const 1
+Analysis: Teebee03.mp3	bpm 126.0000	key 7A	first_beat_s 0.0263	const 1
+Analysis: Tell Me Why - MEDUZA Remix.mp3	bpm 126.0000	key 10A	first_beat_s 0.0224	const 1
+Analysis: Tell Me Why - Radio Edit.mp3	bpm 129.0000	key 10A	first_beat_s 0.1002	const 1
+Analysis: That Girl.mp3	bpm 122.0000	key 4A	first_beat_s 0.0376	const 1
+Analysis: The Corner (feat. Joe Devlin).mp3	bpm 175.0000	key 4A	first_beat_s 0.0242	const 1
+Analysis: The Novel Sound.mp3	bpm 122.0978	key 4A	first_beat_s 0.0760	const 1
+Analysis: The Outer.mp3	bpm 86.0000	key 5A	first_beat_s 0.0141	const 1
+Analysis: The Outsider.mp3	bpm 112.6482	key 8A	first_beat_s 0.1666	const 1
+Analysis: The Rapture Pt.III.mp3	bpm 120.0000	key 8A	first_beat_s 0.0269	const 1
+Analysis: The Real Thing.mp3	bpm 143.9522	key 8A	first_beat_s 0.3575	const 1
+Analysis: The Secret Kissing of the Sun and Moon(1).mp3	bpm 111.8333	key 11A	first_beat_s 0.1743	const 1
+Analysis: The Secret Kissing of the Sun and Moon.mp3	bpm 111.8333	key 11A	first_beat_s 0.1551	const 1
+Analysis: The Switch.mp3	bpm 125.0000	key 6A	first_beat_s 0.0345	const 1
+Analysis: The Weekend - Radio Edit.mp3	bpm 127.0000	key 10A	first_beat_s 0.2653	const 1
+Analysis: Thinking Of You.mp3	bpm 111.1200	key 8A	first_beat_s 0.0290	const 0
+Analysis: Time After Time (feat. Diana Miro).mp3	bpm 124.0000	key 6A	first_beat_s 0.0260	const 1
+Analysis: Titli.mp3	bpm 72.0000	key 9A	first_beat_s 0.0507	const 1
+Analysis: Toxic - Acoustic.mp3	bpm 108.0000	key 5A	first_beat_s 0.2724	const 1
+Analysis: Transmission - Joris Voorn Remix.mp3	bpm 124.0000	key 7A	first_beat_s 0.2536	const 1
+Analysis: Upside Down.mp3	bpm 107.7600	key 6A	first_beat_s 0.1103	const 0
+Analysis: Waves & Wavs.mp3	bpm 120.0000	key 8A	first_beat_s 0.0249	const 1
+Analysis: We Are A Tribe.mp3	bpm 120.0000	key 10A	first_beat_s 0.0263	const 1
+Analysis: Weak.mp3	bpm 123.0000	key 2A	first_beat_s 0.1020	const 1
+Analysis: Welcome To The People.mp3	bpm 124.0000	key 12A	first_beat_s 0.0383	const 1
+Analysis: What Time Is Love  Time Of Love.mp3	bpm 120.0751	key 6B	first_beat_s 0.2316	const 1
+Analysis: When Love Takes Over (feat. Kelly Rowland).mp3	bpm 130.0000	key 2B	first_beat_s 0.0568	const 1
+Analysis: Who Is He (And What Is He to You).mp3	bpm 99.3333	key 1A	first_beat_s 0.4992	const 1
+Analysis: Woman (Dance Remix).mp3	bpm 128.0000	key 5A	first_beat_s 0.1862	const 1
+Analysis: Woman(1).mp3	bpm 108.0000	key 6A	first_beat_s 0.4749	const 1
+Analysis: Woman.mp3	bpm 108.0000	key 6A	first_beat_s 0.4749	const 1
+Analysis: World Hold On (Children Of The Sky) - FISHER Rework.mp3	bpm 127.0000	key 1A	first_beat_s 0.0393	const 1
+Analysis: World Hold On - FISHER Rework.mp3	bpm 127.0000	key 1A	first_beat_s 0.0393	const 1
+Analysis: You & Me - Rivo Remix.mp3	bpm 172.2700	key 3A	first_beat_s 0.1567	const 0
+Analysis: You Are The Universe.mp3	bpm 115.0180	key 7A	first_beat_s 0.4398	const 1
+Analysis: You Give Me Something.mp3	bpm 120.5193	key 10A	first_beat_s 0.3703	const 1
+Analysis: You Rock My World - Radio Edit.mp3	bpm 95.0000	key 9A	first_beat_s 0.0382	const 1
+Analysis: You Should Be Dancing - Club Mix.mp3	bpm 110.0000	key 6A	first_beat_s 0.1496	const 1
+Analysis: You're Makin' Me High.mp3	bpm 92.1215	key 3A	first_beat_s 0.2277	const 1
+Analysis: summer on the inside.mp3	bpm 120.7864	key 6A	first_beat_s 0.0194	const 1

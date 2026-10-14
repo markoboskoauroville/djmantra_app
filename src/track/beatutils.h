@@ -38,6 +38,16 @@ class BeatUtils {
 
     static QVector<mixxx::audio::FramePos> getBeats(const QVector<ConstRegion>& constantRegions);
 
+    /// DJ Mantra: false when the music does not keep one tempo (a live
+    /// drummer): under 55 % of the ironed beats lie within 25 ms of the
+    /// constant grid and no steady region covers 15 % of the song. Then a
+    /// beat map follows the music better (testing/sections/REKORDBOX_COMPARE.md:
+    /// on Marko's 144 songs, beats within 40 ms of rekordbox's 89.9 -> 93.9 %).
+    static bool followsOneTempo(const QVector<ConstRegion>& constantRegions,
+            mixxx::Bpm bpm,
+            mixxx::audio::FramePos firstBeat,
+            mixxx::audio::SampleRate sampleRate);
+
     static std::optional<mixxx::Bpm> trySnap(mixxx::Bpm minBpm,
             mixxx::Bpm centerBpm,
             mixxx::Bpm maxBpm,

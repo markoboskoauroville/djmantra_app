@@ -58,7 +58,15 @@ int runMixxx(MixxxApplication* pApp, const CmdlineArgs& args) {
 
     int exitCode;
 #ifdef MIXXX_USE_QML
-    if (args.isQml()) {
+    bool quick = args.isQml();
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: only the Qt Quick interface (Marko, 12.10.2026: "completely
+    // remove the legacy design ... the old one is gone"); a stored
+    // classic_ui=true from older versions is ignored
+    quick = true;
+    qInfo() << "Interface: Qt Quick (GPU)";
+#endif
+    if (quick) {
         mixxx::qml::QmlApplication qmlApplication(pApp, pCoreServices);
         exitCode = pApp->exec();
     } else

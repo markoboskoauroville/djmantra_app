@@ -1,0 +1,66 @@
+10-12 07:46:06.515  8824  8824 W Qt A11Y : Unable to initialize the accessibility delegate with a null layout
+10-12 07:46:06.515  8824  8824 W Qt A11Y : Could not (yet) activate platform accessibility.
+10-12 07:46:09.534  8824  8850 W DJMantra: warning [Main] QQmlApplicationEngine failed to load component
+10-12 07:46:09.534  8824  8850 W DJMantra: warning [Main] file:///data/user/0/com.djmantra.app/files/res/qml/djmantra/Main.qml:93:13: Type KeyBadge unavailable
+10-12 07:46:09.534  8824  8850 W DJMantra: warning [Main] file:///data/user/0/com.djmantra.app/files/res/qml/djmantra/KeyBadge.qml: Type Style unavailable
+10-12 07:46:09.534  8824  8850 W DJMantra: warning [Main] file:///data/user/0/com.djmantra.app/files/res/qml/djmantra/Style.qml:15:29: Cannot assign a value to a signal (expecting a script to be run)
+10-12 07:46:09.534  8824  8850 E DJMantra: critical [Main] Failed to load QML file "/data/user/0/com.djmantra.app/files/res/qml/djmantra/Main.qml"
+10-12 07:46:09.541  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.542  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.808  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.809  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.810  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.810  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.810  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.811  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.811  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.815  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.816  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.816  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.817  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.817  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.818  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.819  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.820  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.820  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.821  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.822  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.822  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.823  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.823  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.823  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.824  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.824  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.825  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.825  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.825  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.825  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.826  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.826  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.826  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.826  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.827  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.827  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.828  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.828  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.828  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.828  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.830  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.831  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.832  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.834  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.834  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.835  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.835  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.848  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.871  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.888  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.888  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.888  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.889  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.889  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.889  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.890  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.890  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.891  8824  8824 W Qt A11Y : AccessibilityEvent with empty description
+10-12 07:46:09.891  8824  8824 W Qt A11Y : AccessibilityEvent with empty description

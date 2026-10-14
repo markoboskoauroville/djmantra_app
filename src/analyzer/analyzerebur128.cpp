@@ -2,6 +2,9 @@
 
 #include <QtDebug>
 
+#include <algorithm>
+#include <cmath>
+
 #include "analyzer/analyzertrack.h"
 #include "analyzer/constants.h"
 #include "track/track.h"
@@ -25,7 +28,25 @@ bool AnalyzerEbur128::initialize(
         const AnalyzerTrack& track,
         mixxx::audio::SampleRate sampleRate,
         SINT frameLength) {
-    if (m_rgSettings.isAnalyzerDisabled(2, track.getTrack()) || frameLength <= 0) {
+#ifdef __ANDROID_PORT__
+    // DJ Mantra AUTO GAIN (Marko 14.10.2026): each song's peak is needed; a song measured
+    // before (a ratio but no peak) is measured again
+    const bool needsPeak = !track.getTrack()->getReplayGain().hasPeak();
+    if (!needsPeak) {
+        // a song normalized to 0 dBFS by V60 / V61: back to -1 dBFS from its stored ratio,
+        // without measuring it again
+        mixxx::ReplayGain replayGain(track.getTrack()->getReplayGain());
+        const double old = replayGain.getRatio() * replayGain.getPeak();
+        if (std::fabs(old - 1.0) < 0.005) {
+            replayGain.setRatio(std::clamp(replayGain.getRatio() * db2ratio(-1.0), 0.25, 8.0));
+            track.getTrack()->setReplayGain(replayGain);
+            qInfo() << "Normalized: -1 dBFS again for" << track.getTrack()->getLocation();
+        }
+    }
+#else
+    const bool needsPeak = false;
+#endif
+    if ((m_rgSettings.isAnalyzerDisabled(2, track.getTrack()) && !needsPeak) || frameLength <= 0) {
         qDebug() << "Skipping AnalyzerEbur128";
         return false;
     }
@@ -33,7 +54,11 @@ bool AnalyzerEbur128::initialize(
     m_pState = ebur128_init(
             mixxx::kAnalysisChannels,
             sampleRate,
+#ifdef __ANDROID_PORT__
+            EBUR128_MODE_I | EBUR128_MODE_SAMPLE_PEAK);
+#else
             EBUR128_MODE_I);
+#endif
     return m_pState != nullptr;
 }
 
@@ -82,6 +107,24 @@ void AnalyzerEbur128::storeResults(TrackPointer pTrack) {
     const double fReplayGain2 = kReplayGain2ReferenceLUFS - averageLufs;
     mixxx::ReplayGain replayGain(pTrack->getReplayGain());
     replayGain.setRatio(db2ratio(fReplayGain2));
+#ifdef __ANDROID_PORT__
+    // DJ Mantra normalization (Marko 14.10.2026: "every file is normalized to -1 dB"): the
+    // song's sample peak brought to -1 dBFS (-12 .. +18 dB at most), always, by Mixxx's
+    // ReplayGain stage; there is no GAIN knob (the faders set the volume)
+    double peak = 0;
+    for (unsigned int channel = 0; channel < static_cast<unsigned int>(mixxx::kAnalysisChannels); ++channel) {
+        double channelPeak = 0;
+        if (ebur128_sample_peak(m_pState, channel, &channelPeak) == EBUR128_SUCCESS) {
+            peak = std::max(peak, channelPeak);
+        }
+    }
+    if (peak > 0.001) {
+        replayGain.setPeak(static_cast<CSAMPLE>(std::min(peak, 1.0)));
+        replayGain.setRatio(std::clamp(db2ratio(-1.0) / peak, 0.25, 8.0));
+        qInfo() << "Auto gain:" << pTrack->getLocation() << "peak" << ratio2db(peak)
+                << "dB, gain" << ratio2db(replayGain.getRatio()) << "dB";
+    }
+#endif
     pTrack->setReplayGain(replayGain);
     qDebug() << "ReplayGain 2.0 (libebur128) result is" << fReplayGain2
              << "dB for" << pTrack->getFileInfo();

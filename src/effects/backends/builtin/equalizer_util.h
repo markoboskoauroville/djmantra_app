@@ -11,10 +11,19 @@ class EqualizerUtil {
         EffectManifestParameter::ValueScaler valueScaler =
                 EffectManifestParameter::ValueScaler::Logarithmic;
         double maximum = 4.0;
+        double neutral = 0.5;
         if (linear) {
             valueScaler = EffectManifestParameter::ValueScaler::Linear;
             maximum = 2.0;
         }
+#ifdef __ANDROID_PORT__
+        // DJ Mantra: cut only, never boost (Marko, 12.10.2026: "I never boost
+        // frequencies, only cut ... 127 steps for minus only"). The whole knob
+        // travel goes from a full kill up to 0 dB at the top, its default: a
+        // volume-like knob in dB (ControlEffectKnob), finest near 0 dB.
+        maximum = 1.0;
+        neutral = 1.0;
+#endif
 
         EffectManifestParameterPointer low = pManifest->addParameter();
         low->setId("low");
@@ -22,7 +31,7 @@ class EqualizerUtil {
         low->setDescription(QObject::tr("Gain for Low Filter"));
         low->setValueScaler(valueScaler);
         low->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
-        low->setNeutralPointOnScale(0.5);
+        low->setNeutralPointOnScale(neutral);
         low->setRange(0, 1.0, maximum);
 
         EffectManifestParameterPointer killLow = pManifest->addParameter();
@@ -39,7 +48,7 @@ class EqualizerUtil {
         mid->setDescription(QObject::tr("Gain for Mid Filter"));
         mid->setValueScaler(valueScaler);
         mid->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
-        mid->setNeutralPointOnScale(0.5);
+        mid->setNeutralPointOnScale(neutral);
         mid->setRange(0, 1.0, maximum);
 
         EffectManifestParameterPointer killMid = pManifest->addParameter();
@@ -56,7 +65,7 @@ class EqualizerUtil {
         high->setDescription(QObject::tr("Gain for High Filter"));
         high->setValueScaler(valueScaler);
         high->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
-        high->setNeutralPointOnScale(0.5);
+        high->setNeutralPointOnScale(neutral);
         high->setRange(0, 1.0, maximum);
 
         EffectManifestParameterPointer killHigh = pManifest->addParameter();

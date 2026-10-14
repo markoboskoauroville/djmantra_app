@@ -1,5 +1,6 @@
 #include "analyzer/analyzerbeats.h"
 
+#include <QFileInfo>
 #include <QHash>
 #include <QString>
 #include <QVector>
@@ -30,7 +31,8 @@ mixxx::AnalyzerPluginInfo AnalyzerBeats::defaultPlugin() {
 }
 
 AnalyzerBeats::AnalyzerBeats(UserSettingsPointer pConfig, bool enforceBpmDetection)
-        : m_bpmSettings(pConfig),
+        : m_pConfig(pConfig),
+          m_bpmSettings(pConfig),
           m_enforceBpmDetection(enforceBpmDetection),
           m_bPreferencesReanalyzeOldBpm(false),
           m_bPreferencesReanalyzeImported(false),
@@ -157,6 +159,24 @@ bool AnalyzerBeats::shouldAnalyze(TrackPointer pTrack) const {
         return true;
     }
 
+    // DJ Mantra 14.10.2026: a beat map from the old "auto" default while the steady grid is
+    // chosen (now the default): analysed again into one tempo, as djay
+#ifdef __ANDROID_PORT__
+    // a grid made before the 14.10.2026 rules (a drifting song's average tempo): again
+    // (only our own analysis' grids: not imported, typed or tapped ones)
+    if (pBeats->getSubVersion().contains(QStringLiteral("vamp_plugin_id")) &&
+            !pBeats->getSubVersion().contains(QStringLiteral("djm=2"))) {
+        qInfo().noquote() << QStringLiteral("Beats: %1\tan older grid: again")
+                                     .arg(QFileInfo(pTrack->getLocation()).fileName());
+        return true;
+    }
+    if (!pBeats->hasConstantTempo() && beatGridMode() == 0) {
+        qInfo().noquote() << QStringLiteral("Beats: %1\ta beat map, the steady grid is chosen: again")
+                                     .arg(QFileInfo(pTrack->getLocation()).fileName());
+        return true;
+    }
+#endif
+
     QString subVersion = pBeats->getSubVersion();
     if (subVersion == mixxx::rekordboxconstants::beatsSubversion) {
         return m_bPreferencesReanalyzeImported;
@@ -230,7 +250,10 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
                 beats,
                 extraVersionInfo,
                 m_bPreferencesFixedTempo,
-                m_sampleRate);
+                m_sampleRate,
+                // 14.10.2026 (djay compare): 0 is now the steady grid, as djay's (Aum
+                // Ganesha: djay 115, our beat map drifted 91 / 110 / 118); 1 = beat map
+                beatGridMode() == 1);
         qDebug() << "AnalyzerBeats plugin detected" << beats.size()
                  << "beats. Predominant BPM:"
                  << (pBeats ? pBeats->getBpmInRange(
@@ -245,7 +268,102 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
         pBeats = mixxx::Beats::fromConstTempo(m_sampleRate, mixxx::audio::kStartFramePos, bpm);
     }
 
+    // DJ Mantra: the grid on the beat, not the off-beat. The QM tracker locks
+    // onto the hi-hats in ~27 % of Marko's test songs (half a beat off
+    // rekordbox's grid); the kick band's onsets decide between the grid and
+    // the grid moved by half a beat (right on 74 of 78 songs).
+    if (pBeats && pBeats->hasConstantTempo() && beatOnKick()) {
+        if (const auto* pQm = dynamic_cast<const mixxx::AnalyzerQueenMaryBeats*>(m_pPlugin.get())) {
+            pBeats = onTheBeat(pBeats, *pQm, QFileInfo(pTrack->getLocation()).fileName());
+        }
+    } else if (pBeats && !pBeats->hasConstantTempo()) {
+        qInfo().noquote() << QStringLiteral("Beats: %1\tthe tempo is not constant, a beat map")
+                                     .arg(QFileInfo(pTrack->getLocation()).fileName());
+    }
+    // V8, verbose: the beat options of Settings for this song
+    qInfo().noquote() << QStringLiteral("Beats options: %1\tgrid %2\ton the kick %3")
+                                 .arg(QFileInfo(pTrack->getLocation()).fileName(),
+                                         beatGridMode() == 1 ? QStringLiteral("auto (beat map for live drums)")
+                                                             : QStringLiteral("constant"),
+                                         beatOnKick() ? QStringLiteral("on") : QStringLiteral("off"));
     pTrack->trySetBeats(pBeats);
+}
+
+// V8: Settings -> beats ([DJMantra] in the user settings). 14.10.2026: 0 = constant (the
+// default, as djay; the old "auto" value 0 turns into it), 1 = auto (a beat map for live drums)
+int AnalyzerBeats::beatGridMode() const {
+#ifdef __ANDROID_PORT__
+    constexpr int kDefault = 0; // the steady grid, as djay
+#else
+    constexpr int kDefault = 1; // desktop: Mixxx's own behaviour (the test suite)
+#endif
+    return m_pConfig ? m_pConfig->getValue(ConfigKey(QStringLiteral("[DJMantra]"),
+                                                   QStringLiteral("beat_grid_mode")),
+                               kDefault)
+                     : kDefault;
+}
+
+bool AnalyzerBeats::beatOnKick() const {
+    return m_pConfig ? m_pConfig->getValue(ConfigKey(QStringLiteral("[DJMantra]"),
+                                                   QStringLiteral("beat_on_kick")),
+                               1) != 0
+                     : true;
+}
+
+mixxx::BeatsPointer AnalyzerBeats::onTheBeat(const mixxx::BeatsPointer& pBeats,
+        const mixxx::AnalyzerQueenMaryBeats& plugin,
+        const QString& fileName) const {
+    const std::vector<double>& onsets = plugin.kickOnsets();
+    const int step = plugin.stepSizeFrames();
+    const int window = plugin.windowSize();
+    const int count = static_cast<int>(onsets.size());
+    const mixxx::audio::FramePos first = pBeats->firstBeat();
+    if (count < 100 || step <= 0 || !first.isValid()) {
+        return pBeats;
+    }
+    const mixxx::audio::FramePos second = pBeats->findNextBeat(first + 1);
+    if (!second.isValid()) {
+        return pBeats;
+    }
+    const double beatLength = second - first;
+    const double end = static_cast<double>(count) * step;
+    // the mean of the strongest onset within +-2 steps of each grid line
+    const auto score = [&](double start) {
+        double sum = 0;
+        int n = 0;
+        for (double t = start; t < end - m_sampleRate.toDouble(); t += beatLength) {
+            const int i = static_cast<int>(std::lround((t - window / 2.0) / step));
+            if (i <= 2 || i >= count - 3) {
+                continue;
+            }
+            double best = 0;
+            for (int j = i - 2; j <= i + 2; ++j) {
+                best = std::max(best, onsets[j]);
+            }
+            sum += best;
+            ++n;
+        }
+        return n > 0 ? sum / n : 0.0;
+    };
+    const double onBeat = score(first.value());
+    const double offBeat = score(first.value() + beatLength / 2);
+    if (offBeat <= onBeat) {
+        return pBeats;
+    }
+    double moved = first.value() + beatLength / 2;
+    if (moved >= beatLength) {
+        moved -= beatLength;
+    }
+    const mixxx::Bpm bpm = pBeats->getBpmInRange(
+            mixxx::audio::kStartFramePos, mixxx::audio::FramePos(end));
+    qInfo().noquote() << QStringLiteral("Beats: %1\tthe grid moved half a beat onto the kick %2 -> %3")
+                                 .arg(fileName)
+                                 .arg(onBeat)
+                                 .arg(offBeat);
+    return mixxx::Beats::fromConstTempo(m_sampleRate,
+            mixxx::audio::FramePos(moved).toNearestFrameBoundary(),
+            bpm,
+            pBeats->getSubVersion());
 }
 
 // static
@@ -256,5 +374,9 @@ QHash<QString, QString> AnalyzerBeats::getExtraVersionInfo(
     if (bPreferencesFastAnalysis) {
         extraVersionInfo["fast_analysis"] = "1";
     }
+#ifdef __ANDROID_PORT__
+    // DJ Mantra's grid rules (14.10.2026: steady by default, a drifting song at its average)
+    extraVersionInfo["djm"] = "2";
+#endif
     return extraVersionInfo;
 }

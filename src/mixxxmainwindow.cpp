@@ -1,5 +1,7 @@
 #include "mixxxmainwindow.h"
 
+#include <memory>
+
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QDebug>
@@ -121,13 +123,14 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
           m_toolTipsCfg(mixxx::preferences::Tooltips::On) {
     DEBUG_ASSERT(pCoreServices);
 #ifdef __ANDROID_PORT__
-    // DJ Mantra: full screen by default on the phone (no status bar); can be
-    // turned off in Preferences -> Interface
+    // DJ Mantra: no Qt full screen on the phone. WindowBridge (Java) hides the
+    // bars itself; with Qt's full screen as well, its hide call showed them
+    // again (round 13: "requestedVisibleTypes -528 -> -9" right after
+    // "hiding the system bars"). The Qt Quick interface, never full screen,
+    // kept them hidden.
     {
         const ConfigKey fullscreenKey("[Config]", "StartInFullscreen");
-        if (!pCoreServices->getSettings()->exists(fullscreenKey)) {
-            pCoreServices->getSettings()->setValue(fullscreenKey, true);
-        }
+        pCoreServices->getSettings()->setValue(fullscreenKey, false);
     }
 #endif
     // DJ Mantra: the phone screens (the phone has no menu bar). The skin's
@@ -163,6 +166,20 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
             };
             actions.midi = [this] { slotOptionsPreferences(); };
             actions.advanced = [this] { slotOptionsPreferences(); };
+            const ConfigKey gpuKey("[DJMantra]", "gpu");
+            actions.gpu = m_pCoreServices->getSettings()->getValue(gpuKey, false);
+            actions.setGpu = [this, gpuKey](bool on) {
+                // Read at the start (initializeQOpenGL())
+                m_pCoreServices->getSettings()->setValue(gpuKey, on);
+                m_pCoreServices->getSettings()->save();
+            };
+            const ConfigKey classicKey("[DJMantra]", "classic_ui");
+            actions.quick = !m_pCoreServices->getSettings()->getValue(classicKey, false);
+            actions.setQuick = [this, classicKey](bool on) {
+                // Read at the start (main.cpp)
+                m_pCoreServices->getSettings()->setValue(classicKey, !on);
+                m_pCoreServices->getSettings()->save();
+            };
             new djmantra::SettingsScreen(screenParent(), actions);
         };
         // A deck's song picker: a tap on the deck's cover in the header sets
@@ -293,13 +310,51 @@ MixxxMainWindow::MixxxMainWindow(std::shared_ptr<mixxx::CoreServices> pCoreServi
 #ifdef MIXXX_USE_QOPENGL
 void MixxxMainWindow::initializeQOpenGL() {
 #ifdef __ANDROID_PORT__
-    // DJ Mantra: a QOpenGLWindow inside widgets (QWindowContainer) gets no
-    // EGL surface on Android and crashes on its first paint (CI launch
-    // test). The skin uses its software waveforms and widgets instead; the
-    // touch interface (QML, M6) draws with Qt Quick.
-    qInfo() << "Android: starting without OpenGL widgets (software waveforms)";
-    initialize();
-    return;
+    // DJ Mantra: the OpenGL widgets (waveforms, VU meters) draw on the GPU
+    // through a QOpenGLWidget on Android (OpenGLChildWidget: Mixxx's
+    // QOpenGLWindow in a window container gets no EGL surface there and
+    // crashed). [DJMantra],gpu 0 (or safe mode) draws on the CPU as before;
+    // so does a GPU that does not start within a few seconds.
+    {
+        // Off by default: in round 12 (A142) the GPU path made every frame a
+        // composition of the whole window on the GUI thread (90th percentile
+        // 250 ms, taps ignored for a minute, no VU meters). Settings turns it on.
+        const bool gpu = m_pCoreServices->getSettings()->getValue(
+                ConfigKey("[DJMantra]", "gpu"), false);
+        if (!gpu || CmdlineArgs::Instance().getSafeMode()) {
+            qInfo() << "Android: drawing on the CPU (software waveforms)";
+            initialize();
+            return;
+        }
+        // The first call reads the settings (later calls have none)
+        WaveformWidgetFactory::getSurfaceFormat(m_pCoreServices->getSettings());
+        WInitialGLWidget* pWidget = new WInitialGLWidget(this);
+        pWidget->setGeometry(QRect(0, 0, 3, 3));
+        SharedGLContext::setWidget(pWidget);
+        auto pStarted = std::make_shared<bool>(false);
+        connect(pWidget, &WInitialGLWidget::onInitialized, this, [this, pStarted] {
+            if (*pStarted) {
+                return;
+            }
+            *pStarted = true;
+            qInfo() << "Android: drawing on the GPU (OpenGL ES)";
+            // Not inside the QOpenGLWidget's first paint (the skin loads)
+            QTimer::singleShot(0, this, [this] { initialize(); });
+        });
+        QTimer::singleShot(4000, this, [this, pStarted, pWidget] {
+            if (*pStarted) {
+                return;
+            }
+            *pStarted = true;
+            qWarning() << "Android: the GPU did not start, drawing on the CPU";
+            SharedGLContext::setWidget(nullptr);
+            pWidget->hide();
+            pWidget->deleteLater();
+            initialize();
+        });
+        pWidget->show();
+        return;
+    }
 #endif
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     // Qt 6 will nno longer crash if no GL is available and
@@ -1655,7 +1710,7 @@ void MixxxMainWindow::closeEvent(QCloseEvent *event) {
 
 void MixxxMainWindow::checkDirectRendering() {
 #ifdef __ANDROID_PORT__
-    // No OpenGL widgets on Android on purpose (initializeQOpenGL()): no
+    // Android: without the GPU the CPU draws (initializeQOpenGL()): no
     // warning about it (a modal box that would stop the startup)
     return;
 #endif

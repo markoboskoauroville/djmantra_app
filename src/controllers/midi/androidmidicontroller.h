@@ -37,14 +37,20 @@ class MidiStreamParser {
 /// reconnects, so its mapping stays loaded; after every (re)connect it asks
 /// the controller for all knob positions (B0 7F 7F) and lets the mapping
 /// refresh its LEDs (djmantraControllerConnected() in the script, if any).
+/// The Mix Ultra's link now (0 none, 1 USB, 2 Bluetooth), for [DJMantra],controller_link
+/// even when the controller connected before that control existed
+int androidMidiControllerLink();
+
 class AndroidMidiController : public MidiController {
     Q_OBJECT
   public:
     explicit AndroidMidiController(const QString& name);
     ~AndroidMidiController() override;
 
+    // round 23: polled every 1 ms, the controller thread took 8 % of a core
+    // with no controller there; now Java's data wakes it (wake())
     bool isPolling() const override {
-        return true;
+        return false;
     }
 
     /// Called from Java's MIDI thread
@@ -66,6 +72,12 @@ class AndroidMidiController : public MidiController {
     QMutex m_mutex;
     QQueue<QByteArray> m_incoming;
     QAtomicInt m_connectedEvents;
+    // the link is Bluetooth: the Mix Ultra sends its faders' and knobs' 14-bit CCs as the
+    // MSB alone there (no LSB), so an LSB of 0 is added (r41, 14.10.2026)
+    QAtomicInt m_bluetooth;
+    // a poll() is queued on the controller thread
+    QAtomicInt m_wakePending;
+    void wake();
     MidiStreamParser m_parser;
 };
 

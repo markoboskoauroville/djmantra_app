@@ -1,5 +1,7 @@
 #include "library/djmantra/trackpicker.h"
 
+#include "control/controlobject.h"
+
 #include <QCollator>
 #include <QDateTime>
 #include <QDir>
@@ -626,8 +628,26 @@ void TrackPicker::itemTapped(QListWidgetItem* pItem) {
         break;
     case KindSong:
         if (m_group.isEmpty()) {
-            // The library (no deck chosen yet): ask which deck
-            itemMenu(pItem);
+            // The library (no deck chosen yet): the free deck, as djay's "load
+            // to free deck" (Marko, 12.10.2026): the one not playing; neither
+            // plays: 1, 2, 1, 2 ...; both play: ask which one
+            const bool playing1 = ControlObject::get(ConfigKey(QStringLiteral("[Channel1]"), QStringLiteral("play"))) > 0;
+            const bool playing2 = ControlObject::get(ConfigKey(QStringLiteral("[Channel2]"), QStringLiteral("play"))) > 0;
+            if (playing1 && playing2) {
+                itemMenu(pItem);
+                break;
+            }
+            static QString s_lastLoaded;
+            QString deck;
+            if (playing1 != playing2) {
+                deck = playing1 ? QStringLiteral("[Channel2]") : QStringLiteral("[Channel1]");
+            } else {
+                deck = s_lastLoaded == QLatin1String("[Channel1]") ? QStringLiteral("[Channel2]")
+                                                                   : QStringLiteral("[Channel1]");
+            }
+            s_lastLoaded = deck;
+            qInfo().noquote() << "TrackPicker: free deck" << deck;
+            load(path, deck);
             break;
         }
         if (m_tab == Tab::Queue) {

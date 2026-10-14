@@ -5,6 +5,11 @@ name: Android
 
 on:
   push:
+    # test reports and notes do not need a build (the tester pushes after every part)
+    paths-ignore:
+      - "testing/**"
+      - "docs/**"
+      - "**.md"
   pull_request:
   workflow_dispatch:
 
@@ -226,7 +231,7 @@ jobs:
           FILES=$(unzip -l "$APK" | grep -c " assets/res/" || true)
           echo "assets/res: $FILES files" | tee -a "$GITHUB_STEP_SUMMARY"
           unzip -l "$APK" | grep -q " assets/res/djmantra-res.stamp" \
-            || { echo "FAIL: assets/res (skins, mappings) missing from the APK"; exit 1; }
+            || { echo "FAIL: assets/res (mappings, QML) missing from the APK"; exit 1; }
           unzip -l "$APK" | grep -q " assets/res/controllers/Hercules DJControl Mix Ultra.midi.xml" \
             || { echo "FAIL: the Mix Ultra mapping is missing from the APK"; exit 1; }
 
@@ -307,15 +312,21 @@ jobs:
 
 
   publish:
-    # Every green build of main becomes the download for testers:
-    # https://github.com/<owner>/<repo>/releases/tag/android-latest
-    name: Publish the tested APKs (main only)
+    # Every green build of main AND of the development branch becomes the
+    # download for testers (Marko, 12.10.2026: the version in the app opens it
+    # to update): https://github.com/<owner>/<repo>/releases/tag/android-latest
+    name: Publish the tested APKs (main and the development branch)
     runs-on: ubuntu-24.04
     needs: [app, launch]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ccr-eb7d1019-d3kubd')
     permissions:
       contents: write
     steps:
+      # only CMakeLists.txt: the version (V1, V2 ...) for the file names
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: CMakeLists.txt
+          sparse-checkout-cone-mode: false
       - uses: actions/download-artifact@v4
         with:
           name: djmantra-arm64-v8a-apk
@@ -329,7 +340,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          VERSION=0.5.0
+          VERSION=$(sed -n 's/^set(DJMANTRA_VERSION_NUMBER \([0-9]*\))/V\1/p' CMakeLists.txt)
+          test -n "$VERSION" || { echo "FAIL: no DJMANTRA_VERSION_NUMBER in CMakeLists.txt"; exit 1; }
           SHORT=${GITHUB_SHA::7}
           mv out/djmantra-arm64-v8a.apk "out/DJMantra-${VERSION}-${SHORT}-phone-arm64.apk"
           mv out/djmantra-x86_64.apk "out/DJMantra-${VERSION}-${SHORT}-emulator-x86_64.apk"
@@ -338,7 +350,7 @@ jobs:
           gh release create android-latest out/*.apk \
             --prerelease --target "$GITHUB_SHA" \
             --title "DJ Mantra ${VERSION} (test build ${SHORT})" \
-            --notes "Newest build of main that passed every check: unit tests, the APK library check, and the launch test on an Android emulator (starts, sound output running, main window ready).
+            --notes "Newest build (${GITHUB_REF_NAME}) that passed every check: unit tests, the APK library check, and the launch test on an Android emulator (starts, sound output running, main window ready).
 
           - Phones (Pixel 7 and other 64-bit ARM phones): **DJMantra-${VERSION}-${SHORT}-phone-arm64.apk**
           - Android emulator: DJMantra-${VERSION}-${SHORT}-emulator-x86_64.apk

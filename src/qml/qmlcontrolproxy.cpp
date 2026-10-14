@@ -1,5 +1,7 @@
 #include "qml/qmlcontrolproxy.h"
 
+#include <algorithm>
+
 #include "moc_qmlcontrolproxy.cpp"
 #include "util/cmdlineargs.h"
 
@@ -15,6 +17,41 @@ QmlControlProxy::QmlControlProxy(QObject* parent)
         : QObject(parent),
           m_isComponentComplete(false),
           m_pControlProxy(nullptr) {
+    m_rateTimer.setSingleShot(true);
+    connect(&m_rateTimer, &QTimer::timeout, this, [this] {
+        if (m_changedMeanwhile && isInitialized()) {
+            m_changedMeanwhile = false;
+            slotControlProxyValueChanged(m_pControlProxy->get());
+            m_rateTimer.start();
+        }
+    });
+}
+
+void QmlControlProxy::setMaxRate(int rate) {
+    rate = std::max(0, rate);
+    if (rate == m_maxRate) {
+        return;
+    }
+    m_maxRate = rate;
+    if (rate > 0) {
+        m_rateTimer.setInterval(std::max(1, 1000 / rate));
+    } else {
+        m_rateTimer.stop();
+    }
+    emit maxRateChanged(rate);
+}
+
+void QmlControlProxy::slotThrottledValueChanged(double newValue) {
+    if (m_maxRate <= 0) {
+        slotControlProxyValueChanged(newValue);
+        return;
+    }
+    if (m_rateTimer.isActive()) {
+        m_changedMeanwhile = true; // the newest value goes out when it ends
+        return;
+    }
+    slotControlProxyValueChanged(newValue);
+    m_rateTimer.start();
 }
 
 void QmlControlProxy::componentComplete() {
@@ -173,7 +210,7 @@ void QmlControlProxy::reinitializeFromKey() {
     if (!wasInitialized) {
         emit initializedChanged(true);
     }
-    m_pControlProxy->connectValueChanged(this, &QmlControlProxy::slotControlProxyValueChanged);
+    m_pControlProxy->connectValueChanged(this, &QmlControlProxy::slotThrottledValueChanged);
     slotControlProxyValueChanged(m_pControlProxy->get());
 }
 

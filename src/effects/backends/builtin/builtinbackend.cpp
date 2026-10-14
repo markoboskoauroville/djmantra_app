@@ -5,6 +5,8 @@
 #include "effects/backends/builtin/bessel4lvmixeqeffect.h"
 #include "effects/backends/builtin/bessel8lvmixeqeffect.h"
 #include "effects/backends/builtin/biquadfullkilleqeffect.h"
+#include "effects/backends/builtin/stemeqeffect.h"
+#include "effects/backends/builtin/djayfxeffect.h"
 #include "effects/backends/builtin/bitcrushereffect.h"
 #include "effects/backends/builtin/filtereffect.h"
 #include "effects/backends/builtin/flangereffect.h"
@@ -27,6 +29,7 @@
 #ifdef __RUBBERBAND__
 #include "effects/backends/builtin/pitchshifteffect.h"
 #endif
+#include "effects/backends/builtin/roomeqeffect.h"
 #include "effects/backends/builtin/tremoloeffect.h"
 #include "effects/backends/builtin/whitenoiseeffect.h"
 
@@ -38,8 +41,10 @@ BuiltInBackend::BuiltInBackend() {
     registerEffect<LinkwitzRiley8EQEffect>();
     registerEffect<ThreeBandBiquadEQEffect>();
     registerEffect<BiquadFullKillEQEffect>();
+    registerEffect<StemEQEffect>();
     // Compensations EQs
     registerEffect<GraphicEQEffect>();
+    registerEffect<RoomEQEffect>();
     registerEffect<ParametricEQEffect>();
     registerEffect<LoudnessContourEffect>();
     // Fading Effects
@@ -50,6 +55,10 @@ BuiltInBackend::BuiltInBackend() {
     registerEffect<BalanceEffect>();
     // Fancy effects
     registerEffect<FlangerEffect>();
+    registerEffect<UnderwaterEffect>();
+    registerEffect<CooldownEffect>();
+    registerEffect<EchoOutEffect>();
+    registerEffect<DjmFilterEffect>();
     registerEffect<EchoEffect>();
     registerEffect<AutoPanEffect>();
 #ifndef __MACAPPSTORE__

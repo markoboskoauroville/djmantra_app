@@ -2,6 +2,7 @@ qt_add_shaders(mixxx-lib "waveform_shaders"
   PREFIX "/shaders"
   FILES
       "rgbsignal_qml.frag"
+      "djaysignal_qml.frag"
 )
 
 # Workaround for https://bugreports.qt.io/browse/QTBUG-118500 that can be

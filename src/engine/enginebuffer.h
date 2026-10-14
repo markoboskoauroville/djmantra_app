@@ -202,7 +202,11 @@ class EngineBuffer : public EngineObject {
     }
 
     constexpr static KeylockEngine defaultKeylockEngine() {
-#ifdef __RUBBERBAND__
+#if defined(__ANDROID_PORT__)
+        // DJ Mantra on the phone: SoundTouch, several times lighter than
+        // Rubber Band (round 19: drops with keylock on, KEY MATCH / key shift)
+        return KeylockEngine::SoundTouch;
+#elif defined(__RUBBERBAND__)
         return KeylockEngine::RubberBandFaster;
 #else
         return KeylockEngine::SoundTouch;

@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QQmlParserStatus>
+#include <QTimer>
 #include <memory>
 
 #include "control/controlproxy.h"
@@ -22,6 +23,10 @@ class QmlControlProxy : public QObject, public QQmlParserStatus {
     Q_PROPERTY(bool initialized READ isInitialized NOTIFY initializedChanged)
     Q_PROPERTY(double value READ getValue WRITE setValue NOTIFY valueChanged)
     Q_PROPERTY(double parameter READ getParameter WRITE setParameter NOTIFY parameterChanged)
+    /// DJ Mantra: at most this many value changes a second reach QML (0: all).
+    /// The play position changes with every audio buffer, hundreds of times a
+    /// second; a time display needs a few (round 24: the main thread ~24 %)
+    Q_PROPERTY(int maxRate READ maxRate WRITE setMaxRate NOTIFY maxRateChanged)
     QML_NAMED_ELEMENT(ControlProxy)
 
   public:
@@ -52,6 +57,11 @@ class QmlControlProxy : public QObject, public QQmlParserStatus {
     void setParameter(double newValue);
     double getParameter() const;
 
+    int maxRate() const {
+        return m_maxRate;
+    }
+    void setMaxRate(int rate);
+
     bool isKeyValid() const;
     bool isInitialized() const;
 
@@ -65,10 +75,13 @@ class QmlControlProxy : public QObject, public QQmlParserStatus {
     void initializedChanged(bool initialized);
     void valueChanged(double newValue);
     void parameterChanged(double newParameter);
+    void maxRateChanged(int rate);
 
   private slots:
     /// Emits both the valueChanged and parameterChanged signals
     void slotControlProxyValueChanged(double newValue);
+    /// The engine's change, through the maxRate limit
+    void slotThrottledValueChanged(double newValue);
 
   private:
     /// (Re-)Initializes or resets the pointer to the underlying control proxy.
@@ -83,6 +96,10 @@ class QmlControlProxy : public QObject, public QQmlParserStatus {
     /// QML object creation is complete.
     bool m_isComponentComplete;
     std::unique_ptr<ControlProxy> m_pControlProxy;
+
+    int m_maxRate = 0;
+    QTimer m_rateTimer;
+    bool m_changedMeanwhile = false;
 };
 
 } // namespace qml

@@ -5,6 +5,11 @@ name: Linux build & tests
 
 on:
   push:
+    # test reports and notes do not need a build (the tester pushes after every part)
+    paths-ignore:
+      - "testing/**"
+      - "docs/**"
+      - "**.md"
   pull_request:
   workflow_dispatch:
 
@@ -13,6 +18,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  qml:
+    # the new interface (res/qml/djmantra) loaded headless against a stub of
+    # the Mixxx QML module: a QML error fails here, not on the phone
+    name: QML check (new interface)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PySide6
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libegl1 libgl1 libxkbcommon0 libfontconfig1
+          pip install --break-system-packages pyside6-essentials==6.8.3
+      - name: Load every component and Main.qml
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python3 tools/qml/check_djmantra_qml.py
+
   linux:
     name: Ubuntu 24.04 (Qt 6)
     runs-on: ubuntu-24.04

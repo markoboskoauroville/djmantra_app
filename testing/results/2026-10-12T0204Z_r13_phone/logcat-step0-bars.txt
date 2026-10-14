@@ -1,0 +1,10 @@
+10-12 04:04:21.592  6571  6571 D InsetsController: Setting requestedVisibleTypes to -14 (was -9)
+10-12 04:04:24.752  6571  6606 I DJMantra: info [Main] Interface: classic (widgets)
+10-12 04:04:25.515  6571  6606 I DJMantra: info [Main] Android: drawing on the CPU (software waveforms)
+10-12 04:04:25.516  6571  6571 D InsetsController: Setting requestedVisibleTypes to -528 (was -14)
+10-12 04:04:27.050  6571  6571 I DJMantra: WindowBridge: hiding the system bars
+10-12 04:04:27.051  6571  6571 D InsetsController: Setting requestedVisibleTypes to -9 (was -528)
+10-12 04:04:27.080  6571  6606 I DJMantra: info [Main] Deck 1 playing
+10-12 04:04:27.081  6571  6606 I DJMantra: info [Main] Deck 2 playing
+10-12 04:05:12.458  2206  2206 D SatelliteModemInterface: Binding to com.mediatek.satellite.service
+10-12 04:05:12.462  2206  2206 E SatelliteModemInterface: Error binding to the satellite service. Retrying in 45480 ms.

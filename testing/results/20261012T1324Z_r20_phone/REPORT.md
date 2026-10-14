@@ -1,0 +1,92 @@
+# Round 20 on the phone (Nothing Phone (2a), A142, Android 16, 1084x2412)
+
+Build: run 38253413748, commit bd59c40. Started by the tester's own build watcher (Marko: "automatically detect when build is finished, and then you need to test"), 12.10.2026 13:24 UTC.
+
+## Part 0: smoke - PASS
+- Ready in 6 s: `Quick: interface ready 413x919`, no qml error, `Quick: insets 0 0 0 0 corner 50`.
+- `Sound buffer: 3072 of 4096 frames` (asked: about 3072).
+- `p0_start.png`: full screen; the matrix and overview edges are already yellow for both decks.
+
+## Part 1: transport - PASS
+- Loaded Let Me In (deck 1) and Lions (deck 2) (meant 3 Sense and Addis: the list had scrolled under the finger, see part 6).
+- PLAY deck 1: `button [Channel1],play 1`. Deck 2 PLAY while deck 1 plays: `align [Channel2] to beat 8 ...`, `button [Channel2],play armed (aligned start)`, `beat launch [Channel2] on beat 8`. Pause: `play 0`. All as asked.
+- SYNC logs the new value: deck 2's SYNC was on from the last session, the first press turned it off (`sync_enabled 0`), the second on (`sync_enabled 1`), each with `sync [Channel2]: deck 1 122.00 bpm, deck 2 122.00 bpm`.
+- CUE: `button [Channel1],cue_default pressed`.
+- AUTO PHASE: off, deck 2 moved to beat 3 → one beat behind (`p1_off.png`: deck 1 on a white 1, deck 2 on 2); on → `auto phase: [Channel2] (beat 4) to the other deck's beat`, both on 4 (`p1_on.png`). A first try (LED 5) logged no correction within 5 s: probably landed in phase already.
+- Drops: 30 s, both playing, SYNC on, while the analysis in advance was running: xruns 0, late 0, slowest 2.4-3.4 ms.
+
+## Part 2: sliders and knobs - PASS
+- Mixer map lines are there: `knob_[Channel1],pregain`, the three EQ `parameter3/2/1`, `super1`, `fader_[ChannelN],volume`, `crossfader`.
+- Knob direction: HIGH deck 1, slow `input swipe` from its centre 150 px DOWN (1.5 s): the pointer turned COUNTER-clockwise (value lower). Two drags up: back clockwise. Right now (`p2_knob_down.png`, `p2_knob_up.png`).
+- Double tap resets the knob (`p2_knob_reset.png`) and the volume fader (dragged to ~half, `p2_moved.png` → `p2_reset.png`). Crossfader to L and back to the middle.
+- Question for the builder: at rest (and after a double tap) HIGH / MID / LOW point to ~4-5 o'clock, while GAIN and FILTER point to 12. If the EQ's neutral is meant to be the middle, the drawing maps it wrong (Mixxx EQ 0..4, neutral 1).
+
+## Part 3: LEDs - PASS
+- 32 BEATS portrait (`p3_32beats.png`): the scrolling waveforms step aside, the LEDs take the page: each cell 129 device px high (`map led1_1 66 966 106 129`), ~49 dp. Asked: at least ~46 dp / ~120 px. Round 19's FAIL fixed.
+- 8 and 16 BEATS: waveforms back above the LEDs (`p3_8beats.png`, `p3_16beats.png`).
+- The LED map is logged again after each 8 / 16 / 32 change (`map bigLeds1 ... 560`, `led1_32`, `led2_32` at 32).
+- Quantized jumps, AUTO PHASE off: LED 1 three times in a row → 3 x `jump [Channel2] to beat 1 on the next beat`; then 32, 8, 4, 1 → each logged. xruns 0, late 0, slowest 4.1-5.0 ms. Groove continuity: not by ear.
+- AUTO PHASE back on moved deck 1 to deck 2's beat (`auto phase: [Channel1] (beat 10) ...`): the deck it moves is the one heard less; with the crossfader in the middle either is right.
+
+## Part 4: colours - PASS
+- Both decks yellow (`p3_32beats.png`, `p4_armed_a.png`): SYNC / PLAY when on, the matrix's time left and bar.beat, its running lights, the Phrasing LEDs, the key labels (and genre) under the titles, the overviews' edge, the Keys tab rows `1 5A` / `2 7A` (`p4_keys.png`). No deck is green or blue any more. (The overviews' waveforms keep their sound colours; the Camelot wheel keeps its key colours; the CPU meter stays green: none of these is a deck colour.)
+- White marked states: the matrix countdown (right) is white; a lit beat 1 of a bar (cell 25 on deck 1) is white; a stopped deck's armed LED 1 is solid white (`p4_armed_a/b.png`), then `beat launch [Channel2] on beat 1` at deck 1's next phrase. Readable against the yellow.
+
+## Part 5: screen - FAIL (two small items; the rest PASS)
+- Full screen after start and after home → back. Corners (`Quick: insets 0 0 0 0 corner 50`): the menu button (66,21) and the meter (904..1019, 37..100) sit inside the 131 px rounded corners; the meter shows `C 8%` / `G --` fully.
+- Navigation bar (checked by the pixel at the bottom edge and the log):
+  - tap on the empty strip at the top (right of the key badge): bar comes, `bars shown, insets [0, 0, 0, 126]`, `Quick: insets 0 0 0 48`, the app makes room (`p5_bar_shown.png`). PASS
+  - a press on a button (8/16 BEATS) while shown: `hiding the system bars`, `bars hidden` in 2 s. PASS
+  - an empty tap while shown: hides. PASS
+  - unused: hides after 4.2 s. PASS
+  - swipe up from the bottom edge: bars come (status bar too), the app stays in front; the next touch hides them. PASS
+  - **FAIL: a tap on the empty part of the song list (the Folders view below Download, 540,1700) does NOT bring the bar.** Only the top strip does. Marko's "tap on empty space" means any empty space.
+  - Tester's own mistake, kept as a warning for later rounds: with the bar shown the tabs move up 126 px, but the tab map is not re-logged, so a tap at the old tab position hits the bar's Recents / Home. Please re-log the map after an insets change.
+- Landscape (rotated with `settings put system user_rotation 1`): the bar sits on the right, `insets [126, 0, 126, 0]`, `Quick: insets 48 0 48 0`: it covers nothing; +/−, the tabs and the meter stay clear (`p5_land_bar.png`).
+- **FAIL (small): landscape Phrasing at 16 BEATS (`p5_land_phr.png`): the two decks' LEDs are side by side, but the two-digit numbers run together ("10111213141516"): the cells are too narrow for their digits.** Smaller font or fewer cells per row in landscape.
+
+## Part 6: library, BPM and key IN ADVANCE - PASS
+- Opening Music started it by itself: `Quick: analysing 66 songs in advance (BPM, key)` (15:24:58); the header said `analysing BPM / key: 65 left`, counting down (`p6_music_open.png`, 40 left at ~1.5 min); `Quick: analysis in advance finished` at 15:28:14: 66 songs in 196 s, **~3 s per song**.
+- While it ran, both decks playing: xruns 0, late 0 (part 1).
+- After a force-stop and restart, Music again: the values are there at once (`p6_reopened.png`); `analysing 2 songs in advance` → finished within seconds (2 of 66 analysed again: which two is not logged; worth a look whether two results are not saved).
+- Every row has the cover, title, artist, BPM and Camelot key. Sorting: BPM ▲ (`songs sorted by bpm up`) to the end of the list, no blanks (`p6_bpm_end.png`); KEY ▲ in wheel order 2B, 3A, 3A, 3B, 4A (`p6_key_end.png`). Folders on top.
+- Note: Yshai Afterman - _Between ... got 187.3 BPM (probably double time of ~93.6); the BPM sort puts it last.
+- Note: while the analysis fills the rows, the list scrolled under my finger once (at the start of part 1 a tap meant for 3 Sense loaded Let Me In). Maybe the list jumps when rows change; keep the scroll position while values arrive.
+- A tap on a song loads onto the free deck (`load [Channel1] Higher`); deck 2's cover then a song → `load [Channel2] Stardust`; deck 1's cover then a song → `load [Channel1] Easing Light`.
+
+## Part 7: the rest - FAIL (AUTOMIX, genre, CPU; the rest PASS)
+- JUMP (▸| held 0.7 s, deck 1 Easing Light): `next section [Channel1]`, `jump to the next section at 173.4 s; cues: none` (no intro_start / outro_end any more). A tap: `jump [Channel1] to beat 2 on the next beat` (align). PASS
+- Sections: every load this round logged `Sections: [ChannelN] N changes` (Let Me In 4, Lions 2, ...). PASS
+- Phrasing waveforms (`p7_zoom0/in/out.png`): the waves fill most of their lane; + twice → `waveform zoom 2.00`, `1.33`: fewer, wider peaks (less time); − four times → `2.00 ... 6.75`: denser (more time). PASS
+- KEY MATCH: `key match [Channel2] 3B > 3A: 0 semitones` (relative keys, right), off → `key [Channel2] reset_key`; − / + on both decks: `pitch_down` / `pitch_up`. PASS
+- **AUTOMIX: FAIL.** On (`automix on eq true tempo true`), both playing, deck 1 with 1:18 left: the button showed `AUTOMIX 50%` for ~2 min, the crossfader stayed in the middle, deck 1 ran out to 0:00 and stopped, deck 2 played on; no transition, no fade, no log after `automix on` (`p7_automix.png`, `p7_automix2.png`). The BPM glide could not be seen (no transition).
+- **Genre: FAIL (2 of 6).** Found: Let Me In → House, Easing Light → Electronic (shown under the titles). Not found: Awka - Astral Voyage, Viel - Beautiful Place, Gorje Hewek - Children, Deaf Unique - Connecting Beat (`no recording for ..., artist's genre: none`). The first artist only and the mix name stripped ("Children", not "Children - Extended Mix"), as asked. (The list had scrolled, so these are not round 19's five songs.)
+- **CPU: FAIL (better than round 18).** `top`, both playing, SYNC on: Songs 77.6 %, Phrasing 76.3 %, Mixer 74.0 % of one core (round 18 ~100 %; target 32-55 %). The app's meter says `C 8%` (of 8 cores, the same). PSS 582 MB. Audio clean meanwhile: xruns 0, late 0, slowest 4.2 ms.
+- Good to know: a song tapped while both decks play opens "Deck 1 is playing. Load the new song anyway?" CANCEL / LOAD (`Quick: free deck [Channel1] (playing true true)`).
+- Marko was handling the phone during part 7 (the app logged rotations: `insets 0 0 48 0`, `0 0 0 48` with bars hidden = landscape / upside down). Auto-rotate is back on as it was (`accelerometer_rotation 1`).
+
+## Round 20 finished: 6 pass, 2 fail
+Pass: 0 smoke, 1 transport, 2 sliders and knobs, 3 LEDs (32-beat cells 129 px), 4 colours (both decks yellow), 6 BPM and key in advance (66 songs, ~3 s each, kept after restart).
+Fail, ranked:
+1. AUTOMIX does nothing (no fade, no transition; deck 1 ran out).
+2. CPU ~75 % of one core with both decks playing (all tabs).
+3. Genre found for 2 of 6 songs.
+4. Tap on the empty song list area does not bring the navigation bar (only the top strip does).
+5. Landscape Phrasing at 16: two-digit LED numbers run together.
+Notes: EQ knobs at rest point to ~4-5 o'clock; 2 songs re-analysed after a restart; 187.3 BPM (double time) for Yshai Afterman; the list scrolled under the finger once during the analysis; re-log the tap map after an insets change.
+Not tested: by ear (groove continuity of jumps, crossfader sound).
+
+## Marko's new requests (12.10.2026, after round 20, verbatim)
+
+> "I want to add feature to this app, automatic pre-fader listening. It means if I'm listening to deck 2 on the headphones, pre-listen, pre-fader listening, and then in the moment I play the deck, when it goes out online, then automatically the pre-listen button is swapped. then number 1 comes to the headphones. Same feature has a DJ Pro from Algorithm, so you can research in manual and see how it works. And we need to build the audio router inside the settings so it can show all connected audio devices. So if I have Bluetooth headphones and audio interface at the same time, I can route output and headphones. So we have 2 destinations which can go to multiple outputs, any, any output of, of registered inside Android, Bluetooth, USB, whatever is there. It, it must be there to route"
+
+### Shaped for the builder
+1. **Automatic pre-listen (headphone cue) swap.** While deck 2 is in the headphones (its pre-listen / PFL on) and goes on air (Marko plays it / brings it to the master), the headphones switch by themselves to the other deck: deck 2's pre-listen off, deck 1's on. And the other way round. One headphone deck at a time. On by default, with an on/off in the settings. Log every swap (`Quick: auto cue: headphones to [ChannelN]`).
+2. **Research first:** "djay Pro" by Algoriddim has this (Marko: "research in manual and see how it works"): when exactly it swaps (on PLAY, or when the crossfader / fader brings the deck on air), and what happens with both decks on air. Copy that behaviour and write it into ROUND21.md.
+3. **Audio router in the settings.** A page listing every audio output Android has right now (built-in speaker, wired, USB audio interface, Bluetooth headphones, ...), refreshed when a device is plugged in or out.
+4. **Two destinations, MASTER and HEADPHONES, each routable to any of those outputs** (for example: master to the USB interface, headphones to the Bluetooth headphones), both at once. The choice is remembered, and comes back when the device reconnects.
+
+### Tester findings (suggestions)
+- Today the Mixer tab has one headphone button per deck (`p2_mixer` in round 19, the 🎧 under FILTER). The swap belongs to those buttons' state.
+- Audio today: one Oboe output (`SoundDeviceOboe - Sound buffer: 3072 of 4096 frames`). Two destinations on two devices means two Oboe streams, each opened with its own device id (`AudioManager.getDevices(GET_DEVICES_OUTPUTS)` lists them; `AudioDeviceCallback` reports plug in / out). Bluetooth (A2DP) adds ~150-250 ms of latency: fine for headphones, not in sync with the master on another device; say so in the router.
+- To test it I need: a USB audio interface or Bluetooth headphones connected to the phone (Marko), and the logs `Quick: audio route master -> <device>`, `headphones -> <device>`.

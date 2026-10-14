@@ -1,12 +1,15 @@
 #include "qmlapplication.h"
 
 #include <QQmlEngineExtensionPlugin>
+#include <QQuickWindow>
 
 #include "control/controlsortfiltermodel.h"
 #include "controllers/controllermanager.h"
 #include "moc_qmlapplication.cpp"
 #include "qml/asyncimageprovider.h"
+#include "qml/gputime.h"
 #include "qml/qmlconfigproxy.h"
+#include "qml/qmldjmantra.h"
 #include "qml/qmlcontrolproxy.h"
 #include "qml/qmldlgpreferencesproxy.h"
 #include "qml/qmleffectmanifestparametersmodel.h"
@@ -24,6 +27,17 @@ Q_IMPORT_QML_PLUGIN(Mixxx_ControlsPlugin)
 
 namespace {
 const QString kMainQmlFileName = QStringLiteral("qml/main.qml");
+// DJ Mantra's own interface (Qt Quick, drawn by the GPU): on Android, or with
+// DJMANTRA_QUICK=1 (desktop renders of it)
+const QString kDJMantraQmlFileName = QStringLiteral("qml/djmantra/Main.qml");
+
+QString mainQmlFileName() {
+#if defined(Q_OS_ANDROID)
+    return kDJMantraQmlFileName;
+#else
+    return qEnvironmentVariableIsSet("DJMANTRA_QUICK") ? kDJMantraQmlFileName : kMainQmlFileName;
+#endif
+}
 
 // Converts a (capturing) lambda into a function pointer that can be passed to
 // qmlRegisterSingletonType.
@@ -43,7 +57,7 @@ QmlApplication::QmlApplication(
         QApplication* app,
         std::shared_ptr<CoreServices> pCoreServices)
         : m_pCoreServices(pCoreServices),
-          m_mainFilePath(pCoreServices->getSettings()->getResourcePath() + kMainQmlFileName),
+          m_mainFilePath(pCoreServices->getSettings()->getResourcePath() + mainQmlFileName()),
           m_pAppEngine(nullptr),
           m_autoReload() {
     m_pCoreServices->initialize(app);
@@ -77,6 +91,8 @@ QmlApplication::QmlApplication(
     QmlEffectsManagerProxy::registerEffectsManager(pCoreServices->getEffectsManager());
     QmlPlayerManagerProxy::registerPlayerManager(pCoreServices->getPlayerManager());
     QmlConfigProxy::registerUserSettings(pCoreServices->getSettings());
+    QmlDJMantra::registerUserSettings(pCoreServices->getSettings());
+    QmlDJMantra::registerSoundManager(pCoreServices->getSoundManager());
     QmlLibraryProxy::registerLibrary(pCoreServices->getLibrary());
 
     loadQml(m_mainFilePath);
@@ -96,6 +112,8 @@ QmlApplication::~QmlApplication() {
     QmlEffectsManagerProxy::registerEffectsManager(nullptr);
     QmlPlayerManagerProxy::registerPlayerManager(nullptr);
     QmlConfigProxy::registerUserSettings(nullptr);
+    QmlDJMantra::registerUserSettings(nullptr);
+    QmlDJMantra::registerSoundManager(nullptr);
     QmlLibraryProxy::registerLibrary(nullptr);
     QmlDlgPreferencesProxy::s_pInstance->deleteLater();
 }
@@ -114,6 +132,13 @@ void QmlApplication::loadQml(const QString& path) {
             m_pCoreServices->getTrackCollectionManager());
     m_pAppEngine->addImageProvider(AsyncImageProvider::kProviderName, pImageProvider);
 
+    // DJ Mantra: the GPU monitor's own measure (qml/gputime.h), before the first frame
+    QObject::connect(m_pAppEngine.get(),
+            &QQmlApplicationEngine::objectCreated,
+            m_pAppEngine.get(),
+            [](QObject* pObject, const QUrl&) {
+                djmantra::gputime::watch(qobject_cast<QQuickWindow*>(pObject));
+            });
     m_pAppEngine->load(path);
     if (m_pAppEngine->rootObjects().isEmpty()) {
         qCritical() << "Failed to load QML file" << path;

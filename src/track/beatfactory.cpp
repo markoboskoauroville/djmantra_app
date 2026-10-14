@@ -2,6 +2,8 @@
 #include <QStringList>
 
 #include "track/beatfactory.h"
+
+#include <cmath>
 #include "track/beatutils.h"
 
 namespace {
@@ -52,7 +54,8 @@ mixxx::BeatsPointer BeatFactory::makePreferredBeats(
         const QVector<mixxx::audio::FramePos>& beats,
         const QHash<QString, QString>& extraVersionInfo,
         bool fixedTempo,
-        mixxx::audio::SampleRate sampleRate) {
+        mixxx::audio::SampleRate sampleRate,
+        bool allowBeatMap) {
     DEBUG_ASSERT(sampleRate.isValid());
 #ifdef DEBUG_PRINT_BEATS
     for (mixxx::audio::FramePos beat : beats) {
@@ -79,10 +82,35 @@ mixxx::BeatsPointer BeatFactory::makePreferredBeats(
         mixxx::audio::FramePos firstBeat = mixxx::audio::kStartFramePos;
         const mixxx::Bpm constBPM = BeatUtils::makeConstBpm(
                 constantRegions, sampleRate, &firstBeat);
+        if (firstBeat.isValid() && allowBeatMap &&
+                !BeatUtils::followsOneTempo(constantRegions, constBPM, firstBeat, sampleRate)) {
+            // DJ Mantra: the tempo drifts (a live drummer): a beat map
+            return mixxx::Beats::fromBeatPositions(
+                    sampleRate, BeatUtils::getBeats(constantRegions), subVersion);
+        }
+        mixxx::Bpm gridBpm = constBPM;
+#ifdef __ANDROID_PORT__
+        // DJ Mantra 14.10.2026 (djay compare): a drifting song on a steady grid gets its
+        // AVERAGE tempo, as djay (Aum Ganesha speeds up ~110 -> 118: djay 115, the longest
+        // steady stretch gave 116.7)
+        if (firstBeat.isValid() && !allowBeatMap && beats.size() > 32 &&
+                !BeatUtils::followsOneTempo(constantRegions, constBPM, firstBeat, sampleRate)) {
+            const double span = beats.last().value() - beats.first().value();
+            if (span > 0) {
+                const double average = 60.0 * sampleRate.toDouble() * (beats.size() - 1) / span;
+                // the same octave as the steady stretch (no half / double tempo)
+                if (average > constBPM.value() * 0.75 && average < constBPM.value() * 1.33) {
+                    gridBpm = mixxx::Bpm(std::round(average * 10.0) / 10.0);
+                    qInfo() << "Beats: the tempo drifts; the average" << gridBpm.value()
+                            << "instead of the steady stretch's" << constBPM.value();
+                }
+            }
+        }
+#endif
         if (firstBeat.isValid()) {
-            firstBeat = BeatUtils::adjustPhase(firstBeat, constBPM, sampleRate, beats);
+            firstBeat = BeatUtils::adjustPhase(firstBeat, gridBpm, sampleRate, beats);
             auto pGrid = mixxx::Beats::fromConstTempo(
-                    sampleRate, firstBeat.toNearestFrameBoundary(), constBPM, subVersion);
+                    sampleRate, firstBeat.toNearestFrameBoundary(), gridBpm, subVersion);
             return pGrid;
         } else {
             qWarning() << "Failed to create beat grid: Invalid first beat";

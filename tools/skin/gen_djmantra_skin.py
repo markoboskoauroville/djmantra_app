@@ -250,6 +250,32 @@ def time_remaining(n, align="right"):
 </NumberPos>""" % (align, n, grp(n))
 
 
+def deck_counter(n, align="left"):
+    # A tap: TIME (1:23 / 5:40 / -4:17) <-> BARS & BEATS (17.3  next -6.2  4/4)
+    return """<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
+  <Size>-1min,-1min</Size>
+  <Alignment>%s</Alignment>
+  <Channel>%d</Channel>
+</DeckCounter>""" % (align, n)
+
+
+def counter(n, align="left"):
+    """Marko's deck counter (11.10.2026, v2): one line that a tap switches
+    between the time and the bars and beats. It has the line to itself (round
+    12: the key next to it cut its text); the key is on the artist line."""
+    return hbox(deck_counter(n, align), policy="me,min")
+
+
+def artist_key(n, align="left"):
+    """The artist line with the deck's key at its end (towards the middle)."""
+    if align == "left":
+        return hbox(track_prop(n, "artist", "ArtistText"), hspace(6), key_label(n, "right"),
+                    policy="me,min")
+    return hbox(key_label(n, "left"), hspace(6), track_prop(n, "artist", "ArtistText", "right"),
+                policy="me,min")
+
+
 def key_label(n, align="right"):
     return """<Key>
   <ObjectName>KeyDeck%d</ObjectName>
@@ -485,8 +511,9 @@ def pads(n, column=True):
 
 def header_deck_landscape(n):
     text = vbox(
-        hbox(track_prop(n, "artist", "ArtistText"), key_label(n), policy="me,min"),
-        hbox(track_prop(n, "title", "TitleText"), time_remaining(n), policy="me,min"),
+        artist_key(n, "left" if n == 1 else "right"),
+        track_prop(n, "title", "TitleText", "left" if n == 1 else "right"),
+        counter(n, "left" if n == 1 else "right"),
         overview(n, 22),
         policy="me,max")
     art = cover(n, "58f,58f", "58,58", "HeaderCover")
@@ -496,24 +523,31 @@ def header_deck_landscape(n):
 
 def header_deck_portrait(n):
     if n == 1:
-        time_key = hbox(time_remaining(n, "left"), spacer(), key_label(n), policy="me,min")
-        text = vbox(track_prop(n, "artist", "ArtistText"),
-                    track_prop(n, "title", "TitleText"), time_key, policy="me,min")
+        text = vbox(artist_key(n, "left"),
+                    track_prop(n, "title", "TitleText"), counter(n, "left"), policy="me,min")
         top = hbox(cover(n, "58f,58f", "58,58", "HeaderCover"), hspace(6), text,
                    policy="me,min")
     else:
-        time_key = hbox(key_label(n, "left"), spacer(), time_remaining(n), policy="me,min")
-        text = vbox(track_prop(n, "artist", "ArtistText", "right"),
-                    track_prop(n, "title", "TitleText", "right"), time_key, policy="me,min")
+        text = vbox(artist_key(n, "right"),
+                    track_prop(n, "title", "TitleText", "right"), counter(n, "right"),
+                    policy="me,min")
         top = hbox(text, hspace(6), cover(n, "58f,58f", "58,58", "HeaderCover"),
                    policy="me,min")
     return vbox(top, vspace(4), overview(n, 22), policy="me,max")
 
 
+def key_match(size="118f,34f"):
+    # Camelot: the two decks' keys, green / amber / red; a tap opens the wheel
+    return """<KeyMatch>
+  <ObjectName>KeyMatch</ObjectName>
+  <Size>%s</Size>
+</KeyMatch>""" % size
+
+
 def library_button(size=40):
     # the menu sheet (djay's): Library, Controller, REC, Settings
     return button("[DJMantra],show_menu", "LibraryButton", "", "%df,%df" % (size, size),
-                  pixmaps=[("dj_logo.svg", "dj_logo.svg"), ("dj_logo.svg", "dj_logo.svg")])
+                  pixmaps=[("menu_off.svg", "menu_pressed.svg"), ("menu_on.svg", "menu_pressed.svg")])
 
 
 def tabs(prefix):
@@ -631,7 +665,8 @@ def stack(pages, current_key=None):
 
 def performance_landscape():
     header = hbox(header_deck_landscape(1), hspace(12),
-                  vbox(vstretch(), library_button(34), vstretch(), policy="min,me"),
+                  vbox(vstretch(), hbox(spacer(), library_button(34), spacer(), policy="me,min"),
+                       vspace(4), key_match(), vstretch(), policy="min,me"),
                   hspace(12), header_deck_landscape(2),
                   name="TopBar", policy="me,max")
 
@@ -660,7 +695,13 @@ def performance_landscape():
 
 
 def performance_portrait():
-    header = vbox(hbox(spacer(), library_button(32), spacer(), policy="me,min"),
+    # The middle of the top row stays free: most phones have the selfie camera
+    # hole there (Nothing A142: x 511-571, y 31-91 px of 1084; Marko, 12.10.2026:
+    # "spread the user interface around this hole"). Logo left, key badge right;
+    # 40 high, so the deck headers start below the hole. A hole elsewhere: the
+    # app keeps out of its band (WindowBridge insets).
+    header = vbox(hbox(hspace(10), library_button(32), spacer(), key_match(), hspace(10),
+                       policy="me,min", minsize="0,40"),
                   hbox(header_deck_portrait(1), hspace(14), header_deck_portrait(2),
                        policy="me,min"),
                   name="TopBar", policy="me,max")
@@ -747,8 +788,8 @@ def one_deck_view():
         return vbox(label(caption, "OneDeckCaption", align="left"), value, policy="me,min")
     info = vbox(fact("TITLE", track_prop(1, "title", "OneDeckTitle")),
                 fact("ARTIST", track_prop(1, "artist", "OneDeckArtist")),
-                hbox(fact("BPM", bpm(1, "left")), fact("KEY", key_label(1, "left")),
-                     fact("TIME", time_remaining(1, "left")), policy="me,min"),
+                hbox(fact("BPM", bpm(1, "left")), hspace(12), fact("KEY", key_label(1, "left")),
+                     hspace(12), counter(1, "left"), policy="me,min"),
                 policy="me,min")
     top = hbox(cover(1, "104f,104f", "104,104", "OneDeckCover"), hspace(12), info,
                vbox(library_button(32), vstretch(), policy="min,me"),
@@ -817,8 +858,10 @@ def skin_xml():
         "[DJMantra],d2_hotcue": "1", "[DJMantra],d2_loop": "0",
         "[DJMantra],d2_fx": "0", "[DJMantra],d2_sampler": "0",
     }
-    # Remaining time, as in djay (a tap on the time changes it until the next start)
-    persist = {"[Controls],ShowDurationRemaining": "1"}
+    # Elapsed and remaining, m:ss only (Marko, 11.10.2026: "only minutes and seconds")
+    persist = {"[Controls],ShowDurationRemaining": "2", "[Controls],TimeFormat": "1",
+               # Keys in Camelot notation everywhere (8A, 5B; Mixxx calls it Lancelot)
+               "[Library],key_notation": "3"}
     # kept between starts: One Deck's continuous play / stop after current
     kept = {"[DJMantra],one_deck_continuous": "1"}
     attr_xml = "\n".join('      <attribute config_key="%s" persist="true">%s</attribute>' % kv
@@ -848,7 +891,7 @@ def skin_xml():
 %s
     </attributes>
   </manifest>
-  <ObjectName>Mixxx</ObjectName>
+  <ObjectName>DJMantra</ObjectName>
   <Style src="skins:DJMantra/style.qss"/>
   <MinimumSize>320,320</MinimumSize>
   <SizePolicy>me,me</SizePolicy>
@@ -870,7 +913,7 @@ def skin_xml():
 
 def style_qss():
     return """/* DJ Mantra skin. Generated by tools/skin/gen_djmantra_skin.py */
-#Mixxx, WWidgetStack, #Landscape, #Portrait { background-color: %(BG)s; }
+#DJMantra, WWidgetStack, #Landscape, #Portrait { background-color: %(BG)s; }
 WWidget, WLabel, QLabel { color: %(WHITE)s; font-family: "Roboto", "Open Sans", sans-serif; }
 #TopBar { background-color: %(TOPBAR)s; padding: 6px 10px 4px 10px; }
 #Centre, #Mixer { background-color: %(CENTER)s; }
@@ -887,9 +930,10 @@ WWidget, WLabel, QLabel { color: %(WHITE)s; font-family: "Roboto", "Open Sans", 
 
 #ArtistText { color: %(GREY)s; font-size: 12px; }
 #TitleText { color: %(WHITE)s; font-size: 16px; }
-#TimeText { color: %(WHITE)s; font-size: 18px; }
+#TimeText { color: %(WHITE)s; font-size: 15px; }
 #KeyDeck1 { color: %(GREEN)s; font-size: 13px; }
 #KeyDeck2 { color: %(MAGENTA)s; font-size: 13px; }
+#CounterText { color: %(WHITE)s; font-size: 14px; font-weight: bold; }
 #BpmText { color: %(WHITE)s; font-size: 20px; }
 #BpmCaption, #KnobLabel { color: %(GREY)s; font-size: 11px; font-weight: bold; }
 #KnobLabel { qproperty-alignment: AlignCenter; }
@@ -1020,18 +1064,18 @@ def graphics():
     g["play_off.svg"] = transport_button(tri, BUTTON)
     g["play_on.svg"] = transport_button(bars, BUTTON)
     g["play_pressed.svg"] = transport_button(tri, PRESSED)
-    # the menu button and the app's "dj" mark (after Marko's model, changed a
-    # little): a heavy lowercase "dj", a round bowl, a tall d stem, a j with a
-    # round dot and a hook under the d, white on a black rounded tile
-    g["dj_logo.svg"] = svg(40, 40,
-        '<rect x="0.5" y="0.5" width="39" height="39" rx="9" fill="#000000" '
-        'stroke="#2e3133" stroke-width="1"/>'
-        '<g transform="translate(2,-1)" fill="none" stroke="#ffffff" stroke-width="4.2" '
-        'stroke-linecap="round" stroke-linejoin="round">'
-        '<circle cx="13.6" cy="24.6" r="5.4"/>'
-        '<path d="M19.4 9.6v20.9"/>'
-        '<path d="M28 19.4v12.4a4 4 0 0 1-4 4h-0.6"/></g>'
-        '<circle cx="30" cy="12.6" r="2.5" fill="#ffffff"/>')
+    # the menu button (Marko, 12.10.2026: no "dj" logo in the interface, a
+    # fitting icon for what it does): three lines on a dark tile, yellow while
+    # the menu is open
+    def menu_icon(tile, lines):
+        return svg(40, 40,
+            '<rect x="0.5" y="0.5" width="39" height="39" rx="9" fill="%s" '
+            'stroke="#2e3133" stroke-width="1"/>' % tile +
+            ''.join('<rect x="11" y="%s" width="18" height="2.6" rx="1.3" fill="%s"/>' % (y, lines)
+                    for y in (12.7, 18.7, 24.7)))
+    g["menu_off.svg"] = menu_icon("#000000", "#ffffff")
+    g["menu_on.svg"] = menu_icon("#000000", "#FFD54A")
+    g["menu_pressed.svg"] = menu_icon("#2e3133", "#ffffff")
     # the start screen: the app's icon (tools/android/gen_launcher_icon.py)
     import importlib.util
     spec = importlib.util.spec_from_file_location(

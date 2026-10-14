@@ -1,0 +1,5 @@
+# GPU on, waveforms tab, both decks playing, pid 9292
+ 9292 u0_a342      10 -10  19G 327M 208M S 92.3   4.4   1:56.12 com.djmantra.app
+ 9292 u0_a342      10 -10  19G 327M 208M S 89.5   4.4   1:56.36 com.djmantra.app
+ 9292 u0_a342      10 -10  19G 327M 208M S 70.5   4.4   1:58.15 com.djmantra.app
+# GPU on, mixer tab (taken 03:01, pid 9292): 85.1 78.5 60.0 %CPU

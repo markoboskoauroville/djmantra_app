@@ -1,0 +1,2 @@
+10-12 02:57:11.467  8467  8504 I DJMantra: info [Main] Android: drawing on the GPU (OpenGL ES)
+10-12 02:57:11.671  8467  8504 I DJMantra: info [Main] Waveforms: GPU (all-shader) instead of the saved type 10

@@ -59,6 +59,7 @@ MixUltra.Deck = function(number) {
 };
 
 MixUltra.init = function(id, debugging) {
+    MixUltra.quietUntil = Date.now() + 1500;
     MixUltra.debugging = debugging;
     for (var number = 1; number <= 2; number++) {
         var deck = new MixUltra.Deck(number);
@@ -204,7 +205,13 @@ MixUltra.shiftButton = function(channel, control, value, status, group) {
 
 MixUltra.play = function(channel, control, value, status, group) {
     if (value > 0) {
-        script.toggleControl(group, "play");
+        // DJ Mantra: a playing deck with a STOP TIME (Settings) stops as a turntable,
+        // done by the app (TurntableStop.qml)
+        if (engine.getValue(group, "play") > 0 && engine.getValue("[DJMantra]", "stop_time") > 0) {
+            MixUltra.tellApp("stop_deck", group === "[Channel2]" ? 2 : 1);
+        } else {
+            script.toggleControl(group, "play");
+        }
     }
 };
 
@@ -223,22 +230,13 @@ MixUltra.shiftCue = function(channel, control, value, status, group) {
     }
 };
 
-// SYNC: tap = beat sync once, hold = sync lock on/off
-MixUltra.syncTimers = {};
+// SYNC as the screen's SYNC button (r40 part 9: a tap did Mixxx's one-shot beatsync,
+// which lit nothing, so "SYNC from the console did not register"): a press toggles the
+// deck's sync lock, the same control the screen's SYNC shows
 MixUltra.sync = function(channel, control, value, status, group) {
     if (value > 0) {
-        MixUltra.syncTimers[group] = engine.beginTimer(400, function() {
-            MixUltra.syncTimers[group] = 0;
-            script.toggleControl(group, "sync_enabled");
-        }, true);
-    } else if (MixUltra.syncTimers[group]) {
-        engine.stopTimer(MixUltra.syncTimers[group]);
-        MixUltra.syncTimers[group] = 0;
-        if (engine.getValue(group, "sync_enabled") > 0) {
-            engine.setValue(group, "sync_enabled", 0);
-        } else {
-            engine.setValue(group, "beatsync", 1);
-        }
+        script.toggleControl(group, "sync_enabled");
+        print("MixUltra: SYNC " + group + " -> " + engine.getValue(group, "sync_enabled"));
     }
 };
 
@@ -250,7 +248,8 @@ MixUltra.shiftSync = function(channel, control, value, status, group) {
 
 MixUltra.load = function(channel, control, value, status, group) {
     if (value > 0) {
-        engine.setValue(group, "LoadSelectedTrack", 1);
+        // the highlighted song of the app's list onto this deck
+        MixUltra.tellApp("load", group === "[Channel2]" ? 2 : 1);
     }
 };
 
@@ -272,9 +271,32 @@ MixUltra.shiftPfl = function(channel, control, value, status, group) {
     }
 };
 
+// DJ Mantra (Marko, 12.10.2026; 14.10.2026): the pad mode buttons also choose the app's tabs at
+// the bottom, one to one in their order: HOT CUE = Songs, LOOP = Phrasing, FX = Mixer,
+// NEURAL MIX = AutoMix, SHIFT + NEURAL MIX (SAMPLER) = Keys (either deck's buttons). The
+// controller still switches its own pad mode (it does so itself), so the pads are read in that
+// mode as before.
+MixUltra.PAGE_BUTTONS = {0x0F: 1, 0x10: 2, 0x11: 3, 0x12: 4, 0x16: 5};
+
+// A pulse on one of the app's [DJMantra] controls (back to 0: the same value twice still counts)
+// r41: not a pulse any more (set and straight back to 0: the screen read the 0 and did
+// nothing, BROWSE / LOAD / the tabs): the value stays until the app has handled it and set
+// it back to 0 itself; BROWSE's turns add up until then
+MixUltra.tellApp = function(key, value) {
+    if (key === "browse_move") {
+        value += engine.getValue("[DJMantra]", key);
+    }
+    engine.setValue("[DJMantra]", key, value);
+};
+
 MixUltra.modeButton = function(channel, control, value, status, group) {
     if (value === 0) {
         return;
+    }
+    if (MixUltra.PAGE_BUTTONS[control]) {
+        // r41: not a pulse (set and back to 0 at once, the screen read 0): the app sets it
+        // back to 0 itself once the tab has changed
+        engine.setValue("[DJMantra]", "page", MixUltra.PAGE_BUTTONS[control]);
     }
     var deck = MixUltra.deckOf(status);
     var mode = MixUltra.MODE_BUTTONS[control];
@@ -328,24 +350,38 @@ MixUltra.jogSeek = function(channel, control, value, status, group) {
 
 // --- Browser and global -----------------------------------------------------------------------
 
+// DJ Mantra (Marko, 12.10.2026): BROWSE brings the app's song list in front; turning moves
+// the highlighted song, a press loads it onto the free deck (a folder opens), SHIFT + press goes
+// up a folder; a deck's LOAD loads it onto that deck. Loading closes the list again.
+// r41 (V71, Bluetooth): right after a (re)connect the controller sends its state, among it
+// "90 00 7F", read as a BROWSE press that opened the song list: the browser ignores the
+// controller for 1.5 s after a connect
+MixUltra.quietUntil = 0;
+MixUltra.settling = function() {
+    return Date.now() < MixUltra.quietUntil;
+};
+
 MixUltra.browse = function(channel, control, value, status, group) {
-    engine.setValue("[Library]", "MoveVertical", MixUltra.ticks(value));
+    if (MixUltra.settling()) {
+        return;
+    }
+    MixUltra.tellApp("browse_move", MixUltra.ticks(value));
 };
 
 MixUltra.shiftBrowse = function(channel, control, value, status, group) {
-    // SHIFT + turn: move in the sidebar (Folders, playlists, ...)
-    engine.setValue("[Library]", "MoveFocus", MixUltra.ticks(value) > 0 ? 1 : -1);
+    // SHIFT + turn: ten songs at a time
+    MixUltra.tellApp("browse_move", MixUltra.ticks(value) * 10);
 };
 
 MixUltra.browsePress = function(channel, control, value, status, group) {
-    if (value > 0) {
-        engine.setValue("[Library]", "GoToItem", 1);
+    if (value > 0 && !MixUltra.settling()) {
+        MixUltra.tellApp("browse_press", 1);
     }
 };
 
 MixUltra.shiftBrowsePress = function(channel, control, value, status, group) {
-    if (value > 0) {
-        engine.setValue("[Library]", "MoveFocusForward", 1);
+    if (value > 0 && !MixUltra.settling()) {
+        MixUltra.tellApp("browse_back", 1);
     }
 };
 
@@ -458,9 +494,61 @@ MixUltra.jumpToBeat = function(deck, pad) {
     }
 };
 
+// The EQ knobs (V63, Marko 14.10.2026: "shift does opposite of what the knob is for ... if I
+// am in the EQ mode, if I press shift and I'm turning, let's say, mids, suddenly I am in the
+// [Neural Mix] mode ... temporarily overriding the actual function"). The screen's mode (EQ /
+// NEURAL MIX, button_parameter4) picks the knobs' set: LOW / MID / HIGH = parameter1..3,
+// DRUMS / VOCALS / HARMONIES = parameter4..6; with SHIFT held (the deck's SHIFT layer, B4 /
+// B5) the other set. 14-bit: MSB 02..04, LSB 22..24.
+// PICKUP, as Ableton Live's "Pickup" takeover (Marko 14.10.2026: "no knob, no fader jumps ... I
+// need to pick it up"): a knob that has just changed target (SHIFT, the mode, or the value was
+// moved on the screen / reset by a new song) leaves the value alone until the knob reaches it
+// (within 2 %) or turns across it; from then on it follows the knob.
+MixUltra.eqMsb = {};
+MixUltra.eqKnob = {};   // per physical knob: {hw: last position, key: last target}
+MixUltra.eqSet = {};    // per target: the value this script last set (else: not picked up)
+MixUltra.eq = function(channel, control, value, status, group) {
+    var band = (control & 0x1F) - 1; // 1 low, 2 mid, 3 high
+    var shifted = (status & 0x0F) >= 4;
+    var stems = engine.getValue(group, "button_parameter4") > 0;
+    var key = "parameter" + (stems !== shifted ? band + 3 : band);
+    var knobId = group + band;
+    var hw;
+    if (control < 0x20) {
+        MixUltra.eqMsb[knobId] = value;
+        hw = value / 127;
+    } else {
+        hw = ((MixUltra.eqMsb[knobId] || 0) * 128 + value) / 16383;
+    }
+    var knob = MixUltra.eqKnob[knobId] || (MixUltra.eqKnob[knobId] = {hw: undefined, key: ""});
+    var target = group + key;
+    var current = engine.getParameter(group, key);
+    var set = MixUltra.eqSet[target];
+    // picked up: this knob set it last and nothing else moved it since
+    var picked = knob.key === key && set !== undefined && Math.abs(current - set) < 0.01;
+    if (!picked) {
+        var near = Math.abs(hw - current) < 0.02;
+        var crossed = knob.hw !== undefined && (knob.hw - current) * (hw - current) <= 0;
+        picked = near || crossed;
+    }
+    knob.hw = hw;
+    if (!picked) {
+        // not this knob's value yet: the other set keeps its own until the knob gets there
+        if (knob.key !== key) {
+            knob.key = key;
+        }
+        MixUltra.eqSet[target] = undefined;
+        return;
+    }
+    knob.key = key;
+    engine.setParameter(group, key, hw);
+    MixUltra.eqSet[target] = hw;
+};
+
 // Called by DJ Mantra on Android after every (re)connect over USB or Bluetooth:
 // the controller's LEDs are dark again, the knob positions were requested already.
 var djmantraControllerConnected = function() {
+    MixUltra.quietUntil = Date.now() + 1500;
     midi.sendShortMsg(0x90, 0x01, 0x7F);
     MixUltra.refreshLeds();
 };

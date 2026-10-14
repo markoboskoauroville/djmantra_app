@@ -1,0 +1,2190 @@
+=== page 1
+ 
+ 
+ 
+ 
+MIDI Protocol 
+Firmware V1.2 Issue 4 
+
+=== page 2
+ 
+ 2 
+MIDI Protocol V1.2 Issue 4
+ 
+1. Introduction and setup ................................................................................ 3 
+1.1 Connection ............................................................................................................ 3 
+1.2 Transmitting and Recording ......................................................................... 3 
+1.3 MIDI Channel ........................................................................................................ 4 
+1.4 Types of MIDI message ................................................................................... 4 
+1.5 Allen & Heath MIDI Control app ................................................................... 5 
+2. Available Controls ........................................................................................6 
+2.1 Scene change ...................................................................................................... 6 
+2.2 Soft Keys .............................................................................................................. 7 
+2.3 Mutes ..................................................................................................................... 8 
+2.4 Levels ..................................................................................................................... 9 
+2.5 Panning/Balance ............................................................................................. 11 
+2.6 Getting values .................................................................................................. 13 
+3. Reference Tables ........................................................................................ 14 
+ 
+ 
+
+=== page 3
+ 
+ 3 
+MIDI Protocol V1.2 Issue 4
+ 
+1. Introduction and setup 
+MIDI (Musical Instrument Digital Interface) is a standardised communication 
+protocol that enables digital devices to communicate and allows one piece of 
+equipment to control another. 
+The CQ sends and receives MIDI over USB (via the USB-B port) as well as over 
+ethernet (using MIDI over TCP/IP via the network port). 
+ 
+1.1 Connection 
+When connected to a computer using the USB-B port, the CQ will appear as a MIDI 
+input and output device. This can be used with software directly or through use of 
+the Allen & Heath MIDI Control application. 
+To connect a computer to the CQ over a network, Allen & Heath MIDI Control can be 
+used. 
+All other clients used for network communication should be configured to send 
+messages to the CQ’s IP address and use port 51325. 
+ Only one TCP/IP MIDI connection is possible at a time. 
+ 
+ 
+ 
+ 
+1.2 Transmitting and Recording 
+The CQ transmits MIDI messages when any changes are made on the unit (or using 
+a connected app ) to any parameters that include NRPN MIDI Control. 
+This means the raw MIDI output from the CQ can be recorded and then ‘played 
+back’ to the CQ later to automate level and mute control. 
+ Avoid creating a MIDI feedback loop by sending the CQ MIDI output back to the 
+CQ when recording MIDI data. 
+ 
+Network Connection - TCP/IP MIDI 
+Direct Connection - USB MIDI 
+
+=== page 4
+ 
+ 4 
+MIDI Protocol V1.2 Issue 4
+ 
+1.3 MIDI Channel 
+The MIDI standard includes 16 channels per port/device. 
+The CQ uses MIDI Channel 1 for all control messaging. 
+ 
+1.4 Types of MIDI message 
+MIDI messages can be presented in different ways in various hardware and 
+software, including plain text, binary, decimal and hexadecimal. 
+As an example, here are four representations of the same message: 
+Plain text MIDI Channel 1, C-1, Note on 
+Binary 1001 0000 0000 0000 0111 1111 
+Decimal 144 0 127 
+Hexadecimal 0x90 0x00 0x7F 
+ 
+Hexadecimal uses numbers 0-9 and letters A-F to represent 16 possible 
+values. This document uses hexadecimal values throughout, and it should 
+be noted that the ‘0x’ prefix has been removed for brevity. 
+Note On/Off – The CQ uses a note on followed by a note off for MIDI triggering of 
+the CQ SoftKeys. 
+CC (Continuous Controller) – For each MIDI channel there are 128 continuous 
+controllers, each of which can have a value between 0 and 127 (128 steps). These 
+are used by the ‘CC Translator’ option in the Allen & Heath MIDI Control app. 
+NRPN (Non-Registered Parameter Number) – For high-resolution control 
+(16384 steps) and access to many more parameters, NRPN messages are used to 
+communicate with the CQ to control levels, panning and mutes.  
+NRPN messages can be thought of as a specific string of CC messages, with MSB 
+(Most Significant Byte) and LSB (Least Significant Byte) representing a parameter 
+number and data bytes representing parameter value. 
+NRPNs can be used to set the absolute value of a parameter or to 
+increment/decrement a parameter value. 
+ 
+ 
+
+=== page 5
+ 
+ 5 
+MIDI Protocol V1.2 Issue 4
+ 
+1.5 Allen & Heath MIDI Control app 
+The Allen & Heath MIDI Control app works by creating virtual MIDI ports in Mac OS 
+or Windows and then facilitating a MIDI connection between these virtual ports and 
+the CQ either via the USB connection or over a network via TCP/IP MIDI, and with or 
+without translation. 
+This can be used to send and receive MIDI control messages directly to and from 
+the CQ for remote control of mixing parameters, scene changes and other functions 
+(as detailed in this document) using the ‘MIDI Thru’ option. 
+Simplified control of the most common mixing parameters using MIDI CC and Note 
+On/Off messages from the computer is also made possible with the ‘CC Translator’ 
+option. 
+Visit the Allen & Heath website (http://www.allen-heath.com/midi) to download the 
+latest version of Allen & Heath MIDI Control and refer to the Help document for 
+information on setup and configuration. 
+ 
+ 
+ 
+ 
+
+=== page 6
+ 
+ 6 
+MIDI Protocol V1.2 Issue 4
+ 
+2. Available Controls 
+2.1 Scene change 
+A scene change uses a bank change followed by a program change. 
+             Bank 
+      Program 
+ 
+ 
+B0 00 BK 
+C0 PG 
+Where: BK = Bank, PG = Program 
+The bank change (BK) may not always be required, or may only be required for the 
+first scene change message sent to the CQ, but should be included when possible 
+for completeness and should always be bank 1 (00). 
+The program change (PG) is then a value between 00 and 7F (decimal 0-127), which 
+selects a scene in that range. 
+ Note that there is an offset of -1 between the CQ values and the MIDI values due to 
+the CQ counting from 1 to 128 and MIDI counting from 0 to 127. 
+The scene being recalled must exist as a saved scene in the CQ, blank scenes 
+cannot be recalled. 
+Examples: 
+Scene 
+Message 
+Scene 1 
+B0 00 00 C0 00 
+Scene 7 
+B0 00 00 C0 06 
+Scene 64 
+B0 00 00 C0 3F 
+ 
+ 
+ 
+
+=== page 7
+ 
+ 7 
+MIDI Protocol V1.2 Issue 4
+ 
+2.2 Soft Keys 
+CQ Soft Keys can be controlled using standard MIDI Note On/Off messages, 
+allowing the control of many more internal functions of the CQ by proxy. 
+Each Soft Key is controlled with a different sequential note starting at C3 (30). 
+A key press is triggered with note on, and a release is triggered separately with a 
+note off, meaning it is possible to replicate a held key. 
+ The CQ will respond to both MIDI note off standards, i.e. a specific note off message 
+or a note on message with zero velocity. 
+ The CQ does not send note on/off messages when a Soft Key is pressed. 
+ 
+Note On (Soft Key press) 
+       On  Note Velocity 
+ 
+90 SK 7F 
+Note Off (Soft Key release) 
+       Off  Note Velocity 
+ 
+80 SK 00 
+Both where: SK = Soft Key Note 
+Examples: 
+Soft Key 
+Message (Press) 
+Message (Release) 
+Soft Key #1 
+90 30 7F 
+80 30 00 
+Soft Key #2 
+90 31 7F 
+80 31 00 
+Soft Key #3 
+90 32 7F 
+80 32 00 
+ 
+ The HEX values shown here are accurate, but some applications and hardware use 
+different octave designations. i.e If C3 is not controlling SoftKey 1, try C2/C4. 
+ 
+ 
+ 
+
+=== page 8
+ 
+ 8 
+MIDI Protocol V1.2 Issue 4
+ 
+2.3 Mutes 
+The CQ sends and receives absolute On or Off mute messages. It will also toggle 
+the mute state when either an increment or decrement message is received. 
+MSB and LSB are a parameter number for the channel you wish to mute or unmute. 
+ MSB/LSB parameter numbers are shown in the reference tables section. 
+The last byte of the full message then represents a mute on or off. 
+Mute On 
+             MSB 
+             LSB 
+ 
+      Mute On 
+ 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 06 00 
+B0 26 01 
+ 
+Mute Off 
+             MSB 
+             LSB 
+ 
+      Mute Off 
+ 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 06 00 
+B0 26 00 
+Both where: MB/LB = MSB/LSB Parameter number 
+ 
+When either a data increment or decrement message is received, the CQ will toggle 
+between states, in the same way as pressing a mute key on the CQ does. 
+ 
+Mute Toggle (increment) 
+             MSB 
+             LSB 
+Increment 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 60 00 
+Where: MB/LB = MSB/LSB Parameter number 
+Examples: 
+Channel, Cmnd 
+Message 
+Ip1, Mute On 
+B0 63 00 B0 62 00 B0 06 00 B0 26 01 
+Main LR, Mute Off 
+B0 63 00 B0 62 44 B0 06 00 B0 26 00 
+Ip3, Mute Toggle 
+B0 63 00 B0 62 02 B0 60 00 
+ 
+ Mute Toggle cannot currently be used with DCA Mute and Mute Group Mute. 
+ 
+ 
+
+=== page 9
+ 
+ 9 
+MIDI Protocol V1.2 Issue 4
+ 
+2.4 Levels 
+Levels can be set using either absolute values or in relative 1dB 
+increments/decrements. 
+MSB and LSB are a parameter number showing where the signal is being sent from 
+and where it is being sent to. 
+ MSB/LSB parameter numbers are shown in the reference tables. 
+Absolute Control 
+An absolute level is represented with a combination of course and fine values. 
+             MSB 
+              LSB 
+Value Coarse 
+Value Fine 
+ 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 06 VC 
+B0 26 VF 
+Where: MB/LB = MSB/LSB Parameter number, VC/VF = Value 
+ See ‘Example Linear Taper Level Values’ and ‘Approximate Audio Taper Level Values’ 
+in the reference tables. 
+Examples: 
+Address, Value 
+Message 
+Ip1 to Main LR, 0dB 
+B0 63 40 B0 62 00 B0 06 62 B0 26 00 
+Ip1 to Main LR, -20dB 
+B0 63 40 B0 62 00 B0 06 2E B0 26 40 
+Ip12 to Out2, -5dB 
+B0 63 41 B0 62 49 B0 06 4E B0 26 40 
+Out 5/6 (overall), +5dB 
+B0 63 4F B0 62 05 B0 06 73 B0 26 40 
+FX2 to Out 1, -10dB 
+B0 63 46 B0 62 20 B0 06 3E B0 26 00 
+FX1 to FX2, -15dB 
+B0 63 4E B0 62 05 B0 06 36 B0 26 00 
+DCA1, -40dB 
+B0 63 4F B0 62 20 B0 06 0F B0 26 40 
+ 
+ 
+ 
+
+=== page 10
+ 
+ 10 
+MIDI Protocol V1.2 Issue 4
+ 
+ 
+Relative Control 
+A relative level message uses the same parameter number, but with an increment 
+or decrement byte. 
+This raises or lowers a level in 1dB steps. 
+ The NRPN Fader Law setting has no effect on relative control. 
++1dB (increment) 
+             MSB 
+             LSB 
+Increment 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 60 00 
+-1dB (decrement) 
+             MSB 
+             LSB 
+Decrement 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 61 00 
+Both where: MB/LB = MSB/LSB Parameter number 
+ 
+Examples: 
+Address, Inc/Dec 
+Message 
+Ip1 to LR, Increment 
+B0 63 40 B0 62 00 B0 60 00 
+Ip1 to LR, Decrement 
+B0 63 40 B0 62 00 B0 61 00 
+FX3 to Out 3/4, Increment 
+B0 63 46 B0 62 2E B0 60 00 
+ 
+ 
+ 
+
+=== page 11
+ 
+ 11 
+MIDI Protocol V1.2 Issue 4
+ 
+2.5 Panning/Balance 
+Panning (mono sources) or balance (stereo sources) can be set using either 
+absolute values or in relative increments/decrements.  
+MSB and LSB represent a parameter number showing where the signal is being 
+sent from and where it is being sent to. 
+ MSB/LSB parameter numbers are shown in the reference tables. 
+ Note that to allow MIDI control of panning to Linked Stereo Outputs, the ‘Follow Main 
+LR Pan’ setting must be set to ‘Off’. 
+Absolute Control 
+Absolute values are set with a combination of coarse and fine values. Ranging from 
+00 00 (full left) to 7F 7F (full right), with centre being 40 00. 
+ See ‘Example Pan/Balance Values’ in the reference tables. 
+ 
+             MSB 
+             LSB 
+  Value Coarse 
+   Value Fine 
+ 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 06 VC 
+B0 26 VF 
+Where: MB/LB = MSB/LSB Parameter number, VC/VF = Value 
+ 
+Examples: 
+Address, Value 
+Message 
+Ip1 to LR, L100% 
+B0 63 50 B0 62 00 B0 06 00 B0 26 00 
+Ip1 to LR, Center 
+B0 63 50 B0 62 00 B0 06 40 B0 26 00 
+Ip1 to LR, R100% 
+B0 63 50 B0 62 00 B0 06 7F B0 26 7F 
+Ip3 to Out 5/6, L30% 
+B0 63 50 B0 62 60 B0 06 2C B0 26 65 
+FX1 to Out 1/2, R10% 
+B0 63 56 B0 62 14 B0 06 46 B0 26 32 
+ 
+ 
+ 
+
+=== page 12
+ 
+ 12 
+MIDI Protocol V1.2 Issue 4
+ 
+ 
+Relative Control 
+A relative pan/balance message uses the same parameter number, but with an 
+increment or decrement byte. Incrementing moves to the right and decrementing 
+moves to the left. 
+ 
+Right one step (increment) 
+             MSB 
+             LSB 
+Increment 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 60 00 
+ 
+Left one step (decrement) 
+             MSB 
+             LSB 
+Decrement 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 61 00 
+Both where: MB/LB = MSB/LSB Parameter number 
+ 
+Examples: 
+Address, Left/Right 
+Message 
+Ip1 to LR, Right 
+B0 63 50 B0 62 00 B0 60 00 
+Ip1 to LR, Left 
+B0 63 50 B0 62 00 B0 61 00 
+Ip10 to Out 1/2, Left 
+B0 63 51 B0 62 30 B0 61 00 
+BT to Out 5/6, Left 
+B0 63 53 B0 62 30 B0 61 00 
+ 
+ 
+ 
+
+=== page 13
+ 
+ 13 
+MIDI Protocol V1.2 Issue 4
+ 
+2.6 Getting values 
+A ‘get’ command can be sent to the CQ in order to return the current value of any 
+mute, level or pan/balance parameter listed in this document. 
+MSB and LSB represent the parameter number of the value being requested, 
+followed by a data increment with value 7F (i.e. the same as a standard increment 
+message but with a value of 7F instead of 00). 
+ All MSB/LSB parameter numbers are shown in the reference tables, be sure to use the 
+correct parameter number for either mute, level, panning/balance or assignments. 
+             MSB 
+             LSB 
+       ‘Get’ 
+ 
+ 
+ 
+B0 63 MB 
+B0 62 LB 
+B0 60 7F 
+Where: MB/LB = MSB/LSB Parameter number 
+Examples: 
+Parameter Requested 
+Message 
+Ip1, Mute 
+B0 63 00 B0 62 00 B0 60 7F 
+Ip1 to LR, Level 
+B0 63 40 B0 62 00 B0 60 7F 
+ST1 to Out 1/2, Pan 
+B0 63 52 B0 62 64 B0 60 7F 
+FX2 Overall Input Level 
+B0 63 4F B0 62 0E B0 60 7F 
+ 
+ 
+
+=== page 14
+ 
+ 14 
+MIDI Protocol V1.2 Issue 4
+ 
+3. Reference Tables 
+ 
+Decimal, HEX, Note conversion (PG and other values from 1-128) 
+ 
+ 
+ 
+VAL HEX
+Note
+VAL HEX
+Note
+VAL HEX
+Note
+VAL HEX
+Note
+1
+00
+C-1
+33
+20
+G#1
+65
+40
+E4
+97
+60
+C7
+2
+01
+C#-1
+34
+21
+A1
+66
+41
+F4
+98
+61
+C#7
+3
+02
+D-1
+35
+22
+A#1
+67
+42
+F#4
+99
+62
+D7
+4
+03
+D#-1
+36
+23
+B1
+68
+43
+G4
+100
+63
+D#7
+5
+04
+E-1
+37
+24
+C2
+69
+44
+G#4
+101
+64
+E7
+6
+05
+F-1
+38
+25
+C#2
+70
+45
+A4
+102
+65
+F7
+7
+06
+F#-1
+39
+26
+D2
+71
+46
+A#4
+103
+66
+F#7
+8
+07
+G-1
+40
+27
+D#2
+72
+47
+B4
+104
+67
+G7
+9
+08
+G#-1
+41
+28
+E2
+73
+48
+C5
+105
+68
+G#7
+10
+09
+A-1
+42
+29
+F2
+74
+49
+C#5
+106
+69
+A7
+11
+0A
+A#-1
+43
+2A
+F#2
+75
+4A
+D5
+107
+6A
+A#7
+12
+0B
+B-1
+44
+2B
+G2
+76
+4B
+D#5
+108
+6B
+B7
+13
+0C
+C0
+45
+2C
+G#2
+77
+4C
+E5
+109
+6C
+C8
+14
+0D
+C#0
+46
+2D
+A2
+78
+4D
+F5
+110
+6D
+C#8
+15
+0E
+D0
+47
+2E
+A#2
+79
+4E
+F#5
+111
+6E
+D8
+16
+0F
+D#0
+48
+2F
+B2
+80
+4F
+G5
+112
+6F
+D#8
+17
+10
+E0
+49
+30
+C3
+81
+50
+G#5
+113
+70
+E8
+18
+11
+F0
+50
+31
+C#3
+82
+51
+A5
+114
+71
+F8
+19
+12
+F#0
+51
+32
+D3
+83
+52
+A#5
+115
+72
+F#8
+20
+13
+G0
+52
+33
+D#3
+84
+53
+B5
+116
+73
+G8
+21
+14
+G#0
+53
+34
+E3
+85
+54
+C6
+117
+74
+G#8
+22
+15
+A0
+54
+35
+F3
+86
+55
+C#6
+118
+75
+A8
+23
+16
+A#0
+55
+36
+F#3
+87
+56
+D6
+119
+76
+A#8
+24
+17
+B0
+56
+37
+G3
+88
+57
+D#6
+120
+77
+B8
+25
+18
+C1
+57
+38
+G#3
+89
+58
+E6
+121
+78
+C9
+26
+19
+C#1
+58
+39
+A3
+90
+59
+F6
+122
+79
+C#9
+27
+1A
+D1
+59
+3A
+A#3
+91
+5A
+F#6
+123
+7A
+D9
+28
+1B
+D#1
+60
+3B
+B3
+92
+5B
+G6
+124
+7B
+D#9
+29
+1C
+E1
+61
+3C
+C4
+93
+5C
+G#6
+125
+7C
+E9
+30
+1D
+F1
+62
+3D
+C#4
+94
+5D
+A6
+126
+7D
+F9
+31
+1E
+F#1
+63
+3E
+D4
+95
+5E
+A#6
+127
+7E
+F#9
+32
+1F
+G1
+64
+3F
+D#4
+96
+5F
+B6
+128
+7F
+G9
+
+=== page 15
+ 
+ 15 
+MIDI Protocol V1.2 Issue 4
+ 
+ 
+Soft Key Notes and Hexadecimal Values (SK) 
+Example Level Values (VC/VF)  
+ 
+Example Pan/Balance Values (VC/VF) 
+ 
+ 
+dB
+VC
+VF
+dB
+VC
+VF
+dB
+VC
+VF
+dB
+VC
+VF
+dB
+VC
+VF
+dB
+VC
+VF
+-inf
+00
+00
+-45
+0C
+00
+-29
+20
+40
+-19
+30
+00
+-9
+41
+40
++1
+65
+40
+-89
+01
+40
+-40
+0F
+40
+-28
+22
+00
+-18
+31
+40
+-8
+44
+40
++2
+69
+00
+-85
+02
+00
+-38
+12
+40
+-27
+23
+40
+-17
+33
+00
+-7
+48
+00
++3
+6C
+40
+-80
+02
+40
+-36
+15
+40
+-26
+25
+00
+-16
+34
+40
+-6
+4B
+00
++4
+70
+00
+-75
+03
+40
+-35
+17
+00
+-25
+26
+40
+-15
+36
+00
+-5
+4E
+40
++5
+73
+40
+-70
+04
+00
+-34
+19
+00
+-24
+28
+40
+-14
+38
+00
+-4
+52
+40
++6
+75
+40
+-65
+05
+00
+-33
+1A
+40
+-23
+2A
+00
+-13
+39
+40
+-3
+56
+40
++7
+78
+00
+-60
+06
+00
+-32
+1C
+00
+-22
+2B
+40
+-12
+3B
+00
+-2
+5A
+00
++8
+7A
+40
+-55
+07
+00
+-31
+1D
+40
+-21
+2D
+00
+-11
+3C
+40
+-1
+5E
+00
++9
+7D
+00
+-50
+08
+00
+-30
+1F
+00
+-20
+2E
+40
+-10
+3E
+00
+0
+62
+00
++10 7F
+40
+SoftKey Note
+HEX
+1
+C3
+30
+2
+C#3
+31
+3
+D3
+32
+L/R
+VC VF
+L/R
+VC VF
+L/R
+VC VF
+L/R
+VC VF
+L/R
+VC VF
+L100% 00 00
+L50% 1F 7F
+L10% 39 4B
+R15% 49 4B
+R60% 66 32
+L90%
+06 33
+L40% 26 32
+L5%
+3C 65
+R20% 4C 65
+R70% 6C 65
+L80%
+0C 66
+L30% 2C 65
+CTR
+40 00
+R30% 53 18
+R80% 73 18
+L70%
+13 19
+L20% 33 18
+R5% 43 18
+R40% 59 4B
+R90% 79 4B
+L60%
+19 4C
+L15% 36 32
+R10% 46 32
+R50% 5F 7F
+R100% 7F 7F
+
+=== page 16
+ 
+ 16 
+MIDI Protocol V1.2 Issue 4
+ 
+ 
+ 
+In the following tables, the source is shown on the left and the destination is shown 
+at the top. 
+Each parameter number includes one MSB (MB) and one LSB (LB). 
+ 
+ 
+Mute Parameter Numbers – (MB/LB) 
+    
+ 
+MSB LSB
+MSB LSB
+MSB LSB
+MSB LSB
+Ip1
+00
+00
+St1
+00
+18
+Main LR
+00
+44
+MGRP1
+04
+00
+Ip2
+00
+01
+St2
+00
+1A
+MGRP2
+04
+01
+Ip3
+00
+02
+USB
+00
+1C
+Out1
+00
+45
+MGRP3
+04
+02
+Ip4
+00
+03
+BT
+00
+1E
+Out2
+00
+46
+MGRP4
+04
+03
+Ip5
+00
+04
+Out3
+00
+47
+Ip6
+00
+05
+Out4
+00
+48
+Ip7
+00
+06
+Out5
+00
+49
+Ip8
+00
+07
+MSB LSB
+Out6
+00
+4A
+MSB LSB
+Ip9
+00
+08
+FX1
+00
+51
+DCA1
+02
+00
+Ip10
+00
+09
+FX2
+00
+52
+Out1/2
+00
+45
+DCA2
+02
+01
+Ip11
+00
+0A
+FX3
+00
+53
+Out3/4
+00
+47
+DCA3
+02
+02
+Ip12
+00
+0B
+FX4
+00
+54
+Out5/6
+00
+49
+DCA4
+02
+03
+Ip13
+00
+0C
+Ip14
+00
+0D
+Ip15
+00
+0E
+Ip16
+00
+0F
+MUTE
+MUTE
+MUTE
+MUTE
+MUTE
+MUTE
+
+=== page 17
+ 
+ 17 
+MIDI Protocol V1.2 Issue 4
+ 
+ 
+Level Parameter Numbers – Inputs and FX to Outputs and FX (MB/LB) 
+ 
+Level Parameter Numbers – Outputs, FX unit input and DCAs (MB/LB) 
+ 
+MSB LSB
+MSB LSB MSB LSB MSB LSB MSB LSB MSB LSB MSB LSB
+MSB LSB MSB LSB MSB LSB MSB LSB
+Ip1
+40
+00
+40
+44
+40
+45
+40
+46
+40
+47
+40
+48
+40
+49
+4C
+14
+4C
+15
+4C
+16
+4C
+17
+Ip2
+40
+01
+40
+50
+40
+51
+40
+52
+40
+53
+40
+54
+40
+55
+4C
+18
+4C
+19
+4C
+1A
+4C
+1B
+Ip3
+40
+02
+40
+5C
+40
+5D
+40
+5E
+40
+5F
+40
+60
+40
+61
+4C
+1C
+4C
+1D
+4C
+1E
+4C
+1F
+Ip4
+40
+03
+40
+68
+40
+69
+40
+6A
+40
+6B
+40
+6C
+40
+6D
+4C
+20
+4C
+21
+4C
+22
+4C
+23
+Ip5
+40
+04
+40
+74
+40
+75
+40
+76
+40
+77
+40
+78
+40
+79
+4C
+24
+4C
+25
+4C
+26
+4C
+27
+Ip6
+40
+05
+41
+00
+41
+01
+41
+02
+41
+03
+41
+04
+41
+05
+4C
+28
+4C
+29
+4C
+2A
+4C
+2B
+Ip7
+40
+06
+41
+0C
+41
+0D
+41
+0E
+41
+0F
+41
+10
+41
+11
+4C
+2C
+4C
+2D
+4C
+2E
+4C
+2F
+Ip8
+40
+07
+41
+18
+41
+19
+41
+1A
+41
+1B
+41
+1C
+41
+1D
+4C
+30
+4C
+31
+4C
+32
+4C
+33
+Ip9
+40
+08
+41
+24
+41
+25
+41
+26
+41
+27
+41
+28
+41
+29
+4C
+34
+4C
+35
+4C
+36
+4C
+37
+Ip10 40
+09
+41
+30
+41
+31
+41
+32
+41
+33
+41
+34
+41
+35
+4C
+38
+4C
+39
+4C
+3A
+4C
+3B
+Ip11 40
+0A
+41
+3C
+41
+3D
+41
+3E
+41
+3F
+41
+40
+41
+41
+4C
+3C
+4C
+3D
+4C
+3E
+4C
+3F
+Ip12 40
+0B
+41
+48
+41
+49
+41
+4A
+41
+4B
+41
+4C
+41
+4D
+4C
+40
+4C
+41
+4C
+42
+4C
+43
+Ip13 40
+0C
+41
+54
+41
+55
+41
+56
+41
+57
+41
+58
+41
+59
+4C
+44
+4C
+45
+4C
+46
+4C
+47
+Ip14 40
+0D
+41
+60
+41
+61
+41
+62
+41
+63
+41
+64
+41
+65
+4C
+48
+4C
+49
+4C
+4A
+4C
+4B
+Ip15 40
+0E
+41
+6C
+41
+6D
+41
+6E
+41
+6F
+41
+70
+41
+71
+4C
+4C
+4C
+4D
+4C
+4E
+4C
+4F
+Ip16 40
+0F
+41
+78
+41
+79
+41
+7A
+41
+7B
+41
+7C
+41
+7D
+4C
+50
+4C
+51
+4C
+52
+4C
+53
+ST1
+40
+18
+42
+64
+42
+65
+42
+66
+42
+67
+42
+68
+42
+69
+4C
+74
+4C
+75
+4C
+76
+4C
+77
+ST2
+40
+1A
+42
+7C
+42
+7D
+42
+7E
+42
+7F
+43
+00
+43
+01
+4C
+7C
+4C
+7D
+4C
+7E
+4C
+7F
+USB 40
+1C
+43
+14
+43
+15
+43
+16
+43
+17
+43
+18
+43
+19
+4D
+04
+4D
+05
+4D
+06
+4D
+07
+BT
+40
+1E
+43
+2C
+43
+2D
+43
+2E
+43
+2F
+43
+30
+43
+31
+4D
+0C
+4D
+0D
+4D
+0E
+4D
+0F
+FX1
+40
+3C
+46
+14
+46
+15
+46
+16
+46
+17
+46
+18
+46
+19
+-
+-
+4E
+05
+4E
+06
+4E
+07
+FX2
+40
+3D
+46
+20
+46
+21
+46
+22
+46
+23
+46
+24
+46
+25
+4E
+08
+-
+-
+4E
+0A
+4E
+0B
+FX3
+40
+3E
+46
+2C
+46
+2D
+46
+2E
+46
+2F
+46
+30
+46
+31
+4E
+0C
+4E
+0D
+-
+-
+4E
+0F
+FX4
+40
+3F
+46
+38
+46
+39
+46
+3A
+46
+3B
+46
+3C
+46
+3D
+4E
+10
+4E
+11
+4E
+12
+-
+-
+Main LR
+Out1
+Out2
+Out3
+Out4
+Out1/2
+Out3/4
+Out5/6
+FX1
+FX2
+FX3
+FX4
+Out5
+Out6
+MSB LSB
+MSB LSB
+MSB LSB
+Main LR
+4F
+00
+FX1
+4F
+0D
+DCA1
+4F
+20
+FX2
+4F
+0E
+DCA2
+4F
+21
+Out1
+4F
+01
+FX3
+4F
+0F
+DCA3
+4F
+22
+Out2
+4F
+02
+FX4
+4F
+10
+DCA4
+4F
+23
+Out3
+4F
+03
+Out4
+4F
+04
+Out5
+4F
+05
+Out6
+4F
+06
+Out1/2
+4F
+01
+Out3/4
+4F
+03
+Out5/6
+4F
+05
+to FX unit
+Control
+Output
+
+=== page 18
+ 
+ 18 
+MIDI Protocol V1.2 Issue 4
+ 
+Pan/Balance Parameter Numbers – 
+Inputs and FX to Main LR and Outputs (MB/LB) 
+ 
+ 
+  
+ 
+  
+ 
+CQ MIDI Protocol, Firmware V1.2.0, issue 4. 
+Copyright © 2024 Allen & Heath.  All rights reserved. 
+ 
+Allen & Heath Limited, Kernick Industrial Estate, Penryn, Cornwall, TR10 9LU, UK 
+www.allen-heath.com 
+MSB LSB
+MSB LSB MSB LSB MSB LSB
+Ip1
+50
+00
+50
+44
+50
+46
+50
+48
+Ip2
+50
+01
+50
+50
+50
+52
+50
+54
+Ip3
+50
+02
+50
+5C
+50
+5E
+50
+60
+Ip4
+50
+03
+50
+68
+50
+6A
+50
+6C
+Ip5
+50
+04
+50
+74
+50
+76
+50
+78
+Ip6
+50
+05
+51
+00
+51
+02
+51
+04
+Ip7
+50
+06
+51
+0C
+51
+0E
+51
+10
+Ip8
+50
+07
+51
+18
+51
+1A
+51
+1C
+Ip9
+50
+08
+51
+24
+51
+26
+51
+28
+Ip10 50
+09
+51
+30
+51
+32
+51
+34
+Ip11 50
+0A
+51
+3C
+51
+3E
+51
+40
+Ip12 50
+0B
+51
+48
+51
+4A
+51
+4C
+Ip13 50
+0C
+51
+54
+51
+56
+51
+58
+Ip14 50
+0D
+51
+60
+51
+62
+51
+64
+Ip15 50
+0E
+51
+6C
+51
+6E
+51
+70
+Ip16 50
+0F
+51
+78
+51
+7A
+51
+7C
+ST1
+50
+18
+52
+64
+52
+66
+52
+68
+ST2
+50
+1A
+52
+7C
+52
+7E
+53
+0
+USB 50
+1C
+53
+14
+53
+16
+53
+18
+BT
+50
+1E
+53
+2C
+53
+2E
+53
+30
+FX1
+50
+3C
+56
+14
+56
+16
+56
+18
+FX2
+50
+3D
+56
+20
+56
+22
+56
+24
+FX3
+50
+3E
+56
+2C
+56
+2E
+56
+30
+FX4
+50
+3F
+56
+38
+56
+3A
+56
+3C
+LR
+Out1/2
+Out3/4
+Out5/6

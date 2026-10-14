@@ -1,5 +1,7 @@
 #include "widget/djmantra/settingsscreen.h"
 
+#include "widget/djmantra/camelot.h"
+
 #include <QDesktopServices>
 #include <QEvent>
 #include <QHBoxLayout>
@@ -81,9 +83,37 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
         });
     }
 
+    auto* pQuick = addSwitchRow(tr("New interface (GPU)"),
+            tr("DJ Mantra's new screen, drawn completely by the graphics chip: smoother "
+               "waveforms, less battery. Close and open the app to switch."));
+    pQuick->setChecked(actions.quick);
+    if (actions.setQuick) {
+        const auto setQuick = actions.setQuick;
+        connect(pQuick, &QAbstractButton::toggled, this, [setQuick](bool on) {
+            setQuick(on);
+            qInfo().noquote() << "Settings new interface" << on;
+        });
+    }
+
+    auto* pGpu = addSwitchRow(tr("Draw on the GPU (test)"),
+            tr("Waveforms on the graphics chip. Still being tuned: it can make the "
+               "screen slow. After a restart."));
+    pGpu->setChecked(actions.gpu);
+    if (actions.setGpu) {
+        const auto setGpu = actions.setGpu;
+        connect(pGpu, &QAbstractButton::toggled, this, [setGpu](bool on) {
+            setGpu(on);
+            qInfo().noquote() << "Settings GPU" << on;
+        });
+    }
+
     addSection(tr("Settings"));
     addRow(icons::kSound, tr("Sound"), tr("Output, latency"), actions.sound);
     addRow(icons::kNote, tr("Library"), tr("Song folders"), actions.library);
+    addRow(icons::kInfo,
+            tr("Camelot wheel"),
+            tr("Which keys mix well: 8A, 9A, 8B ..."),
+            [this] { camelot::showWheelScreen(m_pWindow); });
     addRow(icons::kController,
             tr("Virtual controller"),
             tr("Choose what each button, fader and knob does"),
@@ -103,6 +133,7 @@ SettingsScreen::SettingsScreen(QWidget* pWindow, const SettingsActions& actions)
     show();
     raise();
     setFocus();
+    qInfo() << "Settings screen open" << geometry() << "visible" << isVisible();
 }
 
 void SettingsScreen::showAbout() {
@@ -113,7 +144,12 @@ void SettingsScreen::showAbout() {
             QStringLiteral(DJMANTRA_VERSION) + QStringLiteral(" (") +
                     VersionStore::gitVersion() + QStringLiteral(")"),
             nullptr);
-    pAbout->addRow(nullptr, tr("Engine"), tr("Mixxx %1, free software (GPL)").arg(VersionStore::version()), nullptr);
+    pAbout->addRow(nullptr, tr("Engine"),
+            // The licence credit keeps the engine's name (outside tr(): the
+            // BrandTranslator would put DJ Mantra in)
+            tr("%1 %2, free software (GPL)")
+                    .arg(QStringLiteral("Mixxx"), VersionStore::version()),
+            nullptr);
     pAbout->addRow(nullptr, tr("Website"), kWebsite, [] {
         QDesktopServices::openUrl(QUrl(kWebsite));
     });
@@ -121,6 +157,12 @@ void SettingsScreen::showAbout() {
     pAbout->raise();
     pAbout->setFocus();
 }
+
+namespace {
+// The menu sheet starts under the skin's top row: the selfie camera hole sits
+// in its middle (round 14: the sheet's close button was under the hole)
+constexpr int kSheetTop = 44;
+} // namespace
 
 MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
         : QWidget(pWindow),
@@ -133,7 +175,6 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
     setFocusPolicy(Qt::StrongFocus);
     setStyleSheet(QStringLiteral(
             "QLabel { color: %1; background: transparent; }"
-            "QLabel#MenuTitle { font-size: 34px; font-weight: 700; }"
             "QToolButton { background: transparent; border: none; color: %1; font-size: 16px; }"
             "QToolButton:pressed { background-color: %2; border-radius: 12px; }"
             "QToolButton#Tile { font-size: 14px; font-weight: 600; border-radius: 18px; }"
@@ -157,10 +198,7 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
     connect(pClose, &QToolButton::clicked, this, &QWidget::close);
     pLayout->addWidget(pClose, 0, Qt::AlignHCenter);
 
-    auto* pTitle = new QLabel(QStringLiteral("DJ Mantra"), m_pSheet);
-    pTitle->setObjectName(QStringLiteral("MenuTitle"));
-    pTitle->setAlignment(Qt::AlignCenter);
-    pLayout->addWidget(pTitle);
+    // no "DJ Mantra" title on the sheet (Marko, 12.10.2026: no logo text)
 
     // Large tiles, coloured like djay's mode tiles
     auto* pTiles = new QHBoxLayout();
@@ -250,6 +288,8 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
     pSettings->setFixedHeight(56);
     const auto settingsAction = actions.settings;
     connect(pSettings, &QToolButton::clicked, this, [this, settingsAction] {
+        // round 12: "a tap on Settings just closed the menu"; logged to see where it stops
+        qInfo() << "Menu: Settings tapped";
         close();
         if (settingsAction) {
             settingsAction();
@@ -266,7 +306,7 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
     setGeometry(m_pWindow->rect());
     // Android shows the system bars again over a new screen (round 7)
     AndroidWindow::hideSystemBars();
-    m_pSheet->setGeometry(0, 0, width(), m_pSheet->sizeHint().height());
+    m_pSheet->setGeometry(0, kSheetTop, width(), m_pSheet->sizeHint().height());
     show();
     raise();
     setFocus();
@@ -275,7 +315,7 @@ MainMenu::MainMenu(QWidget* pWindow, const Actions& actions)
 bool MainMenu::eventFilter(QObject* pObject, QEvent* pEvent) {
     if (pObject == m_pWindow && pEvent->type() == QEvent::Resize) {
         setGeometry(m_pWindow->rect());
-        m_pSheet->setGeometry(0, 0, width(), m_pSheet->sizeHint().height());
+        m_pSheet->setGeometry(0, kSheetTop, width(), m_pSheet->sizeHint().height());
     }
     return QWidget::eventFilter(pObject, pEvent);
 }

@@ -20,7 +20,8 @@ OUT=$2
 SYMBOLS=${3:-}
 PACKAGE=com.djmantra.app
 ACTIVITY=org.qtproject.qt.android.bindings.QtActivity
-READY="DJ Mantra main window ready"
+# The classic interface or the Qt Quick one (the default since 7171a0a)
+READY="DJ Mantra main window ready|Quick: interface ready"
 TIMEOUT=${SMOKE_TIMEOUT:-150}
 # How long it must stay alive after the main window is ready
 SETTLE=${SMOKE_SETTLE:-15}
@@ -56,7 +57,7 @@ for ((t = 0; t < TIMEOUT; t += 3)); do
         result="exited"
         break
     fi
-    if [ -z "$ready_at" ] && grep -q "$READY" "$OUT/logcat.txt"; then
+    if [ -z "$ready_at" ] && grep -qE "$READY" "$OUT/logcat.txt"; then
         ready_at=$t
         echo "main window ready after ${t}s"
     fi

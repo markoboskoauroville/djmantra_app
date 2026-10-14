@@ -265,8 +265,14 @@ void SoundManager::queryDevices() {
     queryDevicesPortaudio();
 #endif
 #ifdef __OBOE__
-    // DJ Mantra on Android: the phone's output (Android routes it)
+    // DJ Mantra on Android: the phone's output (Android routes it), and each
+    // connected output by itself for the audio router (MASTER on one,
+    // HEADPHONES on another)
     m_devices.append(SoundDevicePointer(new SoundDeviceOboe(m_pConfig, this)));
+    for (const auto& output : SoundDeviceOboe::androidOutputs()) {
+        m_devices.append(SoundDevicePointer(new SoundDeviceOboe(
+                m_pConfig, this, output.key, output.label, output.channels)));
+    }
 #endif
     queryDevicesMixxx();
 
@@ -359,6 +365,31 @@ SoundDeviceStatus SoundManager::setupDevices() {
     // pushBuffer and onDeviceOutputCallback until closeDevices() below.
 
     qDebug() << "SoundManager::setupDevices()";
+#ifdef __OBOE__
+    {
+        // DJ Mantra: an output routed to a device that is not connected now
+        // (a USB interface left at home): the main output to the phone's
+        // default route, the rest dropped, so the app always has sound
+        bool missing = false;
+        const auto outputs = m_config.getOutputs();
+        for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+            bool found = false;
+            for (const auto& pDevice : std::as_const(m_devices)) {
+                if (pDevice->getDeviceId() == it.key()) {
+                    found = true;
+                    break;
+                }
+            }
+            missing = missing || !found;
+        }
+        if (missing && !m_devices.isEmpty()) {
+            qInfo() << "Sound: a routed output is not connected, back to the phone's default";
+            m_config.clearOutputs();
+            m_config.addOutput(m_devices.first()->getDeviceId(),
+                    AudioOutput(AudioPathType::Main, 0, mixxx::audio::ChannelCount::stereo(), 0));
+        }
+    }
+#endif
     m_pControlObjectSoundStatusCO->set(SOUNDMANAGER_CONNECTING);
     SoundDeviceStatus status = SoundDeviceStatus::Ok;
     // NOTE(rryan): Do not clear m_pClkRefDevice here. If we didn't touch the

@@ -1,0 +1,15 @@
+25:Output thread 0xb4000077f4d1d790, name AudioOut_D, tid 1722, type 0 (MIXER):
+26-  I/O handle: 13
+27-  Standby: no
+28-  Sample rate: 48000 Hz
+29-  HAL frame count: 480
+30-  HAL format: 0x5 (AUDIO_FORMAT_PCM_FLOAT)
+31-  HAL buffer size: 3840 bytes
+32-  Channel count: 2
+33-  Channel mask: 0x00000003 (front-left, front-right)
+34-  Processing format: 0x5 (AUDIO_FORMAT_PCM_FLOAT)
+35-  Processing frame size: 8 bytes
+36-  Pending config events: none
+37-  Output devices: 0x4000 (AUDIO_DEVICE_OUT_USB_DEVICE)
+38-  Input device: 0 (AUDIO_DEVICE_NONE)
+39-  Audio source: 0 (AUDIO_SOURCE_DEFAULT)

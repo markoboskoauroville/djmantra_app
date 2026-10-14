@@ -846,6 +846,11 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/effects/backends/builtin/bessel4lvmixeqeffect.cpp
   src/effects/backends/builtin/bessel8lvmixeqeffect.cpp
   src/effects/backends/builtin/biquadfullkilleqeffect.cpp
+  src/effects/backends/builtin/stemeq.cpp
+  src/effects/backends/builtin/stemeqeffect.cpp
+  src/effects/backends/builtin/roomeqeffect.cpp
+  src/effects/backends/builtin/djayfx.cpp
+  src/effects/backends/builtin/djayfxeffect.cpp
   src/effects/backends/builtin/bitcrushereffect.cpp
   src/effects/backends/builtin/builtinbackend.cpp
   src/effects/backends/builtin/distortioneffect.cpp
@@ -915,6 +920,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/engine/controls/bpmcontrol.cpp
   src/engine/controls/clockcontrol.cpp
   src/engine/controls/phrasecontrol.cpp
+  src/engine/controls/sectiondetector.cpp
   src/engine/controls/cuecontrol.cpp
   src/engine/controls/enginecontrol.cpp
   src/engine/controls/keycontrol.cpp
@@ -1223,7 +1229,10 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/library/djmantra/trackpicker.cpp
   src/widget/djmantra/mantraui.cpp
   src/widget/djmantra/settingsscreen.cpp
+  src/widget/djmantra/camelot.cpp
+  src/widget/djmantra/wdeckcounter.cpp
   src/util/androidwindow.cpp
+  src/util/brandtranslator.cpp
   src/util/bundledresources.cpp
   src/util/uitestprobe.cpp
   src/util/cache.cpp
@@ -1616,6 +1625,7 @@ if(QOPENGL)
     src/waveform/widgets/allshader/rgbstackedwaveformwidget.cpp
     src/waveform/widgets/allshader/simplewaveformwidget.cpp
     src/waveform/widgets/allshader/waveformwidget.cpp
+    src/widget/openglchildwidget.cpp
     src/widget/openglwindow.cpp
     src/widget/tooltipqopengl.cpp
     src/widget/wglwidgetqopengl.cpp
@@ -1903,9 +1913,12 @@ if(ANDROID)
   target_compile_definitions(mixxx-lib PUBLIC __OBOE__)
 endif()
 
-# DJ Mantra's own version (the engine stays Mixxx ${CMAKE_PROJECT_VERSION})
-set(DJMANTRA_VERSION "0.5.0")
-set(DJMANTRA_VERSION_CODE 5)
+# DJ Mantra's own version (the engine stays Mixxx ${CMAKE_PROJECT_VERSION}):
+# V1, V2, V3 ... (Marko, 12.10.2026): one up for every build that goes to the
+# phone. Android's version code must only grow, and 0.5.0 had 5: code = 5 + N.
+set(DJMANTRA_VERSION_NUMBER 76)
+set(DJMANTRA_VERSION "V${DJMANTRA_VERSION_NUMBER}")
+math(EXPR DJMANTRA_VERSION_CODE "5 + ${DJMANTRA_VERSION_NUMBER}")
 target_compile_definitions(mixxx-lib PUBLIC DJMANTRA_VERSION="${DJMANTRA_VERSION}")
 
 if(ANDROID)
@@ -1950,6 +1963,10 @@ if(ANDROID)
     # Manifest (name DJ Mantra, icon), Java helpers (Storage Access Framework,
     # MIDI) and the resources in assets/res, assembled in the build tree
     QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/android-package"
+    # The Qt Quick interface (res/qml, DJ Mantra's in res/qml/djmantra) is read
+    # from the resources at run time: androiddeployqt scans it for the Qt
+    # Quick modules to put into the APK (QtQuick, Window, Shapes ...)
+    QT_QML_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/res/qml"
   )
   # Without a resource folder the app finds no skin and crashes at start
   # (phone test run #31). Re-staged on every build.
@@ -2370,6 +2387,10 @@ if(BUILD_TESTING)
     src/test/folderfeature_test.cpp
     src/test/externalcontent_test.cpp
     src/test/phrasecontrol_test.cpp
+    src/test/stemeq_test.cpp
+    src/test/djayfx_test.cpp
+    src/test/camelot_test.cpp
+    src/test/brandtranslator_test.cpp
     src/test/androidmidicontroller_test.cpp
     src/test/bundledresources_test.cpp
     src/test/starrating_test.cpp
@@ -2976,6 +2997,8 @@ set(
 set(QT_EXTRA_COMPONENTS "")
 if(QT6)
   find_package(QT 6.2 NAMES Qt6 COMPONENTS Core REQUIRED)
+  # QOpenGLWidget: the GPU surface of the OpenGL widgets on Android
+  list(APPEND QT_EXTRA_COMPONENTS "OpenGLWidgets")
   list(APPEND QT_EXTRA_COMPONENTS "ShaderTools")
   list(APPEND QT_EXTRA_COMPONENTS "SvgWidgets")
   list(APPEND QT_EXTRA_COMPONENTS "Core5Compat")
@@ -3073,6 +3096,8 @@ if(QML)
   )
 
   target_link_libraries(mixxx-qml-lib PRIVATE mixxx-qml-libplugin)
+  # Mixxx.DJMantra.version (round 13: the menu said 2.5.6, Mixxx's version)
+  target_compile_definitions(mixxx-qml-lib PRIVATE DJMANTRA_VERSION="${DJMANTRA_VERSION}")
 
   qt_add_library(mixxx-qml-mixxxcontrols STATIC)
   set_target_properties(mixxx-qml-mixxxcontrols PROPERTIES AUTOMOC ON)
@@ -3094,11 +3119,15 @@ if(QML)
   target_sources(mixxx-qml-lib PRIVATE
     src/qml/asyncimageprovider.cpp
     src/qml/qmlapplication.cpp
+    src/qml/gputime.cpp
+    src/qml/cqlink.cpp
+    src/qml/finewave.cpp
     src/qml/qmlautoreload.cpp
     src/qml/qmlbeatsmodel.cpp
     src/qml/qmlcuesmodel.cpp
     src/qml/qmlcontrolproxy.cpp
     src/qml/qmlconfigproxy.cpp
+    src/qml/qmldjmantra.cpp
     src/qml/qmldlgpreferencesproxy.cpp
     src/qml/qmleffectmanifestparametersmodel.cpp
     src/qml/qmleffectsmanagerproxy.cpp

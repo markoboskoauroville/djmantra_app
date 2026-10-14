@@ -1,0 +1,24 @@
+10-12 04:05:57.189  3261  3261 I adbd    : adbd service requested 'shell,v2,TERM=xterm-256color,raw:am start -W -n com.djmantra.app/org.qtproject.qt.android.bindings.QtActivity --es applicationArguments '--qml --play /sdcard/Music/Addis.mp3 /sdcard/Music/Dune.mp3''
+10-12 04:05:57.866  8070  8097 I DJMantra: info [Main] Interface: Qt Quick (GPU)
+10-12 04:05:57.945  2206  2206 D SatelliteModemInterface: Binding to com.mediatek.satellite.service
+10-12 04:05:57.947  2206  2206 E SatelliteModemInterface: Error binding to the satellite service. Retrying in 54679 ms.
+10-12 04:05:58.865  8070  8070 I DJMantra: WindowBridge: hiding the system bars
+10-12 04:05:59.256  8070  8097 I DJMantra: info [Main] Quick: interface ready 413x919
+10-12 04:05:59.257  8070  8070 I DJMantra: WindowBridge: hiding the system bars
+10-12 04:05:59.258  8070  8097 I DJMantra: info [Main] Deck 1 playing
+10-12 04:05:59.258  8070  8097 I DJMantra: info [Main] Deck 2 playing
+10-12 04:06:00.936  8070  8097 I DJMantra: info [Main] Quick: map logo 26 11 95 95
+10-12 04:06:00.937  8070  8097 I DJMantra: info [Main] Quick: map keyBadge 748 13 310 89
+10-12 04:06:00.938  8070  8097 I DJMantra: info [Main] Quick: map deck1 16 131 508 242
+10-12 04:06:00.939  8070  8097 I DJMantra: info [Main] Quick: map deck2 560 131 508 242
+10-12 04:06:00.940  8070  8097 I DJMantra: info [Main] Quick: map tab0 92 389 284 100
+10-12 04:06:00.941  8070  8097 I DJMantra: info [Main] Quick: map tab1 402 389 284 100
+10-12 04:06:00.941  8070  8097 I DJMantra: info [Main] Quick: map tab2 711 389 284 100
+10-12 04:06:00.942  8070  8097 I DJMantra: info [Main] Quick: map page 0 504 1084 1478
+10-12 04:06:00.944  8070  8097 I DJMantra: info [Main] Quick: map sync1 16 1998 221 116
+10-12 04:06:00.945  8070  8097 I DJMantra: info [Main] Quick: map sync2 848 1998 221 116
+10-12 04:06:00.945  8070  8097 I DJMantra: info [Main] Quick: map cue1 16 2129 518 116
+10-12 04:06:00.945  8070  8097 I DJMantra: info [Main] Quick: map cue2 550 2129 518 116
+10-12 04:06:00.946  8070  8097 I DJMantra: info [Main] Quick: map play1 16 2260 168 137
+10-12 04:06:00.946  8070  8097 I DJMantra: info [Main] Quick: map crossfader 200 2260 685 137
+10-12 04:06:00.946  8070  8097 I DJMantra: info [Main] Quick: map play2 900 2260 168 137

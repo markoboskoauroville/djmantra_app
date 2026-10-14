@@ -11,6 +11,25 @@ change code, push      ──────▶  CI builds the APK   ────�
 read results, fix      ◀──────  testing/results/*.md ◀────  commits + pushes results
 ```
 
+## In the cloud session, before every push (Marko 14.10.2026: "Running everything is in mantra manifest")
+
+Never ask Marko for an SDK. The cloud session sets it up itself, as `mantra_manifest/modules/cloud-android.md`
+describes:
+
+```bash
+curl -s -H "Accept: application/vnd.github.raw" \
+  https://api.github.com/repos/markoboskoauroville/mantra_manifest/contents/tools/cloud-android/setup.sh \
+  -o /tmp/setup.sh && bash /tmp/setup.sh          # Android SDK in /opt/android-sdk, about 1 min
+javac -nowarn -d /tmp/jc -cp /opt/android-sdk/platforms/android-36/android.jar \
+  $(find packaging/android/package/src -name "*.java")   # the app's Java: must print nothing
+python3 tools/qml/check_djmantra_qml.py                   # every QML screen loads
+```
+
+The app's screens are not tested in the cloud: a software-only emulator (no `/dev/kvm`) never draws a Qt Quick app
+(testing-on-a-budget.md). Screens and sound are tested on the Mac's emulator and the Pixel 7 (below). Java code
+that only talks to the network (SunoBridge, BeatStatsActivity.isrc) can be run here with plain Java and a stub
+`android.util.Log`.
+
 ## On your computer (once)
 1. Install Claude Code, [Android platform-tools](https://developer.android.com/tools/releases/platform-tools)
    (`adb`) and the [GitHub CLI](https://cli.github.com/) (`gh auth login`).
@@ -60,3 +79,10 @@ Marko present.
 
 No lock since 10.10.2026 (Marko: "remove the lock algorithm because now we have only one session
 running"): adb straight to it, like the emulator (`emulator-5554`).
+
+## Test songs (11.10.2026)
+
+Marko's 69 test MP3s (about 880 MB) are in a public Google Drive folder
+(`1pgo5Zyxl-t4uVHfLtMMXOSCO9uQpFOT_`), listed in `testing/songs/drive-songs.tsv`.
+`tools/android/fetch_test_songs.sh` downloads them into the phone's `/sdcard/Music` (run in Termux on
+the phone) or, with `--serial`, pushes them there over adb. Use them for the load, play and mix tests.

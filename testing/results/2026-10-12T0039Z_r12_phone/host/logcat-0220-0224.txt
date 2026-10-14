@@ -1,0 +1,242 @@
+10-12 02:20:01.877 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:339,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:04.603 I/am_freeze( 1551): [6709,com.termux.api]
+10-12 02:20:07.889 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:339,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:10.102 W/ActivityManager( 1551): Unbind failed: could not find connection for android.os.BinderProxy@a2b4095
+10-12 02:20:10.105 W/ActivityManager( 1551): Unable to start service Intent { act=android.telephony.satellite.SatelliteService xflg=0x4 pkg=com.mediatek.satellite.service } U=0: not found
+10-12 02:20:13.728 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SC_SCP2SPM_WAKEUP_B, timer_out = 262, r13 = 0x8002ffec, debug_flag = 0x20000000 0x402, r12 = 0x800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x400000a0 0x420020a0 0x420200a0 0x20000a0 0x20600a0 0x20020 0x40000000 0x0 0x6067f, cg_check_sta =0x420200a0, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2092965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x18660000,  clk_settle = 0x60fe,
+10-12 02:20:13.898 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:338,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:18.832 I/[C618448] [name(    0): spm&][SPM] system-vcore wake up by  R12_SYSTIMER, timer_out = 264, r13 = 0x8003fee0, debug_flag = 0x20000000 0x402, r12 = 0x40000, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x420000a0 0x420020a0 0x420000a0 0x20000a0 0x20000e0 0x20 0x40000000 0x0 0x6067f, cg_check_sta =0x420000a0, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2192965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x18660000,  clk_settle = 0x60fe,
+10-12 02:20:19.909 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:337,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:23.787 I/ActivityManager( 1551): Process PhantomProcessRecord {c5977a5 21244:19657:sleep/u0a245} died
+10-12 02:20:25.920 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:335,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:26.136 I/ActivityManager( 1551): Process PhantomProcessRecord {547751b 21029:19657:bash/u0a245} died
+10-12 02:20:28.486 I/am_unfreeze( 1551): [6709,com.termux.api,3]
+10-12 02:20:28.512 I/sysui_multi_action( 1551): [757,128,758,5,759,8,793,33981,794,0,795,33981,796,0,797,claude_stopped,806,com.termux.api,857,termux-notification,858,2,947,0,1500,33770,1688,1]
+10-12 02:20:28.512 I/notification_canceled( 1551): [0|com.termux.api|0|claude_stopped|10245,8,33981,33981,0,-1,-1,NULL]
+10-12 02:20:28.517 I/NotificationListener( 2377): received notification removed event - com.termux.api#UserHandle{0},category=-1
+10-12 02:20:31.928 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:335,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:37.940 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:335,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:38.545 I/am_freeze( 1551): [6709,com.termux.api]
+10-12 02:20:43.950 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:335,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:49.958 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:335,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:20:55.981 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:335,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:02.001 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:335,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:08.012 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:334,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:13.506 W/ActivityManager( 1551): Unbind failed: could not find connection for android.os.BinderProxy@a68d9f1
+10-12 02:21:13.508 W/ActivityManager( 1551): Unable to start service Intent { act=android.telephony.satellite.SatelliteService xflg=0x4 pkg=com.mediatek.satellite.service } U=0: not found
+10-12 02:21:14.022 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:334,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:20.032 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:334,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:26.042 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:333,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:32.052 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:332,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:38.062 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:332,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:44.073 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:332,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:47.820 I/lowmemorykiller(  459): Kill 'com.google.android.gms.unstable' (12313), uid 10138, oom_score_adj 975 to free 93008kB rss, 44984kB swap; reason: device is not responding
+10-12 02:21:47.820 I/killinfo(  459): [12313,10138,975,0,93008,1,161412,2510872,3636,2128,29744,553888,4194300,403480,1287592,217868,1248724,683988,218756,411040,101904,198240,0,0,188,0,4,0,0,44984,511776,0,7,1.370000,1.370000,0.000000,0.000000,4.220000]
+10-12 02:21:47.845 I/ActivityManager( 1551): Process com.google.android.gms.unstable (pid 12313) has died: cch+75 CEM 
+10-12 02:21:47.845 I/am_proc_died( 1551): [0,12313,com.google.android.gms.unstable,975,19]
+10-12 02:21:47.848 I/Zygote  (  928): Process 12313 exited due to signal 9 (Killed)
+10-12 02:21:50.084 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:332,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:21:56.092 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:332,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:02.100 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:332,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:08.108 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:334,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:08.737 W/ActivityManager( 1551): Unbind failed: could not find connection for android.os.BinderProxy@10c79e5
+10-12 02:22:08.738 W/ActivityManager( 1551): Unable to start service Intent { act=android.telephony.satellite.SatelliteService xflg=0x4 pkg=com.mediatek.satellite.service } U=0: not found
+10-12 02:22:14.116 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:336,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:20.136 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:338,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:26.145 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:342,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:32.153 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:343,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:38.160 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:344,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:44.169 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:345,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:50.177 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:345,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:22:54.476 W/ActivityManager( 1551): Unbind failed: could not find connection for android.os.BinderProxy@efc20d5
+10-12 02:22:54.477 W/ActivityManager( 1551): Unable to start service Intent { act=android.telephony.satellite.SatelliteService xflg=0x4 pkg=com.mediatek.satellite.service } U=0: not found
+10-12 02:22:56.184 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:347,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:02.192 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:347,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:08.200 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:348,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:14.209 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:349,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:20.217 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:350,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:23.487 I/am_unfreeze( 1551): [13159,com.android.settings,3]
+10-12 02:23:23.495 I/am_unfreeze( 1551): [11707,com.google.android.apps.turbo,3]
+10-12 02:23:23.504 I/am_pss  ( 1551): [13159,1000,com.android.settings,0,0,0,115404800,0,11,7]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {6b4bd 19704:19657:bash/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19704,bash,0,Trimming phantom processes,3644]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {51abab2 19725:19657:runsvdir/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19725,runsvdir,0,Trimming phantom processes,2696]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {8efea03 19726:19657:runsv/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19726,runsv,0,Trimming phantom processes,2576]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {8c5bd80 19727:19657:runsv/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19727,runsv,0,Trimming phantom processes,2576]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {ceedfb9 19728:19657:runsv/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19728,runsv,0,Trimming phantom processes,2536]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {bf5cffe 19729:19657:svlogd/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19729,svlogd,0,Trimming phantom processes,2668]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {97d235f 19730:19657:svlogd/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19730,svlogd,0,Trimming phantom processes,2592]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {58931ac 19731:19657:svlogd/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,19731,svlogd,0,Trimming phantom processes,2616]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {f94be75 28511:19657:bash/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,28511,bash,0,Trimming phantom processes,2996]
+10-12 02:23:23.519 I/ActivityManager( 1551): Killing PhantomProcessRecord {7daee0a 28533:19657:bash/u0a245}: Trimming phantom processes
+10-12 02:23:23.519 I/am_kill ( 1551): [0,28533,bash,0,Trimming phantom processes,3220]
+10-12 02:23:23.524 I/ActivityManager( 1551): Process PhantomProcessRecord {27a967b 27865:19657:bash/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {62dbc98 27839:19657:timeout/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {67fccf1 27840:19657:timeout/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {51abab2 19725:19657:runsvdir/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {bf5cffe 19729:19657:svlogd/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {8efea03 19726:19657:runsv/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {8c5bd80 19727:19657:runsv/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {58931ac 19731:19657:svlogd/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {6b4bd 19704:19657:bash/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {841e0d6 27860:19657:bash/u0a245} died
+10-12 02:23:23.525 I/ActivityManager( 1551): Process PhantomProcessRecord {ceedfb9 19728:19657:runsv/u0a245} died
+10-12 02:23:23.526 I/ActivityManager( 1551): Process PhantomProcessRecord {97d235f 19730:19657:svlogd/u0a245} died
+10-12 02:23:23.526 I/ActivityManager( 1551): Process PhantomProcessRecord {f94be75 28511:19657:bash/u0a245} died
+10-12 02:23:23.526 I/ActivityManager( 1551): Process PhantomProcessRecord {2121f57 27828:19657:bash/u0a245} died
+10-12 02:23:23.528 I/ActivityManager( 1551): Process PhantomProcessRecord {7daee0a 28533:19657:bash/u0a245} died
+10-12 02:23:23.530 I/ActivityManager( 1551): Process PhantomProcessRecord {b8e0a44 27832:19657:bash/u0a245} died
+10-12 02:23:23.532 I/ActivityManager( 1551): Process PhantomProcessRecord {733472d 27835:19657:timeout/u0a245} died
+10-12 02:23:23.534 I/ActivityManager( 1551): Process PhantomProcessRecord {a533462 27825:19657:bash/u0a245} died
+10-12 02:23:23.544 I/ActivityManager( 1551): Process PhantomProcessRecord {52f59f3 27849:19657:timeout/u0a245} died
+10-12 02:23:23.560 I/ActivityManager( 1551): Process PhantomProcessRecord {78386b0 28550:19657:python/u0a245} died
+10-12 02:23:23.562 I/ActivityManager( 1551): Process PhantomProcessRecord {22a2929 27833:19657:bash/u0a245} died
+10-12 02:23:23.563 I/ActivityManager( 1551): Process PhantomProcessRecord {33434ae 27843:19657:timeout/u0a245} died
+10-12 02:23:23.564 I/ActivityManager( 1551): Process PhantomProcessRecord {1dba24f 27848:19657:timeout/u0a245} died
+10-12 02:23:23.575 I/ActivityManager( 1551): Process PhantomProcessRecord {e125ddc 27837:19657:bash/u0a245} died
+10-12 02:23:23.575 I/ActivityManager( 1551): Process PhantomProcessRecord {a932ee5 27841:19657:bash/u0a245} died
+10-12 02:23:23.584 I/ActivityManager( 1551): Process PhantomProcessRecord {312edba 27846:19657:timeout/u0a245} died
+10-12 02:23:23.601 I/ActivityManager( 1551): Process PhantomProcessRecord {b5a146b 27838:19657:bash/u0a245} died
+10-12 02:23:23.610 I/ActivityManager( 1551): Process PhantomProcessRecord {d557bc8 27853:19657:timeout/u0a245} died
+10-12 02:23:23.622 I/ActivityManager( 1551): Process PhantomProcessRecord {dccd461 27842:19657:bash/u0a245} died
+10-12 02:23:23.633 I/ActivityManager( 1551): Process PhantomProcessRecord {cf22b86 27867:19657:timeout/u0a245} died
+10-12 02:23:23.638 I/ActivityManager( 1551): Process PhantomProcessRecord {c038c47 27857:19657:bash/u0a245} died
+10-12 02:23:23.642 I/ActivityManager( 1551): Process PhantomProcessRecord {82a8c74 27859:19657:timeout/u0a245} died
+10-12 02:23:23.645 I/ActivityManager( 1551): Process PhantomProcessRecord {6a1559d 27850:19657:bash/u0a245} died
+10-12 02:23:23.685 I/ActivityManager( 1551): Process PhantomProcessRecord {e2a5e3 27866:19657:bash/u0a245} died
+10-12 02:23:23.687 I/ActivityManager( 1551): Process PhantomProcessRecord {f9dfbe0 27863:19657:bash/u0a245} died
+10-12 02:23:23.728 I/ActivityManager( 1551): Process PhantomProcessRecord {842ae99 21736:19657:seq/u0a245} died
+10-12 02:23:23.731 I/ActivityManager( 1551): Process PhantomProcessRecord {8ed255e 21738:19657:sort/u0a245} died
+10-12 02:23:23.733 I/ActivityManager( 1551): Process PhantomProcessRecord {30fbd3f 21735:19657:bash/u0a245} died
+10-12 02:23:23.734 I/ActivityManager( 1551): Process PhantomProcessRecord {716f60c 21737:19657:xargs/u0a245} died
+10-12 02:23:25.099 I/ActivityManager( 1551): Process PhantomProcessRecord {a62244b 20362:19657:claude/u0a245} died
+10-12 02:23:25.106 I/ActivityManager( 1551): Process PhantomProcessRecord {fda7e28 21626:19657:adb/u0a245} died
+10-12 02:23:25.119 I/ActivityManager( 1551): Process PhantomProcessRecord {d681741 20345:19657:proot/u0a245} died
+10-12 02:23:26.227 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:350,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:28.232 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SYSTIMER, timer_out = 119, r13 = 0x80001ec0, debug_flag = 0x20000000 0x402, r12 = 0x40000, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x2000080 0x0 0x40000000 0x0 0x66667f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2094965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x10660000,  clk_settle = 0x60fe,
+10-12 02:23:32.272 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:350,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:33.336 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SC_SCP2SPM_WAKEUP_B, timer_out = 191, r13 = 0x80001ec0, debug_flag = 0x20000000 0x402, r12 = 0x800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x2000080 0x0 0x40000000 0x0 0x6067f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2094965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x10660000,  clk_settle = 0x60fe,
+10-12 02:23:33.557 I/am_freeze( 1551): [11707,com.google.android.apps.turbo]
+10-12 02:23:33.560 I/am_freeze( 1551): [13159,com.android.settings]
+10-12 02:23:38.284 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:347,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:256,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:38.460 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SYSTIMER, timer_out = 358, r13 = 0x80001ec0, debug_flag = 0x20000000 0x402, r12 = 0x40000, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x2000080 0x0 0x40000000 0x0 0x6067f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2094965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x10660000,  clk_settle = 0x60fe,
+10-12 02:23:44.294 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:347,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:47.553 W/ActivityManager( 1551): Unbind failed: could not find connection for android.os.BinderProxy@55c2bd6
+10-12 02:23:47.558 W/ActivityManager( 1551): Unable to start service Intent { act=android.telephony.satellite.SatelliteService xflg=0x4 pkg=com.mediatek.satellite.service } U=0: not found
+10-12 02:23:48.696 I/[C606177] [name(    0): spm&][SPM] system-bus wake up by  R12_CONN2AP_SPM_WAKEUP_B R12_SC_SCP2SPM_WAKEUP_B, timer_out = 7, r13 = 0x80001ec0, debug_flag = 0x20000000 0x402, r12 = 0x820, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x2000080 0x0 0x40000000 0x0 0x6067f, cg_check_sta =0x42004080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2094965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x10660000,  clk_settle = 0x60fe,
+10-12 02:23:50.307 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:346,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:56.331 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:344,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:23:58.964 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SC_SCP2SPM_WAKEUP_B, timer_out = 432, r13 = 0x80001ec0, debug_flag = 0x20000000 0x402, r12 = 0x800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x2000080 0x0 0x40000000 0x0 0x66667f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2094965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x10660000,  clk_settle = 0x60fe,
+10-12 02:24:02.355 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:344,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:08.380 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:343,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:09.180 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SC_SCP2SPM_WAKEUP_B R12_SYSTIMER, timer_out = 154, r13 = 0x8002fee0, debug_flag = 0x20000000 0x402, r12 = 0x40800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x400000a0 0x420020a0 0x420000a0 0x20000a0 0x20000a0 0x20 0x40000000 0x0 0x6067f, cg_check_sta =0x420000a0, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2092965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x18660000,  clk_settle = 0x60fe,
+10-12 02:24:14.296 I/[C602110] [name(    0): spm&][SPM] system-bus wake up by  R12_SC_SCP2SPM_WAKEUP_B, timer_out = 215, r13 = 0x80001ec0, debug_flag = 0x20000000 0x402, r12 = 0x800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x2000080 0x0 0x40000000 0x0 0x66667f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2094965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x10660000,  clk_settle = 0x60fe,
+10-12 02:24:14.392 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:343,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:19.452 I/[C600000] [name(    0): spm&][SPM] system-vcore wake up by  R12_SC_SCP2SPM_WAKEUP_B, timer_out = 83, r13 = 0x80001ec0, debug_flag = 0x20000000 0x402, r12 = 0x800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x2000080 0x0 0x40000000 0x0 0x6067f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2094965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x10660000,  clk_settle = 0x60fe,
+10-12 02:24:20.402 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:343,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:24.540 I/[C602071] [name(    0): spm&][SPM] system-bus wake up by  R12_EINT_EVENT_B, timer_out = 28, r13 = 0x80001ec0, debug_flag = 0x20000000 0x402, r12 = 0x40, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x2000080 0x0 0x40000000 0x0 0x66667f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2094965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x10660000,  clk_settle = 0x60fe,
+10-12 02:24:26.414 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:342,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:27.085 I/PowerHalWrapper( 1551): amsBoostNotify pid:2377,activity:com.android.quickstep.RecentsActivity, package:com.nothing.launcher, mProcessCreatePackcom.djmantra.app 
+10-12 02:24:27.091 I/PowerHalWrapper( 1551): amsBoostNotify pid:2377,activity:com.android.quickstep.RecentsActivity, package:com.nothing.launcher, mProcessCreatePackcom.djmantra.app 
+10-12 02:24:27.120 I/am_pss  ( 1551): [3317,10222,com.teslacoilsw.launcher,0,0,0,290152448,0,5,12]
+10-12 02:24:27.136 I/am_pss  ( 1551): [2683,10216,com.google.android.ext.services,0,0,0,155836416,0,5,15]
+10-12 02:24:27.159 I/am_pss  ( 1551): [1551,1000,system,0,0,0,678744064,0,0,23]
+10-12 02:24:27.176 I/am_pss  ( 1551): [15713,10354,com.anthropic.claude,0,0,0,506232832,0,2,18]
+10-12 02:24:27.185 I/am_pss  ( 1551): [4530,10105,com.android.companiondevicemanager,0,0,0,86429696,0,6,9]
+10-12 02:24:27.194 I/am_pss  ( 1551): [23166,10283,com.touchtype.swiftkey,0,0,0,107040768,0,16,9]
+10-12 02:24:27.201 I/am_pss  ( 1551): [3467,1000,com.nothing.ntgamedashboard,0,0,0,79908864,0,5,6]
+10-12 02:24:28.008 I/am_unfreeze( 1551): [13159,com.android.settings,3]
+10-12 02:24:28.015 I/am_unfreeze( 1551): [11707,com.google.android.apps.turbo,3]
+10-12 02:24:28.996 I/libPowerHal(  976): cmdSetting - unknown cmd:1438500, scmd:(null) ,param_1:0
+10-12 02:24:28.996 I/libPowerHal(  976): cmdSetting - unknown cmd:1438800, scmd:(null) ,param_1:0
+10-12 02:24:29.099 I/libPowerHal(  976): cmdSetting - unknown cmd:2000400, scmd:(null) ,param_1:-4245
+10-12 02:24:29.601 I/libPowerHal(  976): cmdSetting - unknown cmd:2000400, scmd:(null) ,param_1:4245
+10-12 02:24:29.656 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SC_SCP2SPM_WAKEUP_B, timer_out = 507, r13 = 0x8000fec0, debug_flag = 0x20000000 0x402, r12 = 0x800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40004080 0x42006180 0x42000080 0x2000080 0x20000a0 0x20 0x40000000 0x0 0x6067f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2092965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x18660000,  clk_settle = 0x60fe,
+10-12 02:24:29.790 I/PowerHalWrapper( 1551): amsBoostNotify pid:15713,activity:com.anthropic.claude.mainactivity.MainActivity, package:com.anthropic.claude, mProcessCreatePackcom.djmantra.app 
+10-12 02:24:29.791 I/PowerHalWrapper( 1551): <amsBoostResume> last:null, next:com.termuxhasATProcess:true 
+10-12 02:24:29.808 I/NT-AppEventTracker( 2377): Begin non-home task duration timing:TaskDuration(taskId=723, pkgName=com.termux, userId=UserHandle{0}, beginTime=1791764669808, endTime=0, windowType=1, duration=0, state=2)
+10-12 02:24:29.813 I/wm_set_resumed_activity( 1551): [0,com.termux/.app.TermuxActivity,resumeTopActivity - onActivityStateChanged]
+10-12 02:24:29.813 I/PowerHalWrapper( 1551): amsBoostNotify pid:19657,activity:com.termux.app.TermuxActivity, package:com.termux, mProcessCreatePackcom.djmantra.app 
+10-12 02:24:29.813 I/mtkpower_client( 1551): [PowerHal_Wrap_notifyAppState] com.termux/com.termux.app.TermuxActivity pid=19657 activityId:262539877 state:1
+10-12 02:24:29.813 I/vendor.mediatek.hardware.mtkpower_applist-service.mediatek(  975): packName: com.termux actName: com.termux.app.TermuxActivity pid: 19657 uid: 10245 state: 1
+10-12 02:24:29.813 I/MTK_APPList(  975): [notifyAPPstate] com.termux/com.termux.app.TermuxActivity, pid=19657, uid=10245, state:RESUMED, fps:-1, win:0
+10-12 02:24:29.813 I/MTK_APPList(  975): [notifyAPPstate] multi_resumed_app_info[1] com.termux/com.termux.app.TermuxActivity, pid:19657, fps:-1, isMultiWindow:0
+10-12 02:24:29.813 I/MTK_APPList(  975): [notifyAPPstate] foreground:com.termux, pid:19657, uid:10245
+10-12 02:24:29.814 I/PowerHalWrapper( 1551): amsBoostNotify pid:19657,activity:com.termux.app.TermuxActivity, package:com.termux, mProcessCreatePackcom.djmantra.app 
+10-12 02:24:29.814 I/mtkpower_client( 1551): [PowerHal_Wrap_notifyAppState] com.termux/com.termux.app.TermuxActivity pid=19657 activityId:262539877 state:1
+10-12 02:24:29.816 I/MTK_APPList(  975): [notifyAPPstate] pc:0, com.nothing.launcher => com.termux
+10-12 02:24:29.816 I/wm_resume_activity( 1551): [0,262539877,723,com.termux/.app.TermuxActivity]
+10-12 02:24:29.816 I/vendor.mediatek.hardware.mtkpower_applist-service.mediatek(  975): packName: com.termux actName: com.termux.app.TermuxActivity pid: 19657 uid: 10245 state: 1
+10-12 02:24:29.816 I/MTK_APPList(  975): [notifyAPPstate] com.termux/com.termux.app.TermuxActivity, pid=19657, uid=10245, state:RESUMED, fps:-1, win:1
+10-12 02:24:29.816 I/MTK_APPList(  975): [notifyAPPstate] multi_resumed_app_info[1] com.termux/com.termux.app.TermuxActivity, pid:19657, fps:-1, isMultiWindow:1
+10-12 02:24:29.816 I/MTK_APPList(  975): [notifyAPPstate] foreground:com.termux, pid:19657, uid:10245
+10-12 02:24:29.818 I/MTK_APPList(  975): [notifyAPPstate] act com.android.quickstep.RecentsActivity => com.termux.app.TermuxActivity
+10-12 02:24:29.819 I/wm_on_restart_called(19657): [262539877,com.termux.app.TermuxActivity,performRestart,0]
+10-12 02:24:29.822 I/wm_on_start_called(19657): [262539877,com.termux.app.TermuxActivity,handleStartActivity,4]
+10-12 02:24:29.827 I/wm_on_resume_called(19657): [262539877,com.termux.app.TermuxActivity,RESUME_ACTIVITY,4]
+10-12 02:24:29.827 I/wm_on_top_resumed_gained_called(19657): [262539877,com.termux.app.TermuxActivity,topWhenResuming]
+10-12 02:24:29.843 W/WindowManager( 1551): Changing focus from null to Window{1dc3ff3 u0 com.termux/com.termux.app.TermuxActivity} displayId=0 Callers=com.android.server.wm.RootWindowContainer.updateFocusedWindowLocked:494 com.android.server.wm.WindowManagerService.updateFocusedWindowLocked:6830 com.android.server.wm.WindowManagerService.relayoutWindow:2794 com.android.server.wm.Session.relayout:288 
+10-12 02:24:29.844 I/WindowManager( 1551): Relayout Window{1dc3ff3 u0 com.termux/com.termux.app.TermuxActivity}: oldVis=8 newVis=0 focusMayChange = true requestedWidth = 1084 requestedHeight = 2412 outFrames = ClientWindowFrames{frame=[0,0][1084,2412] display=[0,0][1084,2412] parentFrame=[0,0][0,0]} outSurfaceControl = Surface(name=com.termux/com.termux.app.TermuxActivity)/@0xc376806
+10-12 02:24:29.844 I/input_focus( 1551): [Focus request 1dc3ff3 com.termux/com.termux.app.TermuxActivity,reason=UpdateInputWindows]
+10-12 02:24:29.873 I/sysui_multi_action( 1551): [319,31,322,74,325,9304,757,761,758,9,759,2,806,com.termux,871,com.termux.app.TermuxActivity,904,com.teslacoilsw.launcher,905,0,1320,8,1321,1]
+10-12 02:24:29.884 I/input_focus( 1551): [Focus entering 1dc3ff3 com.termux/com.termux.app.TermuxActivity,reason=Window became focusable. Previous reason: NOT_VISIBLE]
+10-12 02:24:29.893 I/ImeTracker( 1551): com.termux:1e5ea094: onRequestShow at ORIGIN_SERVER reason ATTACH_NEW_INPUT fromUser false
+10-12 02:24:29.895 I/ImeTracker( 1551): com.termux:1c600986: onRequestShow at ORIGIN_SERVER reason SHOW_RESTORE_IME_VISIBILITY fromUser false
+10-12 02:24:29.901 I/ImeTracker(19657): com.termux:1c600986: onCancelled at PHASE_CLIENT_REPORT_REQUESTED_VISIBLE_TYPES
+10-12 02:24:29.941 I/ImeTracker( 1551): com.termux:1e5ea094: onCancelled at PHASE_WM_ABORT_SHOW_IME_POST_LAYOUT
+10-12 02:24:29.996 E/com.termux(19657): Failed to query component interface for required system resources: 6
+10-12 02:24:30.000 I/jank_cuj_events_begin_request(19657): [80,1791764670000300000,9304396655554,9304396655861,0@0@com.termux]
+10-12 02:24:30.128 I/ImeTracker(19657): com.termux:fa2d12f1: onRequestShow at ORIGIN_CLIENT reason SHOW_SOFT_INPUT fromUser false
+10-12 02:24:30.128 I/ImeTracker(19657): com.termux:fa2d12f1: onCancelled at PHASE_CLIENT_APPLY_ANIMATION
+10-12 02:24:30.185 I/PowerHalWrapper( 1551): amsBoostNotify pid:2377,activity:com.android.quickstep.RecentsActivity, package:com.nothing.launcher, mProcessCreatePackcom.djmantra.app 
+10-12 02:24:30.186 I/MTK_APPList(  975): [notifyAPPstate] multi_resumed_app_info[0] com.termux/com.termux.app.TermuxActivity, pid:19657, fps:-1, isMultiWindow:1
+10-12 02:24:30.199 I/PowerHalWrapper( 1551): amsBoostNotify pid:2377,activity:com.android.quickstep.RecentsActivity, package:com.nothing.launcher, mProcessCreatePackcom.djmantra.app 
+10-12 02:24:30.200 I/MTK_APPList(  975): [notifyAPPstate] multi_resumed_app_info[0] com.termux/com.termux.app.TermuxActivity, pid:19657, fps:-1, isMultiWindow:1
+10-12 02:24:30.201 I/PowerHalWrapper( 1551): amsBoostNotify pid:15713,activity:com.anthropic.claude.mainactivity.MainActivity, package:com.anthropic.claude, mProcessCreatePackcom.djmantra.app 
+10-12 02:24:30.202 I/MTK_APPList(  975): [notifyAPPstate] multi_resumed_app_info[0] com.termux/com.termux.app.TermuxActivity, pid:19657, fps:-1, isMultiWindow:1
+10-12 02:24:31.323 I/am_uid_active( 1551): 10219
+10-12 02:24:31.323 I/am_unfreeze( 1551): [5945,com.google.android.permissioncontroller,6]
+10-12 02:24:31.334 I/am_unfreeze( 1551): [17094,com.stid.stidmobileid,6]
+10-12 02:24:31.907 I/am_uid_running( 1551): 10066
+10-12 02:24:31.918 I/am_proc_start( 1551): [0,27993,10066,com.android.providers.calendar,content provider,{com.android.providers.calendar/com.android.providers.calendar.CalendarProvider2}]
+10-12 02:24:31.919 I/ActivityManager( 1551): Start proc 27993:com.android.providers.calendar/u0a66 for content provider {com.android.providers.calendar/com.android.providers.calendar.CalendarProvider2}
+10-12 02:24:31.919 I/ActivityManager( 1551): ProcessObserver broadcast disabled
+10-12 02:24:31.938 I/am_proc_bound( 1551): [0,27993,com.android.providers.calendar]
+10-12 02:24:31.982 I/am_uid_active( 1551): 10066
+10-12 02:24:32.425 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:342,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:34.776 I/[C600000] [name(    0): spm&][SPM] system-vcore wake up by  R12_SC_SCP2SPM_WAKEUP_B, timer_out = 29, r13 = 0x8004fec0, debug_flag = 0x20000000 0x402, r12 = 0x800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42402080 0x42400080 0x2400080 0x24000a0 0x20 0x40000000 0x0 0x66667f, cg_check_sta =0x42400080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2092965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x18660000,  clk_settle = 0x60fe,
+10-12 02:24:38.025 I/am_freeze( 1551): [11707,com.google.android.apps.turbo]
+10-12 02:24:38.027 I/am_freeze( 1551): [13159,com.android.settings]
+10-12 02:24:38.437 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:343,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:39.944 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SC_SCP2SPM_WAKEUP_B, timer_out = 69, r13 = 0x8000fec0, debug_flag = 0x20000000 0x402, r12 = 0x800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002080 0x42000080 0x2000080 0x20000a0 0x20 0x40000000 0x0 0x6067f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2092965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x18660000,  clk_settle = 0x60fe,
+10-12 02:24:42.000 I/am_freeze( 1551): [17094,com.stid.stidmobileid]
+10-12 02:24:44.448 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:343,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:45.024 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SYSTIMER, timer_out = 431, r13 = 0x8020fec0, debug_flag = 0x20000000 0x402, r12 = 0x40000, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x40000080 0x42002a80 0x42000a80 0x2000080 0x20000a0 0x20 0x40000000 0x0 0x66667f, cg_check_sta =0x42000080, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2092965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x18661860,  clk_settle = 0x60fe,
+10-12 02:24:45.293 I/am_freeze( 1551): [15713,com.anthropic.claude]
+10-12 02:24:45.295 I/am_freeze( 1551): [15895,com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0]
+10-12 02:24:46.386 I/am_freeze( 1551): [27993,com.android.providers.calendar]
+10-12 02:24:48.671 W/ActivityManager( 1551): Unbind failed: could not find connection for android.os.BinderProxy@621e85e
+10-12 02:24:48.676 W/ActivityManager( 1551): Unable to start service Intent { act=android.telephony.satellite.SatelliteService xflg=0x4 pkg=com.mediatek.satellite.service } U=0: not found
+10-12 02:24:49.417 I/ActivityManager( 1551): Background started FGS: Allowed [callingPackage: com.mantraproductions.tttlight; callingUid: 10396; uidState: BFGS; uidBFSL: [BFSL]; intent: Intent { xflg=0x4 cmp=com.mantraproductions.tttlight/dev.patrickgold.florisboard.dictate.MaRecordingService }; code:UID_VISIBLE; tempAllowListReason:<null>; allowWiu:50; targetSdkVersion:36; callerTargetSdkVersion:36; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+10-12 02:24:49.440 I/am_foreground_service_start( 1551): [0,com.mantraproductions.tttlight/dev.patrickgold.florisboard.dictate.MaRecordingService,1,UID_VISIBLE,36,36,0,0,0,1,UNKNOWN,128]
+10-12 02:24:49.466 I/        (    0): [T628030] mt6886-audio 11050000.mt6886-afe-pcm: mtk_audio_sram_free(), user 00000000854faf8e
+10-12 02:24:49.466 I/        (    0): [T628030] mt6886-audio 11050000.mt6886-afe-pcm: mtk_audio_sram_allocate(), size 46080, user 00000000854faf8e, format 6, force_normal 0
+10-12 02:24:49.466 I/        (    0): [T628030] mt6886-audio 11050000.mt6886-afe-pcm: mtk_audio_sram_avail(), max_avail_size = 49152, size = 46080, blk_idx = 0, blk_num = 12
+10-12 02:24:49.466 I/        (    0): [T628030] mt6886-audio 11050000.mt6886-afe-pcm: mtk_afe_fe_hw_params(), VUL12, use_adsp_share_mem 0, using_sram 1, use_dram_only 0, ch 2, rate 48000, fmt 6, dma_addr 0x0000000011052000, dma_area ffffffc00e740000, dma_bytes 0xb400
+10-12 02:24:50.144 I/[C600000] [name(    0): spm&][SPM] system-bus wake up by  R12_SC_SCP2SPM_WAKEUP_B R12_SYSTIMER, timer_out = 510, r13 = 0x8002fee0, debug_flag = 0x20000000 0x402, r12 = 0x40800, r12_ext = 0x0, raw_sta = 0x0 0x0 0x0, idle_sta = 0x0, req_sta =  0x400040a0 0x420061a0 0x420000a0 0x20000a0 0x20000a0 0x20 0x40000000 0x0 0x6067f, cg_check_sta =0x420000a0, isr = 0x0, rt_req_sta0 = 0x0 rt_req_sta1 = 0x0 rt_req_sta2 = 0x0 rt_req_sta3 = 0x9e00023f dram_sw_con_3 = 0x552, raw_ext_sta = 0x2012965, wake_misc = 0x180030, pcm_flag = 0xfcc90d12 0x0 0xc90912 0x0, req = 0x18660000,  clk_settle = 0x60fe,
+10-12 02:24:50.458 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:342,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:53.971 I/am_foreground_service_stop( 1551): [0,com.mantraproductions.tttlight/dev.patrickgold.florisboard.dictate.MaRecordingService,1,UID_VISIBLE,36,36,0,0,4531,1,STOP_SERVICE,128]
+10-12 02:24:54.041 I/        (    0): [T702337] mt6886-audio 11050000.mt6886-afe-pcm: mtk_afe_fe_hw_free(), VUL12, use_adsp_share_mem 0, using_sram 1, use_dram_only 0, dma_addr 0x0000000011052000, dma_area 00000000f5fa1b6e, dma_bytes 0xb400, vow_barge_in_enable 0
+10-12 02:24:54.041 I/        (    0): [T702337] mt6886-audio 11050000.mt6886-afe-pcm: mtk_audio_sram_free(), user 00000000854faf8e
+10-12 02:24:56.397 I/am_freeze( 1551): [5945,com.google.android.permissioncontroller]
+10-12 02:24:56.469 E/NtChg   (  982): NtChg:T0-6:[100,150,350,370,390,410,500],chg_series:3,is_changed:1,TeBoT0-6:[100,150,330,370,390,410,500],TRegion:3,Temp:341,tzname:shell_front,Ibat:7000,onlineI:-400,param_type:3,AbnormalStatus:0,tzn:60,g_cp_mode:5,vbat:0,pr_id:5,OnGameStatus:0
+10-12 02:24:57.889 I/ImeTracker(19657): com.termux:9d47db4d: onRequestHide at ORIGIN_CLIENT reason HIDE_SOFT_INPUT_REQUEST_HIDE_WITH_CONTROL fromUser true
+10-12 02:24:57.894 I/jank_cuj_events_begin_request(19657): [81,1791764697893806000,9332290159632,9332290160171,1@0@com.termux]

@@ -1,0 +1,216 @@
+import "."
+import Mixxx 1.0 as Mixxx
+import QtQuick 2.12
+
+// A button. With group and key it drives a control: "toggle" flips it on
+// each tap, "push" holds it at 1 while pressed (CUE, hot cues)
+Rectangle {
+    id: root
+
+    property bool wrap: false // long labels (Settings) wrap instead of shrinking
+    property string text
+    property string group
+    property string key
+    property string mode: "toggle" // or "push", or "" (only clicked())
+    property color litColor: Style.accent
+    property bool lit: root.key !== "" && control.value > 0
+    property int fontSize: 15
+    // "play" / "pause" / "next" (to the next section): drawn, not a font
+    // glyph (round 13: the pause sign was tofu; round 16b: JUMP's too)
+    property string icon: ""
+    signal clicked()
+    onLitChanged: {
+        playIcon.requestPaint();
+        closeIcon.requestPaint();
+        nextIcon.requestPaint();
+        dropIcon.requestPaint();
+    }
+    signal pressedDown()
+    // a long press (0.45 s, a finger may move a little): the FX button's chooser;
+    // clicked() still follows on release
+    signal longPressed()
+    // a ▾ after the text, drawn (round 38: the font's ▾ was a box)
+    property bool dropdown: false
+    signal releasedUp()
+
+    radius: Style.radius
+    color: area.pressed ? Style.pressed : (lit ? litColor : Style.tile)
+    border.color: lit ? litColor : Style.surface
+    border.width: 1
+
+    Mixxx.ControlProxy {
+        id: control
+
+        group: root.group !== "" ? root.group : "[Master]"
+        key: root.key !== "" ? root.key : "enabled"
+    }
+
+    Row {
+        anchors.centerIn: parent
+        visible: root.icon === "pause"
+        spacing: root.height * 0.14
+
+        Repeater {
+            model: 2
+
+            delegate: Rectangle {
+                width: root.height * 0.13
+                height: root.height * 0.42
+                radius: 2
+                color: root.lit ? Style.inkOnAccent : Style.text
+            }
+        }
+    }
+
+    Canvas {
+        // "close": an ✕ of two strokes (round 32: the phone's font has no ✕ glyph)
+        id: closeIcon
+
+        anchors.centerIn: parent
+        width: root.height * 0.36
+        height: width
+        visible: root.icon === "close"
+        onVisibleChanged: requestPaint()
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.strokeStyle = String(root.lit ? Style.inkOnAccent : Style.text);
+            ctx.lineWidth = Math.max(2, width * 0.14);
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(width, height);
+            ctx.moveTo(width, 0);
+            ctx.lineTo(0, height);
+            ctx.stroke();
+        }
+    }
+
+    Canvas {
+        // "play": the same triangle as "next", drawn the same way (Marko 13.10.2026:
+        // one design language; the font's ▶ looked different from ▸|)
+        id: playIcon
+
+        anchors.centerIn: parent
+        width: root.height * 0.42
+        height: width
+        visible: root.icon === "play"
+        onVisibleChanged: requestPaint()
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.fillStyle = String(root.lit ? Style.inkOnAccent : Style.text);
+            ctx.beginPath();
+            // as wide as next's triangle, centred
+            const left = width * 0.14;
+            ctx.moveTo(left, 0);
+            ctx.lineTo(left + width * 0.72, height / 2);
+            ctx.lineTo(left, height);
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
+    Canvas {
+        // "next": a triangle against a bar, ▸|
+        id: nextIcon
+
+        anchors.centerIn: parent
+        width: root.height * 0.42
+        height: width
+        visible: root.icon === "next"
+        onVisibleChanged: requestPaint()
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.fillStyle = String(root.lit ? Style.inkOnAccent : Style.text);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(width * 0.72, height / 2);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillRect(width * 0.78, 0, width * 0.22, height);
+        }
+    }
+
+    Text {
+        anchors.fill: parent
+        anchors.margins: 4
+        visible: root.icon !== "pause" && root.icon !== "next" && root.icon !== "play" && root.icon !== "close"
+        text: root.text
+        color: root.lit ? Style.inkOnAccent : Style.text
+        font.pixelSize: root.fontSize
+        font.bold: true
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        fontSizeMode: Text.Fit
+        minimumPixelSize: 8
+        wrapMode: root.wrap ? Text.WordWrap : Text.NoWrap
+    }
+
+    Timer {
+        id: holdTimer
+
+        interval: 1000 // Marko 14.10.2026: every long press is 1 s
+        onTriggered: root.longPressed()
+    }
+
+    Canvas {
+        id: dropIcon
+
+        visible: root.dropdown
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        width: 10
+        height: 6
+        onPaint: {
+            const ctx = getContext("2d");
+            ctx.reset();
+            ctx.fillStyle = String(root.lit ? Style.inkOnAccent : Style.text);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(width, 0);
+            ctx.lineTo(width / 2, height);
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
+    MouseArea {
+        id: area
+
+        anchors.fill: parent
+        preventStealing: true
+        onPressed: {
+            holdTimer.restart();
+            root.pressedDown();
+            if (root.key !== "" && root.mode === "push") {
+                control.value = 1;
+                Mixxx.DJMantra.log("button " + root.group + "," + root.key + " pressed");
+            }
+            // toggles act on the press (round 17: Marko's PLAY "doesn't work":
+            // a finger that slides a little lost the click); the log names the
+            // new value (round 19: the proxy's value lagged behind)
+            if (root.key !== "" && root.mode === "toggle") {
+                const next = control.value > 0 ? 0 : 1;
+                control.value = next;
+                Mixxx.DJMantra.log("button " + root.group + "," + root.key + " " + next);
+            }
+        }
+        onReleased: {
+            holdTimer.stop();
+            if (root.key !== "" && root.mode === "push")
+                control.value = 0;
+            root.releasedUp();
+        }
+        onCanceled: {
+            holdTimer.stop();
+            if (root.key !== "" && root.mode === "push")
+                control.value = 0;
+            root.releasedUp();
+        }
+        onClicked: root.clicked()
+    }
+}

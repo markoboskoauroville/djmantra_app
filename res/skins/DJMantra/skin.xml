@@ -12,7 +12,9 @@
     <license>GPL-2.0-or-later</license>
     <attributes>
       <attribute config_key="[DJMantra],one_deck_continuous" persist="true">1</attribute>
-      <attribute config_key="[Controls],ShowDurationRemaining">1</attribute>
+      <attribute config_key="[Controls],ShowDurationRemaining">2</attribute>
+      <attribute config_key="[Controls],TimeFormat">1</attribute>
+      <attribute config_key="[Library],key_notation">3</attribute>
       <attribute config_key="[App],num_decks">2</attribute>
       <attribute config_key="[App],num_samplers">8</attribute>
       <attribute config_key="[Skin],show_spinnies">0</attribute>
@@ -38,7 +40,7 @@
       <attribute config_key="[DJMantra],d2_sampler">0</attribute>
     </attributes>
   </manifest>
-  <ObjectName>Mixxx</ObjectName>
+  <ObjectName>DJMantra</ObjectName>
   <Style src="skins:DJMantra/style.qss"/>
   <MinimumSize>320,320</MinimumSize>
   <SizePolicy>me,me</SizePolicy>
@@ -72,25 +74,31 @@
 <WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
+<MinimumSize>0,40</MinimumSize>
 
 <Children>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>10f,0min</Size></WidgetGroup>
 <PushButton>
 <ObjectName>LibraryButton</ObjectName>
 <Size>32f,32f</Size>
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_off.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+<KeyMatch>
+  <ObjectName>KeyMatch</ObjectName>
+  <Size>118f,34f</Size>
+</KeyMatch>
+<WidgetGroup><Layout>horizontal</Layout><Size>10f,0min</Size></WidgetGroup>
 </Children></WidgetGroup>
 <WidgetGroup>
 <Layout>horizontal</Layout>
@@ -121,6 +129,11 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
 <TrackProperty>
   <ObjectName>ArtistText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -129,6 +142,15 @@
   <Elide>right</Elide>
   <Channel>1</Channel>
 </TrackProperty>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
+<Key>
+  <ObjectName>KeyDeck1</ObjectName>
+  <Group>[Channel1]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>right</Alignment>
+  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
+</Key>
+</Children></WidgetGroup>
 <TrackProperty>
   <ObjectName>TitleText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -142,21 +164,12 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>left</Alignment>
   <Channel>1</Channel>
-  <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
-</NumberPos>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<Key>
-  <ObjectName>KeyDeck1</ObjectName>
-  <Group>[Channel1]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
-  <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
-</Key>
+</DeckCounter>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -211,6 +224,19 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<Key>
+  <ObjectName>KeyDeck2</ObjectName>
+  <Group>[Channel2]</Group>
+  <Size>-1min,-1min</Size>
+  <Alignment>left</Alignment>
+  <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
+</Key>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
 <TrackProperty>
   <ObjectName>ArtistText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -219,6 +245,7 @@
   <Elide>right</Elide>
   <Channel>2</Channel>
 </TrackProperty>
+</Children></WidgetGroup>
 <TrackProperty>
   <ObjectName>TitleText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -232,21 +259,12 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<Key>
-  <ObjectName>KeyDeck2</ObjectName>
-  <Group>[Channel2]</Group>
-  <Size>-1min,-1min</Size>
-  <Alignment>left</Alignment>
-  <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
-</Key>
-<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>right</Alignment>
   <Channel>2</Channel>
-  <Connection><ConfigKey>[Channel2],playposition</ConfigKey></Connection>
-</NumberPos>
+</DeckCounter>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
@@ -2658,6 +2676,7 @@
   <Elide>right</Elide>
   <Channel>1</Channel>
 </TrackProperty>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
 <Key>
   <ObjectName>KeyDeck1</ObjectName>
   <Group>[Channel1]</Group>
@@ -2666,11 +2685,6 @@
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
 </Children></WidgetGroup>
-<WidgetGroup>
-<Layout>horizontal</Layout>
-<SizePolicy>me,min</SizePolicy>
-
-<Children>
 <TrackProperty>
   <ObjectName>TitleText</ObjectName>
   <Size>-1me,-1min</Size>
@@ -2679,13 +2693,17 @@
   <Elide>right</Elide>
   <Channel>1</Channel>
 </TrackProperty>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
+  <Alignment>left</Alignment>
   <Channel>1</Channel>
-  <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
-</NumberPos>
+</DeckCounter>
 </Children></WidgetGroup>
 <Overview>
   <ObjectName>Overview</ObjectName>
@@ -2729,21 +2747,34 @@
 
 <Children>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>min,me</SizePolicy></WidgetGroup>
+<WidgetGroup>
+<Layout>horizontal</Layout>
+<SizePolicy>me,min</SizePolicy>
+
+<Children>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
 <PushButton>
 <ObjectName>LibraryButton</ObjectName>
 <Size>34f,34f</Size>
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_off.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
+<WidgetGroup><Layout>horizontal</Layout><SizePolicy>me,min</SizePolicy></WidgetGroup>
+</Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>0min,4f</Size></WidgetGroup>
+<KeyMatch>
+  <ObjectName>KeyMatch</ObjectName>
+  <Size>118f,34f</Size>
+</KeyMatch>
 <WidgetGroup><Layout>horizontal</Layout><SizePolicy>min,me</SizePolicy></WidgetGroup>
 </Children></WidgetGroup>
 <WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
@@ -2762,42 +2793,42 @@
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<TrackProperty>
-  <ObjectName>ArtistText</ObjectName>
-  <Size>-1me,-1min</Size>
-  <Property>artist</Property>
-  <Alignment>left</Alignment>
-  <Elide>right</Elide>
-  <Channel>2</Channel>
-</TrackProperty>
 <Key>
   <ObjectName>KeyDeck2</ObjectName>
   <Group>[Channel2]</Group>
   <Size>-1min,-1min</Size>
-  <Alignment>right</Alignment>
+  <Alignment>left</Alignment>
   <Connection><ConfigKey>[Channel2],visual_key</ConfigKey></Connection>
 </Key>
+<WidgetGroup><Layout>horizontal</Layout><Size>6f,0min</Size></WidgetGroup>
+<TrackProperty>
+  <ObjectName>ArtistText</ObjectName>
+  <Size>-1me,-1min</Size>
+  <Property>artist</Property>
+  <Alignment>right</Alignment>
+  <Elide>right</Elide>
+  <Channel>2</Channel>
+</TrackProperty>
 </Children></WidgetGroup>
+<TrackProperty>
+  <ObjectName>TitleText</ObjectName>
+  <Size>-1me,-1min</Size>
+  <Property>title</Property>
+  <Alignment>right</Alignment>
+  <Elide>right</Elide>
+  <Channel>2</Channel>
+</TrackProperty>
 <WidgetGroup>
 <Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<TrackProperty>
-  <ObjectName>TitleText</ObjectName>
-  <Size>-1me,-1min</Size>
-  <Property>title</Property>
-  <Alignment>left</Alignment>
-  <Elide>right</Elide>
-  <Channel>2</Channel>
-</TrackProperty>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>right</Alignment>
   <Channel>2</Channel>
-  <Connection><ConfigKey>[Channel2],playposition</ConfigKey></Connection>
-</NumberPos>
+</DeckCounter>
 </Children></WidgetGroup>
 <Overview>
   <ObjectName>Overview</ObjectName>
@@ -5524,6 +5555,7 @@
   <Connection><ConfigKey>[Channel1],visual_bpm</ConfigKey></Connection>
 </Number>
 </Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
 <Layout>vertical</Layout>
 <SizePolicy>me,min</SizePolicy>
@@ -5538,19 +5570,18 @@
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
 </Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
-<Layout>vertical</Layout>
+<Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<Label><ObjectName>OneDeckCaption</ObjectName><Text>TIME</Text><Alignment>left</Alignment></Label>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>left</Alignment>
   <Channel>1</Channel>
-  <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
-</NumberPos>
+</DeckCounter>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -5565,12 +5596,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_off.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>
@@ -5769,6 +5800,7 @@
   <Connection><ConfigKey>[Channel1],visual_bpm</ConfigKey></Connection>
 </Number>
 </Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
 <Layout>vertical</Layout>
 <SizePolicy>me,min</SizePolicy>
@@ -5783,19 +5815,18 @@
   <Connection><ConfigKey>[Channel1],visual_key</ConfigKey></Connection>
 </Key>
 </Children></WidgetGroup>
+<WidgetGroup><Layout>horizontal</Layout><Size>12f,0min</Size></WidgetGroup>
 <WidgetGroup>
-<Layout>vertical</Layout>
+<Layout>horizontal</Layout>
 <SizePolicy>me,min</SizePolicy>
 
 <Children>
-<Label><ObjectName>OneDeckCaption</ObjectName><Text>TIME</Text><Alignment>left</Alignment></Label>
-<NumberPos>
-  <ObjectName>TimeText</ObjectName>
+<DeckCounter>
+  <ObjectName>CounterText</ObjectName>
   <Size>-1min,-1min</Size>
   <Alignment>left</Alignment>
   <Channel>1</Channel>
-  <Connection><ConfigKey>[Channel1],playposition</ConfigKey></Connection>
-</NumberPos>
+</DeckCounter>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
 </Children></WidgetGroup>
@@ -5810,12 +5841,12 @@
 <NumberStates>2</NumberStates>
 <RightClickIsPushButton>false</RightClickIsPushButton>
 <State><Number>0</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_off.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <State><Number>1</Number>
-<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Unpressed>
-<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/dj_logo.svg</Pressed>
+<Unpressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_on.svg</Unpressed>
+<Pressed scalemode="STRETCH_ASPECT">skins:DJMantra/svg/menu_pressed.svg</Pressed>
 </State>
 <Connection><ConfigKey>[DJMantra],show_menu</ConfigKey><ButtonState>LeftButton</ButtonState></Connection>
 </PushButton>

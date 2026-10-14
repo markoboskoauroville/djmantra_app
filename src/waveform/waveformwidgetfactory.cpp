@@ -412,6 +412,11 @@ bool WaveformWidgetFactory::setConfig(UserSettingsPointer config) {
     }
 
     bool zoomSync = m_config->getValue(ConfigKey("[Waveform]", "ZoomSynchronization"), m_zoomSync);
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: both decks always at the same zoom, so the two waveforms
+    // compare like one track (Marko, 12.10.2026)
+    zoomSync = true;
+#endif
     setZoomSync(zoomSync);
 
     int beatGridAlpha = m_config->getValue(ConfigKey("[Waveform]", "beatGridAlpha"), m_beatGridAlpha);
@@ -421,6 +426,26 @@ bool WaveformWidgetFactory::setConfig(UserSettingsPointer config) {
             m_config->getValueString(ConfigKey("[Waveform]","WaveformType")).toInt(&ok));
     // Store the widget type on m_configType for later initialization.
     // We will initialize the objects later because of a problem with GL on QT 5.14.2 on Windows
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: the phone drew software waveforms before it had the GPU
+    // (and does again when the GPU does not start): with shaders, a saved
+    // software type becomes the GPU's (all-shader RGB)
+    if (ok && isOpenGlShaderAvailable()) {
+        switch (type) {
+        case WaveformWidgetType::AllShaderRGBWaveform:
+        case WaveformWidgetType::AllShaderLRRGBWaveform:
+        case WaveformWidgetType::AllShaderFilteredWaveform:
+        case WaveformWidgetType::AllShaderSimpleWaveform:
+        case WaveformWidgetType::AllShaderHSVWaveform:
+        case WaveformWidgetType::AllShaderRGBStackedWaveform:
+            break;
+        default:
+            qInfo() << "Waveforms: GPU (all-shader) instead of the saved type" << type;
+            ok = false;
+            break;
+        }
+    }
+#endif
     if (!ok || !setWidgetType(type, &m_configType)) {
         setWidgetType(autoChooseWidgetType(), &m_configType);
     }
@@ -901,7 +926,10 @@ void WaveformWidgetFactory::swap() {
 void WaveformWidgetFactory::swapAndRender() {
     // used for PLL
     WGLWidget* widget = SharedGLContext::getWidget();
-    widget->getOpenGLWindow()->update();
+    // No QOpenGLWindow on Android (QOpenGLWidget there)
+    if (widget && widget->getOpenGLWindow()) {
+        widget->getOpenGLWindow()->update();
+    }
 
     swapSelf();
     renderSelf();
@@ -914,7 +942,9 @@ void WaveformWidgetFactory::slotFrameSwapped() {
     if (m_vsyncThread->pllInitializing()) {
         // continuously trigger redraws during PLL init
         WGLWidget* widget = SharedGLContext::getWidget();
-        widget->getOpenGLWindow()->update();
+        if (widget && widget->getOpenGLWindow()) {
+            widget->getOpenGLWindow()->update();
+        }
     }
     // update the phase-locked-loop
     m_vsyncThread->updatePLL();
@@ -1273,8 +1303,10 @@ void WaveformWidgetFactory::startVSync(GuiTick* pGuiTick, VisualsManager* pVisua
     m_vsyncThread->setSyncIntervalTimeMicros(static_cast<int>(1e6 / m_frameRate));
 
 #ifdef MIXXX_USE_QOPENGL
-    if (m_vsyncThread->vsyncMode() == VSyncThread::ST_PLL) {
-        WGLWidget* widget = SharedGLContext::getWidget();
+    WGLWidget* pPllWidget = SharedGLContext::getWidget();
+    if (m_vsyncThread->vsyncMode() == VSyncThread::ST_PLL && pPllWidget &&
+            pPllWidget->getOpenGLWindow()) {
+        WGLWidget* widget = pPllWidget;
         connect(widget->getOpenGLWindow(),
                 &QOpenGLWindow::frameSwapped,
                 this,

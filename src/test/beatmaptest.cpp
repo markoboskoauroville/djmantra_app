@@ -1,9 +1,11 @@
 #include <gtest/gtest.h>
 
 #include <QtDebug>
+#include <cmath>
 #include <memory>
 
 #include "track/beats.h"
+#include "track/beatutils.h"
 #include "track/track.h"
 
 using namespace mixxx;
@@ -252,3 +254,25 @@ TEST_F(BeatMapTest, HasBeatInRangeWithFractionalPos) {
 }
 
 }  // namespace
+
+// DJ Mantra: a live drummer (the tempo drifts) gets a beat map, a steady
+// song keeps its constant grid (BeatUtils::followsOneTempo)
+TEST(BeatUtilsDJMantraTest, followsOneTempoTellsLiveFromSteady) {
+    const auto sampleRate = audio::SampleRate(44100);
+    const double beatLength = 22050; // 120 BPM
+    QVector<BeatUtils::ConstRegion> steady = {
+            {audio::FramePos(0), beatLength},
+            {audio::FramePos(400 * beatLength), 0}};
+    EXPECT_TRUE(BeatUtils::followsOneTempo(steady, Bpm(120), audio::FramePos(0), sampleRate));
+
+    // 40 regions of 10 beats, the tempo wandering by +-2 %
+    QVector<BeatUtils::ConstRegion> live;
+    double position = 0;
+    for (int i = 0; i < 40; ++i) {
+        const double length = beatLength * (1 + 0.02 * std::sin(i * 0.7));
+        live.append({audio::FramePos(position), length});
+        position += 10 * length;
+    }
+    live.append({audio::FramePos(position), 0});
+    EXPECT_FALSE(BeatUtils::followsOneTempo(live, Bpm(120), audio::FramePos(0), sampleRate));
+}

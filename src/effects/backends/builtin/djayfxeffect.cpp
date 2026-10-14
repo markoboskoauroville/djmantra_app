@@ -1,0 +1,240 @@
+#include "effects/backends/builtin/djayfxeffect.h"
+
+#include "effects/backends/effectmanifest.h"
+#include "engine/effects/engineeffectparameter.h"
+
+#include <QtDebug>
+
+void DjayFxEffectBase::loadEngineEffectParameters(
+        const QMap<QString, EngineEffectParameterPointer>& parameters) {
+    m_pAmount = parameters.value(parameters.contains("beats") ? "beats" : "amount");
+    m_pMix = parameters.value("mix");
+    m_pEngaged = parameters.value("engaged");
+}
+
+// static
+EffectManifestPointer DjayFxEffectBase::makeManifest(const QString& id,
+        const QString& name,
+        const QString& description,
+        bool beats) {
+    EffectManifestPointer pManifest(new EffectManifest());
+    pManifest->setId(id);
+    pManifest->setName(name);
+    pManifest->setShortName(name);
+    pManifest->setAuthor("DJ Mantra");
+    pManifest->setVersion("1.0");
+    pManifest->setDescription(description);
+    pManifest->setEffectRampsFromDry(true);
+
+    EffectManifestParameterPointer amount = pManifest->addParameter();
+    if (beats) {
+        amount->setId("beats");
+        amount->setName(QObject::tr("Beats"));
+        amount->setShortName(QObject::tr("Beats"));
+        amount->setDescription(QObject::tr("The echo time in beats, fixed when pressed"));
+        amount->setUnitsHint(EffectManifestParameter::UnitsHint::Beats);
+        amount->setRange(0.25, 2, 2); // djay: 1 or 2 beats
+    } else {
+        amount->setId("amount");
+        amount->setName(QObject::tr("Amount"));
+        amount->setShortName(QObject::tr("Amount"));
+        amount->setDescription(QObject::tr("How deep the effect goes"));
+        amount->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+        amount->setRange(0, 0.5, 1);
+    }
+    amount->setValueScaler(EffectManifestParameter::ValueScaler::Linear);
+
+    EffectManifestParameterPointer mix = pManifest->addParameter();
+    mix->setId("mix");
+    mix->setName(QObject::tr("Dry/Wet"));
+    mix->setShortName(QObject::tr("D/W"));
+    mix->setDescription(QObject::tr("Dry / wet mix"));
+    mix->setValueScaler(EffectManifestParameter::ValueScaler::Linear);
+    mix->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+    mix->setRange(0, 1, 1);
+
+    if (beats) {
+        // Echo Out runs while chosen (it keeps the last beats); this button cuts
+        // the song into its echo (djay's ON), [..._EffectN],button_parameter1
+        EffectManifestParameterPointer engaged = pManifest->addParameter();
+        engaged->setId("engaged");
+        engaged->setName(QObject::tr("Echo out"));
+        engaged->setShortName(QObject::tr("Out"));
+        engaged->setDescription(QObject::tr("On: the song stops and its last beats echo on"));
+        engaged->setValueScaler(EffectManifestParameter::ValueScaler::Toggle);
+        engaged->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+        engaged->setRange(0, 0, 1);
+    }
+    return pManifest;
+}
+
+// static
+QString UnderwaterEffect::getId() {
+    return "org.djmantra.effects.underwater";
+}
+
+// static
+EffectManifestPointer UnderwaterEffect::getManifest() {
+    return makeManifest(getId(),
+            QObject::tr("Underwater"),
+            QObject::tr("The song heard from under water: a resonant, drifting lowpass"),
+            false);
+}
+
+void UnderwaterEffect::processChannel(DjayFxGroupState* pState,
+        const CSAMPLE* pInput,
+        CSAMPLE* pOutput,
+        const mixxx::EngineParameters& engineParameters,
+        const EffectEnableState enableState,
+        const GroupFeatureState& groupFeatures) {
+    Q_UNUSED(groupFeatures);
+    pState->underwater.setSampleRate(engineParameters.sampleRate().toDouble());
+    if (enableState == EffectEnableState::Enabling) {
+        pState->underwater.reset();
+    }
+    pState->underwater.process(pInput,
+            pOutput,
+            static_cast<int>(engineParameters.framesPerBuffer()),
+            m_pAmount->value(),
+            m_pMix->value());
+}
+
+// static
+QString CooldownEffect::getId() {
+    return "org.djmantra.effects.cooldown";
+}
+
+// static
+EffectManifestPointer CooldownEffect::getManifest() {
+    return makeManifest(getId(),
+            QObject::tr("Cooldown"),
+            QObject::tr("The energy drops: the highs and the deepest lows glide "
+                        "away and a reverb washes in"),
+            false);
+}
+
+void CooldownEffect::processChannel(DjayFxGroupState* pState,
+        const CSAMPLE* pInput,
+        CSAMPLE* pOutput,
+        const mixxx::EngineParameters& engineParameters,
+        const EffectEnableState enableState,
+        const GroupFeatureState& groupFeatures) {
+    Q_UNUSED(groupFeatures);
+    pState->cooldown.setSampleRate(engineParameters.sampleRate().toDouble());
+    if (enableState == EffectEnableState::Enabling) {
+        pState->cooldown.reset();
+    }
+    pState->cooldown.process(pInput,
+            pOutput,
+            static_cast<int>(engineParameters.framesPerBuffer()),
+            m_pAmount->value(),
+            m_pMix->value());
+}
+
+// static
+QString EchoOutEffect::getId() {
+    return "org.djmantra.effects.echoout";
+}
+
+// static
+EffectManifestPointer EchoOutEffect::getManifest() {
+    return makeManifest(getId(),
+            QObject::tr("Echo Out"),
+            QObject::tr("Leave on an echo: the song stops and its last beats "
+                        "echo on, fading"),
+            true);
+}
+
+void EchoOutEffect::processChannel(DjayFxGroupState* pState,
+        const CSAMPLE* pInput,
+        CSAMPLE* pOutput,
+        const mixxx::EngineParameters& engineParameters,
+        const EffectEnableState enableState,
+        const GroupFeatureState& groupFeatures) {
+    pState->echoOut.setSampleRate(engineParameters.sampleRate().toDouble());
+    if (enableState == EffectEnableState::Enabling) {
+        pState->echoOut.reset();
+    }
+    const double beatSeconds = groupFeatures.beat_length.has_value()
+            ? groupFeatures.beat_length->seconds
+            : 0.5; // no tempo: 120 BPM
+    // round 38: Echo Out's ON did nothing on the phone: say when the engine sees it
+    const bool engaged = m_pEngaged && m_pEngaged->toBool();
+    if (engaged != pState->lastEngaged || enableState == EffectEnableState::Enabling) {
+        qInfo() << "Echo Out:" << (m_pEngaged ? "" : "(no engaged parameter)")
+                << "engaged" << engaged << "enable state" << static_cast<int>(enableState)
+                << "beats" << m_pAmount->value() << "mix" << m_pMix->value();
+        pState->lastEngaged = engaged;
+    }
+    pState->echoOut.process(pInput,
+            pOutput,
+            static_cast<int>(engineParameters.framesPerBuffer()),
+            engaged,
+            m_pAmount->value(),
+            beatSeconds,
+            m_pMix->value());
+}
+
+// static
+QString DjmFilterEffect::getId() {
+    return "org.djmantra.effects.djmfilter";
+}
+
+// static
+EffectManifestPointer DjmFilterEffect::getManifest() {
+    EffectManifestPointer pManifest(new EffectManifest());
+    pManifest->setId(getId());
+    pManifest->setName(QObject::tr("DJM Filter"));
+    pManifest->setShortName(QObject::tr("DJM Filter"));
+    pManifest->setAuthor("DJ Mantra");
+    pManifest->setVersion("1.0");
+    pManifest->setDescription(QObject::tr(
+            "Pioneer DJM style Color FX filter: left a resonant low-pass, right a "
+            "resonant high-pass, the middle off"));
+    pManifest->setEffectRampsFromDry(true);
+    pManifest->setMetaknobDefault(0.5);
+
+    EffectManifestParameterPointer filter = pManifest->addParameter();
+    filter->setId("filter");
+    filter->setName(QObject::tr("Filter"));
+    filter->setShortName(QObject::tr("Filter"));
+    filter->setDescription(QObject::tr("Left: low-pass, middle: off, right: high-pass"));
+    filter->setValueScaler(EffectManifestParameter::ValueScaler::Linear);
+    filter->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+    filter->setDefaultLinkType(EffectManifestParameter::LinkType::Linked);
+    filter->setRange(0, 0.5, 1);
+
+    EffectManifestParameterPointer resonance = pManifest->addParameter();
+    resonance->setId("resonance");
+    resonance->setName(QObject::tr("Resonance"));
+    resonance->setShortName(QObject::tr("Res"));
+    resonance->setDescription(QObject::tr("The peak at the corner (the DJM's PARAMETER)"));
+    resonance->setValueScaler(EffectManifestParameter::ValueScaler::Linear);
+    resonance->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+    resonance->setRange(0, 0.4, 1);
+    return pManifest;
+}
+
+void DjmFilterEffect::loadEngineEffectParameters(
+        const QMap<QString, EngineEffectParameterPointer>& parameters) {
+    m_pFilter = parameters.value("filter");
+    m_pResonance = parameters.value("resonance");
+}
+
+void DjmFilterEffect::processChannel(DjayFxGroupState* pState,
+        const CSAMPLE* pInput,
+        CSAMPLE* pOutput,
+        const mixxx::EngineParameters& engineParameters,
+        const EffectEnableState enableState,
+        const GroupFeatureState& groupFeatures) {
+    Q_UNUSED(groupFeatures);
+    pState->djmFilter.setSampleRate(engineParameters.sampleRate().toDouble());
+    if (enableState == EffectEnableState::Enabling) {
+        pState->djmFilter.reset();
+    }
+    pState->djmFilter.process(pInput,
+            pOutput,
+            static_cast<int>(engineParameters.framesPerBuffer()),
+            m_pFilter->value(),
+            m_pResonance->value());
+}

@@ -123,6 +123,14 @@ void RecordingManager::startRecording() {
     m_iNumberSplits = 1;
     // Append file extension.
     QString date_time_str = formatDateTimeForFilename(QDateTime::currentDateTime());
+    // DJ Mantra (Marko 14.10.2026): "<name> - <date> <time>", the name from Settings
+    // (default "DJ Mantra Mix")
+    const QString namePrefix = m_pConfig->getValueString(
+            ConfigKey(RECORDING_PREF_KEY, "NamePrefix"));
+    if (!namePrefix.isEmpty()) {
+        date_time_str = namePrefix + QStringLiteral(" - ") +
+                QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd HH'h'mm"));
+    }
     m_recordingFile = QString("%1.%2")
                               .arg(date_time_str, fileExtension);
 

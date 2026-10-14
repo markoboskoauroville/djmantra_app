@@ -1,5 +1,7 @@
 #include "coreservices.h"
 
+#include "util/brandtranslator.h"
+
 #include <QApplication>
 #include <QFileDialog>
 #include <QProcess>
@@ -73,7 +75,13 @@ namespace {
 const mixxx::Logger kLogger("CoreServices");
 constexpr int kMicrophoneCount = 4;
 constexpr int kAuxiliaryCount = 4;
+#ifdef __ANDROID_PORT__
+// DJ Mantra: the Mix Ultra's SAMPLER pads play 1-8; the 9th plays the ROOM CORRECTION test signal
+// through the mixer (every output it feeds)
+constexpr int kSamplerCount = 9;
+#else
 constexpr int kSamplerCount = 4;
+#endif
 
 #define CLEAR_AND_CHECK_DELETED(x) clearHelper(x, #x);
 
@@ -359,6 +367,10 @@ CoreServices::CoreServices(const CmdlineArgs& args, QApplication* pApp)
     }
     mixxx::Translations::initializeTranslations(
             m_pSettingsManager->settings(), pApp, m_cmdlineArgs.getLocale());
+#ifdef __ANDROID_PORT__
+    // DJ Mantra's name in every text that names Mixxx (installed last: asked first)
+    pApp->installTranslator(new djmantra::BrandTranslator(pApp));
+#endif
     initializeKeyboard();
 }
 
@@ -720,19 +732,19 @@ void CoreServices::initialize(QApplication* pApp) {
             static_cast<int>(musicFiles.count()));
     for (int i = 0; i < numTracks; ++i) {
         if (SoundSourceProxy::isFileNameSupported(musicFiles.at(i))) {
-            if (i == 0 && m_cmdlineArgs.getPlay()) {
-                // Log once when deck 1 really plays (the device tests wait for it)
-                auto* pPlay = new ControlProxy(QStringLiteral("[Channel1]"),
-                        QStringLiteral("play"),
-                        this);
-                pPlay->connectValueChanged(this, [pPlay](double value) {
+            if (m_cmdlineArgs.getPlay()) {
+                // --play: every deck given a song plays (round 12: only deck 1
+                // did). Logged once when the deck really plays (the device
+                // tests wait for it).
+                const QString group = PlayerManager::groupForDeck(i);
+                auto* pPlay = new ControlProxy(group, QStringLiteral("play"), this);
+                pPlay->connectValueChanged(this, [pPlay, i](double value) {
                     if (value > 0) {
-                        qInfo() << "Deck 1 playing";
+                        qInfo().noquote() << QStringLiteral("Deck %1 playing").arg(i + 1);
                         pPlay->deleteLater();
                     }
                 });
-                m_pPlayerManager->slotLoadLocationToPlayer(
-                        musicFiles.at(i), QStringLiteral("[Channel1]"), true);
+                m_pPlayerManager->slotLoadLocationToPlayer(musicFiles.at(i), group, true);
                 continue;
             }
             m_pPlayerManager->slotLoadToDeck(musicFiles.at(i), i + 1);

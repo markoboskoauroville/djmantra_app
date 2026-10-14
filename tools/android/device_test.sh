@@ -138,7 +138,8 @@ for serial in "${SERIALS[@]}"; do
         sort -rn | head -3 | awk '{print $2}' | sed 's/AUDIO_DEVICE_OUT_//' | paste -sd ',' -)"
     soundline="$(grep -m1 "Sound output open" "$out/logcat.txt" | sed 's/.*Sound output open: *//' | cut -c1-90)"
     level="$(grep "Output level: peak" "$out/logcat.txt" | tail -1 | sed 's/.*peak */peak /')"
-    window="$(grep -m1 "main window ready" "$out/logcat.txt" | sed 's/.*full screen: *//' | cut -c1-60)"
+    window="$(grep -m1 -E "main window ready|Quick: interface ready" "$out/logcat.txt" |
+        sed -e 's/.*full screen: *//' -e 's/.*Quick: interface ready */Quick /' | cut -c1-60)"
     result="$(grep -m1 "^### Launch test:" "$out/summary.txt" | sed 's/### Launch test: //')"
     [ $status = 0 ] && verdict="**pass**" || verdict="**fail** ($result)"
     echo "| $model | $release (API $sdk) | $verdict | ${soundline:-none}${level:+; $level} | ${route:-?} | ${window:-?} |" >> "$TABLE"

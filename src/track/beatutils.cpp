@@ -1,6 +1,9 @@
 #include "track/beatutils.h"
 
 #include <QtDebug>
+#include <algorithm>
+#include <cmath>
+#include <vector>
 
 #include "util/math.h"
 
@@ -426,4 +429,45 @@ mixxx::audio::FramePos BeatUtils::adjustPhase(
     DEBUG_ASSERT(abs(offsetAdjust) < (kMaxSecsPhaseError * sampleRate));
 
     return firstBeat + offsetAdjust;
+}
+
+// static
+bool BeatUtils::followsOneTempo(const QVector<ConstRegion>& constantRegions,
+        mixxx::Bpm bpm,
+        mixxx::audio::FramePos firstBeat,
+        mixxx::audio::SampleRate sampleRate) {
+    const QVector<mixxx::audio::FramePos> beats = getBeats(constantRegions);
+    if (beats.size() < 32 || !bpm.isValid() || !firstBeat.isValid() || !sampleRate.isValid()) {
+        return true;
+    }
+    const double beatLength = 60.0 * sampleRate / bpm.value();
+    std::vector<double> offsets;
+    offsets.reserve(beats.size());
+    for (const auto& beat : beats) {
+        double offset = fmod(beat - firstBeat, beatLength);
+        if (offset < 0) {
+            offset += beatLength;
+        }
+        if (offset > beatLength / 2) {
+            offset -= beatLength;
+        }
+        offsets.push_back(offset);
+    }
+    std::vector<double> sorted = offsets;
+    std::nth_element(sorted.begin(), sorted.begin() + sorted.size() / 2, sorted.end());
+    const double median = sorted[sorted.size() / 2];
+    int fitting = 0;
+    for (double offset : offsets) {
+        if (fabs(offset - median) < 0.025 * sampleRate) {
+            ++fitting;
+        }
+    }
+    const double fit = static_cast<double>(fitting) / offsets.size();
+    double longest = 0;
+    for (int i = 0; i + 1 < constantRegions.size(); ++i) {
+        longest = std::max(longest, constantRegions[i + 1].firstBeat - constantRegions[i].firstBeat);
+    }
+    const double span = beats.last() - beats.first();
+    const double longestShare = span > 0 ? longest / span : 1;
+    return !(fit < 0.55 && longestShare < 0.15);
 }

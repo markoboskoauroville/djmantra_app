@@ -1,5 +1,8 @@
 #pragma once
 
+#include <chrono>
+#include <vector>
+
 #include <oboe/Oboe.h>
 
 #include <QMutex>
@@ -8,6 +11,7 @@
 #include <memory>
 
 #include "soundio/sounddevice.h"
+#include "util/fifo.h"
 
 /// The host API name of the Android sound output in the sound preferences.
 extern const QString kOboeHostApi;
@@ -25,7 +29,23 @@ class SoundDeviceOboe : public SoundDevice,
                         public oboe::AudioStreamDataCallback,
                         public oboe::AudioStreamErrorCallback {
   public:
-    SoundDeviceOboe(UserSettingsPointer config, SoundManager* sm);
+    /// `routeKey` "": the output Android routes media to (follows plugging);
+    /// else one output by its AudioRouter key ("usb:...", "bt:...") for the
+    /// audio router (Marko, 12.10.2026: MASTER and HEADPHONES on any output)
+    SoundDeviceOboe(UserSettingsPointer config,
+            SoundManager* sm,
+            const QString& routeKey = QString(),
+            const QString& label = QString(),
+            int channels = 2);
+    struct AndroidOutput {
+        QString key;
+        QString label;
+        int channels; // a multi-channel interface: stereo pairs 1-2, 3-4 ...
+    };
+    /// The phone's outputs now (AudioRouter.java)
+    static QList<AndroidOutput> androidOutputs();
+    /// Goes up whenever an output comes or goes
+    static int androidOutputsVersion();
     ~SoundDeviceOboe() override;
 
     SoundDeviceStatus open(bool isClkRefDevice, int syncBuffers) override;
@@ -46,15 +66,45 @@ class SoundDeviceOboe : public SoundDevice,
   private:
     oboe::Result openStream();
     void prepareCallbackThread();
-    void logOutputLevel(const CSAMPLE* pOutput, SINT samples, int sampleRate);
+    void logOutputLevel(const CSAMPLE* pOutput, SINT samples, int sampleRate, oboe::AudioStream* pStream);
 
     // Guards m_pStream against open/close/reopen from different threads
     mutable QMutex m_streamMutex;
     std::shared_ptr<oboe::AudioStream> m_pStream;
+    QString m_routeKey;
+    // Not the clock reference (the headphones on a second output): the
+    // engine's samples come through this FIFO, written by writeProcess() on
+    // the clock device's callback, read by this device's own callback
+    bool m_isClkRef = true;
+    std::unique_ptr<FIFO<CSAMPLE>> m_pFifo;
+    int m_fifoUnderflows = 0;
     int m_outputChannels;
+    // V16 (CQ-12T on the Pixel's USB): the low-latency MMAP stream timed out every
+    // ~1 s and wrote nothing; after one timeout the stream opens without MMAP.
+    std::atomic<bool> m_avoidMmap{false};
+    // a USB interface's own channel count did not open: only the needed ones
+    bool m_twoChannelsOnly = false;
+    std::atomic<int> m_streamChannels{2}; // the open stream's channels
+    // round 38: an output that runs slow is reopened in variants 1-5 (deep buffer,
+    // 16-bit, 32-bit, the device's rate; sounddeviceoboe.cpp variantFormat())
+    static constexpr int kVariants = 6;
+    std::atomic<int> m_variant{0};
+    bool m_rateChecked = false;
+    std::vector<CSAMPLE> m_scratch;
+    oboe::AudioFormat variantFormat() const;
+    bool variantPowerSaving() const;
+    void reopenVariant(int variant);
+    bool m_variantsDone = false; // a variant ran in real time, or all were tried
+    double m_bestRate = 0;
+    int m_bestVariant = 0;
+    long long m_rateFrames = 0;
+    std::chrono::steady_clock::time_point m_rateStart;
     QString m_lastError;
     std::atomic<bool> m_closing;
     bool m_callbackThreadPrepared;
+    // The engine's time per callback, for the log (callback thread only)
+    double m_callbackMaxMs = 0;
+    int m_callbacksLate = 0;
     // Output level for the log (callback thread only)
     CSAMPLE m_levelPeak;
     SINT m_levelSamples;

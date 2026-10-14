@@ -1,0 +1,103 @@
+{
+ "song": "American Dream - PROFF Interpretation",
+ "bpm": 121.995,
+ "bars": 123,
+ "downbeat_phase": 3,
+ "phrase_phase": 3,
+ "app_sections_s": [
+  9.5,
+  72.5,
+  104.0,
+  127.6,
+  151.2,
+  206.3,
+  229.9
+ ],
+ "app_sections_bar": [
+  4,
+  36,
+  52,
+  64,
+  76,
+  104,
+  116
+ ],
+ "ref_sections_s": [
+  9.5,
+  39.0,
+  70.5,
+  102.0,
+  164.9,
+  212.2,
+  233.8
+ ],
+ "ref_sections_bar": [
+  4,
+  19,
+  35,
+  51,
+  83,
+  107,
+  118
+ ],
+ "ref_major_bar": [
+  4,
+  35,
+  51,
+  83,
+  107,
+  118
+ ],
+ "ref_major_s": [
+  9.5,
+  70.5,
+  102.0,
+  164.9,
+  212.2,
+  233.8
+ ],
+ "ref_labels": [
+  {
+   "bar": 0,
+   "s": 1.7,
+   "name": "Intro"
+  },
+  {
+   "bar": 4,
+   "s": 9.5,
+   "name": "Up"
+  },
+  {
+   "bar": 19,
+   "s": 39.0,
+   "name": "Chorus"
+  },
+  {
+   "bar": 35,
+   "s": 70.5,
+   "name": "Down"
+  },
+  {
+   "bar": 51,
+   "s": 102.0,
+   "name": "Down"
+  },
+  {
+   "bar": 83,
+   "s": 164.9,
+   "name": "Chorus"
+  },
+  {
+   "bar": 107,
+   "s": 212.2,
+   "name": "Chorus"
+  },
+  {
+   "bar": 118,
+   "s": 233.8,
+   "name": "Outro"
+  }
+ ],
+ "app_on_8bar_grid": 0,
+ "ref_on_8bar_grid": 5
+}

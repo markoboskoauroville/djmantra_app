@@ -81,6 +81,7 @@ class LegacySkinParser : public QObject, public SkinParser {
     QWidget* parseRateRange(const QDomElement& node);
     QWidget* parseNumberRate(const QDomElement& node);
     QWidget* parseNumberPos(const QDomElement& node);
+    QWidget* parseDeckCounter(const QDomElement& node);
     QWidget* parseEngineKey(const QDomElement& node);
     QWidget* parseBeatSpinBox(const QDomElement& node);
     QWidget* parseEffectChainName(const QDomElement& node);
