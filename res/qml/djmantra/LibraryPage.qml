@@ -25,6 +25,74 @@ Rectangle {
 
     ListModel { id: songs }
 
+    // Marko 14.10.2026: a FILTER above the list (the open folder's songs whose title, artist or
+    // file name has every typed word) and FIND ON PHONE (the same words through every song on
+    // the phone: Android's media index of the phone, SD card and USB sticks). Both show their
+    // hits in `found`, in the list or thumbnail view; clearing the text goes back to the folder.
+    ListModel { id: found }
+    property string filterText: ""
+    property bool phoneMode: false
+    readonly property bool searching: filterText !== "" || phoneMode
+    readonly property var shownModel: searching ? found : songs
+
+    function rowCopy(r) {
+        return {name: r.name, path: r.path, isFolder: r.isFolder, artist: r.artist || "",
+                title: r.title || r.name, bpm: r.bpm || 0, key: r.key || "", cover: r.cover || "",
+                duration: r.duration || 0, known: true};
+    }
+
+    function refilter() {
+        if (phoneMode || filterText === "")
+            return;
+        const words = filterText.toLowerCase().split(/\s+/).filter(w => w !== "");
+        found.clear();
+        for (let i = 0; i < songs.count; ++i) {
+            const r = songs.get(i);
+            const text = (r.title + " " + r.artist + " " + r.name).toLowerCase();
+            if (words.every(w => text.indexOf(w) >= 0))
+                found.append(rowCopy(r));
+        }
+        view.currentIndex = -1;
+    }
+
+    function findOnPhone() {
+        if (filterText.trim() === "") {
+            Toasts.show(qsTr("TYPE A TITLE OR ARTIST FIRST"));
+            return;
+        }
+        phoneMode = true;
+        found.clear();
+        const hits = Mixxx.DJMantra.findSongs(filterText);
+        for (const h of hits)
+            found.append(rowCopy(h));
+        Toasts.show(qsTr("FOUND ON PHONE: ") + hits.length);
+        Mixxx.DJMantra.log("find on phone '" + filterText + "': " + hits.length);
+    }
+
+    function clearSearch() {
+        searchInput.text = "";
+        filterText = "";
+        phoneMode = false;
+        found.clear();
+    }
+
+    onFilterTextChanged: {
+        if (filterText === "")
+            phoneMode = false;
+        else if (phoneMode)
+            phoneSearchDelay.restart();
+        else
+            refilter();
+    }
+
+    Timer {
+        // phone search again while typing (after a short pause: it reads the media index)
+        id: phoneSearchDelay
+
+        interval: 400
+        onTriggered: root.findOnPhone()
+    }
+
     Connections {
         // a song analysed in advance: its BPM / key into the list
         target: Mixxx.DJMantra
@@ -73,6 +141,7 @@ Rectangle {
     }
 
     onFolderChanged: {
+        clearSearch();
         analysisStart.stop();
         missing = [];
         Mixxx.DJMantra.stopAnalysis();
@@ -138,6 +207,7 @@ Rectangle {
                 }
                 root.missing = missing;
                 root.updateStats();
+                root.refilter();
                 if (root.sortKey !== "")
                     root.sortBy(root.sortKey, root.sortUp);
             }
@@ -215,6 +285,7 @@ Rectangle {
         for (const r of rows)
             songs.append(r);
         Mixxx.DJMantra.log("songs sorted by " + key + (up ? " up" : " down"));
+        refilter();
     }
     signal done()
     // the ✕: closed without loading a song (Marko 13.10.2026: "I'm stuck")
@@ -260,11 +331,11 @@ Rectangle {
     }
 
     function moveSelection(steps) {
-        if (songs.count === 0)
+        if (shownModel.count === 0)
             return;
         controllerSelect = true;
         const index = view.currentIndex < 0 ? 0 : view.currentIndex + steps;
-        view.currentIndex = Math.max(0, Math.min(songs.count - 1, index));
+        view.currentIndex = Math.max(0, Math.min(shownModel.count - 1, index));
         view.positionViewAtIndex(view.currentIndex, ListView.Contain);
     }
 
@@ -272,11 +343,11 @@ Rectangle {
     // or a deck's LOAD: a folder opens, a song loads (a playing deck: the same
     // press again confirms)
     function activate(group) {
-        if (view.currentIndex < 0 || view.currentIndex >= songs.count) {
+        if (view.currentIndex < 0 || view.currentIndex >= shownModel.count) {
             moveSelection(0);
             return;
         }
-        const item = songs.get(view.currentIndex);
+        const item = shownModel.get(view.currentIndex);
         if (item.isFolder) {
             Mixxx.DJMantra.log("controller: open folder " + item.path);
             folder = item.path;
@@ -403,14 +474,109 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        // FILTER (this folder) and FIND ON PHONE (Marko 14.10.2026)
+        id: searchRow
+
+        anchors.top: bar.bottom
+        width: parent.width
+        height: 46
+        color: Style.background
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.leftMargin: 8
+            anchors.right: phoneButton.left
+            anchors.rightMargin: 6
+            anchors.verticalCenter: parent.verticalCenter
+            height: 38
+            radius: Style.radius
+            color: Style.tile
+            border.color: searchInput.activeFocus ? Style.accent : Style.surface
+
+            Text {
+                // the magnifier and, while empty, the hint
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                text: "\uD83D\uDD0D"
+                color: Style.subText
+                font.pixelSize: 18
+            }
+
+            TextInput {
+                id: searchInput
+
+                objectName: "songFilter"
+                anchors.left: parent.left
+                anchors.leftMargin: 32
+                anchors.right: clearSearchButton.left
+                anchors.verticalCenter: parent.verticalCenter
+                color: Style.text
+                font.pixelSize: 16
+                clip: true
+                inputMethodHints: Qt.ImhNoPredictiveText
+                onTextChanged: root.filterText = text.trim()
+                onAccepted: focus = false
+
+                Text {
+                    anchors.fill: parent
+                    visible: searchInput.text === "" && !searchInput.activeFocus
+                    text: root.folder !== "" ? qsTr("Filter this folder") : qsTr("Find a song")
+                    color: Style.line
+                    font.pixelSize: 16
+                }
+            }
+
+            Text {
+                id: clearSearchButton
+
+                anchors.right: parent.right
+                anchors.rightMargin: 4
+                anchors.verticalCenter: parent.verticalCenter
+                width: visible ? 32 : 0
+                visible: searchInput.text !== ""
+                horizontalAlignment: Text.AlignHCenter
+                text: "\u2715"
+                color: Style.subText
+                font.pixelSize: 16
+
+                MouseArea {
+                    anchors.fill: parent
+                    anchors.margins: -6
+                    onClicked: root.clearSearch()
+                }
+            }
+        }
+
+        DButton {
+            id: phoneButton
+
+            objectName: "findOnPhone"
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            width: 118
+            height: 38
+            mode: ""
+            text: qsTr("FIND ON PHONE")
+            fontSize: 11
+            lit: root.phoneMode
+            onClicked: {
+                searchInput.focus = false;
+                root.findOnPhone();
+            }
+        }
+    }
+
     Row {
         // the column headers: a tap sorts by that column, again reverses
         id: header
 
-        anchors.top: bar.bottom
+        anchors.top: searchRow.bottom
         width: parent.width
         height: 32
-        visible: root.folder !== ""
+        visible: root.folder !== "" || root.phoneMode
 
         Repeater {
             // Marko 14.10.2026: also by LENGTH
@@ -452,18 +618,18 @@ Rectangle {
     ListView {
         id: list
 
-        anchors.top: header.visible ? header.bottom : bar.bottom
+        anchors.top: header.visible ? header.bottom : searchRow.bottom
         anchors.bottom: parent.bottom
         width: parent.width
         clip: true
-        model: songs
+        model: root.shownModel
         // the empty space under the songs: a tap brings Android's navigation
         // bar, as anywhere else empty (round 20: the list swallowed the tap)
         footer: MouseArea {
             property bool barWasShown: false
 
             width: list.width
-            height: Math.max(0, list.height - songs.count * 56 - header.height)
+            height: Math.max(0, list.height - list.count * 56)
             onPressed: barWasShown = Mixxx.DJMantra.barsVisible()
             onClicked: {
                 if (!barWasShown) {
@@ -649,14 +815,14 @@ Rectangle {
         id: grid
 
         objectName: "libraryGrid"
-        anchors.top: header.visible ? header.bottom : bar.bottom
+        anchors.top: header.visible ? header.bottom : searchRow.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.leftMargin: 4
         width: parent.width - 8
         visible: root.thumbnails
         clip: true
-        model: songs
+        model: root.shownModel
         readonly property int columns: Math.max(3, Math.floor(width / 150))
         cellWidth: width / columns
         cellHeight: cellWidth + 44

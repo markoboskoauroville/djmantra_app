@@ -55,3 +55,9 @@ the deck's sync lock, the same as the screen's SYNC (it lights / unlights; log `
 ## 14. TABS = the Mix Ultra's pad-mode buttons (Marko 14.10.2026): the tab bar is now Songs | Phrasing | Mixer |
 AutoMix | Keys. On the controller (either deck): HOT CUE -> Songs, LOOP -> Phrasing, FX -> Mixer, NEURAL MIX ->
 AutoMix, SHIFT + NEURAL MIX (SAMPLER) -> Keys (log `controller: page 1..5`). Also the key badge (top left) opens Keys.
+## 15. FILTER and FIND ON PHONE (Marko 14.10.2026), above the song list: type in "Filter this folder": the list (or
+thumbnails) shows only the folder's songs whose title / artist / file name has every typed word, at once while
+typing; ✕ clears; sorting still works. "FIND ON PHONE": the same words through every song on the phone (Android's
+media index: phone, SD card, USB stick), at most 300, toast "FOUND ON PHONE: N" (log `find on phone ...`, logcat
+DJMantraStorage `findSongs`); a tap loads the hit onto the free deck; typing more searches again. Also from the
+Folders level. Opening another folder clears the search. Check with a song in Download and one in Music.

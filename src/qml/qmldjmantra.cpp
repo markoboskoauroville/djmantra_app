@@ -1,6 +1,7 @@
 #include "qml/qmldjmantra.h"
 
 #include <QDir>
+#include <QDirIterator>
 #include <QFileInfo>
 #include <QGuiApplication>
 #include <QScreen>
@@ -784,6 +785,71 @@ QVariantList QmlDJMantra::listFolder(const QString& folder) const {
         }
     }
     return folders + songs;
+}
+
+QVariantList QmlDJMantra::findSongs(const QString& query) const {
+    QVariantList result;
+    const QStringList words = query.simplified().toLower().split(QChar(' '), Qt::SkipEmptyParts);
+    if (words.isEmpty()) {
+        return result;
+    }
+    const auto add = [&result](const QString& path, const QString& title, const QString& artist,
+                             double seconds) {
+        const QFileInfo info(path);
+        QVariantMap entry;
+        entry[QStringLiteral("name")] = info.completeBaseName();
+        entry[QStringLiteral("path")] = path;
+        entry[QStringLiteral("isFolder")] = false;
+        entry[QStringLiteral("title")] = title.isEmpty() ? info.completeBaseName() : title;
+        entry[QStringLiteral("artist")] = artist == QStringLiteral("<unknown>") ? QString() : artist;
+        entry[QStringLiteral("duration")] = seconds;
+        result << entry;
+    };
+#if defined(Q_OS_ANDROID)
+    const QJniObject array = QJniObject::callStaticObjectMethod(
+            "com/djmantra/app/StorageBridge",
+            "findSongs",
+            "(Landroid/content/Context;Ljava/lang/String;)[Ljava/lang/String;",
+            QNativeInterface::QAndroidApplication::context().object(),
+            QJniObject::fromString(query).object<jstring>());
+    QJniEnvironment env;
+    if (env.checkAndClearExceptions() || !array.isValid()) {
+        qWarning() << "Find song: the media index could not be read";
+        return result;
+    }
+    const auto jArray = static_cast<jobjectArray>(array.object());
+    const jsize count = env->GetArrayLength(jArray);
+    for (jsize i = 0; i < count; ++i) {
+        const auto jItem = static_cast<jstring>(env->GetObjectArrayElement(jArray, i));
+        const QStringList parts = QJniObject(jItem).toString().split(QChar('\t'));
+        env->DeleteLocalRef(jItem);
+        if (parts.size() >= 4 && QFileInfo::exists(parts[0]) &&
+                SoundSourceProxy::isFileNameSupported(parts[0])) {
+            add(parts[0], parts[1], parts[2], parts[3].toDouble() / 1000.0);
+        }
+    }
+#else
+    // desktop: the file names under the music folder
+    QDirIterator it(QStandardPaths::writableLocation(QStandardPaths::MusicLocation),
+            QDir::Files | QDir::Readable,
+            QDirIterator::Subdirectories);
+    while (it.hasNext() && result.size() < 300) {
+        const QString path = it.next();
+        const QString name = it.fileInfo().completeBaseName().toLower();
+        if (!SoundSourceProxy::isFileNameSupported(path)) {
+            continue;
+        }
+        bool all = true;
+        for (const QString& word : words) {
+            all = all && name.contains(word);
+        }
+        if (all) {
+            add(path, QString(), QString(), 0);
+        }
+    }
+#endif
+    qInfo().noquote() << "Find song:" << query << "->" << result.size();
+    return result;
 }
 
 QVariantMap QmlDJMantra::songInfo(const QString& path) const {

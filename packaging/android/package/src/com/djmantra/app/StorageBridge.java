@@ -11,6 +11,7 @@ import android.os.ParcelFileDescriptor;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import java.util.ArrayDeque;
@@ -197,6 +198,55 @@ public final class StorageBridge {
             }
         }
         return ids;
+    }
+
+    /**
+     * FIND SONG (Marko 14.10.2026): every audio file on the phone (all volumes Android has
+     * indexed: internal storage, SD card, USB stick) whose title, artist, album or file name
+     * contains every word of the query. "path\ttitle\tartist\tduration ms" each, at most 300.
+     */
+    public static String[] findSongs(Context context, String query) {
+        List<String> found = new ArrayList<>();
+        String[] words = query.trim().toLowerCase().split("\\s+");
+        StringBuilder where = new StringBuilder();
+        List<String> args = new ArrayList<>();
+        for (String word : words) {
+            if (word.isEmpty()) {
+                continue;
+            }
+            if (where.length() > 0) {
+                where.append(" AND ");
+            }
+            where.append("(" + MediaStore.Audio.Media.TITLE + " LIKE ? OR "
+                    + MediaStore.Audio.Media.ARTIST + " LIKE ? OR "
+                    + MediaStore.Audio.Media.ALBUM + " LIKE ? OR "
+                    + MediaStore.Audio.Media.DISPLAY_NAME + " LIKE ?)");
+            for (int i = 0; i < 4; ++i) {
+                args.add("%" + word + "%");
+            }
+        }
+        if (where.length() == 0) {
+            return new String[0];
+        }
+        String[] columns = {MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION};
+        try (Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL), columns,
+                where.toString(), args.toArray(new String[0]),
+                MediaStore.Audio.Media.TITLE + " COLLATE NOCASE ASC")) {
+            while (cursor != null && cursor.moveToNext() && found.size() < 300) {
+                String path = cursor.getString(0);
+                if (path == null) {
+                    continue;
+                }
+                found.add(clean(path) + "\t" + clean(cursor.getString(1)) + "\t"
+                        + clean(cursor.getString(2)) + "\t" + cursor.getLong(3));
+            }
+        } catch (Exception e) {
+            Log.w("DJMantraStorage", "findSongs: " + e);
+        }
+        Log.i("DJMantraStorage", "findSongs '" + query + "': " + found.size());
+        return found.toArray(new String[0]);
     }
 
     private static String clean(String text) {
