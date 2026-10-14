@@ -21,3 +21,11 @@ Tester: Claude Code on the Mac (hub session), adb over USB. APK DJMantra-V41-0fa
 | 1 | MIXER: no FILTER knob | PASS | each deck: GAIN, HIGH, MID, LOW only, FX button, headphones button |
 | 1 | nothing overlaps, bigger | PASS | 411x914 portrait: knobs, labels, faders, FX/headphones buttons clear of each other, above the crossfader |
 | 1 | double tap: knob middle, fader top | PASS | see part 0 rows |
+| 2 | AutoMix START (Music, sorted BPM ▲, 8 beats) | PASS | `AutoMix: 1/8 Mantra - Ganesha Sharana -> [Channel1]`, `2/8 Gambara... -> [Channel2]`, `start, 8 songs, 8 beats`; crossfader went fully to deck 1; "mix in 111 s"; NEXT UP list in order |
+| 2 | transition 1 (8 beats) | PASS | `mix ... over 8 beats (4.8 s)`; "Mixing into ... 1 % -> 85 %", crossfader travelled left -> right over the 8 beats, old deck ended and `3/8 Aum Ganesha -> [Channel1]` loaded (p2_automix_8beats_1fps.png, 1 frame/s). Beat alignment / flam and the bass swap: no log line, needs the ear |
+| 2 | 32 BEATS chosen while running | PASS | `Settings: automix_beats = 32`; next `mix Gambara -> Aum Ganesha over 32 beats (26.5 s)` |
+| 2 | switch tabs during a mix | PASS | went to Songs during the 32-beat mix: it went on, `4/8 cura prox -> [Channel2]` loaded (p2_automix_32beats_tabswitch.png) |
+| 2 | STOP | PASS | `AutoMix: stop`, tab shows "Stopped", START AUTOMIX again |
+| 2 | "The playlist has ended" | not tested | 8 songs = ~35 min; left for a short folder |
+| 2 | layout | minor | while running, NEXT UP item 7 sits under the crossfader handle (the list is not clipped above the crossfader) |
+| 2 | xruns during mixes | PASS | xruns 0, late 0 throughout |
