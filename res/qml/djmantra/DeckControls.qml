@@ -46,6 +46,8 @@ Row {
     }
 
     DButton {
+        id: cueButton
+
         objectName: "cue" + root.deck
         width: (root.width - 3 * root.spacing) * 0.22
         height: root.height
@@ -60,7 +62,24 @@ Row {
         // back to it (and stays); playing, or paused on the cue, CUE works
         // as on a CDJ (back to the cue / preview while held).
         property bool held: false
+        // Marko 14.10.2026: CUE held for 1 s jumps to the very start of the song
+        Timer {
+            id: cueToStart
+
+            interval: 1000
+            onTriggered: {
+                if (cueButton.held) {
+                    cueButton.held = false;
+                    cueDefault.value = 0; // the preview ends
+                }
+                cueStart.value = 1;
+                cueStart.value = 0;
+                Toasts.show("DECK " + root.deck + qsTr("  \u2192 START OF THE SONG"));
+                Mixxx.DJMantra.log("cue held 1 s " + root.group + ": to the start");
+            }
+        }
         onPressedDown: {
+            cueToStart.restart();
             // round 24: where the cue and the deck are, on every press
             const seconds = (v) => (v * cueDuration.value).toFixed(2);
             Mixxx.DJMantra.log("cue press " + root.group + ": deck at " + seconds(cuePosition.value) +
@@ -80,6 +99,7 @@ Row {
             }
         }
         onReleasedUp: {
+            cueToStart.stop();
             if (held) {
                 held = false;
                 cueDefault.value = 0;
@@ -88,6 +108,7 @@ Row {
 
         Mixxx.ControlProxy { id: cueDefault; group: root.group; key: "cue_default" }
         Mixxx.ControlProxy { id: cueGoto; group: root.group; key: "cue_gotoandstop" }
+        Mixxx.ControlProxy { id: cueStart; group: root.group; key: "start" }
         Mixxx.ControlProxy { id: cuePoint; group: root.group; key: "cue_point" }
         Mixxx.ControlProxy { id: cuePosition; group: root.group; key: "playposition"; maxRate: 4 }
         Mixxx.ControlProxy { id: trackSamples; group: root.group; key: "track_samples" }
