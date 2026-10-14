@@ -295,6 +295,50 @@ Rectangle {
                 }
             }
 
+            // TEMPO RANGE as a Pioneer CDJ (Marko 14.10.2026), both decks; on the screen a tap
+            // on a TEMPO fader's label steps through the same ranges for that deck
+            Text {
+                text: qsTr("TEMPO RANGE (as Pioneer CDJ; tap TEMPO under a fader to step)")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Row {
+                id: rangeRow
+
+                property int range: Number(Mixxx.DJMantra.setting("tempo_range_[Channel1]", "10"))
+
+                spacing: 6
+
+                Mixxx.ControlProxy { id: range1; group: "[Channel1]"; key: "rateRange" }
+                Mixxx.ControlProxy { id: range2; group: "[Channel2]"; key: "rateRange" }
+
+                Repeater {
+                    model: [6, 10, 16, 100]
+
+                    delegate: DButton {
+                        required property int modelData
+
+                        objectName: "tempoRange_" + modelData
+                        width: (column.width - 12 - 3 * 6) / 4
+                        height: 42
+                        mode: ""
+                        text: modelData >= 100 ? qsTr("WIDE") : "\u00B1" + modelData + " %"
+                        fontSize: 13
+                        lit: rangeRow.range === modelData
+                        onClicked: {
+                            rangeRow.range = modelData;
+                            range1.value = modelData / 100;
+                            range2.value = modelData / 100;
+                            Mixxx.DJMantra.setSetting("tempo_range_[Channel1]", modelData);
+                            Mixxx.DJMantra.setSetting("tempo_range_[Channel2]", modelData);
+                            Toasts.show(qsTr("TEMPO RANGE \u2192 ") + text);
+                        }
+                    }
+                }
+            }
+
             // the Mix Ultra's link, one or the other (Marko 14.10.2026: "cannot be connected
             // over USB and Bluetooth at the same time ... a toggle in the settings")
             Text {

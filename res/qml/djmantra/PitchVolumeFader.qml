@@ -55,6 +55,25 @@ Item {
         Toasts.show(deckName + (pitch ? "VOLUME \u2192 TEMPO" : "TEMPO \u2192 VOLUME"));
     }
 
+    // TEMPO RANGE as a Pioneer CDJ's button (Marko 14.10.2026): ±6, ±10 (default), ±16 %,
+    // WIDE (±100 %); a tap on the TEMPO label steps through them, the tempo stays where it
+    // is when it fits the new range (as the CDJ); remembered per deck, also in Settings
+    readonly property var ranges: [6, 10, 16, 100]
+    function setRange(percent) {
+        const change = dir * rate.value * rateRange.value; // the speed change now (+ faster)
+        rateRange.value = percent / 100;
+        rate.value = Math.max(-1, Math.min(1, change / (dir * rateRange.value)));
+        Mixxx.DJMantra.setSetting("tempo_range_" + group, percent);
+        Toasts.show(deckName + qsTr("TEMPO RANGE \u2192 ") + (percent >= 100 ? qsTr("WIDE \u00B1100 %") : "\u00B1" + percent + " %"));
+        Mixxx.DJMantra.log("tempo range " + group + " " + percent + " %");
+    }
+    function nextRange() {
+        const now = Math.round(rateRange.value * 100);
+        const i = ranges.indexOf(now);
+        setRange(ranges[(i + 1) % ranges.length]);
+    }
+    Component.onCompleted: rateRange.value = Number(Mixxx.DJMantra.setting("tempo_range_" + group, "10")) / 100
+
     readonly property real trackTop: 13
     readonly property real trackBottom: height - label.height - 13
     readonly property real span: trackBottom - trackTop
@@ -152,7 +171,9 @@ Item {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         height: 16
-        text: root.pitch ? qsTr("TEMPO") : qsTr("VOLUME")
+        text: root.pitch ? qsTr("TEMPO ") + (rateRange.value >= 0.995 ? qsTr("WIDE")
+                                                                   : "\u00B1" + Math.round(rateRange.value * 100))
+                         : qsTr("VOLUME")
         color: root.pitch ? root.pitchColor : Style.subText
         font.pixelSize: 11
         font.bold: true
@@ -201,5 +222,16 @@ Item {
                 volume.parameter = 1;
             Toasts.show(root.deckName + (root.pitch ? "TEMPO \u2192 0 %" : "VOLUME \u2192 0 dB"));
         }
+    }
+
+    MouseArea {
+        // the CDJ's TEMPO RANGE button: a tap on the TEMPO label
+        objectName: "tempoRange_" + root.group
+        visible: root.pitch
+        z: 2
+        anchors.bottom: parent.bottom
+        width: parent.width
+        height: 22
+        onClicked: root.nextRange()
     }
 }

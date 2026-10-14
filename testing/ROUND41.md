@@ -110,3 +110,6 @@ down, the BPM rises; drag the screen handle down: faster too.
 countdown turn RED from 30 s before the end; a new song (or jumping back) brings the usual colours back.
 ## 30. (V48) CUE held 1 s (Marko 14.10.2026): jumps to the very start of the song (toast "DECK 1 → START OF THE SONG",
 log `cue held 1 s`), the deck paused there; a short CUE press works as before (back to the cue / preview).
+## 31. (V49) TEMPO RANGE as a Pioneer CDJ (Marko 14.10.2026): under a TEMPO fader the label reads "TEMPO ±10" (the
+default); a tap steps ±6 -> ±10 -> ±16 -> WIDE (±100) -> ±6 (toast "DECK 1 TEMPO RANGE → ±16 %"), the scale's BPM / %
+follow, and the tempo playing stays the same where it fits. Settings -> TEMPO RANGE sets both decks. Remembered.
