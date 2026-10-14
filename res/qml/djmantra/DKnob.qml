@@ -34,14 +34,22 @@ Item {
     // Marko 14.10.2026 (the cut-only EQ is like no other mixer's): the ends of the ring
     // labelled in dB, "−∞" (full kill) on the left, "0" (no cut) on the right, and the cut
     // in the caption while there is one ("LOW −12 dB"); the value is the linear gain
-    property bool dbScale: false
+    // "cut" (the EQ: 0 dB at the top) or "gain" (GAIN: -12 dB .. 0 at the middle .. +12 dB,
+    // Mixxx's pregain; a DJM's TRIM is -inf .. +9 dB), "" none
+    property string dbMode: ""
+    property bool dbScale: dbMode !== ""
+    readonly property real dbValue: control.value > 0.0005 ? 20 * Math.log(control.value) / Math.LN10 : -999
     readonly property string dbText: {
-        const v = control.value;
-        if (v <= 0.0005)
+        if (dbValue <= -998)
             return "\u2212\u221E";
-        const db = 20 * Math.log(v) / Math.LN10;
-        return db > -0.5 ? "0" : "\u2212" + Math.round(-db);
+        if (Math.abs(dbValue) < 0.5)
+            return "0";
+        const n = Math.round(Math.abs(dbValue));
+        return (dbValue < 0 ? "\u2212" : "+") + n;
     }
+    // the caption shows the value while it is away from the rest position
+    readonly property bool dbShown: dbMode === "gain" ? Math.abs(dbValue) >= 0.5
+                                  : dbMode === "cut" && dbValue < -0.5
 
     implicitWidth: 52
     implicitHeight: 64
@@ -118,15 +126,16 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         fontSizeMode: Text.HorizontalFit
         minimumPixelSize: 8
-        text: root.dbScale && control.value < 0.94 ? root.label + " " + root.dbText + " dB" : root.label
-        color: root.dbScale && control.value < 0.94 ? root.arcColor : Style.subText
+        text: root.dbShown ? root.label + " " + root.dbText + " dB" : root.label
+        color: root.dbShown ? (root.dbMode === "gain" ? Style.accent : root.arcColor) : Style.subText
         font.pixelSize: 11
         font.bold: true
     }
 
     Repeater {
         // the dB at the ring's two ends (below its first and last dot)
-        model: root.dbScale ? [[-135, "\u2212\u221E"], [135, "0 dB"]] : []
+        model: root.dbMode === "cut" ? [[-135, "\u2212\u221E"], [135, "0 dB"]]
+             : root.dbMode === "gain" ? [[-135, "\u221212"], [135, "+12"]] : []
 
         delegate: Text {
             required property var modelData
