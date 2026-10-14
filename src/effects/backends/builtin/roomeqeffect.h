@@ -9,13 +9,13 @@
 class EngineFilterBiquad1Peaking;
 
 /// DJ Mantra ROOM EQ (Marko 14.10.2026: "EQ output to adjust actually to the room, correcting
-/// the room"): ten octave bands, 31.5 Hz .. 16 kHz, +-12 dB each (parameter1..10 in dB), peaking
-/// filters one octave wide. It runs on [MasterOutput] (effect unit 4): the speakers hear it, the
+/// the room"): 31 third-octave bands (ISO, 20 Hz .. 20 kHz), +-12 dB each (parameter1..31 in dB),
+/// peaking filters a third of an octave wide, as a 31-band graphic / room-correction EQ. It runs on [MasterOutput] (effect unit 4): the speakers hear it, the
 /// recording does not. Its curve is measured in the room (RoomEqPage.qml, RoomEqBridge.java) or
 /// drawn by hand.
 class RoomEQEffectGroupState : public EffectState {
   public:
-    static constexpr int kBands = 10;
+    static constexpr int kBands = 31;
     explicit RoomEQEffectGroupState(const mixxx::EngineParameters& engineParameters);
     ~RoomEQEffectGroupState() override;
 

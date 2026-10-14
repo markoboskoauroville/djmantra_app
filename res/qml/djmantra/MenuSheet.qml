@@ -94,7 +94,7 @@ Rectangle {
                 objectName: "menuRoomEq"
                 width: parent.width
                 height: 52
-                text: qsTr("ROOM EQ (calibrate the room)")
+                text: qsTr("ROOM CORRECTION")
                 onClicked: root.roomEq()
             }
             Row {

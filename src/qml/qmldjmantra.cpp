@@ -1809,6 +1809,7 @@ void QmlDJMantra::useDjmFilter() {
 
 namespace {
 const QString kRoomEqGroup = QStringLiteral("[OutputEffectRack_[Master]_Effect1]");
+constexpr int kRoomBands = 31;
 
 #if defined(Q_OS_ANDROID)
 // the microphone, asked for once; `then` runs when it is allowed
@@ -1842,10 +1843,11 @@ void QmlDJMantra::useRoomEq() {
         pSlot->loadEffectWithDefaults(pManifest);
         qInfo() << "Room EQ: loaded on the main output";
     }
+    // the 31 bands as left (a V67 10-band curve is not taken over)
     const QStringList saved = setting(QStringLiteral("room_eq"), QString()).toString().split(QChar(','));
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < kRoomBands; ++i) {
         setControl(kRoomEqGroup, QStringLiteral("parameter%1").arg(i + 1),
-                i < saved.size() ? saved[i].toDouble() : 0.0);
+                saved.size() == kRoomBands ? saved[i].toDouble() : 0.0);
     }
     setRoomEqOn(setting(QStringLiteral("room_eq_on"), QStringLiteral("0")).toString() == QStringLiteral("1"));
 }
@@ -1856,7 +1858,7 @@ void QmlDJMantra::setRoomEqOn(bool on) {
 }
 
 void QmlDJMantra::setRoomBand(int band, double db) {
-    if (band < 0 || band >= 10) {
+    if (band < 0 || band >= kRoomBands) {
         return;
     }
     setControl(kRoomEqGroup, QStringLiteral("parameter%1").arg(band + 1), std::clamp(db, -12.0, 12.0));
@@ -1869,7 +1871,7 @@ void QmlDJMantra::setRoomBand(int band, double db) {
 
 QVariantList QmlDJMantra::roomBands() const {
     QVariantList bands;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < kRoomBands; ++i) {
         ControlProxy proxy(ConfigKey(kRoomEqGroup, QStringLiteral("parameter%1").arg(i + 1)),
                 nullptr,
                 ControlFlag::NoWarnIfMissing);
@@ -1878,10 +1880,35 @@ QVariantList QmlDJMantra::roomBands() const {
     return bands;
 }
 
-void QmlDJMantra::roomEqMeasure(const QString& signal, double seconds) {
+static QString roomDir() {
+#if defined(Q_OS_ANDROID)
+    return QStringLiteral("/sdcard/Music/djmantra_app/Room_Correction");
+#else
+    return QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
+            QStringLiteral("/djmantra_app/Room_Correction");
+#endif
+}
+
+QString QmlDJMantra::roomEqSignal(const QString& kind, double seconds) {
+#if defined(Q_OS_ANDROID)
+    return QJniObject::callStaticObjectMethod("com/djmantra/app/RoomEqBridge",
+            "writeSignal",
+            "(Ljava/lang/String;Ljava/lang/String;D)Ljava/lang/String;",
+            QJniObject::fromString(roomDir()).object<jstring>(),
+            QJniObject::fromString(kind).object<jstring>(),
+            static_cast<jdouble>(seconds))
+            .toString();
+#else
+    Q_UNUSED(kind);
+    Q_UNUSED(seconds);
+    return QString();
+#endif
+}
+
+void QmlDJMantra::roomEqMeasure(const QString& kind, double seconds, int inputId) {
 #if defined(Q_OS_ANDROID)
     QPointer<QmlDJMantra> guard(this);
-    withMicrophone(this, [guard, signal, seconds](bool allowed) {
+    withMicrophone(this, [guard, kind, seconds, inputId](bool allowed) {
         if (!guard) {
             return;
         }
@@ -1890,12 +1917,16 @@ void QmlDJMantra::roomEqMeasure(const QString& signal, double seconds) {
                     QStringLiteral("error: DJ Mantra may not use the microphone"));
             return;
         }
-        std::thread([guard, signal, seconds]() {
+        // the recording starts now; QML starts the test signal on the mixer right after
+        emit guard->roomEqResult(QStringLiteral("recording"), QString());
+        std::thread([guard, kind, seconds, inputId]() {
             const QString result = QJniObject::callStaticObjectMethod("com/djmantra/app/RoomEqBridge",
                     "measure",
-                    "(Ljava/lang/String;D)Ljava/lang/String;",
-                    QJniObject::fromString(signal).object<jstring>(),
-                    static_cast<jdouble>(seconds))
+                    "(Landroid/content/Context;Ljava/lang/String;DI)Ljava/lang/String;",
+                    QNativeInterface::QAndroidApplication::context().object(),
+                    QJniObject::fromString(kind).object<jstring>(),
+                    static_cast<jdouble>(seconds),
+                    static_cast<jint>(inputId))
                                            .toString();
             QMetaObject::invokeMethod(qApp, [guard, result]() {
                 if (guard) {
@@ -1905,17 +1936,38 @@ void QmlDJMantra::roomEqMeasure(const QString& signal, double seconds) {
         }).detach();
     });
 #else
-    Q_UNUSED(signal);
+    Q_UNUSED(kind);
     Q_UNUSED(seconds);
+    Q_UNUSED(inputId);
     emit roomEqResult(QStringLiteral("measure"), QStringLiteral("error: only on the phone"));
 #endif
 }
 
-void QmlDJMantra::roomEqLive(bool on) {
+QVariantList QmlDJMantra::roomEqInputs() const {
 #if defined(Q_OS_ANDROID)
-    const auto start = [on](bool allowed) {
-        QJniObject::callStaticMethod<void>("com/djmantra/app/RoomEqBridge", "live", "(Z)V",
-                static_cast<jboolean>(on && allowed));
+    const QString json = QJniObject::callStaticObjectMethod("com/djmantra/app/RoomEqBridge",
+            "inputs",
+            "(Landroid/content/Context;)Ljava/lang/String;",
+            QNativeInterface::QAndroidApplication::context().object())
+                                 .toString();
+    return QJsonDocument::fromJson(json.toUtf8()).array().toVariantList();
+#else
+    QVariantMap phone;
+    phone[QStringLiteral("id")] = 0;
+    phone[QStringLiteral("name")] = QStringLiteral("Phone microphone");
+    return {phone};
+#endif
+}
+
+void QmlDJMantra::roomEqLive(bool on, int inputId) {
+#if defined(Q_OS_ANDROID)
+    const auto start = [on, inputId](bool allowed) {
+        QJniObject::callStaticMethod<void>("com/djmantra/app/RoomEqBridge",
+                "live",
+                "(Landroid/content/Context;ZI)V",
+                QNativeInterface::QAndroidApplication::context().object(),
+                static_cast<jboolean>(on && allowed),
+                static_cast<jint>(inputId));
     };
     if (on) {
         withMicrophone(this, start);
@@ -1924,7 +1976,25 @@ void QmlDJMantra::roomEqLive(bool on) {
     }
 #else
     Q_UNUSED(on);
+    Q_UNUSED(inputId);
 #endif
+}
+
+QString QmlDJMantra::roomsLoad() const {
+    QFile file(roomDir() + QStringLiteral("/rooms.json"));
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QStringLiteral("[]");
+    }
+    return QString::fromUtf8(file.readAll());
+}
+
+void QmlDJMantra::roomsSave(const QString& json) {
+    QDir().mkpath(roomDir());
+    QSaveFile file(roomDir() + QStringLiteral("/rooms.json"));
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(json.toUtf8());
+        file.commit();
+    }
 }
 
 QString QmlDJMantra::roomEqLiveColumns() const {

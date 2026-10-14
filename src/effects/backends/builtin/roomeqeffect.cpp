@@ -8,10 +8,11 @@
 #include "util/sample.h"
 
 namespace {
-// one octave wide (Q = sqrt(2)), as a 10-band octave graphic EQ
-constexpr double kQ = 1.41421356;
-constexpr double kCenters[RoomEQEffectGroupState::kBands] =
-        {31.5, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000};
+// a third of an octave wide (Q = 4.32), the ISO 1/3-octave centres
+constexpr double kQ = 4.318;
+constexpr double kCenters[RoomEQEffectGroupState::kBands] = {20, 25, 31.5, 40, 50, 63, 80, 100,
+        125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000,
+        5000, 6300, 8000, 10000, 12500, 16000, 20000};
 
 // below Nyquist (the filter design needs it)
 double usable(double hz, mixxx::audio::SampleRate rate) {
@@ -38,7 +39,7 @@ EffectManifestPointer RoomEQEffect::getManifest() {
     pManifest->setAuthor("DJ Mantra");
     pManifest->setVersion("1.0");
     pManifest->setDescription(QObject::tr(
-            "Ten octave bands (31.5 Hz - 16 kHz) to correct the room, on the "
+            "31 third-octave bands (20 Hz - 20 kHz) to correct the room, on the "
             "main output only."));
     pManifest->setEffectRampsFromDry(true);
     for (int i = 0; i < RoomEQEffectGroupState::kBands; ++i) {

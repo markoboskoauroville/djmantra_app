@@ -75,7 +75,13 @@ namespace {
 const mixxx::Logger kLogger("CoreServices");
 constexpr int kMicrophoneCount = 4;
 constexpr int kAuxiliaryCount = 4;
+#ifdef __ANDROID_PORT__
+// DJ Mantra: the Mix Ultra's SAMPLER pads play 1-8; the 9th plays the ROOM CORRECTION test signal
+// through the mixer (every output it feeds)
+constexpr int kSamplerCount = 9;
+#else
 constexpr int kSamplerCount = 4;
+#endif
 
 #define CLEAR_AND_CHECK_DELETED(x) clearHelper(x, #x);
 

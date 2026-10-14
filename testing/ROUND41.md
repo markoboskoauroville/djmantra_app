@@ -246,3 +246,14 @@ MEASURE 2 (green), MEASURE 3 (red); the dashed white line is their average. APPL
 inverse of the average, the highest band at 0 dB (cut only), ROOM EQ ON. FLAT: all at 0. Leave and come back, restart
 the app: the curve and ON / OFF are kept. Play a song: ON vs OFF is audible (e.g. less boom where the room had it).
 logcat DJMantraRoomEq.
+## 59. (V68) ROOM CORRECTION (replaces part 58; docs/ROOM_CORRECTION.md). Menu -> ROOM CORRECTION. Pause the music.
+AUTO CALIBRATE: Android asks for the microphone once; the sweep plays THROUGH THE APP'S MIXER (audible on the USB PA / the
+phone and on Bluetooth if routed), "MEASURING PLACE 1 ...", then the place's line appears (blue), the white dashed
+average and the yellow correction curve (31 points); toast "ROOM CORRECTION APPLIED". Move, AUTO CALIBRATE again (place 2,
+green). Tap place 1: "LEFT OUT" (faint), AVERAGE & APPLY: the curve changes; tap again: back in. Long press a place:
+measured again. BYPASS: lit = off (the curve dims), audible difference with music. MORE: TARGET CURVE (FLAT / HOUSE /
+CLUB: grey target line), STRENGTH, TEST SIGNAL (SWEEP / PINK NOISE), LENGTH, TEST LEVEL, MICROPHONE (the phone; a USB
+microphone appears when plugged), ANALYZER (violet live spectrum), CORRECTION GUIDE (reads, scrolls, ×). ROOM: NEW ROOM
+"Test", measure one place there, switch back: each room keeps its places; restart the app: rooms, places and the
+correction kept (Music/djmantra_app/Room_Correction/rooms.json). The recording (RECORD MIX) is NOT corrected. logcat
+DJMantraRoomEq ("sweep 8 s, input 0, peak X dBFS").
