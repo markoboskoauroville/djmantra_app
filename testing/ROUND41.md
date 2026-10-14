@@ -26,3 +26,5 @@ cut, the reset and start position); r40's "EQ at max at start" was right. Now:
   "DECK 1  GAIN → FILTER", "DECK 2  VOLUME → PITCH", "DECK 1  PITCH → 0 %", "CROSSFADER → middle",
   "DECK 1  FX → DJM ECHO", "DECK 1  FLANGER ON", "EQ → NEURAL MIX", "SORTED BY LENGTH ▲", "VIEW → THUMBNAILS".
 ## 7. Songs: a LENGTH column (sortable, tap again = reverse; songs without a length last).
+## 8. PITCH on DECK 2: the BPM numbers on the left of the scale are there (they were hidden under the VU meter), the
+% on the right; both decks' scales fully readable (no number cut).

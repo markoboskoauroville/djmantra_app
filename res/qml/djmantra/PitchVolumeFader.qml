@@ -90,6 +90,11 @@ Item {
                 anchors.right: parent.horizontalCenter
                 anchors.rightMargin: handle.width / 2 + 3
                 anchors.verticalCenter: parent.top
+                // never wider than its side of the fader (deck 2: the VU meter is on the left)
+                width: Math.max(8, (root.width - handle.width) / 2 - 4)
+                horizontalAlignment: Text.AlignRight
+                fontSizeMode: Text.HorizontalFit
+                minimumPixelSize: 7
                 text: fileBpm.value > 0 ? (fileBpm.value * (1 + f * rateRange.value)).toFixed(index === 4 ? 1 : 0) : ""
                 color: index === 4 ? Style.accent : Style.subText
                 font.pixelSize: 10
@@ -100,6 +105,11 @@ Item {
                 anchors.left: parent.horizontalCenter
                 anchors.leftMargin: handle.width / 2 + 3
                 anchors.verticalCenter: parent.top
+                // never wider than its side of the fader (deck 2: the VU meter is on the left)
+                width: Math.max(8, (root.width - handle.width) / 2 - 4)
+                horizontalAlignment: Text.AlignLeft
+                fontSizeMode: Text.HorizontalFit
+                minimumPixelSize: 7
                 text: (percent > 0 ? "+" : "") + percent.toFixed(Math.abs(percent % 1) > 0.05 ? 1 : 0) + "%"
                 color: index === 4 ? Style.accent : Style.subText
                 font.pixelSize: 10

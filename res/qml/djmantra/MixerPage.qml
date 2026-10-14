@@ -247,7 +247,9 @@ Item {
                     layoutDirection: deck.index === 0 ? Qt.LeftToRight : Qt.RightToLeft
 
                     PitchVolumeFader {
-                        // long press: VOLUME <-> PITCH (Marko 13.10.2026)
+                        // long press: VOLUME <-> PITCH (Marko 13.10.2026); above the VU meter,
+                        // which on deck 2 is on its left and hid the BPM scale (Marko 14.10.2026)
+                        z: 1
                         width: deck.width - knobs.width - 3 * Style.gap - 14
                         height: parent.height
                         group: deck.modelData
