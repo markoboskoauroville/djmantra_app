@@ -70,6 +70,37 @@ Rectangle {
                 text: qsTr("CAMELOT WHEEL")
                 onClicked: root.wheel()
             }
+            Row {
+                // the controller's link, one or the other (Marko 14.10.2026: in the menu too,
+                // as in Settings -> CONTROLLER CONNECTION)
+                id: linkRow
+
+                property string link: Mixxx.DJMantra.setting("controller_link_mode", "usb")
+
+                width: parent.width
+                spacing: 8
+
+                Repeater {
+                    model: [["usb", qsTr("CONTROLLER: USB")], ["bluetooth", qsTr("CONTROLLER: BLUETOOTH")]]
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "menuLink_" + modelData[0]
+                        width: (linkRow.width - linkRow.spacing) / 2
+                        height: 52
+                        mode: ""
+                        text: modelData[1]
+                        fontSize: 12
+                        lit: linkRow.link === modelData[0]
+                        onClicked: {
+                            linkRow.link = modelData[0];
+                            Mixxx.DJMantra.setControllerLink(modelData[0]);
+                            Toasts.show(qsTr("CONTROLLER \u2192 ") + (modelData[0] === "usb" ? "USB" : "BLUETOOTH"));
+                        }
+                    }
+                }
+            }
             DButton {
                 // record the mix (Marko 14.10.2026), lossless; Settings: its name and format
                 objectName: "menuRecord"

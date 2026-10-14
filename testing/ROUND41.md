@@ -93,3 +93,5 @@ Turn LOW down step by step: −1 ... −6 ... −20 ... −∞; long press: back
 ## 24. (V46) Recording time under the clock (Marko 14.10.2026): while recording, the clock has two rows in the matrix
 font: the time of day on top, the recording's time under it (0:00, 0:01 ... 12:34, 1:02:45 after an hour), both red;
 stop: back to one row. Start / stop by a long press on the clock or Menu -> RECORD MIX.
+## 25. (V46) The menu (top left) has CONTROLLER: USB / CONTROLLER: BLUETOOTH, the same switch as Settings (lit = the
+current one; a tap switches, toast "CONTROLLER → USB / BLUETOOTH"). Settings and the menu show the same choice.
