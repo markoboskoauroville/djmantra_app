@@ -230,6 +230,88 @@ Rectangle {
                 }
             }
 
+            // AUTOMIX FADE (Marko 14.10.2026): how long the AUTOMIX button's crossfade takes,
+            // in beats of the outgoing deck or in seconds
+            Text {
+                text: qsTr("AUTOMIX FADE: the AUTOMIX button moves the crossfader over")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Row {
+                id: fadeRow
+
+                property string unit: Mixxx.DJMantra.setting("automix_fade_unit", "beats")
+                property int amount: Number(Mixxx.DJMantra.setting("automix_fade_amount", "16"))
+
+                spacing: 4
+
+                Repeater {
+                    model: fadeRow.unit === "seconds" ? [2, 5, 10, 20, 30] : [4, 8, 16, 32, 64]
+
+                    delegate: DButton {
+                        required property int modelData
+
+                        objectName: "fadeAmount_" + modelData
+                        width: (column.width - 12 - 4 * 6 - 2 * 74) / 5
+                        height: 42
+                        mode: ""
+                        text: String(modelData)
+                        fontSize: 14
+                        lit: fadeRow.amount === modelData
+                        onClicked: {
+                            fadeRow.amount = modelData;
+                            Mixxx.DJMantra.setSetting("automix_fade_amount", modelData);
+                            Toasts.show(qsTr("AUTOMIX FADE \u2192 ") + modelData
+                                    + (fadeRow.unit === "seconds" ? " s" : qsTr(" BEATS")));
+                        }
+                    }
+                }
+
+                Repeater {
+                    model: [["beats", qsTr("BEATS")], ["seconds", qsTr("SEC")]]
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "fadeUnit_" + modelData[0]
+                        width: 74
+                        height: 42
+                        mode: ""
+                        text: modelData[1]
+                        fontSize: 13
+                        lit: fadeRow.unit === modelData[0]
+                        onClicked: {
+                            fadeRow.unit = modelData[0];
+                            Mixxx.DJMantra.setSetting("automix_fade_unit", modelData[0]);
+                            // a sensible amount in the new unit
+                            fadeRow.amount = modelData[0] === "seconds" ? 10 : 16;
+                            Mixxx.DJMantra.setSetting("automix_fade_amount", fadeRow.amount);
+                            Toasts.show(qsTr("AUTOMIX FADE \u2192 ") + fadeRow.amount
+                                    + (modelData[0] === "seconds" ? " s" : qsTr(" BEATS")));
+                        }
+                    }
+                }
+            }
+
+            DButton {
+                // djay's "Auto-play when moving crossfader" (Marko 14.10.2026)
+                objectName: "crossfaderAutoplay"
+                property bool on: Mixxx.DJMantra.setting("crossfader_autoplay", "1") === "1"
+                width: column.width - 12
+                height: 42
+                mode: ""
+                text: qsTr("AUTO-PLAY WHEN MOVING CROSSFADER: ") + (on ? qsTr("ON") : qsTr("OFF"))
+                fontSize: 13
+                lit: on
+                onClicked: {
+                    on = !on;
+                    Mixxx.DJMantra.setSetting("crossfader_autoplay", on ? "1" : "0");
+                    Toasts.show(qsTr("AUTO-PLAY ") + (on ? qsTr("ON") : qsTr("OFF")));
+                }
+            }
+
             // RECORDING (Marko 14.10.2026): the mix recorded lossless (FLAC, or WAV) into
             // Music/DJ Mantra Recordings as "<name> - <date> <time>" (Menu -> RECORD MIX)
             Text {

@@ -35,3 +35,12 @@ egg: a LONG PRESS on the CLOCK starts / stops it too, and the clock is RED while
 toast "RECORDING SAVED: ...", log `Recording: stopped <path> <bytes>`. Pull the file: plays, 48 kHz stereo, the length
 right, the sound = what was heard (EQ / FILTER / FX moves audible in it). Change the name in Settings: the next file
 has it.
+## 10. AUTOMIX / EQ / TEMPO BLEND (Marko 14.10.2026): EQ and TEMPO BLEND work whenever lit, also on a crossfader
+moved by hand (`automix eq ...%` lines while dragging, AUTOMIX not pressed). AUTOMIX is an ACTION: a tap glides the
+crossfader from the end it rests on to the other over Settings -> AUTOMIX FADE (4-64 BEATS of the outgoing deck, or
+2-30 SECONDS; toast "AUTOMIX → DECK 2 (16 beats)", log `automix: crossfader -1.00 -> 1 in 7742 ms`); the button shows
+the %; a tap while it moves stops it (toast). Time it with a stopwatch: 16 beats at 124 BPM = 7.7 s; 10 s.
+## 11. AUTO-PLAY WHEN MOVING CROSSFADER (djay's option; Settings, default ON): fader at deck 1's end, deck 2 paused
+with a song: moving the fader towards deck 2 starts deck 2 at once, on the beat (toast "AUTO-PLAY → DECK 2", log
+`crossfader auto-play`). Not when the deck plays already or is empty; once per move away from an end. OFF in
+Settings: nothing starts. Compare with djay's own (Settings -> Crossfader FX -> Auto-play when moving crossfader).

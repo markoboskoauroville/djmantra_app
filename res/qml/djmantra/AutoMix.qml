@@ -14,10 +14,22 @@ import QtQuick 2.12
 //   TEMPO BLEND: the tempo glides from the outgoing song's to the incoming
 //     song's own along the fader's travel
 //   8 / 16 / 32: how many beats the phrase has (the matrix's running lights)
+// Marko 14.10.2026: EQ and TEMPO BLEND work whenever they are lit, also when the
+// crossfader is moved by hand (AUTO PHASE as before, on its own); AUTOMIX is now an
+// ACTION: a tap moves the crossfader by itself from the deck it rests on to the other
+// over the time set in Settings (AUTOMIX FADE: beats of the outgoing deck, or seconds),
+// with the lit blends applied on the way; a tap while it moves stops it there.
 Rectangle {
     id: root
 
-    property bool automix: false
+    // the blends follow the crossfader while EQ or TEMPO BLEND is lit
+    readonly property bool automix: eq || tempo
+    // the AUTOMIX action: the crossfader moving by itself
+    property bool fading: false
+    property real fadeFrom: -1
+    property real fadeTo: 1
+    property double fadeStart: 0
+    property real fadeMs: 1
     property bool eq: true
     property bool tempo: true
     property int beats: 8
@@ -53,6 +65,39 @@ Rectangle {
         onValueChanged: root.follow()
     }
 
+    // AUTO-PLAY (Marko 14.10.2026, djay's "Auto-play when moving crossfader", Settings ->
+    // General -> Crossfader FX): the crossfader leaving the end it rests on, towards a
+    // paused deck with a song, starts that deck (quantized: on the beat of the playing one)
+    // armed once the fader has rested at an end (not by the first touch of a centred fader)
+    property bool armed: false
+    Mixxx.ControlProxy { id: play1; group: "[Channel1]"; key: "play" }
+    Mixxx.ControlProxy { id: play2; group: "[Channel2]"; key: "play" }
+    Mixxx.ControlProxy { id: loaded1; group: "[Channel1]"; key: "track_loaded" }
+    Mixxx.ControlProxy { id: loaded2; group: "[Channel2]"; key: "track_loaded" }
+    Mixxx.ControlProxy { id: quantize1; group: "[Channel1]"; key: "quantize" }
+    Mixxx.ControlProxy { id: quantize2; group: "[Channel2]"; key: "quantize" }
+
+    function checkAutoPlay(x) {
+        if (Math.abs(x) >= 0.95) {
+            armed = true;
+            return;
+        }
+        if (!armed || Mixxx.DJMantra.setting("crossfader_autoplay", "1") !== "1")
+            return;
+        armed = false;
+        // the deck the fader moves towards: away from the end it rested on
+        const towards2 = from === "[Channel1]";
+        const play = towards2 ? play2 : play1;
+        const loaded = towards2 ? loaded2 : loaded1;
+        if (play.value > 0 || loaded.value <= 0)
+            return;
+        (towards2 ? quantize2 : quantize1).value = 1;
+        play.value = 1;
+        const deck = towards2 ? 2 : 1;
+        Toasts.show(qsTr("AUTO-PLAY \u2192 DECK ") + deck);
+        Mixxx.DJMantra.log("crossfader auto-play: deck " + deck + " started at " + x.toFixed(2));
+    }
+
     function deckControls(deck) {
         return deck === "[Channel1]"
                 ? {bpm: bpm1, fileBpm: fileBpm1, lo: lo1, mi: mi1, hi: hi1}
@@ -85,8 +130,6 @@ Rectangle {
     property int loggedStep: -1
 
     function follow() {
-        if (!automix)
-            return;
         const x = fader.value; // -1 deck 1 only, 1 deck 2 only
         if (x <= -0.98 || x >= 0.98) {
             const was = from;
@@ -96,6 +139,9 @@ Rectangle {
         }
         const p = from === "[Channel1]" ? (x + 1) / 2 : (1 - x) / 2;
         progress = Math.max(0, Math.min(1, p));
+        checkAutoPlay(x);
+        if (!automix)
+            return;
         const f = deckControls(from);
         const t = deckControls(from === "[Channel1]" ? "[Channel2]" : "[Channel1]");
         if (eq) {
@@ -143,8 +189,52 @@ Rectangle {
             f.bpm.value = startBpm + (t.fileBpm.value - startBpm) * progress;
     }
 
+    // the fade time from Settings: beats of the outgoing deck (its tempo now) or seconds
+    function fadeTime() {
+        const unit = Mixxx.DJMantra.setting("automix_fade_unit", "beats");
+        const amount = Number(Mixxx.DJMantra.setting("automix_fade_amount", "16"));
+        if (unit === "seconds")
+            return {ms: amount * 1000, text: amount + " s"};
+        const bpm = deckControls(fader.value <= 0 ? "[Channel1]" : "[Channel2]").bpm.value;
+        return {ms: amount * 60000 / (bpm > 0 ? bpm : 120), text: amount + qsTr(" beats")};
+    }
+
+    function startFade() {
+        if (fading) {
+            fading = false;
+            Toasts.show(qsTr("AUTOMIX STOPPED ") + Math.round(progress * 100) + "%");
+            Mixxx.DJMantra.log("automix: stopped at " + fader.value.toFixed(2));
+            return;
+        }
+        rest();
+        const t = fadeTime();
+        fadeFrom = fader.value;
+        fadeTo = fader.value <= 0 ? 1 : -1;
+        fadeMs = Math.max(200, t.ms * Math.abs(fadeTo - fadeFrom) / 2);
+        fadeStart = Date.now();
+        fading = true;
+        Toasts.show(qsTr("AUTOMIX \u2192 DECK ") + (fadeTo > 0 ? 2 : 1) + "  (" + t.text + ")");
+        Mixxx.DJMantra.log("automix: crossfader " + fadeFrom.toFixed(2) + " -> " + fadeTo + " in "
+                + Math.round(fadeMs) + " ms (" + t.text + ")");
+    }
+
+    Timer {
+        // the crossfader's glide, every frame
+        interval: 16
+        repeat: true
+        running: root.fading
+        onTriggered: {
+            const u = Math.min(1, (Date.now() - root.fadeStart) / root.fadeMs);
+            fader.value = root.fadeFrom + (root.fadeTo - root.fadeFrom) * u;
+            if (u >= 1) {
+                root.fading = false;
+                Mixxx.DJMantra.log("automix: done, " + root.from + " out");
+            }
+        }
+    }
+
     onAutomixChanged: {
-        Mixxx.DJMantra.log("automix " + (automix ? "on" : "off") + " eq " + eq + " tempo " + tempo);
+        Mixxx.DJMantra.log("blend " + (automix ? "on" : "off") + " eq " + eq + " tempo " + tempo);
         if (automix) {
             rest();
             follow();
@@ -153,11 +243,13 @@ Rectangle {
         }
     }
     onEqChanged: {
+        Toasts.show(eq ? qsTr("EQ BLEND ON") : qsTr("EQ BLEND OFF"));
         if (!eq)
             resetEq();
         else
             follow();
     }
+    onTempoChanged: Toasts.show(tempo ? qsTr("TEMPO BLEND ON") : qsTr("TEMPO BLEND OFF"))
 
     Component.onCompleted: setBeats(beats)
 
@@ -169,11 +261,10 @@ Rectangle {
             objectName: "autoMix"
             width: (parent.width - 4 * parent.spacing) * 0.22
             height: parent.height
-            text: root.automix && root.progress > 0.01 && root.progress < 0.99
-                    ? qsTr("AUTOMIX") + " " + Math.round(root.progress * 100) + "%" : qsTr("AUTOMIX")
+            text: root.fading ? qsTr("AUTOMIX") + " " + Math.round(root.progress * 100) + "%" : qsTr("AUTOMIX")
             fontSize: 12
-            lit: root.automix
-            onClicked: root.automix = !root.automix
+            lit: root.fading
+            onClicked: root.startFade()
         }
 
         DButton {
@@ -204,7 +295,12 @@ Rectangle {
             text: qsTr("AUTO PHASE")
             fontSize: 11
             lit: root.phase ? root.phase.active : false
-            onClicked: if (root.phase) root.phase.active = !root.phase.active
+            onClicked: {
+                if (!root.phase)
+                    return;
+                root.phase.active = !root.phase.active;
+                Toasts.show(root.phase.active ? qsTr("AUTO PHASE ON") : qsTr("AUTO PHASE OFF"));
+            }
         }
 
         DButton {
@@ -214,7 +310,10 @@ Rectangle {
             height: parent.height
             text: root.beats + qsTr(" BEATS")
             fontSize: 11
-            onClicked: root.setBeats(root.beats === 8 ? 16 : root.beats === 16 ? 32 : 8)
+            onClicked: {
+                root.setBeats(root.beats === 8 ? 16 : root.beats === 16 ? 32 : 8);
+                Toasts.show(qsTr("PHRASE \u2192 ") + root.beats + qsTr(" BEATS"));
+            }
         }
     }
 }
