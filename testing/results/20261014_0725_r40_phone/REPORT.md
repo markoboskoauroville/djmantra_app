@@ -53,3 +53,8 @@ Tester: Claude Code on the Mac (hub session), adb over USB. APK DJMantra-V41-0fa
 | 6 | mode remembered per deck | PASS | after force-stop + start: deck 1 PITCH (empty deck: "--"), deck 2 VOLUME |
 | 6 | follows sync / tempo blend during AutoMix | not tested | |
 | 6 | EQ at max on a fresh start | FAIL (again) | p6_fresh_load_eq_max_volume.png; builder says fixed in V42 62ad896 |
+| 7 | DJM filter loaded | PASS | at start `DJM filter: loaded on [Channel1]` / `[Channel2]` |
+| 7 | long press GAIN -> FILTER and back | PASS | `Settings: gain_filter_1 = 1`, `Quick: knob [Channel1]: FILTER` (label FILTER, blue arc); again: `gain_filter_1 = 0`, `knob [Channel1]: GAIN` |
+| 7 | sweep sound (LP 20k->45 Hz, HP 20->9k, peak sings) | not verified | slow 9 s sweeps down / up with double tap between, deck 1 playing (peak ~0.04). Tried to record the phone's output with `scrcpy --no-video --audio-dup --audio-codec=raw`: the file is pure silence, though the app has ALLOW_AUDIO_PLAYBACK_CAPTURE — the Oboe/AAudio stream (probably MMAP/exclusive) is not capturable. Needs Marko's ear, or a non-MMAP option so captures work |
+| 7 | no filter log line on a knob move | NOTE | only the mode flip logs; also `QmlControlProxy: Requested CO "[QuickEffectRack1_[Channel1]]" , "pregain" does not exist` at mixer load |
+| 7 | deck bpm now | NOTE | Aum Ganesha loaded fresh at 09:57: the PITCH handle reads **109.9** at 0 % (library 114.6); the earlier load read 91.0 |
