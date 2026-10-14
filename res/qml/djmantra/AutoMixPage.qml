@@ -327,9 +327,15 @@ Item {
                     width: 44
                     height: 32
                     mode: ""
-                    text: "\u25B4"
-                    fontSize: 16
+                    text: ""
                     onClicked: root.open = false
+
+                    Chevron {
+                        // drawn: U+25B4 was an empty box in the phone's font
+                        anchors.centerIn: parent
+                        up: true
+                        color: Style.text
+                    }
                 }
             }
 
@@ -406,7 +412,7 @@ Item {
                     width: (face.width - 6) / 2
                     height: 48
                     mode: ""
-                    text: qsTr("\u25C0\u25C0 PREVIOUS")
+                    text: qsTr("PREVIOUS SONG")
                     fontSize: 14
                     enabled: root.running
                     onClicked: root.skip(-1)
@@ -417,7 +423,7 @@ Item {
                     width: (face.width - 6) / 2
                     height: 48
                     mode: ""
-                    text: qsTr("NEXT \u25B6\u25B6")
+                    text: qsTr("NEXT SONG")
                     fontSize: 14
                     enabled: root.running
                     onClicked: root.skip(1)

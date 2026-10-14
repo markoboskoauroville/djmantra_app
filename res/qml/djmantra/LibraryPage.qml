@@ -519,9 +519,11 @@ Rectangle {
             anchors.rightMargin: visible ? 6 : 0
             anchors.verticalCenter: parent.verticalCenter
             visible: root.automixMode
-            width: visible ? 84 : 0
+            width: visible ? 104 : 0
             height: 40
-            text: qsTr("AUTOMIX ▾")
+            // the arrow is drawn (dropdown): U+25BE was an empty box in the phone's font
+            text: qsTr("AUTOMIX") + "   "
+            dropdown: true
             fontSize: 11
             lit: root.automixRunning
             onClicked: root.automixMenu()

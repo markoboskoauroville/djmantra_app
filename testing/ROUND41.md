@@ -203,3 +203,6 @@ the Client ID from it (toast "TIDAL KEY FILE LOADED: LOG IN AGAIN"; the secret i
 TIDAL -> LOG IN (PKCE) -> his TIDAL playlists; TAKE IN one; SYNC ALL PLAYLISTS TO TIDAL: every app playlist to TIDAL
 (one after another, "found/total" each, then "N playlists synced to TIDAL"); SYNC again: no duplicate playlists, only
 missing songs added. Check on TIDAL (app or web) that the playlists are there with the songs.
+## 50. (V59) The AUTOMIX button in the AutoMix tab's top bar: "AUTOMIX" with a small drawn arrow pointing down
+(was an empty box); in the dropdown, the collapse button shows a drawn arrow pointing up; PREVIOUS SONG / NEXT SONG
+in words (no glyph boxes anywhere in the AutoMix dropdown).
