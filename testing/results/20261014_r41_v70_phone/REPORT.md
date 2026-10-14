@@ -33,3 +33,12 @@ Mic permission granted ("While using the app"); AUTO CALIBRATE ran one 8 s sweep
 - Log: `getControl returning NULL for [DJMantra] room_current / room_eq_on` on every change.
 
 Left BYPASS on, so the bad -12 dB correction isn't heard.
+
+## V71 (67f8b89) installed 22:12 — parts 62, 51, 53, 54, 55, 57 (screen side)
+- **62 PASS:** Songs top bar: FOLDERS / PLAYLISTS / LIST / FULL fit; filter field has room beside SUNO / TIDAL / FIND ON PHONE.
+- **51 PASS (screen):** auto gain brings every song to -1 dBFS, e.g. Bissa peak +0.28 → gain -1.28, Cler Achel -0.84 → -0.16. Mixer column per deck: HIGH, MID, LOW, FILTER (blue), FX, headphones; no GAIN knob. Still open: two masters level on the VU meters; the Mix Ultra's FILTER knob; SHIFT+HIGH.
+- **53 PASS (screen):** MID -16 in EQ, switch to NEURAL MIX gives "EQ → NEURAL MIX", VOCALS inner at 0, MID -16 kept on the outer. VOCALS cut to -13, back to EQ: MID -16 and VOCALS -13 both kept. Whether both are heard still needs Marko; the SHIFT part needs the controller.
+- **54 PASS:** LOW -14, MID -16, VOCALS -13 and FILTER right on deck 1, then Diaraby Nene loaded onto deck 1. Everything is back at 0 / off, with "New song on [Channel1] : EQ, Neural Mix and FILTER reset". Deck 2 untouched.
+- **55 PASS (screen):** a finger drag turns only the inner knob; the dropdown swaps inner and outer.
+- **57 PASS:** inner dots in band colours (HIGH blue, MID green, LOW red), outer ring violet, violet number on top, band number at the bottom, 0 dB shown. Minor: the scale labels "−∞ / 0 dB" under each knob crowd the band caption below.
+- The "BT" pill is gone because the Mix Ultra isn't connected (Bluetooth STATE_DISCONNECTED). 56 and the controller halves of 51/53 are waiting for it.
