@@ -15,3 +15,5 @@ tick; a tap loads onto the free deck; folders open. Tap again: LIST. Leave the a
 ## 4. r40 fixes: right after start HIGH / MID / LOW on both decks are in the middle (log: no EQ at max); the
 volume fader: its label must say VOLUME while testing it (a still hold of 0.5 s flips it to PITCH, which would explain
 r40's "fader barely changes the peak" and "90.07 BPM": grep `fader [Channel` in logcat).
+## 5. r40 part 6: the PITCH scale's middle = the deck's BPM where the song is (local_bpm), the same number as the
+handle at 0 % (was the library's 114.6 while the deck played at 91).

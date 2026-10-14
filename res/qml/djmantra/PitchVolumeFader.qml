@@ -23,7 +23,9 @@ Item {
     Mixxx.ControlProxy { id: rate; group: root.group; key: "rate" }
     Mixxx.ControlProxy { id: rateDir; group: root.group; key: "rate_dir" }
     Mixxx.ControlProxy { id: rateRange; group: root.group; key: "rateRange" }
-    Mixxx.ControlProxy { id: fileBpm; group: root.group; key: "file_bpm" }
+    // the tempo where the song is now (r40: a variable beat grid made file_bpm 114.6 while the
+    // deck played at 91): the scale has to match the BPM the handle shows
+    Mixxx.ControlProxy { id: fileBpm; group: root.group; key: "local_bpm" }
     Mixxx.ControlProxy { id: bpm; group: root.group; key: "bpm" }
 
     // the pitch as "faster" (-1..1, up = faster whatever the rate direction)
