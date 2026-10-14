@@ -106,3 +106,5 @@ down, the BPM rises; drag the screen handle down: faster too.
 ## 28. (V48) GAIN in dB (Marko 14.10.2026): under the GAIN ring "−12" at the left end and "+12" at the right end
 (Mixxx's pregain; a DJM's TRIM is −∞ .. +9 dB); straight up = 0 dB = just "GAIN"; turned, the caption shows the gain
 ("GAIN +4 dB", "GAIN −6 dB", yellow). Flipped to FILTER: no dB labels. Double tap: back to 0 dB.
+## 29. (V48) The last 30 s of a song (Marko 14.10.2026): in the matrix, the deck's time left ("-0:30") and its
+countdown turn RED from 30 s before the end; a new song (or jumping back) brings the usual colours back.

@@ -167,9 +167,11 @@ Item {
             for (let d = 0; d < Math.min(2, root.decks.length); ++d) {
                 const deck = root.decks[d];
                 const top = d * root.deckRows;
-                text(deck.remaining, 1, top + 1, deck.color);
+                // the last 30 s: time left and countdown red (Marko 14.10.2026)
+                text(deck.remaining, 1, top + 1, deck.ending ? String(Style.red) : deck.color);
                 text(deck.barBeat, Math.floor((columns - textWidth(deck.barBeat)) / 2), top + 1, deck.color);
-                text(deck.countdown, columns - 1 - textWidth(deck.countdown), top + 1, String(Style.text));
+                text(deck.countdown, columns - 1 - textWidth(deck.countdown), top + 1,
+                        deck.ending ? String(Style.red) : String(Style.text));
                 const layout = root.cellColumns(deck.cells);
                 const cellTop = top + 1 + 7 + 1;
                 for (let c = 0; c < deck.cells; ++c) {

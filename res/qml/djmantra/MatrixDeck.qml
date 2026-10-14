@@ -174,6 +174,9 @@ Item {
     readonly property int phraseBeat: loaded && beat.value >= 0 ? Math.floor(beat.value) % cells : -1
     // the time left in the song, counting down (round 18, Marko: "I need time
     // until the end of the song ... it needs to go backwards")
+    // Marko 14.10.2026: the last 30 s of the song: the time left and the countdown turn red
+    readonly property real secondsLeft: Math.max(0, 1 - Math.max(0, position.value)) * Math.max(0, duration.value)
+    readonly property bool ending: loaded && duration.value > 30 && secondsLeft <= 30
     readonly property string remaining: loaded
             ? "-" + Mixxx.DJMantra.formatTime(Math.max(0, 1 - Math.max(0, position.value)) * Math.max(0, duration.value))
             : "-:--"
@@ -193,6 +196,7 @@ Item {
         beat: phraseBeat,
         cells: cells,
         armed: armedBeat >= 0 ? armedBeat : queuedBeat >= 0 ? queuedBeat : cuedBeat,
-        color: String(deckColor)
+        color: String(deckColor),
+        ending: ending
     })
 }
