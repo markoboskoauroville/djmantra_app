@@ -583,7 +583,11 @@ Rectangle {
         }
 
         Row {
-            // FOLDERS | PLAYLISTS at the top level (Marko 14.10.2026)
+            // FOLDERS | PLAYLISTS at the top level (Marko 14.10.2026); r41 (V70 phone): they ran over
+            // LIST: they share the room left of the bar's buttons
+            id: modeRow
+
+            readonly property real room: viewButton.x - (backButton.x + backButton.width) - 8 - 6
             anchors.left: backButton.right
             anchors.leftMargin: 8
             anchors.verticalCenter: parent.verticalCenter
@@ -597,7 +601,7 @@ Rectangle {
                     required property var modelData
 
                     objectName: modelData[0] ? "viewPlaylists" : "viewFolders"
-                    width: 92
+                    width: Math.max(60, Math.min(92, (modeRow.room - 4) / 2))
                     height: 36
                     mode: ""
                     text: modelData[1]
@@ -714,7 +718,7 @@ Rectangle {
             anchors.rightMargin: visible ? 6 : 0
             anchors.verticalCenter: parent.verticalCenter
             visible: root.playlistsRoot || root.inPlaylist
-            width: visible ? 64 : 0
+            width: visible ? 56 : 0
             height: 38
             mode: ""
             text: qsTr("SUNO")
@@ -731,7 +735,7 @@ Rectangle {
             anchors.rightMargin: 6
             anchors.verticalCenter: parent.verticalCenter
             visible: root.playlistsRoot || root.inPlaylist
-            width: visible ? 70 : 0
+            width: visible ? 60 : 0
             height: 38
             mode: ""
             text: qsTr("TIDAL")
@@ -746,11 +750,13 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
-            width: 118
+            // r41 (V70 phone): with SUNO and TIDAL beside it the filter had no room: two lines
+            width: sunoButton.visible ? 74 : 118
             height: 38
             mode: ""
             text: qsTr("FIND ON PHONE")
-            fontSize: 11
+            wrap: sunoButton.visible
+            fontSize: sunoButton.visible ? 10 : 11
             lit: root.phoneMode
             onClicked: {
                 searchInput.focus = false;

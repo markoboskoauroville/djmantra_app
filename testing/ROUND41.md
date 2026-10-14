@@ -268,3 +268,6 @@ buttons BACK / READ CHART / CLOSE clear of the camera hole, the page ends above 
 navigation area). BACK goes back a page in the site (on the first page: closes). A swipe from the bottom edge shows the
 navigation bar for a moment, then it hides again; coming back from another app: hidden again. The same for SUNO -> GET
 (the Suno login browser): BACK / DONE on top, clear of the clock and the hole. Screenshot both (top 130 px, bottom 150 px).
+## 62. (V71) SONGS TOP LEVEL BAR (r41 V70 phone bug): FOLDERS | PLAYLISTS no longer run over LIST / GRID; in PLAYLISTS the
+filter field ("Find a song") has room next to SUNO, TIDAL and FIND ON PHONE (two lines). Screenshot the bar in FOLDERS and
+in PLAYLISTS, list and grid.
