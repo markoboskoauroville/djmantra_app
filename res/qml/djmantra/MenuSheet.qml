@@ -9,6 +9,7 @@ Rectangle {
     signal library()
     signal wheel()
     signal settings()
+    signal queues()
     signal done()
 
     color: "#8c000000"
@@ -69,6 +70,14 @@ Rectangle {
                 height: 52
                 text: qsTr("CAMELOT WHEEL")
                 onClicked: root.wheel()
+            }
+            DButton {
+                // the download queues (Spotify, TIDAL, YouTube Music) as text files
+                objectName: "menuQueues"
+                width: parent.width
+                height: 52
+                text: qsTr("DOWNLOAD QUEUES")
+                onClicked: root.queues()
             }
             Row {
                 // the controller's link, one or the other (Marko 14.10.2026: in the menu too,

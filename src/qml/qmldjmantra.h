@@ -125,6 +125,14 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    // DOWNLOAD QUEUES (Marko 14.10.2026): one text file per service in
+    // djmantra_app/Download_Queue/ (Spotify.txt, TIDAL.txt, YouTube_Music.txt), a line per song:
+    // "artist | title | link" (the service's search link); exportable as it is
+    Q_INVOKABLE QString searchLink(const QString& service, const QString& artist, const QString& title) const;
+    Q_INVOKABLE bool addToDownloadQueue(const QString& service, const QString& artist, const QString& title);
+    Q_INVOKABLE QVariantList downloadQueue(const QString& service) const;
+    Q_INVOKABLE bool removeFromDownloadQueue(const QString& service, int index);
+    Q_INVOKABLE QString downloadQueueFile(const QString& service) const;
     // PLAYLISTS (Marko 14.10.2026): the app's own playlists (playlists.json in the app's data;
     // M3U / M3U8 files in Music/Playlists are taken in once, e.g. djay's exported ones).
     // A playlist is listed as a folder "playlist:<name>" (listFolder gives its songs).

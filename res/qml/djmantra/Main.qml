@@ -664,8 +664,9 @@ Window {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            active: window.overlay === "menu" || window.overlay === "settings"
-            sourceComponent: window.overlay === "settings" ? settingsComponent : menuComponent
+            active: window.overlay === "menu" || window.overlay === "settings" || window.overlay === "queues"
+            sourceComponent: window.overlay === "settings" ? settingsComponent
+                           : window.overlay === "queues" ? queuesComponent : menuComponent
         }
     }
 
@@ -679,10 +680,19 @@ Window {
                 window.overlay = "";
             }
             onSettings: window.overlay = "settings"
+            onQueues: window.overlay = "queues"
             onWheel: {
                 window.page = 4;
                 window.overlay = "";
             }
+            onDone: window.overlay = ""
+        }
+    }
+
+    Component {
+        id: queuesComponent
+
+        DownloadQueuePage {
             onDone: window.overlay = ""
         }
     }

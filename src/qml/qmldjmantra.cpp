@@ -870,6 +870,101 @@ void importM3uPlaylists() {
 
 } // namespace
 
+namespace {
+
+QString queueFile(const QString& service) {
+#if defined(Q_OS_ANDROID)
+    const QString dir = QStringLiteral("/sdcard/djmantra_app/Download_Queue");
+#else
+    const QString dir = QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
+            QStringLiteral("/djmantra_app/Download_Queue");
+#endif
+    QDir().mkpath(dir);
+    QString name = service;
+    name.replace(QChar(' '), QChar('_'));
+    return dir + QChar('/') + name + QStringLiteral(".txt");
+}
+
+QStringList queueLines(const QString& service) {
+    QFile file(queueFile(service));
+    QStringList lines;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        while (!file.atEnd()) {
+            const QString line = QString::fromUtf8(file.readLine()).trimmed();
+            if (!line.isEmpty()) {
+                lines << line;
+            }
+        }
+    }
+    return lines;
+}
+
+void writeQueue(const QString& service, const QStringList& lines) {
+    QSaveFile file(queueFile(service));
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        for (const QString& line : lines) {
+            file.write(line.toUtf8() + '\n');
+        }
+        file.commit();
+    }
+}
+
+} // namespace
+
+QString QmlDJMantra::searchLink(const QString& service, const QString& artist, const QString& title) const {
+    const QString query = QString::fromUtf8(QUrl::toPercentEncoding((artist + QChar(' ') + title).simplified()));
+    if (service.startsWith(QStringLiteral("Spotify"), Qt::CaseInsensitive)) {
+        return QStringLiteral("https://open.spotify.com/search/") + query;
+    }
+    if (service.startsWith(QStringLiteral("TIDAL"), Qt::CaseInsensitive)) {
+        return QStringLiteral("https://tidal.com/search?q=") + query;
+    }
+    if (service.startsWith(QStringLiteral("YouTube Music"), Qt::CaseInsensitive)) {
+        return QStringLiteral("https://music.youtube.com/search?q=") + query;
+    }
+    return QStringLiteral("https://www.youtube.com/results?search_query=") + query;
+}
+
+bool QmlDJMantra::addToDownloadQueue(const QString& service, const QString& artist, const QString& title) {
+    QStringList lines = queueLines(service);
+    const QString line = artist.simplified() + QStringLiteral(" | ") + title.simplified() +
+            QStringLiteral(" | ") + searchLink(service, artist, title);
+    if (lines.contains(line)) {
+        return false;
+    }
+    lines << line;
+    writeQueue(service, lines);
+    qInfo().noquote() << "Download queue" << service << "+" << line;
+    return true;
+}
+
+QVariantList QmlDJMantra::downloadQueue(const QString& service) const {
+    QVariantList result;
+    for (const QString& line : queueLines(service)) {
+        const QStringList parts = line.split(QStringLiteral(" | "));
+        QVariantMap entry;
+        entry[QStringLiteral("artist")] = parts.value(0);
+        entry[QStringLiteral("title")] = parts.value(1);
+        entry[QStringLiteral("link")] = parts.value(2);
+        result << entry;
+    }
+    return result;
+}
+
+bool QmlDJMantra::removeFromDownloadQueue(const QString& service, int index) {
+    QStringList lines = queueLines(service);
+    if (index < 0 || index >= lines.size()) {
+        return false;
+    }
+    lines.removeAt(index);
+    writeQueue(service, lines);
+    return true;
+}
+
+QString QmlDJMantra::downloadQueueFile(const QString& service) const {
+    return queueFile(service);
+}
+
 QVariantList QmlDJMantra::playlistRoots() {
     importM3uPlaylists();
     QVariantList roots;

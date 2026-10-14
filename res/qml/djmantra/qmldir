@@ -19,6 +19,7 @@ LibraryPage 1.0 LibraryPage.qml
 MatrixDeck 1.0 MatrixDeck.qml
 MatrixDisplay 1.0 MatrixDisplay.qml
 MenuSheet 1.0 MenuSheet.qml
+DownloadQueuePage 1.0 DownloadQueuePage.qml
 MixerPage 1.0 MixerPage.qml
 NavBar 1.0 NavBar.qml
 Overview 1.0 Overview.qml

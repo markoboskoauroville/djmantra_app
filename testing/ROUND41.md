@@ -144,3 +144,8 @@ crossfader and tabs stay), DOCK puts it back (toasts).
 it; ← shows djmantra_app, Music, Download. Playlists: djmantra_app/Playlists/<name>.m3u8 (songs in
 djmantra_app/Playlists/<name>/) are taken in under PLAYLISTS (Music/Playlists too). Recordings go to
 djmantra_app/Recordings.
+## 41. (V52) DOWNLOAD QUEUES (Marko 14.10.2026; Menu -> DOWNLOAD QUEUES): SPOTIFY / TIDAL / YOUTUBE MUSIC, each a text
+file in /sdcard/djmantra_app/Download_Queue/ (Spotify.txt, TIDAL.txt, YouTube_Music.txt), a line per song
+"artist | title | link" (the service's search link). The page lists the queue (title, artist), OPEN opens the link
+(the service's app or browser), × removes the line; the file path is shown (copy / share it from the Files app).
+Songs are added from the BEATSTATS charts (next; for now check with a file pushed by adb).
