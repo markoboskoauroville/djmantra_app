@@ -14,21 +14,25 @@ Rectangle {
     property string deck: "" // a deck's cover was tapped: onto that deck
     // Marko 14.10.2026: two views, FOLDERS (the phone's folders) and PLAYLISTS (the app's own);
     // playlistsVersion makes the lists read again after a song is added / removed
-    property bool playlistsView: Mixxx.DJMantra.setting("library_mode", "folders") === "playlists"
+    // V75 (Marko 14.10.2026: "playlists are viewed in the same view as folders ... I open the
+    // playlist and I see it as files in the folders"): no FOLDERS | PLAYLISTS switch; the top level
+    // has a "Playlists" folder beside djmantra_app, Music and Download ("playlists:"), each
+    // playlist in it is a folder ("playlist:<name>"), its songs are files
     property int playlistsVersion: 0
     readonly property bool inPlaylist: folder.startsWith("playlist:")
-    readonly property bool playlistsRoot: folder === "" && playlistsView
+    readonly property bool playlistsRoot: folder === "playlists:"
     property var entries: {
         // read again after a playlist change only where playlists are shown
         const version = (playlistsRoot || inPlaylist) ? playlistsVersion : 0;
-        return folder === "" ? (playlistsView ? Mixxx.DJMantra.playlistRoots() : Mixxx.DJMantra.musicRoots())
-                             : Mixxx.DJMantra.listFolder(folder);
+        return folder === "" ? Mixxx.DJMantra.musicRoots().concat([{name: qsTr("Playlists"), path: "playlists:", isFolder: true}])
+             : playlistsRoot ? Mixxx.DJMantra.playlistRoots()
+             : Mixxx.DJMantra.listFolder(folder);
     }
     // Marko 14.10.2026: the list opens in the app's own root, djmantra_app (← shows Music,
     // Download beside it)
     Component.onCompleted: {
         const roots = Mixxx.DJMantra.musicRoots();
-        if (folder === "" && !playlistsView && roots.length > 0 && roots[0].name === "djmantra_app")
+        if (folder === "" && roots.length > 0 && roots[0].name === "djmantra_app")
             folder = roots[0].path;
     }
 
@@ -381,6 +385,10 @@ Rectangle {
             return;
         }
         if (inPlaylist) {
+            folder = "playlists:";
+            return;
+        }
+        if (playlistsRoot) {
             folder = "";
             return;
         }
@@ -582,40 +590,6 @@ Rectangle {
             }
         }
 
-        Row {
-            // FOLDERS | PLAYLISTS at the top level (Marko 14.10.2026); r41 (V70 phone): they ran over
-            // LIST: they share the room left of the bar's buttons
-            id: modeRow
-
-            readonly property real room: viewButton.x - (backButton.x + backButton.width) - 8 - 6
-            anchors.left: backButton.right
-            anchors.leftMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-            visible: root.folder === ""
-            spacing: 4
-
-            Repeater {
-                model: [[false, qsTr("FOLDERS")], [true, qsTr("PLAYLISTS")]]
-
-                delegate: DButton {
-                    required property var modelData
-
-                    objectName: modelData[0] ? "viewPlaylists" : "viewFolders"
-                    width: Math.max(60, Math.min(92, (modeRow.room - 4) / 2))
-                    height: 36
-                    mode: ""
-                    text: modelData[1]
-                    fontSize: 11
-                    lit: root.playlistsView === modelData[0]
-                    onClicked: {
-                        root.playlistsView = modelData[0];
-                        Mixxx.DJMantra.setSetting("library_mode", modelData[0] ? "playlists" : "folders");
-                        Toasts.show(modelData[0] ? qsTr("VIEW \u2192 PLAYLISTS") : qsTr("VIEW \u2192 FOLDERS"));
-                    }
-                }
-            }
-        }
-
         Text {
             anchors.left: backButton.right
             anchors.leftMargin: 12
@@ -623,7 +597,8 @@ Rectangle {
             anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
             visible: root.folder !== ""
-            text: root.inPlaylist ? root.folder.substring(9) : root.folder.substring(root.folder.lastIndexOf("/") + 1)
+            text: root.playlistsRoot ? qsTr("Playlists")
+                  : root.inPlaylist ? root.folder.substring(9) : root.folder.substring(root.folder.lastIndexOf("/") + 1)
             color: Style.text
             font.pixelSize: 20
             font.bold: true

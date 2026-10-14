@@ -1916,7 +1916,7 @@ endif()
 # DJ Mantra's own version (the engine stays Mixxx ${CMAKE_PROJECT_VERSION}):
 # V1, V2, V3 ... (Marko, 12.10.2026): one up for every build that goes to the
 # phone. Android's version code must only grow, and 0.5.0 had 5: code = 5 + N.
-set(DJMANTRA_VERSION_NUMBER 74)
+set(DJMANTRA_VERSION_NUMBER 75)
 set(DJMANTRA_VERSION "V${DJMANTRA_VERSION_NUMBER}")
 math(EXPR DJMANTRA_VERSION_CODE "5 + ${DJMANTRA_VERSION_NUMBER}")
 target_compile_definitions(mixxx-lib PUBLIC DJMANTRA_VERSION="${DJMANTRA_VERSION}")

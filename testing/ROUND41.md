@@ -291,3 +291,8 @@ in LIST view: every row 30 px, one line. A folder: its icon and its WHOLE name a
 "..." while the name fits: "HOTEL KORINJAK {by ...}" now complete). A song: small cover, TITLE / ARTIST / LENGTH / BPM /
 KEY under their headers. PLAYLISTS: name, CREATED, SONGS, LENGTH under theirs. Twice as many rows on screen as V73; tap,
 long press (add to a playlist), the controller's BROWSE highlight and AutoMix's PLAYING / NEXT marks still work.
+## 66. (V75) PLAYLISTS ARE FOLDERS (Marko 14.10.2026: one view). Songs: no FOLDERS | PLAYLISTS buttons any more. The top
+level (← from djmantra_app) lists djmantra_app, Music, Download and "Playlists". Open Playlists: every playlist as a
+folder (NAME, CREATED, SONGS, LENGTH; SUNO and TIDAL buttons there); open one: its songs as files (load, long press,
+sort, filter as in any folder); ← goes back to Playlists, ← again to the top level. Adding a song to a playlist (long
+press) and REMOVE FROM still work; a new playlist appears inside Playlists.
