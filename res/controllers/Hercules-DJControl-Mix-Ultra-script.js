@@ -59,6 +59,7 @@ MixUltra.Deck = function(number) {
 };
 
 MixUltra.init = function(id, debugging) {
+    MixUltra.quietUntil = Date.now() + 1500;
     MixUltra.debugging = debugging;
     for (var number = 1; number <= 2; number++) {
         var deck = new MixUltra.Deck(number);
@@ -352,7 +353,18 @@ MixUltra.jogSeek = function(channel, control, value, status, group) {
 // DJ Mantra (Marko, 12.10.2026): BROWSE brings the app's song list in front; turning moves
 // the highlighted song, a press loads it onto the free deck (a folder opens), SHIFT + press goes
 // up a folder; a deck's LOAD loads it onto that deck. Loading closes the list again.
+// r41 (V71, Bluetooth): right after a (re)connect the controller sends its state, among it
+// "90 00 7F", read as a BROWSE press that opened the song list: the browser ignores the
+// controller for 1.5 s after a connect
+MixUltra.quietUntil = 0;
+MixUltra.settling = function() {
+    return Date.now() < MixUltra.quietUntil;
+};
+
 MixUltra.browse = function(channel, control, value, status, group) {
+    if (MixUltra.settling()) {
+        return;
+    }
     MixUltra.tellApp("browse_move", MixUltra.ticks(value));
 };
 
@@ -362,13 +374,13 @@ MixUltra.shiftBrowse = function(channel, control, value, status, group) {
 };
 
 MixUltra.browsePress = function(channel, control, value, status, group) {
-    if (value > 0) {
+    if (value > 0 && !MixUltra.settling()) {
         MixUltra.tellApp("browse_press", 1);
     }
 };
 
 MixUltra.shiftBrowsePress = function(channel, control, value, status, group) {
-    if (value > 0) {
+    if (value > 0 && !MixUltra.settling()) {
         MixUltra.tellApp("browse_back", 1);
     }
 };
@@ -536,6 +548,7 @@ MixUltra.eq = function(channel, control, value, status, group) {
 // Called by DJ Mantra on Android after every (re)connect over USB or Bluetooth:
 // the controller's LEDs are dark again, the knob positions were requested already.
 var djmantraControllerConnected = function() {
+    MixUltra.quietUntil = Date.now() + 1500;
     midi.sendShortMsg(0x90, 0x01, 0x7F);
     MixUltra.refreshLeds();
 };

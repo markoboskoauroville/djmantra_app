@@ -296,3 +296,12 @@ level (← from djmantra_app) lists djmantra_app, Music, Download and "Playlists
 folder (NAME, CREATED, SONGS, LENGTH; SUNO and TIDAL buttons there); open one: its songs as files (load, long press,
 sort, filter as in any folder); ← goes back to Playlists, ← again to the top level. Adding a song to a playlist (long
 press) and REMOVE FROM still work; a new playlist appears inside Playlists.
+## 67. (V76) NO EMPTY FOLDERS OR PLAYLISTS (Marko 14.10.2026: "only playlists which contain some songs"): Songs hides
+every folder without a song anywhere inside it (subfolders counted) and every playlist whose songs are all gone. Test:
+make an empty folder in Music/djmantra_app (adb shell mkdir), and one with an empty subfolder only: neither shows; copy a
+song into the subfolder, switch to another app and back: the folder shows. A playlist whose files were deleted: gone
+from Playlists (and from "add to playlist").
+## 68. (V76) BLUETOOTH CONNECT DOES NOT OPEN THE BROWSER (r41 V71 BUG 1): connect the Mix Ultra over Bluetooth (or USB):
+the song list does NOT open by itself; 2 s later BROWSE turn / press work as before.
+Tester note (r41 BUG 2): with the navigation bar shown the app makes room for it (the rule: nothing under the bars), so
+the tab bar moves up ~15 px; read the positions again after the bars appear (a finger taps where it is drawn).

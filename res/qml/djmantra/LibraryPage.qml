@@ -21,9 +21,19 @@ Rectangle {
     property int playlistsVersion: 0
     readonly property bool inPlaylist: folder.startsWith("playlist:")
     readonly property bool playlistsRoot: folder === "playlists:"
+    // read again when the app comes back (files added or deleted meanwhile: empty folders and
+    // playlists are not shown, r41)
+    property int filesVersion: 0
+    Connections {
+        target: Qt.application
+        function onStateChanged() {
+            if (Qt.application.state === Qt.ApplicationActive)
+                ++root.filesVersion;
+        }
+    }
     property var entries: {
         // read again after a playlist change only where playlists are shown
-        const version = (playlistsRoot || inPlaylist) ? playlistsVersion : 0;
+        const version = ((playlistsRoot || inPlaylist) ? playlistsVersion : 0) + filesVersion;
         return folder === "" ? Mixxx.DJMantra.musicRoots().concat([{name: qsTr("Playlists"), path: "playlists:", isFolder: true}])
              : playlistsRoot ? Mixxx.DJMantra.playlistRoots()
              : Mixxx.DJMantra.listFolder(folder);

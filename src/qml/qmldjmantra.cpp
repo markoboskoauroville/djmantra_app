@@ -1534,7 +1534,17 @@ QVariantList QmlDJMantra::playlistRoots() {
         entry[QStringLiteral("path")] = QStringLiteral("playlist:") + name;
         entry[QStringLiteral("isFolder")] = true;
         entry[QStringLiteral("created")] = playlist.value(QStringLiteral("created")).toDouble();
-        entry[QStringLiteral("count")] = playlist.value(QStringLiteral("songs")).toArray().size();
+        // the songs still on the phone; a playlist without any is not shown (Marko 14.10.2026)
+        int songs = 0;
+        for (const auto& song : playlist.value(QStringLiteral("songs")).toArray()) {
+            if (QFileInfo::exists(song.toString())) {
+                ++songs;
+            }
+        }
+        if (songs == 0) {
+            continue;
+        }
+        entry[QStringLiteral("count")] = songs;
         if (sunoPlaylists.contains(name)) {
             entry[QStringLiteral("artist")] = QStringLiteral("SUNO PLAYLIST");
         }
@@ -1605,6 +1615,19 @@ double QmlDJMantra::playlistLength(const QString& name) const {
     return total;
 }
 
+// a folder with at least one song in it or in any folder inside it (Marko 14.10.2026: "I want
+// only playlists which contain some songs"; the scan stops at the first song)
+static bool hasSongs(const QString& dir) {
+    QDirIterator it(dir, QDir::Files | QDir::Readable, QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        it.next();
+        if (!it.fileName().startsWith(QChar('.')) && SoundSourceProxy::isFileNameSupported(it.fileName())) {
+            return true;
+        }
+    }
+    return false;
+}
+
 QVariantList QmlDJMantra::listFolder(const QString& folder) const {
     QVariantList folders;
     QVariantList songs;
@@ -1642,7 +1665,10 @@ QVariantList QmlDJMantra::listFolder(const QString& folder) const {
         entry[QStringLiteral("path")] = info.absoluteFilePath();
         entry[QStringLiteral("isFolder")] = info.isDir();
         if (info.isDir()) {
-            folders << entry;
+            // empty folders (no song anywhere inside) are not shown
+            if (hasSongs(info.absoluteFilePath())) {
+                folders << entry;
+            }
         } else if (SoundSourceProxy::isFileNameSupported(info.fileName())) {
             songs << entry;
         }
