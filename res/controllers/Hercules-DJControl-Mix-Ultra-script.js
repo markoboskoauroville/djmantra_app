@@ -229,22 +229,13 @@ MixUltra.shiftCue = function(channel, control, value, status, group) {
     }
 };
 
-// SYNC: tap = beat sync once, hold = sync lock on/off
-MixUltra.syncTimers = {};
+// SYNC as the screen's SYNC button (r40 part 9: a tap did Mixxx's one-shot beatsync,
+// which lit nothing, so "SYNC from the console did not register"): a press toggles the
+// deck's sync lock, the same control the screen's SYNC shows
 MixUltra.sync = function(channel, control, value, status, group) {
     if (value > 0) {
-        MixUltra.syncTimers[group] = engine.beginTimer(400, function() {
-            MixUltra.syncTimers[group] = 0;
-            script.toggleControl(group, "sync_enabled");
-        }, true);
-    } else if (MixUltra.syncTimers[group]) {
-        engine.stopTimer(MixUltra.syncTimers[group]);
-        MixUltra.syncTimers[group] = 0;
-        if (engine.getValue(group, "sync_enabled") > 0) {
-            engine.setValue(group, "sync_enabled", 0);
-        } else {
-            engine.setValue(group, "beatsync", 1);
-        }
+        script.toggleControl(group, "sync_enabled");
+        print("MixUltra: SYNC " + group + " -> " + engine.getValue(group, "sync_enabled"));
     }
 };
 

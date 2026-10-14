@@ -50,3 +50,5 @@ connected, nothing when not; toasts "CONTROLLER CONNECTED · USB" / "· BLUETOOT
 (logcat DJMantraMIDI `USB plugged in: switching from Bluetooth to USB`); unplug: DISCONNECTED, then within ~3-10 s
 back on Bluetooth (the scan). Power off the controller: DISCONNECTED; on again: connected. After each switch: move
 the crossfader, a volume fader, an EQ knob, press PLAY: the screen follows (Marko moves them; one action at a time).
+## 13. Console SYNC (r40 part 9: "SYNC from the console did not register"): a press on the Mix Ultra's SYNC toggles
+the deck's sync lock, the same as the screen's SYNC (it lights / unlights; log `MixUltra: SYNC [ChannelN] -> 1/0`).
