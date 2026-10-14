@@ -69,6 +69,9 @@ public final class SunoActivity extends Activity {
         bar.setOrientation(LinearLayout.HORIZONTAL);
         bar.setGravity(Gravity.CENTER_VERTICAL);
         bar.setPadding(12, 12, 12, 12);
+        Button back = new Button(this);
+        back.setText("BACK");
+        back.setOnClickListener(v -> onBackPressed());
         Button close = new Button(this);
         close.setText("DONE");
         close.setOnClickListener(v -> finish());
@@ -76,6 +79,7 @@ public final class SunoActivity extends Activity {
         mStatus.setTextColor(Color.parseColor("#EEF0FF"));
         mStatus.setPadding(16, 0, 16, 0);
         mStatus.setText("Log in to Suno once, then the song's ... menu -> Download -> MP3");
+        bar.addView(back);
         bar.addView(close);
         bar.addView(mStatus, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         root.addView(bar, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -107,7 +111,14 @@ public final class SunoActivity extends Activity {
         });
         root.addView(mWeb, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         setContentView(root);
+        ScreenEdges.fit(this, root);
         mWeb.loadUrl(getIntent().getStringExtra("url"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ScreenEdges.hideAgain(this);
     }
 
     @Override

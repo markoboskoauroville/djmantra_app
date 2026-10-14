@@ -262,3 +262,9 @@ by itself after each measurement, APPLY, a band dragged, FLAT, a place in / out.
 Room_Corrections/<room>.json". NEW ROOM "Test", measure and APPLY there; choose the first room again: ITS correction
 curve comes back; choose "Test": its curve. RENAME: the file is renamed; DELETE: the file is gone (adb shell ls
 /sdcard/Music/djmantra_app/Room_Corrections).
+## 61. (V70) BEATSTATS AND THE SUNO LOGIN FIT THE SCREEN (Marko 14.10.2026: "not adapting to the user interface of
+Android ... cropped"). Menu -> BEATSTATS CHARTS -> OPEN BEATSTATS: no status bar (clock, battery) over its bar, its
+buttons BACK / READ CHART / CLOSE clear of the camera hole, the page ends above the bottom edge (nothing under the
+navigation area). BACK goes back a page in the site (on the first page: closes). A swipe from the bottom edge shows the
+navigation bar for a moment, then it hides again; coming back from another app: hidden again. The same for SUNO -> GET
+(the Suno login browser): BACK / DONE on top, clear of the clock and the hole. Screenshot both (top 130 px, bottom 150 px).

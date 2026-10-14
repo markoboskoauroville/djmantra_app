@@ -65,6 +65,9 @@ public final class BeatStatsActivity extends Activity {
         bar.setOrientation(LinearLayout.HORIZONTAL);
         bar.setGravity(Gravity.CENTER_VERTICAL);
         bar.setPadding(12, 12, 12, 12);
+        Button back = new Button(this);
+        back.setText("BACK");
+        back.setOnClickListener(v -> onBackPressed());
         Button read = new Button(this);
         read.setText("READ CHART");
         read.setOnClickListener(v -> readChart());
@@ -75,6 +78,7 @@ public final class BeatStatsActivity extends Activity {
         mStatus.setTextColor(Color.parseColor("#EEF0FF"));
         mStatus.setPadding(16, 0, 16, 0);
         mStatus.setText("Open a chart, then READ CHART");
+        bar.addView(back);
         bar.addView(read);
         bar.addView(close);
         bar.addView(mStatus, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
@@ -95,7 +99,14 @@ public final class BeatStatsActivity extends Activity {
         });
         root.addView(mWeb, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         setContentView(root);
+        ScreenEdges.fit(this, root);
         mWeb.loadUrl(getSharedPreferences("djmantra_beatstats", MODE_PRIVATE).getString("url", HOME));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ScreenEdges.hideAgain(this);
     }
 
     @Override
