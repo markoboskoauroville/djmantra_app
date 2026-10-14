@@ -71,3 +71,6 @@ At start with the Mix Ultra on USB: the green USB pill at once; then the switchi
 clear button is a visible "×"; FIND ON PHONE hits get their BPM, key and cover after a moment. A song whose tempo
 drifts gets its AVERAGE tempo on the steady grid (logcat `Beats: the tempo drifts; the average ...`): Aum Ganesha
 ~115 as djay (was 116.7); every song analysed before is analysed again once when loaded (`an older grid: again`).
+## 18. (V44) The overview strips (whole song): no zoom window any more while dragging (Marko 14.10.2026: the
+Phrasing tab already shows the zoomed waveform). A touch puts the play position under the finger, a drag scrubs
+freely through the whole song (log `scrub [ChannelN] to ... s` on release); AUTO PHASE waits while dragging.

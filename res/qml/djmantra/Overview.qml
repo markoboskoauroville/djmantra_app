@@ -14,11 +14,9 @@ import QtQuick.Window 2.12
 //   - the sections as contrasting bands (blue / black), framed by a white line
 //     at each change; the NEXT change is a thick yellow line
 //   - the part already played dimmed, the play position a white line
-// A tap jumps there. Holding or dragging (Marko, 12.10.2026: "when user
-// scrolls through the waveform ... automatically zoom in ... so user can
-// precisely put his playhead") opens a zoomed scrolling waveform above the
-// overview, and the finger then moves the play position finely: the waveform
-// follows the finger 1:1.
+// A tap jumps there; a drag scrubs freely through the whole song (Marko
+// 14.10.2026: the zoom window that opened while dragging is gone, the Phrasing
+// tab shows the zoomed waveform).
 Rectangle {
     id: root
 
@@ -134,57 +132,13 @@ Rectangle {
 
     Mixxx.ControlProxy { id: duration; group: root.group; key: "duration" }
 
-    // the zoom while scrubbing: 100 px show this many seconds
-    readonly property real scrubZoom: 1.0
-
     // the deck's finger is scrubbing (AUTO PHASE waits for it)
     readonly property bool scrubbing: area.scrubbing
-
-    Rectangle {
-        // the zoomed waveform while scrubbing, above the overview. Round 27:
-        // inside the overview it was clipped away (clip: true): it lives on
-        // the window's top layer, placed over the overview when it opens
-        id: scrubView
-
-        readonly property point origin: visible && parent ? root.mapToItem(parent, 0, 0) : Qt.point(0, 0)
-
-        parent: root.Window.contentItem ? root.Window.contentItem : root
-        objectName: "scrub" + root.group
-        visible: area.scrubbing
-        width: root.width
-        height: 96
-        x: origin.x
-        y: Math.max(0, origin.y - height - 4)
-        z: 100
-        radius: 4
-        color: "#141414"
-        border.color: Style.accent
-        border.width: 2
-        clip: true
-
-        Loader {
-            // made only while scrubbing: hidden, it would still follow the
-            // play position 60 times a second
-            anchors.fill: parent
-            anchors.margins: 2
-            active: area.scrubbing
-
-            sourceComponent: Skin.WaveformRow {
-                group: root.group
-                levelGain: Math.max(1, Mixxx.DJMantra.waveformLevel(root.group))
-                zoom: root.scrubZoom
-                showRoll: false
-            }
-        }
-    }
 
     MouseArea {
         id: area
 
         property bool scrubbing: false
-        property real startX: 0
-        property real lastX: 0
-        property real startPos: 0
 
         anchors.fill: parent
         enabled: loaded.value > 0
@@ -194,49 +148,23 @@ Rectangle {
             return Math.max(0, Math.min(1, p));
         }
 
-        function beginScrub() {
-            scrubbing = true;
-            startX = lastX;
-            startPos = position.value;
-            Mixxx.DJMantra.log("scrub " + root.group + " zoomed from " + (startPos * duration.value).toFixed(2) + " s");
-        }
-
-        Timer {
-            id: hold
-
-            interval: 250
-            onTriggered: area.beginScrub()
+        // Marko 14.10.2026: the Phrasing tab has the zoomed waveform already, so no zoom
+        // window here any more: a touch puts the play position under the finger and a
+        // drag scrubs freely through the whole song
+        function scrubTo(x) {
+            position.value = clamp(x / width);
         }
 
         onPressed: (mouse) => {
-            startX = mouse.x;
-            lastX = mouse.x;
-            scrubbing = false;
-            hold.restart();
+            scrubbing = true;
+            scrubTo(mouse.x);
         }
-        onPositionChanged: (mouse) => {
-            lastX = mouse.x;
-            if (!scrubbing && Math.abs(mouse.x - startX) > 12 && hold.running) {
-                hold.stop();
-                beginScrub();
-            }
-            if (scrubbing && duration.value > 0)
-                position.value = clamp(startPos + (mouse.x - startX) * root.scrubZoom / 100 / duration.value);
-        }
+        onPositionChanged: (mouse) => scrubTo(mouse.x)
         onReleased: (mouse) => {
-            hold.stop();
-            if (!scrubbing) {
-                // a tap: straight there, no zoom
-                position.value = clamp(mouse.x / width);
-                Mixxx.DJMantra.log("jump " + root.group + " to " + (position.value * duration.value).toFixed(2) + " s");
-            } else {
-                Mixxx.DJMantra.log("scrub " + root.group + " ended at " + (position.value * duration.value).toFixed(2) + " s");
-            }
+            scrubTo(mouse.x);
+            Mixxx.DJMantra.log("scrub " + root.group + " to " + (position.value * duration.value).toFixed(2) + " s");
             scrubbing = false;
         }
-        onCanceled: {
-            hold.stop();
-            scrubbing = false;
-        }
+        onCanceled: scrubbing = false
     }
 }
