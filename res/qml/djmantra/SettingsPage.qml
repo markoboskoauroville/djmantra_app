@@ -378,13 +378,13 @@ Rectangle {
             }
 
             DButton {
-                // AUTO GAIN as djay's (Marko 14.10.2026): every song's peak at -1 dB
+                // AUTO GAIN as djay's (Marko 14.10.2026): every song's peak at 0 dBFS (V60: GAIN at its top = the song at full level)
                 objectName: "autoGain"
                 property bool on: Mixxx.DJMantra.setting("auto_gain", "1") === "1"
                 width: column.width - 12
                 height: 42
                 mode: ""
-                text: qsTr("AUTO GAIN (every song's peak at \u22121 dB): ") + (on ? qsTr("ON") : qsTr("OFF"))
+                text: qsTr("AUTO GAIN (every song normalized: GAIN 0 dB = its peak at 0 dB): ") + (on ? qsTr("ON") : qsTr("OFF"))
                 fontSize: 13
                 lit: on
                 onClicked: {

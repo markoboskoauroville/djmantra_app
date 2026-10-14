@@ -482,6 +482,13 @@ MixUltra.jumpToBeat = function(deck, pad) {
     }
 };
 
+// GAIN (SHIFT + EQ high), normalized and cut only (Marko 14.10.2026: "If I put the gain to
+// the zero, it means it's a maximum volume of the song"): the knob's full turn is pregain's
+// lower half, silence .. 0 dB (each song's peak already at 0 dBFS by AUTO GAIN), as the screen
+MixUltra.gain = function(channel, control, value, status, group) {
+    engine.setParameter(group, "pregain", value / 127 * 0.5);
+};
+
 // Called by DJ Mantra on Android after every (re)connect over USB or Bluetooth:
 // the controller's LEDs are dark again, the knob positions were requested already.
 var djmantraControllerConnected = function() {

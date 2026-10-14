@@ -813,6 +813,8 @@ Window {
         for (const deck of ["[Channel1]", "[Channel2]"]) {
             for (const key of ["parameter1", "parameter2", "parameter3"])
                 Mixxx.DJMantra.setControl("[EqualizerRack1_" + deck + "_Effect1]", key, 1);
+            // GAIN at 0 dB, its top (V60: cut only, never above the song's normalized peak)
+            Mixxx.DJMantra.setControl(deck, "pregain", 1);
         }
         Mixxx.DJMantra.log("interface ready " + width + "x" + height);
         Mixxx.DJMantra.hideBars();

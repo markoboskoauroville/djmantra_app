@@ -3,6 +3,7 @@
 #include <QtDebug>
 
 #include <algorithm>
+#include <cmath>
 
 #include "analyzer/analyzertrack.h"
 #include "analyzer/constants.h"
@@ -31,6 +32,17 @@ bool AnalyzerEbur128::initialize(
     // DJ Mantra AUTO GAIN (Marko 14.10.2026): each song's peak is needed; a song measured
     // before (a ratio but no peak) is measured again
     const bool needsPeak = !track.getTrack()->getReplayGain().hasPeak();
+    if (!needsPeak) {
+        // a song normalized to the old -1 dBFS (V44..V59): brought to 0 dBFS from its stored
+        // ratio, without measuring it again
+        mixxx::ReplayGain replayGain(track.getTrack()->getReplayGain());
+        const double old = replayGain.getRatio() * replayGain.getPeak();
+        if (std::fabs(old - db2ratio(-1.0)) < 0.005) {
+            replayGain.setRatio(std::clamp(replayGain.getRatio() / db2ratio(-1.0), 0.25, 8.0));
+            track.getTrack()->setReplayGain(replayGain);
+            qInfo() << "Auto gain: 0 dBFS now for" << track.getTrack()->getLocation();
+        }
+    }
 #else
     const bool needsPeak = false;
 #endif
@@ -96,9 +108,10 @@ void AnalyzerEbur128::storeResults(TrackPointer pTrack) {
     mixxx::ReplayGain replayGain(pTrack->getReplayGain());
     replayGain.setRatio(db2ratio(fReplayGain2));
 #ifdef __ANDROID_PORT__
-    // DJ Mantra AUTO GAIN (Marko 14.10.2026: "it adjusts the gain automatically so it's
-    // minus one dB from the top"): the song's sample peak brought to -1 dBFS (at most
-    // +-12 dB), applied by Mixxx's ReplayGain stage while AUTO GAIN is on
+    // DJ Mantra AUTO GAIN, the normalized GAIN (Marko 14.10.2026: "When it's on zero, the song
+    // peak reaches the zero on dB ... song never can peak with the gain"): the song's sample
+    // peak brought to 0 dBFS (-12 .. +18 dB at most), applied by Mixxx's ReplayGain stage while
+    // AUTO GAIN is on; the GAIN knob only cuts from there (MixerPage)
     double peak = 0;
     for (unsigned int channel = 0; channel < static_cast<unsigned int>(mixxx::kAnalysisChannels); ++channel) {
         double channelPeak = 0;
@@ -108,7 +121,7 @@ void AnalyzerEbur128::storeResults(TrackPointer pTrack) {
     }
     if (peak > 0.001) {
         replayGain.setPeak(static_cast<CSAMPLE>(std::min(peak, 1.0)));
-        replayGain.setRatio(std::clamp(db2ratio(-1.0) / peak, 0.25, 4.0));
+        replayGain.setRatio(std::clamp(1.0 / peak, 0.25, 8.0));
         qInfo() << "Auto gain:" << pTrack->getLocation() << "peak" << ratio2db(peak)
                 << "dB, gain" << ratio2db(replayGain.getRatio()) << "dB";
     }

@@ -27,7 +27,7 @@ Item {
 
     function reset() {
         resetRamp.stop();
-        resetRamp.to = root.defaultParameter;
+        resetRamp.to = root.defaultParameter * root.span;
         resetRamp.start();
         Toasts.show(root.toastPrefix + root.label + " \u2192 " + root.resetText);
         Mixxx.DJMantra.log("knob reset " + root.group + "," + root.key);
@@ -36,9 +36,15 @@ Item {
     // Marko 14.10.2026 (the cut-only EQ is like no other mixer's): the ends of the ring
     // labelled in dB, "−∞" (full kill) on the left, "0" (no cut) on the right, and the cut
     // in the caption while there is one ("LOW −12 dB"); the value is the linear gain
-    // "cut" (the EQ: 0 dB at the top) or "gain" (GAIN: -12 dB .. 0 at the middle .. +12 dB,
-    // Mixxx's pregain; a DJM's TRIM is -inf .. +9 dB), "" none
+    // "cut" (the EQ: 0 dB at the top) or "gain" (GAIN: -inf .. 0 dB at the top, the lower half
+    // of Mixxx's pregain, V60), "" none
     property string dbMode: ""
+    // the part of the control's range the knob turns through: GAIN is cut only (Marko
+    // 14.10.2026: each song normalized to a 0 dBFS peak, "If I put the gain to the zero, it means
+    // it's a maximum volume of the song"), so its full turn is pregain's lower half, -inf .. 0 dB
+    readonly property real span: dbMode === "gain" ? 0.5 : 1
+    // the knob's own position, 0 .. 1
+    readonly property real turn: Math.min(1, control.parameter / span)
     property bool dbScale: dbMode !== ""
     readonly property real dbValue: control.value > 0.0005 ? 20 * Math.log(control.value) / Math.LN10 : -999
     readonly property string dbText: {
@@ -50,8 +56,7 @@ Item {
         return (dbValue < 0 ? "\u2212" : "+") + n;
     }
     // the caption shows the value while it is away from the rest position
-    readonly property bool dbShown: dbMode === "gain" ? Math.abs(dbValue) >= 0.5
-                                  : dbMode === "cut" && dbValue < -0.5
+    readonly property bool dbShown: dbMode !== "" && dbValue < -0.5
 
     implicitWidth: 52
     implicitHeight: 64
@@ -92,7 +97,7 @@ Item {
                 readonly property real angle: (-135 + 270 * index / (root.dots - 1)) * Math.PI / 180
                 readonly property real ringRadius: dial.width / 2 - size / 2
                 readonly property real size: Math.max(3, dial.width * 0.085)
-                readonly property bool lit: control.parameter > 0.001 && (index + 0.5) / root.dots <= control.parameter + 0.5 / root.dots
+                readonly property bool lit: root.turn > 0.001 && (index + 0.5) / root.dots <= root.turn + 0.5 / root.dots
 
                 width: size
                 height: size
@@ -124,7 +129,7 @@ Item {
                 x: body.width / 2 - width / 2
                 y: 3
                 transformOrigin: Item.Bottom
-                rotation: -135 + 270 * control.parameter
+                rotation: -135 + 270 * root.turn
             }
         }
     }
@@ -147,8 +152,7 @@ Item {
 
     Repeater {
         // the dB at the ring's two ends (below its first and last dot)
-        model: root.dbMode === "cut" ? [[-135, "\u2212\u221E"], [135, "0 dB"]]
-             : root.dbMode === "gain" ? [[-135, "\u221212"], [135, "+12"]] : []
+        model: root.dbMode !== "" ? [[-135, "\u2212\u221E"], [135, "0 dB"]] : []
 
         delegate: Text {
             required property var modelData
@@ -192,7 +196,7 @@ Item {
         onPressed: (mouse) => {
             resetRamp.stop();
             startY = mouse.y;
-            startParameter = control.parameter;
+            startParameter = root.turn;
             flipped = false;
             hold.restart();
         }
@@ -202,7 +206,7 @@ Item {
             if (flipped)
                 return;
             const p = startParameter + (startY - mouse.y) / 254; // ~2 px per MIDI step
-            control.parameter = Math.max(0, Math.min(1, p));
+            control.parameter = Math.max(0, Math.min(1, p)) * root.span;
         }
         onReleased: hold.stop()
         onCanceled: hold.stop()

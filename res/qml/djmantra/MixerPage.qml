@@ -177,6 +177,8 @@ Item {
                         longPressAction: true
                         // GAIN in dB (Marko 14.10.2026), the FILTER without
                         dbMode: deck.gainIsFilter ? "" : "gain"
+                        // GAIN: 0 dB (each song's peak at 0 dBFS) at the top, as the EQ; FILTER off in the middle
+                        defaultParameter: deck.gainIsFilter ? 0.5 : 1
                         toastPrefix: "DECK " + deck.number + "  "
                         resetText: deck.gainIsFilter ? qsTr("OFF") : "0 dB"
                         onLongPressed: {
