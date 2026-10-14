@@ -80,3 +80,10 @@ the song and zoomed in slower (it was the other way round); at the deepest zooms
 ## 20. (V45) TEMPO (Marko 14.10.2026): the screen fader's second mode is called TEMPO (label, toasts "VOLUME → TEMPO"),
 as on the Mix Ultra. The console's tempo slider sets the tempo where it stands at its first move (no soft takeover), and
 the screen's TEMPO fader follows it: move the console slider, the screen handle and BPM move with it (same direction?).
+## 21. (V45) CONTROLLER CONNECTION in Settings: USB CABLE / BLUETOOTH, one or the other (Marko 14.10.2026; default
+USB). USB: the app connects only over the cable (logcat DJMantraMIDI `Waiting for the controller on USB`, then
+`Connected (usb)`), no Bluetooth scan. BLUETOOTH: only the Bluetooth scan (`Looking for the controller over Bluetooth`),
+a plugged cable is ignored. Switching in Settings drops the link and connects on the other (toast, the pill USB / BT).
+## 22. (V45) Faders and knobs over BLUETOOTH (r41: only buttons worked: the Mix Ultra sends the 14-bit MSB alone over
+BLE, Mixxx waited for the LSB, "mis-matched LSB/MSB ... Ignoring both"): now every fader, EQ knob, crossfader and the
+tempo slider work over Bluetooth too (7-bit steps there); no "mis-matched" warnings. Compare USB vs BT: same moves.

@@ -957,6 +957,18 @@ void QmlDJMantra::useDjmFilter() {
     }
 }
 
+void QmlDJMantra::setControllerLink(const QString& link) {
+    setSetting(QStringLiteral("controller_link_mode"), link);
+#if defined(Q_OS_ANDROID)
+    QJniObject::callStaticMethod<void>("com/djmantra/app/MidiBridge",
+            "setLink",
+            "(Landroid/content/Context;Ljava/lang/String;)V",
+            QNativeInterface::QAndroidApplication::context().object(),
+            QJniObject::fromString(link).object<jstring>());
+#endif
+    qInfo() << "Controller link:" << link;
+}
+
 QString QmlDJMantra::startRecording(const QString& format, const QString& name) {
     if (!m_pConfig) {
         return QString();

@@ -72,6 +72,9 @@ class AndroidMidiController : public MidiController {
     QMutex m_mutex;
     QQueue<QByteArray> m_incoming;
     QAtomicInt m_connectedEvents;
+    // the link is Bluetooth: the Mix Ultra sends its faders' and knobs' 14-bit CCs as the
+    // MSB alone there (no LSB), so an LSB of 0 is added (r41, 14.10.2026)
+    QAtomicInt m_bluetooth;
     // a poll() is queued on the controller thread
     QAtomicInt m_wakePending;
     void wake();

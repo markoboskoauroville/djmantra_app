@@ -125,6 +125,8 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    // the controller's link, one or the other (Settings): "usb" or "bluetooth"
+    Q_INVOKABLE void setControllerLink(const QString& link);
     // FIND SONG (Marko 14.10.2026): audio files anywhere on the phone (Android's media index)
     // whose title / artist / album / file name has every word of `query`: name, path,
     // isFolder false, title, artist, duration (s); at most 300

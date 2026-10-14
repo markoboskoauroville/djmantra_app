@@ -295,6 +295,44 @@ Rectangle {
                 }
             }
 
+            // the Mix Ultra's link, one or the other (Marko 14.10.2026: "cannot be connected
+            // over USB and Bluetooth at the same time ... a toggle in the settings")
+            Text {
+                text: qsTr("CONTROLLER CONNECTION (Hercules Mix Ultra)")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Row {
+                id: linkRow
+
+                property string link: Mixxx.DJMantra.setting("controller_link_mode", "usb")
+
+                spacing: 6
+
+                Repeater {
+                    model: [["usb", qsTr("USB CABLE")], ["bluetooth", qsTr("BLUETOOTH")]]
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "controllerLink_" + modelData[0]
+                        width: (column.width - 12 - 6) / 2
+                        height: 42
+                        mode: ""
+                        text: modelData[1]
+                        fontSize: 13
+                        lit: linkRow.link === modelData[0]
+                        onClicked: {
+                            linkRow.link = modelData[0];
+                            Mixxx.DJMantra.setControllerLink(modelData[0]);
+                            Toasts.show(qsTr("CONTROLLER \u2192 ") + modelData[1]);
+                        }
+                    }
+                }
+            }
+
             DButton {
                 // djay's "Auto-play when moving crossfader" (Marko 14.10.2026)
                 objectName: "crossfaderAutoplay"
