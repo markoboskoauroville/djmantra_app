@@ -54,12 +54,16 @@ Window {
     // The Mix Ultra (Marko, 12.10.2026): BROWSE brings the song list in front,
     // the pad mode buttons choose the tabs (res/controllers/...Mix-Ultra-script.js)
     Mixxx.ControlProxy {
+        id: controllerPage
+
         group: "[DJMantra]"; key: "page"
         // 1 Songs, 2 Phrasing, 3 Mixer, 4 AutoMix, 5 Keys (the pad mode buttons' order)
         onValueChanged: if (value >= 1 && value <= 5) {
             Mixxx.DJMantra.log("controller: page " + value);
             window.browsing = false;
             window.page = value - 1;
+            // back to 0 here (r41): the next press of the same button changes it again
+            controllerPage.value = 0;
         }
     }
     Mixxx.ControlProxy {

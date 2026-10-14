@@ -95,3 +95,7 @@ font: the time of day on top, the recording's time under it (0:00, 0:01 ... 12:3
 stop: back to one row. Start / stop by a long press on the clock or Menu -> RECORD MIX.
 ## 25. (V46) The menu (top left) has CONTROLLER: USB / CONTROLLER: BLUETOOTH, the same switch as Settings (lit = the
 current one; a tap switches, toast "CONTROLLER → USB / BLUETOOTH"). Settings and the menu show the same choice.
+## 26. (V46) Pad-mode buttons -> tabs again (r41 part 14 failed: the script's pulse was back at 0 before the screen
+read it). HOT CUE / LOOP / FX / NEURAL MIX switch Songs / Phrasing / Mixer / AutoMix (`controller: page N`), SHIFT +
+NEURAL MIX (= SAMPLER, 91 16) -> Keys; the same button twice after a screen tab tap works again. Also check BROWSE
+turn / press and LOAD (same kind of message): if they fail too, say so.

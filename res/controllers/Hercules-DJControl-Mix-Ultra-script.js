@@ -288,7 +288,9 @@ MixUltra.modeButton = function(channel, control, value, status, group) {
         return;
     }
     if (MixUltra.PAGE_BUTTONS[control]) {
-        MixUltra.tellApp("page", MixUltra.PAGE_BUTTONS[control]);
+        // r41: not a pulse (set and back to 0 at once, the screen read 0): the app sets it
+        // back to 0 itself once the tab has changed
+        engine.setValue("[DJMantra]", "page", MixUltra.PAGE_BUTTONS[control]);
     }
     var deck = MixUltra.deckOf(status);
     var mode = MixUltra.MODE_BUTTONS[control];
