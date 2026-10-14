@@ -43,7 +43,22 @@ One JSON file per room, saved by itself on every change: `Music/djmantra_app/Roo
 moves the file, DELETE removes it. The room in use: setting `room_current`. The applied curve: setting `room_eq`
 (31 values), `room_eq_on`.
 
+## IK Multimedia ARC, compared (14.10.2026, ikmultimedia.com allowed)
+
+The manual PDFs are behind IK's user login (Downloads needs an account); IK's own product pages (ARC Studio / ARC X)
+and retailers' pages say:
+- **Multi-point measurement:** ARC X guides the user through the places; ARC 4 offers a quick 7-point and an accurate
+  21-point measurement. DJ Mantra's 7 places match the quick mode (21 would be 7 places at 3 heights).
+- **Target curves** to choose the corrected sound (here FLAT / HOUSE / CLUB).
+- **Speakers and subwoofer corrected together** (here: whatever plays through the main output is measured together).
+- **Natural Phase** (low latency, minimum phase) or **Linear Phase** (more latency) correction. DJ Mantra's IIR peaking
+  bands are natural phase (no added latency, right for DJing).
+- **Monitor emulation** (20+ reference systems: earbuds, car, laptop ...): not built (a possible next step).
+- **iLoud MTM MKII:** the ARC microphone plugs into the speaker, and a single-point calibration runs without a computer;
+  a 4-point measurement with X-MONITOR over USB. DJ Mantra's AUTO CALIBRATE is that one button.
+
 ## Open
 
-- The IK Multimedia manuals (ARC, iLoud MTM) to compare: ikmultimedia.com was blocked in the cloud (asked to allow it).
+- A 21-place "accurate" mode (3 heights).
+- Monitor emulation profiles.
 - A calibration file for measurement microphones (UMIK-1 style .txt) would make 20-100 Hz and > 10 kHz exact.
