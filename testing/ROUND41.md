@@ -225,8 +225,8 @@ song, the controller's LOAD, or AutoMix's next song): all six knobs back at 0 dB
 [Channel1] : EQ, Neural Mix and FILTER reset"). Deck 2 untouched.
 ## 55. (V64) CONCENTRIC EQ KNOBS (Marko 14.10.2026, SSL-style dual concentric pots). Mixer tab: each of HIGH / MID / LOW
 is two knobs in one: the INNER cap with coloured dots = the active mode (EQ: HIGH / MID / LOW), the OUTER dark ring with
-its own pointer and grey dots = the other mode (NEURAL MIX: HARMONY / VOCALS / DRUMS). Drag from the middle: the inner
-one; drag starting on the outer ring: the outer one; a long press on either resets that one (toast names it). Caption:
+its own pointer and grey dots = the other mode (NEURAL MIX: HARMONY / VOCALS / DRUMS). A finger turns (and a long press
+resets) ONLY the inner one, wherever the knob is touched (V66); the outer one only from the Mix Ultra (SHIFT + knob). Caption:
 "MID −4 dB · VOCALS −9" while either is cut. Switch the EQ dropdown to NEURAL MIX: the two swap (inner = VOCALS etc.).
 ## 56. (V64) PICKUP ON THE MIX ULTRA (as Ableton Live's Pickup): EQ mode, MID knob down to the middle; hold SHIFT and
 turn MID a little: VOCALS does NOT jump to the knob; turn it up to where VOCALS is (0 dB, the top): from there VOCALS

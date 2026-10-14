@@ -27,8 +27,8 @@ Item {
 
     // CONCENTRIC (Marko 14.10.2026, SSL / big analog mixers): a second control on the same knob,
     // its own outer ring of dots; the inner knob is the active one. The EQ: inner = the mode's
-    // band, outer = the other mode's (EQ <-> NEURAL MIX); a mode switch swaps them. A touch on
-    // the outer ring turns (or, held, resets) the outer one.
+    // band, outer = the other mode's (EQ <-> NEURAL MIX); a mode switch swaps them. On the
+    // screen only the inner knob turns; the outer one from the controller (SHIFT).
     property string outerKey: ""
     property string outerLabel: ""
     property color outerColor: Style.line
@@ -308,8 +308,9 @@ Item {
         onPressed: (mouse) => {
             resetRamp.stop();
             startY = mouse.y;
-            outer = root.concentric
-                    && Math.hypot(mouse.x - dial.width / 2, mouse.y - dial.height / 2) > dial.width * 0.36;
+            // fingers turn only the inner knob (Marko 14.10.2026); the outer ring is turned from
+            // the controller (SHIFT + the knob)
+            outer = false;
             startParameter = outer ? root.outerTurn : root.turn;
             flipped = false;
             hold.restart();
