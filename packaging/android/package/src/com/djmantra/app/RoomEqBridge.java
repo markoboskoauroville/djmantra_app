@@ -272,8 +272,11 @@ public final class RoomEqBridge {
             rec.release();
         }
         double level = 20 * Math.log10(Math.max(peak, 1e-6));
-        if (level < -60) {
-            return "error: the microphone heard nothing (is the test signal playing?)";
+        // r41 V70: a recording at -55.8 dBFS (the microphone heard almost nothing) was kept and
+        // turned into -12 dB everywhere above 1 kHz: too quiet = no measurement
+        if (level < -40) {
+            return String.format(Locale.ROOT, "error: the microphone heard too little (peak %.0f dBFS): raise the "
+                    + "TEST LEVEL or the speakers, or check the MICROPHONE choice", level);
         }
         double[] heardPower, sentPower;
         int size;

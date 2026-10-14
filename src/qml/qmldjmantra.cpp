@@ -148,7 +148,10 @@ QmlDJMantra::QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent)
             &PlayerInfo::trackChanged,
             this,
             [this](const QString& group, TrackPointer pNewTrack, TrackPointer) {
-                lookUpGenre(group, pNewTrack);
+                // the decks only (r41 V70: the room test signal on [Sampler9] was looked up too)
+                if (group.startsWith(QStringLiteral("[Channel"))) {
+                    lookUpGenre(group, pNewTrack);
+                }
                 // a new song starts fresh (Marko 14.10.2026: "on loading next song, you need to
                 // reset all EQs and all neural filtering ... without inheritance of the old
                 // settings"): the bands and the stem levels at 0 dB, no kills, the FILTER off
@@ -1629,7 +1632,9 @@ QVariantList QmlDJMantra::listFolder(const QString& folder) const {
             QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Readable,
             QDir::Name | QDir::IgnoreCase);
     for (const QFileInfo& info : entries) {
-        if (info.fileName().startsWith(QChar('.'))) {
+        // hidden; Room_Corrections holds the room test signals, not songs (r41 V70)
+        if (info.fileName().startsWith(QChar('.')) ||
+                (info.isDir() && info.fileName() == QStringLiteral("Room_Corrections"))) {
             continue;
         }
         QVariantMap entry;

@@ -78,6 +78,7 @@ Rectangle {
     // a room chosen: its own correction comes back with it (FLAT if it has none yet)
     function useRoom(index) {
         current = index;
+        status = qsTr("AUTO CALIBRATE: put the phone where the listeners are, microphone up, and press it.");
         Mixxx.DJMantra.setSetting("room_current", current);
         const corr = room && room.correction && room.correction.length === 31 ? room.correction : null;
         for (let b = 0; b < 31; ++b)
@@ -304,6 +305,24 @@ Rectangle {
             }
             const parts = result.split("|");
             const peak = Number(parts[2]);
+            // r41 V70: a measurement that cannot be a room (silence, noise) is not kept: between
+            // 63 Hz and 8 kHz a real room stays within about 40 dB, and neighbouring thirds never
+            // jump 25 dB
+            const thirds = parts[0].split(",").map(Number);
+            let lo = 1e9, hi = -1e9, jump = 0;
+            for (let b = 5; b <= 26; ++b) {
+                lo = Math.min(lo, thirds[b]);
+                hi = Math.max(hi, thirds[b]);
+                if (b > 5)
+                    jump = Math.max(jump, Math.abs(thirds[b] - thirds[b - 1]));
+            }
+            if (thirds.length !== 31 || thirds.some((v) => !isFinite(v)) || hi - lo > 40 || jump > 25) {
+                root.status = qsTr("PLACE ") + (place + 1) + qsTr(" not kept: the microphone did not hear the test "
+                        + "signal clearly (peak ") + peak.toFixed(0) + qsTr(" dBFS). Quieter room, a higher TEST LEVEL, or "
+                        + "check the MICROPHONE in MORE, then measure again.");
+                Toasts.show(qsTr("MEASUREMENT NOT KEPT"));
+                return;
+            }
             root.setRoom((r) => {
                 r.points[place] = {thirds: parts[0].split(",").map(Number), columns: parts[1].split(",").map(Number),
                                    kind: root.signalKind, level: peak, time: Date.now(), use: true};
@@ -944,6 +963,11 @@ Rectangle {
                     color: Style.text
                     font.pixelSize: 15
                     clip: true
+                    inputMethodHints: Qt.ImhNoPredictiveText
+                    onAccepted: {
+                        focus = false;
+                        Qt.inputMethod.hide();
+                    }
 
                     Text {
                         anchors.fill: parent
@@ -965,7 +989,10 @@ Rectangle {
                     text: qsTr("NEW ROOM")
                     fontSize: 12
                     onClicked: {
+                        Qt.inputMethod.commit(); // r41: the keyboard's composing word ("Test Room" became "Test")
                         const name = roomName.text.trim() || (qsTr("Room ") + (root.rooms.length + 1));
+                        roomName.focus = false;
+                        Qt.inputMethod.hide();
                         root.rooms = root.rooms.concat([root.emptyRoom(name)]);
                         root.useRoom(root.rooms.length - 1);
                         root.saveRooms();
@@ -982,9 +1009,14 @@ Rectangle {
                     text: qsTr("RENAME")
                     fontSize: 12
                     onClicked: {
+                        Qt.inputMethod.commit();
                         const name = roomName.text.trim();
-                        if (name === "")
+                        roomName.focus = false;
+                        Qt.inputMethod.hide();
+                        if (name === "") {
+                            Toasts.show(qsTr("TYPE THE NEW NAME FIRST"));
                             return;
+                        }
                         Mixxx.DJMantra.roomDelete(root.room.name);
                         root.setRoom((r) => { r.name = name; });
                         roomName.text = "";
@@ -996,9 +1028,26 @@ Rectangle {
                     width: (roomsColumn.width - 12) / 3
                     height: 42
                     mode: ""
-                    text: qsTr("DELETE")
+                    property bool armed: false
+
+                    text: armed ? qsTr("SURE? TAP") : qsTr("DELETE")
                     fontSize: 12
+                    lit: armed
+                    Timer {
+                        id: disarm
+
+                        interval: 3000
+                        onTriggered: parent.armed = false
+                    }
                     onClicked: {
+                        // r41: no confirmation: the first tap asks, the second (within 3 s) deletes
+                        if (!armed) {
+                            armed = true;
+                            disarm.restart();
+                            Toasts.show(qsTr("TAP AGAIN TO DELETE ") + root.room.name);
+                            return;
+                        }
+                        armed = false;
                         Mixxx.DJMantra.roomDelete(root.room.name);
                         if (root.rooms.length <= 1) {
                             root.rooms = [root.emptyRoom(qsTr("My room"))];

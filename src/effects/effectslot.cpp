@@ -20,7 +20,13 @@
 #include "util/math.h"
 
 // The maximum number of effect parameters we're going to support.
+#ifdef __ANDROID_PORT__
+// DJ Mantra: the ROOM CORRECTION EQ has 31 bands (r41 V70: with 16 slots only the bands up to
+// 800 Hz were ever applied)
+constexpr unsigned int kDefaultMaxParameters = 32;
+#else
 constexpr unsigned int kDefaultMaxParameters = 16;
+#endif
 
 EffectSlot::EffectSlot(const QString& group,
         EffectsManager* pEffectsManager,

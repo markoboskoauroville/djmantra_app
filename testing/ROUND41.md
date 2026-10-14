@@ -271,3 +271,12 @@ navigation bar for a moment, then it hides again; coming back from another app: 
 ## 62. (V71) SONGS TOP LEVEL BAR (r41 V70 phone bug): FOLDERS | PLAYLISTS no longer run over LIST / GRID; in PLAYLISTS the
 filter field ("Find a song") has room next to SUNO, TIDAL and FIND ON PHONE (two lines). Screenshot the bar in FOLDERS and
 in PLAYLISTS, list and grid.
+## 63. (V72) ROOM CORRECTION FIXES (r41 V70 phone report 8d1c20c). (a) ALL 31 bands now act: drag the 4 kHz and 16 kHz
+handles to -12 with music playing: audible, and the yellow curve shows it (Mixxx effect slots had 16 knobs: bands from
+1 kHz up never reached the engine; now 32 on Android). (b) A measurement the microphone barely heard (peak below -40
+dBFS) or that cannot be a room (63 Hz - 8 kHz spread > 40 dB, a 25 dB jump between thirds) is NOT kept: the status says
+why ("raise the TEST LEVEL ..."), the place stays empty. Test: TEST LEVEL -30 dB with the speaker turned right down.
+(c) Room_Corrections is not listed as a folder in Songs and its test WAVs get no genre lookup (logcat: no Deezer
+lookup for sweep_*.wav). (d) Room name: type "Test Room" without Enter, NEW ROOM: the room is "Test Room", the keyboard
+closes; RENAME the same. (e) DELETE asks first ("TAP AGAIN TO DELETE ..."), a second tap within 3 s deletes. (f)
+Choosing a room resets the status line. Delete the bad "My room" from the V70 test first (or FLAT it).
