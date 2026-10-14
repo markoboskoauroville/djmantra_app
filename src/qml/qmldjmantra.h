@@ -125,6 +125,17 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    // TIDAL playlists both ways (Marko 14.10.2026), official API v2 (TidalBridge.java): each
+    // call runs in the background and answers with tidalResult(action, result)
+    Q_INVOKABLE bool tidalLoggedIn() const;
+    Q_INVOKABLE void tidalLogin();
+    Q_INVOKABLE void tidalLogout();
+    Q_INVOKABLE void tidalPlaylists();
+    // a TIDAL playlist into the app: its songs found among the phone's files, the rest into
+    // the TIDAL download queue
+    Q_INVOKABLE void tidalImport(const QString& id, const QString& name);
+    // one of the app's playlists to TIDAL (a new TIDAL playlist of the same name)
+    Q_INVOKABLE void tidalPush(const QString& name);
     // BEATSTATS (Marko 14.10.2026): beatstats.com in a WebView (BeatStatsActivity), READ CHART
     // there stores the chart (via Groq) in djmantra_app/BeatStats/charts.json, read here
     Q_INVOKABLE void openBeatStats();
@@ -216,6 +227,7 @@ class QmlDJMantra : public QObject {
     /// One more song analysed (the list reads its BPM / key again)
     void analysisChanged();
     void cqChanged();
+    void tidalResult(const QString& action, const QString& result);
 
   protected:
     bool eventFilter(QObject* pObject, QEvent* pEvent) override;

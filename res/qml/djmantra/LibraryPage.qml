@@ -605,7 +605,7 @@ Rectangle {
         Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 8
-            anchors.right: phoneButton.left
+            anchors.right: tidalButton.left
             anchors.rightMargin: 6
             anchors.verticalCenter: parent.verticalCenter
             height: 38
@@ -669,6 +669,23 @@ Rectangle {
                     onClicked: root.clearSearch()
                 }
             }
+        }
+
+        DButton {
+            // TIDAL playlists both ways (Marko 14.10.2026), in the playlists view
+            id: tidalButton
+
+            objectName: "tidalPlaylists"
+            anchors.right: phoneButton.left
+            anchors.rightMargin: 6
+            anchors.verticalCenter: parent.verticalCenter
+            visible: root.playlistsRoot || root.inPlaylist
+            width: visible ? 70 : 0
+            height: 38
+            mode: ""
+            text: qsTr("TIDAL")
+            fontSize: 11
+            onClicked: root.openTidal()
         }
 
         DButton {
@@ -1278,6 +1295,197 @@ Rectangle {
                     }
                 }
             }
+        }
+    }
+
+    // TIDAL (Marko 14.10.2026): log in, take a TIDAL playlist in (its songs found on the phone,
+    // the rest into the TIDAL download queue), send one of the app's playlists to TIDAL
+    property bool tidalOpen: false
+    property bool tidalBusy: false
+    property string tidalStatus: ""
+    property var tidalLists: []
+    property bool tidalOn: false // logged in (asked again after each TIDAL answer)
+
+    function openTidal() {
+        tidalOpen = true;
+        tidalStatus = "";
+        tidalOn = Mixxx.DJMantra.tidalLoggedIn();
+        if (Mixxx.DJMantra.tidalLoggedIn()) {
+            tidalBusy = true;
+            tidalStatus = qsTr("Reading your TIDAL playlists ...");
+            Mixxx.DJMantra.tidalPlaylists();
+        }
+    }
+
+    Connections {
+        target: Mixxx.DJMantra
+        function onTidalResult(action, result) {
+            root.tidalBusy = false;
+            root.tidalOn = Mixxx.DJMantra.tidalLoggedIn();
+            if (action === "login") {
+                root.tidalStatus = result === "" ? qsTr("Connected to TIDAL") : qsTr("Login: ") + result;
+                if (result === "")
+                    root.openTidal();
+            } else if (action === "playlists") {
+                root.tidalLists = JSON.parse(result || "[]");
+                root.tidalStatus = root.tidalLists.length + qsTr(" TIDAL playlists");
+            } else if (action === "import") {
+                const p = result.split("|");
+                root.tidalStatus = p[0] + ": " + p[1] + qsTr(" songs on the phone, ") + p[2] + qsTr(" into the TIDAL download queue");
+                Toasts.show(qsTr("IMPORTED ") + p[0]);
+                ++root.playlistsVersion;
+            } else if (action === "push") {
+                const p = result.split("|");
+                root.tidalStatus = p[1].indexOf("/") > 0 ? p[0] + qsTr(" on TIDAL: ") + p[1] + qsTr(" songs found") : p[1];
+                Toasts.show(qsTr("SENT TO TIDAL: ") + p[0]);
+            } else if (action === "logout") {
+                root.tidalLists = [];
+                root.tidalStatus = qsTr("Logged out");
+            }
+        }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        visible: root.tidalOpen
+        color: Style.background
+        z: 60
+
+        MouseArea {
+            anchors.fill: parent
+        }
+
+        Column {
+            id: tidalHead
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 12
+            spacing: 8
+
+            Item {
+                width: parent.width
+                height: 44
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("TIDAL PLAYLISTS")
+                    color: Style.accent
+                    font.pixelSize: 18
+                    font.bold: true
+                }
+
+                CloseButton {
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    onClicked: root.tidalOpen = false
+                }
+            }
+
+            DButton {
+                visible: !root.tidalOn
+                width: parent.width
+                height: 48
+                text: qsTr("LOG IN TO TIDAL (opens the browser)")
+                lit: true
+                onClicked: {
+                    root.tidalBusy = true;
+                    root.tidalStatus = qsTr("Log in in the browser, then come back ...");
+                    Mixxx.DJMantra.tidalLogin();
+                }
+            }
+
+            DButton {
+                visible: root.inPlaylist && root.tidalOn
+                width: parent.width
+                height: 48
+                text: qsTr("SEND \"") + root.folder.substring(9) + qsTr("\" TO TIDAL")
+                lit: true
+                onClicked: {
+                    root.tidalBusy = true;
+                    root.tidalStatus = qsTr("Finding the songs on TIDAL ...");
+                    Mixxx.DJMantra.tidalPush(root.folder.substring(9));
+                }
+            }
+
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: (root.tidalBusy ? "... " : "") + root.tidalStatus
+                color: Style.text
+                font.pixelSize: 13
+            }
+        }
+
+        ListView {
+            anchors.top: tidalHead.bottom
+            anchors.topMargin: 8
+            anchors.bottom: tidalFoot.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            clip: true
+            model: root.tidalLists
+
+            delegate: Rectangle {
+                id: tlist
+
+                required property var modelData
+
+                width: ListView.view.width
+                height: 52
+                color: "transparent"
+
+                Text {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
+                    anchors.right: importButton.left
+                    anchors.rightMargin: 8
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: tlist.modelData.name + "   (" + tlist.modelData.count + ")"
+                    color: Style.text
+                    font.pixelSize: 14
+                    elide: Text.ElideRight
+                }
+
+                DButton {
+                    id: importButton
+
+                    anchors.right: parent.right
+                    anchors.rightMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 96
+                    height: 40
+                    text: qsTr("TAKE IN")
+                    fontSize: 12
+                    onClicked: {
+                        root.tidalBusy = true;
+                        root.tidalStatus = qsTr("Taking in ") + tlist.modelData.name + " ...";
+                        Mixxx.DJMantra.tidalImport(tlist.modelData.id, tlist.modelData.name);
+                    }
+                }
+
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    width: parent.width
+                    height: 1
+                    color: Style.surface
+                }
+            }
+        }
+
+        DButton {
+            id: tidalFoot
+
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 12
+            visible: root.tidalOn
+            height: visible ? 44 : 0
+            text: qsTr("LOG OUT OF TIDAL")
+            fontSize: 12
+            onClicked: Mixxx.DJMantra.tidalLogout()
         }
     }
 }

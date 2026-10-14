@@ -12,12 +12,14 @@
 #include <QDateTime>
 #include <QFile>
 #include <QRegularExpression>
+#include <QHash>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSaveFile>
 #include <QUrl>
 #include <thread>
+#include <functional>
 #if defined(Q_OS_LINUX) || defined(Q_OS_ANDROID)
 #include <unistd.h>
 #endif
@@ -990,6 +992,165 @@ QVariantList QmlDJMantra::beatStatsCharts() const {
         return QVariantList();
     }
     return QJsonDocument::fromJson(file.readAll()).array().toVariantList();
+}
+
+#if defined(Q_OS_ANDROID)
+namespace {
+
+// "Artist - Title (Mix).mp3" and "Title" / "Artist" compared without case, accents' marks,
+// punctuation and extra spaces
+QString matchKey(const QString& text) {
+    QString key = text.normalized(QString::NormalizationForm_KD).toLower();
+    key.remove(QRegularExpression(QStringLiteral("[\\p{Mn}]")));
+    key.replace(QRegularExpression(QStringLiteral("[^a-z0-9]+")), QStringLiteral(" "));
+    return key.simplified();
+}
+
+QString callTidal(const char* method, const char* signature, const QStringList& args = {}) {
+    QJniObject context = QNativeInterface::QAndroidApplication::context();
+    QJniObject result;
+    if (args.isEmpty()) {
+        result = QJniObject::callStaticObjectMethod("com/djmantra/app/TidalBridge", method, signature,
+                context.object());
+    } else if (args.size() == 1) {
+        result = QJniObject::callStaticObjectMethod("com/djmantra/app/TidalBridge", method, signature,
+                context.object(), QJniObject::fromString(args[0]).object<jstring>());
+    } else {
+        result = QJniObject::callStaticObjectMethod("com/djmantra/app/TidalBridge", method, signature,
+                context.object(), QJniObject::fromString(args[0]).object<jstring>(),
+                QJniObject::fromString(args[1]).object<jstring>());
+    }
+    QJniEnvironment env;
+    env.checkAndClearExceptions();
+    return result.isValid() ? result.toString() : QString();
+}
+
+} // namespace
+#endif
+
+bool QmlDJMantra::tidalLoggedIn() const {
+#if defined(Q_OS_ANDROID)
+    return QJniObject::callStaticMethod<jboolean>("com/djmantra/app/TidalBridge", "loggedIn",
+            "(Landroid/content/Context;)Z", QNativeInterface::QAndroidApplication::context().object());
+#else
+    return false;
+#endif
+}
+
+void QmlDJMantra::tidalLogout() {
+#if defined(Q_OS_ANDROID)
+    QJniObject::callStaticMethod<void>("com/djmantra/app/TidalBridge", "logout",
+            "(Landroid/content/Context;)V", QNativeInterface::QAndroidApplication::context().object());
+#endif
+    emit tidalResult(QStringLiteral("logout"), QString());
+}
+
+#if defined(Q_OS_ANDROID)
+// a TIDAL call in the background; the answer comes back on the UI thread
+static void runTidal(QmlDJMantra* self, const QString& action, std::function<QString()> work) {
+    QPointer<QmlDJMantra> guard(self);
+    std::thread([guard, action, work]() {
+        const QString result = work();
+        QMetaObject::invokeMethod(qApp, [guard, action, result]() {
+            if (guard) {
+                emit guard->tidalResult(action, result);
+            }
+        }, Qt::QueuedConnection);
+    }).detach();
+}
+#endif
+
+void QmlDJMantra::tidalLogin() {
+#if defined(Q_OS_ANDROID)
+    runTidal(this, QStringLiteral("login"), []() {
+        return callTidal("login", "(Landroid/content/Context;)Ljava/lang/String;");
+    });
+#endif
+}
+
+void QmlDJMantra::tidalPlaylists() {
+#if defined(Q_OS_ANDROID)
+    runTidal(this, QStringLiteral("playlists"), []() {
+        return callTidal("playlists", "(Landroid/content/Context;)Ljava/lang/String;");
+    });
+#endif
+}
+
+void QmlDJMantra::tidalImport(const QString& id, const QString& name) {
+#if defined(Q_OS_ANDROID)
+    QPointer<QmlDJMantra> guard(this);
+    std::thread([guard, id, name]() {
+        const QString json = callTidal("playlistTracks",
+                "(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;", {id});
+        QMetaObject::invokeMethod(qApp, [guard, json, name]() {
+            if (!guard) {
+                return;
+            }
+            // the phone's songs by their file names, under Music
+            QHash<QString, QString> files;
+            QDirIterator it(QStringLiteral("/sdcard/Music"), QDir::Files | QDir::Readable,
+                    QDirIterator::Subdirectories);
+            while (it.hasNext()) {
+                const QString path = it.next();
+                if (SoundSourceProxy::isFileNameSupported(path)) {
+                    files.insert(matchKey(it.fileInfo().completeBaseName()), path);
+                }
+            }
+            int matched = 0;
+            int queued = 0;
+            const QJsonArray tracks = QJsonDocument::fromJson(json.toUtf8()).array();
+            for (const auto& value : tracks) {
+                const QJsonObject track = value.toObject();
+                const QString artist = track.value(QStringLiteral("artist")).toString();
+                const QString title = track.value(QStringLiteral("title")).toString();
+                const QString firstArtist = matchKey(artist.section(QChar(','), 0, 0));
+                const QString titleKey = matchKey(title);
+                QString found;
+                for (auto i = files.constBegin(); i != files.constEnd() && found.isEmpty(); ++i) {
+                    if (i.key().contains(titleKey) && i.key().contains(firstArtist)) {
+                        found = i.value();
+                    }
+                }
+                if (!found.isEmpty()) {
+                    guard->addToPlaylist(name, found);
+                    ++matched;
+                } else {
+                    guard->addToDownloadQueue(QStringLiteral("TIDAL"), artist, title);
+                    ++queued;
+                }
+            }
+            qInfo().noquote() << "TIDAL import" << name << ":" << matched << "on the phone," << queued << "queued";
+            emit guard->tidalResult(QStringLiteral("import"),
+                    QStringLiteral("%1|%2|%3").arg(name).arg(matched).arg(queued));
+        }, Qt::QueuedConnection);
+    }).detach();
+#else
+    Q_UNUSED(id);
+    Q_UNUSED(name);
+#endif
+}
+
+void QmlDJMantra::tidalPush(const QString& name) {
+#if defined(Q_OS_ANDROID)
+    // the songs' artist and title from their tags (the library), read here on the UI thread
+    QJsonArray songs;
+    for (const QVariant& entry : listFolder(QStringLiteral("playlist:") + name)) {
+        const QVariantMap info = songInfo(entry.toMap().value(QStringLiteral("path")).toString());
+        QJsonObject song;
+        song[QStringLiteral("artist")] = info.value(QStringLiteral("artist")).toString();
+        song[QStringLiteral("title")] = info.value(QStringLiteral("title")).toString();
+        song[QStringLiteral("isrc")] = QString();
+        songs.append(song);
+    }
+    const QString json = QString::fromUtf8(QJsonDocument(songs).toJson(QJsonDocument::Compact));
+    runTidal(this, QStringLiteral("push"), [name, json]() {
+        return name + QChar('|') + callTidal("pushPlaylist",
+                "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+                {name, json});
+    });
+#else
+    Q_UNUSED(name);
+#endif
 }
 
 QVariantList QmlDJMantra::playlistRoots() {

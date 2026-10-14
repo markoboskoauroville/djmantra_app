@@ -159,3 +159,11 @@ TIDAL / YouTube Music) -> Menu -> DOWNLOAD QUEUES shows it, in djmantra_app/Down
 ## 43. (V53) The app's ROOT moved INTO Music (Marko 14.10.2026: "one master folder of this app"): /sdcard/Music/djmantra_app
 with Playlists/<name>/ + Playlists/<name>.m3u8, Library/, Recordings/, Test/, Download_Queue/, BeatStats/. The Songs tab
 opens in it; ← shows djmantra_app, Music, Download.
+## 44. (V54) TIDAL PLAYLISTS both ways (Marko 14.10.2026; official TIDAL API v2, OAuth PKCE with the public Client ID,
+redirect http://localhost:8765/tidal-callback caught by the app; tokens only in the app's private storage). Songs ->
+PLAYLISTS -> TIDAL: LOG IN TO TIDAL opens the browser, log in, "TIDAL is connected", back to the app: the TIDAL
+playlists list (name, count). TAKE IN: the playlist appears among the app's playlists with the songs found on the phone
+(Music, by file name), the rest go into the TIDAL download queue (status line: "N on the phone, M into the queue").
+Inside one of the app's playlists -> TIDAL -> SEND "<name>" TO TIDAL: a new TIDAL playlist of that name with the songs
+TIDAL finds ("found/total"); needs the playlists.write permission (if TIDAL refuses: the status says so; then the
+developer dashboard has to allow it, Marko). logcat DJMantraTidal. LOG OUT clears the tokens.
