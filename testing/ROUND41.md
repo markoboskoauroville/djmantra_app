@@ -74,3 +74,6 @@ drifts gets its AVERAGE tempo on the steady grid (logcat `Beats: the tempo drift
 ## 18. (V44) The overview strips (whole song): no zoom window any more while dragging (Marko 14.10.2026: the
 Phrasing tab already shows the zoomed waveform). A touch puts the play position under the finger, a drag scrubs
 freely through the whole song (log `scrub [ChannelN] to ... s` on release); AUTO PHASE waits while dragging.
+## 19. (V44) Dragging the ZOOMED waveform (Phrasing): the wave follows the finger, so zoomed out it runs fast through
+the song and zoomed in slower (it was the other way round); at the deepest zooms it never crawls (at least 0.25 s per
+100 px). Check at zoom 6, 3, 1, 0.25, 0.04: a full-width drag moves about width/100 x zoom seconds (0.25 at least).

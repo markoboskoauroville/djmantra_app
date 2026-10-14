@@ -506,6 +506,15 @@ Item {
     MouseArea {
         property int mouseStatus: WaveformRow.MouseStatus.Normal
         property point mouseAnchor: Qt.point(0, 0)
+        // Marko 14.10.2026: dragging the zoomed wave was the wrong way round (fast when
+        // zoomed in, slow when zoomed out: pixels per second were used as samples per
+        // pixel). Now the wave follows the finger (zoomed out = fast through the song,
+        // zoomed in = slower), but never slower than 0.25 s per 100 px, so a deep zoom
+        // still scrolls quickly instead of sample by sample. In samples (stereo) per pixel:
+        readonly property real samplesPerPixel: {
+            const zoomSeconds = Math.max(0.25, root.zoom > 0 ? root.zoom : 3);
+            return 2 * sampleRateControl.value * rateRatioControl.value * zoomSeconds / 100;
+        }
 
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -517,9 +526,7 @@ Item {
 
                 mouseStatus = WaveformRow.MouseStatus.Scratching;
                 scratchPositionEnableControl.value = 1;
-                // TODO: Calculate position properly
-                scratchPositionControl.value = -mouse.x * waveform.effectiveZoomFactor * 2;
-                console.log(mouse.x);
+                scratchPositionControl.value = -mouse.x * samplesPerPixel;
             } else {
                 if (mouseStatus == WaveformRow.MouseStatus.Scratching)
                     scratchPositionEnableControl.value = 0;
@@ -541,8 +548,7 @@ Item {
                     break;
                 };
                 case WaveformRow.MouseStatus.Scratching:
-                // TODO: Calculate position properly
-                    scratchPositionControl.value = -mouse.x * waveform.effectiveZoomFactor * 2;
+                    scratchPositionControl.value = -mouse.x * samplesPerPixel;
                     break;
             }
         }
