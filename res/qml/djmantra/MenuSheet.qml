@@ -10,6 +10,7 @@ Rectangle {
     signal wheel()
     signal settings()
     signal queues()
+    signal beatStats()
     signal done()
 
     color: "#8c000000"
@@ -70,6 +71,14 @@ Rectangle {
                 height: 52
                 text: qsTr("CAMELOT WHEEL")
                 onClicked: root.wheel()
+            }
+            DButton {
+                // the BeatStats charts (Marko 14.10.2026)
+                objectName: "menuBeatStats"
+                width: parent.width
+                height: 52
+                text: qsTr("BEATSTATS CHARTS")
+                onClicked: root.beatStats()
             }
             DButton {
                 // the download queues (Spotify, TIDAL, YouTube Music) as text files

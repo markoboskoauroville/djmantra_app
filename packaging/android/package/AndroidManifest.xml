@@ -69,6 +69,13 @@
                 android:value="-- %%INSERT_APP_ARGUMENTS%% --" />
         </activity>
 
+        <!-- BEATSTATS (Marko 14.10.2026): beatstats.com in a WebView, READ CHART -->
+        <activity
+            android:name="com.djmantra.app.BeatStatsActivity"
+            android:theme="@android:style/Theme.Material.NoActionBar"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.qtprovider"

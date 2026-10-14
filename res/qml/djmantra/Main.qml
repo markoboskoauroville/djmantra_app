@@ -665,8 +665,10 @@ Window {
             anchors.left: parent.left
             anchors.right: parent.right
             active: window.overlay === "menu" || window.overlay === "settings" || window.overlay === "queues"
+                    || window.overlay === "beatstats"
             sourceComponent: window.overlay === "settings" ? settingsComponent
-                           : window.overlay === "queues" ? queuesComponent : menuComponent
+                           : window.overlay === "queues" ? queuesComponent
+                           : window.overlay === "beatstats" ? beatStatsComponent : menuComponent
         }
     }
 
@@ -681,10 +683,19 @@ Window {
             }
             onSettings: window.overlay = "settings"
             onQueues: window.overlay = "queues"
+            onBeatStats: window.overlay = "beatstats"
             onWheel: {
                 window.page = 4;
                 window.overlay = "";
             }
+            onDone: window.overlay = ""
+        }
+    }
+
+    Component {
+        id: beatStatsComponent
+
+        BeatStatsPage {
             onDone: window.overlay = ""
         }
     }

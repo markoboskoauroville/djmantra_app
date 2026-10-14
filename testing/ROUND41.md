@@ -149,3 +149,10 @@ file in /sdcard/djmantra_app/Download_Queue/ (Spotify.txt, TIDAL.txt, YouTube_Mu
 "artist | title | link" (the service's search link). The page lists the queue (title, artist), OPEN opens the link
 (the service's app or browser), × removes the line; the file path is shown (copy / share it from the Files app).
 Songs are added from the BEATSTATS charts (next; for now check with a file pushed by adb).
+## 42. (V52) BEATSTATS (Marko 14.10.2026). Settings -> BEATSTATS: type the Groq API key once (hidden; stays on the
+phone; Marko types it, never in a message or the repo). Menu -> BEATSTATS CHARTS -> OPEN BEATSTATS: beatstats.com in a
+browser inside the app (pass the site's check once by hand; it reopens on the last page); open a chart (e.g. ORGANIC
+HOUSE), READ CHART: the bar says "<chart>: N songs read" (logcat DJMantraBeatStats); CLOSE. The app's BEATSTATS page
+shows the chart (rank, title, artist, label), the charts read as buttons to flip between; per song SPOT / TIDAL / YT M
+open that service's search for artist + title (YouTube MUSIC, not videos); + adds it to a download queue (Spotify /
+TIDAL / YouTube Music) -> Menu -> DOWNLOAD QUEUES shows it, in djmantra_app/Download_Queue/<service>.txt.

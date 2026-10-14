@@ -411,6 +411,39 @@ Rectangle {
                 }
             }
 
+            // BEATSTATS (Marko 14.10.2026): the Groq API key that reads the charts, kept only
+            // on this phone (typed here once, never in the app's code)
+            Text {
+                text: qsTr("BEATSTATS: Groq API key (reads the charts; stays on this phone)")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Rectangle {
+                width: column.width - 12
+                height: 42
+                radius: Style.radius
+                color: Style.tile
+
+                TextInput {
+                    objectName: "groqKey"
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    verticalAlignment: TextInput.AlignVCenter
+                    color: Style.text
+                    font.pixelSize: 15
+                    clip: true
+                    echoMode: TextInput.Password
+                    inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhSensitiveData
+                    text: Mixxx.DJMantra.setting("groq_key", "")
+                    onEditingFinished: {
+                        Mixxx.DJMantra.setSetting("groq_key", text.trim());
+                        Toasts.show(text.trim() === "" ? qsTr("GROQ KEY REMOVED") : qsTr("GROQ KEY SAVED"));
+                    }
+                }
+            }
+
             // RECORDING (Marko 14.10.2026): the mix recorded lossless (FLAC, or WAV) into
             // djmantra_app/Recordings as "<name> - <date> <time>" (Menu -> RECORD MIX)
             Text {

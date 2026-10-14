@@ -125,6 +125,10 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    // BEATSTATS (Marko 14.10.2026): beatstats.com in a WebView (BeatStatsActivity), READ CHART
+    // there stores the chart (via Groq) in djmantra_app/BeatStats/charts.json, read here
+    Q_INVOKABLE void openBeatStats();
+    Q_INVOKABLE QVariantList beatStatsCharts() const;
     // DOWNLOAD QUEUES (Marko 14.10.2026): one text file per service in
     // djmantra_app/Download_Queue/ (Spotify.txt, TIDAL.txt, YouTube_Music.txt), a line per song:
     // "artist | title | link" (the service's search link); exportable as it is

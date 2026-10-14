@@ -965,6 +965,32 @@ QString QmlDJMantra::downloadQueueFile(const QString& service) const {
     return queueFile(service);
 }
 
+void QmlDJMantra::openBeatStats() {
+#if defined(Q_OS_ANDROID)
+    // the Groq key lives only in the phone's settings (Settings -> BEATSTATS)
+    const QString key = setting(QStringLiteral("groq_key"), QString()).toString();
+    QJniObject::callStaticMethod<void>("com/djmantra/app/BeatStatsActivity",
+            "open",
+            "(Landroid/content/Context;Ljava/lang/String;)V",
+            QNativeInterface::QAndroidApplication::context().object(),
+            QJniObject::fromString(key).object<jstring>());
+#endif
+    qInfo() << "BeatStats: opened";
+}
+
+QVariantList QmlDJMantra::beatStatsCharts() const {
+#if defined(Q_OS_ANDROID)
+    QFile file(QStringLiteral("/sdcard/djmantra_app/BeatStats/charts.json"));
+#else
+    QFile file(QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
+            QStringLiteral("/djmantra_app/BeatStats/charts.json"));
+#endif
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QVariantList();
+    }
+    return QJsonDocument::fromJson(file.readAll()).array().toVariantList();
+}
+
 QVariantList QmlDJMantra::playlistRoots() {
     importM3uPlaylists();
     QVariantList roots;
