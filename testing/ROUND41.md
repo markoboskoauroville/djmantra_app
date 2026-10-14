@@ -280,3 +280,9 @@ why ("raise the TEST LEVEL ..."), the place stays empty. Test: TEST LEVEL -30 dB
 lookup for sweep_*.wav). (d) Room name: type "Test Room" without Enter, NEW ROOM: the room is "Test Room", the keyboard
 closes; RENAME the same. (e) DELETE asks first ("TAP AGAIN TO DELETE ..."), a second tap within 3 s deletes. (f)
 Choosing a room resets the status line. Delete the bad "My room" from the V70 test first (or FLAT it).
+## 64. (V73) CONCENTRIC KNOB REDESIGN (Marko 14.10.2026: text overlapped; two concentric pots with two concentric LED
+rings outside). Mixer tab, each HIGH / MID / LOW: from the centre out the inner cap (white pointer), the dark outer knob
+ring right round it (its own violet / band-colour pointer), then two LED rings outside both, dot for dot: the inner
+knob's (closer) and the outer knob's (outermost). Above: the outer value small ("VOCALS −9"), below: the inner ("MID −4"),
+no "−∞ / 0 dB" end labels on these knobs, NO text overlapping anything (screenshot the whole mixer column, both decks,
+EQ and NEURAL MIX mode).

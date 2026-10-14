@@ -33,6 +33,14 @@ Item {
     property string outerLabel: ""
     property color outerColor: Style.line
     readonly property bool concentric: outerKey !== ""
+    // V73 (Marko 14.10.2026: "two concentric pots ... outside again we have two concentric lights
+    // which align to each other"): from the centre out the inner cap, the outer knob ring round
+    // it, then the inner control's LED ring and, outermost, the outer control's, dot for dot
+    readonly property real ledSize: Math.max(2.5, dial.width * 0.055)
+    readonly property real outerLedRadius: dial.width / 2 - ledSize / 2
+    readonly property real innerLedRadius: outerLedRadius - ledSize * 1.55
+    readonly property real outerKnobSize: 2 * (innerLedRadius - ledSize / 2 - dial.width * 0.035)
+    readonly property real innerKnobSize: outerKnobSize * 0.6
     readonly property real outerTurn: concentric ? Math.min(1, outerControl.parameter) : 0
     readonly property real outerDb: outerControl.value > 0.0005 ? 20 * Math.log(outerControl.value) / Math.LN10 : -999
     function dbString(db) {
@@ -109,7 +117,7 @@ Item {
         id: dial
 
         // the ring and the knob inside it
-        width: Math.min(root.width, root.height - caption.height - (root.concentric ? topCaption.height + 1 : 0) - 1)
+        width: Math.min(root.width, root.height - caption.height - (root.concentric ? topCaption.height + 2 : 0) - 1)
         height: width
         anchors.top: root.concentric ? topCaption.bottom : parent.top
         anchors.topMargin: root.concentric ? 1 : 0
@@ -123,8 +131,8 @@ Item {
 
                 // -135° .. +135°, 0° straight up
                 readonly property real angle: (-135 + 270 * index / (root.dots - 1)) * Math.PI / 180
-                readonly property real ringRadius: root.concentric ? dial.width * 0.255 : dial.width / 2 - size / 2
-                readonly property real size: Math.max(2.5, dial.width * (root.concentric ? 0.06 : 0.085))
+                readonly property real ringRadius: root.concentric ? root.innerLedRadius : dial.width / 2 - size / 2
+                readonly property real size: root.concentric ? root.ledSize : Math.max(3, dial.width * 0.085)
                 readonly property bool lit: root.turn > 0.001 && (index + 0.5) / root.dots <= root.turn + 0.5 / root.dots
 
                 z: 2 // over the concentric outer knob
@@ -146,8 +154,8 @@ Item {
                 required property int index
 
                 readonly property real angle: (-135 + 270 * index / (root.dots - 1)) * Math.PI / 180
-                readonly property real size: Math.max(3, dial.width * 0.07)
-                readonly property real ringRadius: dial.width / 2 - size / 2
+                readonly property real size: root.ledSize
+                readonly property real ringRadius: root.outerLedRadius
                 readonly property bool lit: root.outerTurn > 0.001 && (index + 0.5) / root.dots <= root.outerTurn + 0.5 / root.dots
 
                 width: size
@@ -163,36 +171,28 @@ Item {
         Rectangle {
             // the outer knob (concentric, as the reference: a larger dark ring round the inner
             // cap) with its own pointer
+            id: outerKnob
+
             visible: root.concentric
             anchors.centerIn: parent
-            width: dial.width * 0.84
+            width: root.outerKnobSize
             height: width
             radius: width / 2
-            color: "#05070f"
+            color: "#070a17"
             border.color: Style.line
             border.width: 1
 
             Rectangle {
-                // the hole the inner knob sits in
-                anchors.centerIn: parent
-                width: dial.width * 0.60
-                height: width
-                radius: width / 2
-                color: Style.background
-            }
-
-            Rectangle {
-                // the outer pointer: -135° (0) .. +135° (1)
+                // the outer knob's pointer, on its ring: -135° (0) .. +135° (1)
                 width: 2.5
-                height: parent.height * 0.13
+                height: (root.outerKnobSize - root.innerKnobSize) / 2 - 3
                 radius: 1.25
                 color: root.outerColor
-                x: parent.width / 2 - width / 2
+                x: outerKnob.width / 2 - width / 2
                 y: 2
-                transformOrigin: Item.Center
                 transform: Rotation {
                     origin.x: 1.25
-                    origin.y: dial.width * 0.42 - 2
+                    origin.y: outerKnob.height / 2 - 2
                     angle: -135 + 270 * root.outerTurn
                 }
             }
@@ -203,7 +203,7 @@ Item {
 
             z: 3
             anchors.centerIn: parent
-            width: dial.width * (root.concentric ? 0.40 : 0.62)
+            width: root.concentric ? root.innerKnobSize : dial.width * 0.62
             height: width
             radius: width / 2
             color: Style.tile
@@ -233,13 +233,14 @@ Item {
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         width: root.width
-        height: root.concentric ? 13 : 0
+        height: root.concentric ? 11 : 0
         horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
         fontSizeMode: Text.HorizontalFit
-        minimumPixelSize: 8
-        text: root.outerLabel + " " + root.dbString(root.outerDb) + " dB"
+        minimumPixelSize: 7
+        text: root.outerLabel + " " + root.dbString(root.outerDb)
         color: root.outerColor
-        font.pixelSize: 11
+        font.pixelSize: 9
         font.bold: true
     }
 
@@ -253,16 +254,17 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         fontSizeMode: Text.HorizontalFit
         minimumPixelSize: 8
-        text: root.concentric ? root.label + " " + root.dbText + " dB"
+        text: root.concentric ? root.label + " " + root.dbText
               : root.dbShown ? root.label + " " + root.dbText + " dB" : root.label
         color: root.concentric || root.dbShown ? (root.dbMode === "gain" ? Style.accent : root.arcColor) : Style.subText
-        font.pixelSize: 11
+        font.pixelSize: root.concentric ? 9 : 11
         font.bold: true
     }
 
     Repeater {
-        // the dB at the ring's two ends (below its first and last dot)
-        model: root.dbMode !== "" ? [[-135, "\u2212\u221E"], [135, "0 dB"]] : []
+        // the dB at the ring's two ends (below its first and last dot); not on the concentric
+        // knobs (V73: they ran into the captions; the values are above and below)
+        model: root.dbMode !== "" && !root.concentric ? [[-135, "\u2212\u221E"], [135, "0 dB"]] : []
 
         delegate: Text {
             required property var modelData
