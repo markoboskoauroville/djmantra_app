@@ -42,3 +42,10 @@ Left BYPASS on, so the bad -12 dB correction isn't heard.
 - **55 PASS (screen):** a finger drag turns only the inner knob; the dropdown swaps inner and outer.
 - **57 PASS:** inner dots in band colours (HIGH blue, MID green, LOW red), outer ring violet, violet number on top, band number at the bottom, 0 dB shown. Minor: the scale labels "−∞ / 0 dB" under each knob crowd the band caption below.
 - The "BT" pill is gone because the Mix Ultra isn't connected (Bluetooth STATE_DISCONNECTED). 56 and the controller halves of 51/53 are waiting for it.
+
+## V71, Mix Ultra over Bluetooth (22:29–22:50)
+- **51 PASS (controller):** the Mix Ultra's deck 1 FILTER knob (B1 01 44→55) turned the screen's FILTER to the right.
+- **BUG: connecting the controller presses BROWSE.** The first message after "Connected (bluetooth)" is `90 00 7F`, which the app treats as "controller: browse press" and opens the browser. That's probably the controller's state dump on connect. Ignore input for about 500 ms after connecting, or ignore note-ons that arrive with no matching release.
+- **BUG: layout shift with the nav bar.** At 22:48 the Android nav bar appeared over the app. The Mixer shrank, captions overlapped the knobs, and the tab bar was drawn about 15 px higher than the app's tap map (tab y 2247). A tap at y 2232 on "Songs" did nothing; a tap at 2270 worked and immersive mode came back.
+- **Marko's request (22:44):** "If there is any playlist with 0 songs, I want to remove it. I want only playlists which contain some songs." On the phone I deleted the empty folders in Music/djmantra_app/Library (no files in them, nothing else touched): HOTEL KORINJAK {by genre} (8 subfolders), made in Romania {by genre} (6), ECSTATIC-365 [by genre] (6), and 15 empty subfolders of SUNRISE DANCE {by genre} (MOTION PICTURE, which has a song, is kept). Playlists/ had no empty playlist (47 folders, 1–111 songs each).
+  **Wish for the app:** FOLDERS / PLAYLISTS should never show a folder or playlist with 0 songs, counting subfolders. The app also kept showing the deleted HOTEL folder until I left it.
