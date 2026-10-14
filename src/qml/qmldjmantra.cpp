@@ -755,7 +755,11 @@ QVariantList QmlDJMantra::musicRoots() const {
 #if defined(Q_OS_ANDROID)
     // (not QStandardPaths' MusicLocation: on Android that is a second "Music",
     // the app's own folder; round 14 listed Music twice)
-    paths << QStringLiteral("/sdcard/Music") << QStringLiteral("/sdcard/Download");
+    // Marko 14.10.2026: the app's own root first, djmantra_app (underscores, no spaces):
+    // Playlists/<name>/ songs + Playlists/<name>.m3u8, Recordings/; Music and Download stay
+    QDir().mkpath(QStringLiteral("/sdcard/djmantra_app"));
+    paths << QStringLiteral("/sdcard/djmantra_app") << QStringLiteral("/sdcard/Music")
+          << QStringLiteral("/sdcard/Download");
 #else
     paths << QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
 #endif
@@ -809,21 +813,26 @@ int findPlaylist(const QJsonArray& playlists, const QString& name) {
     return -1;
 }
 
-QString playlistsFolder() {
+QStringList playlistsFolders() {
 #if defined(Q_OS_ANDROID)
-    return QStringLiteral("/sdcard/Music/Playlists");
+    // the app's root first (Marko 14.10.2026), then Music/Playlists
+    return {QStringLiteral("/sdcard/djmantra_app/Playlists"), QStringLiteral("/sdcard/Music/Playlists")};
 #else
-    return QStandardPaths::writableLocation(QStandardPaths::MusicLocation) + QStringLiteral("/Playlists");
+    const QString music = QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    return {music + QStringLiteral("/djmantra_app/Playlists"), music + QStringLiteral("/Playlists")};
 #endif
 }
 
-// M3U / M3U8 files in Music/Playlists, each taken in once (by its name)
+// M3U / M3U8 files in djmantra_app/Playlists (and Music/Playlists), each taken in once (by name)
 void importM3uPlaylists() {
     QJsonArray playlists = readPlaylists();
     bool changed = false;
-    const QDir dir(playlistsFolder());
-    const auto files = dir.entryInfoList({QStringLiteral("*.m3u"), QStringLiteral("*.m3u8")}, QDir::Files);
+    QFileInfoList files;
+    for (const QString& folder : playlistsFolders()) {
+        files += QDir(folder).entryInfoList({QStringLiteral("*.m3u"), QStringLiteral("*.m3u8")}, QDir::Files);
+    }
     for (const QFileInfo& info : files) {
+        const QDir dir = info.absoluteDir();
         const QString name = info.completeBaseName();
         if (findPlaylist(playlists, name) >= 0) {
             continue;
@@ -1187,10 +1196,11 @@ QString QmlDJMantra::startRecording(const QString& format, const QString& name) 
         return QString();
     }
 #if defined(Q_OS_ANDROID)
-    const QString dir = QStringLiteral("/sdcard/Music/DJ Mantra Recordings");
+    // the app's root (Marko 14.10.2026): djmantra_app/Recordings
+    const QString dir = QStringLiteral("/sdcard/djmantra_app/Recordings");
 #else
     const QString dir = QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
-            QStringLiteral("/DJ Mantra Recordings");
+            QStringLiteral("/djmantra_app/Recordings");
 #endif
     QDir().mkpath(dir);
     const ConfigKey encoding(QStringLiteral("[Recording]"), QStringLiteral("Encoding"));

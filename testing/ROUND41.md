@@ -140,3 +140,7 @@ count), a NEW PLAYLIST name + CREATE, inside a playlist REMOVE FROM <it>, CANCEL
 REMOVED FROM. The playlists survive a restart.
 ## 39. (V50) FULL / DOCK button in the song list's top bar (both views): FULL lays the list over the decks (top bar,
 crossfader and tabs stay), DOCK puts it back (toasts).
+## 40. (V51) The app's ROOT FOLDER (Marko 14.10.2026): /sdcard/djmantra_app (made at the start). The Songs tab opens IN
+it; ← shows djmantra_app, Music, Download. Playlists: djmantra_app/Playlists/<name>.m3u8 (songs in
+djmantra_app/Playlists/<name>/) are taken in under PLAYLISTS (Music/Playlists too). Recordings go to
+djmantra_app/Recordings.

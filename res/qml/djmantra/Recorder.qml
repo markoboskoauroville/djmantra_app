@@ -5,7 +5,7 @@ import QtQuick 2.12
 
 // Recording the mix (Marko 14.10.2026: djay records, ours must too, so the two can be
 // compared): Menu -> RECORD MIX starts / stops it, lossless FLAC (or WAV, Settings) into
-// Music/DJ Mantra Recordings as "<name> - <date> <time>" (name in Settings, default
+// djmantra_app/Recordings as "<name> - <date> <time>" (name in Settings, default
 // "DJ Mantra Mix"); also a long press on the clock, which is red while it records.
 QtObject {
     id: root

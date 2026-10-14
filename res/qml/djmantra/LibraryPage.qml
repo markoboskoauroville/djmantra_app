@@ -24,6 +24,14 @@ Rectangle {
         return folder === "" ? (playlistsView ? Mixxx.DJMantra.playlistRoots() : Mixxx.DJMantra.musicRoots())
                              : Mixxx.DJMantra.listFolder(folder);
     }
+    // Marko 14.10.2026: the list opens in the app's own root, djmantra_app (← shows Music,
+    // Download beside it)
+    Component.onCompleted: {
+        const roots = Mixxx.DJMantra.musicRoots();
+        if (folder === "" && !playlistsView && roots.length > 0 && roots[0].name === "djmantra_app")
+            folder = roots[0].path;
+    }
+
     // full screen / docked (Marko 14.10.2026), Main.qml lays it out
     property bool fullScreen: false
     signal toggleFullScreen()

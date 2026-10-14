@@ -412,9 +412,9 @@ Rectangle {
             }
 
             // RECORDING (Marko 14.10.2026): the mix recorded lossless (FLAC, or WAV) into
-            // Music/DJ Mantra Recordings as "<name> - <date> <time>" (Menu -> RECORD MIX)
+            // djmantra_app/Recordings as "<name> - <date> <time>" (Menu -> RECORD MIX)
             Text {
-                text: qsTr("RECORDING (Menu -> RECORD MIX; Music/DJ Mantra Recordings)")
+                text: qsTr("RECORDING (Menu -> RECORD MIX; djmantra_app/Recordings)")
                 color: Style.accent
                 font.pixelSize: 14
                 font.bold: true
