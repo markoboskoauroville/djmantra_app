@@ -488,19 +488,49 @@ MixUltra.jumpToBeat = function(deck, pad) {
 // NEURAL MIX, button_parameter4) picks the knobs' set: LOW / MID / HIGH = parameter1..3,
 // DRUMS / VOCALS / HARMONIES = parameter4..6; with SHIFT held (the deck's SHIFT layer, B4 /
 // B5) the other set. 14-bit: MSB 02..04, LSB 22..24.
+// PICKUP, as Ableton Live's "Pickup" takeover (Marko 14.10.2026: "no knob, no fader jumps ... I
+// need to pick it up"): a knob that has just changed target (SHIFT, the mode, or the value was
+// moved on the screen / reset by a new song) leaves the value alone until the knob reaches it
+// (within 2 %) or turns across it; from then on it follows the knob.
 MixUltra.eqMsb = {};
+MixUltra.eqKnob = {};   // per physical knob: {hw: last position, key: last target}
+MixUltra.eqSet = {};    // per target: the value this script last set (else: not picked up)
 MixUltra.eq = function(channel, control, value, status, group) {
     var band = (control & 0x1F) - 1; // 1 low, 2 mid, 3 high
     var shifted = (status & 0x0F) >= 4;
     var stems = engine.getValue(group, "button_parameter4") > 0;
     var key = "parameter" + (stems !== shifted ? band + 3 : band);
-    var id = group + band;
+    var knobId = group + band;
+    var hw;
     if (control < 0x20) {
-        MixUltra.eqMsb[id] = value;
-        engine.setParameter(group, key, value / 127);
+        MixUltra.eqMsb[knobId] = value;
+        hw = value / 127;
     } else {
-        engine.setParameter(group, key, ((MixUltra.eqMsb[id] || 0) * 128 + value) / 16383);
+        hw = ((MixUltra.eqMsb[knobId] || 0) * 128 + value) / 16383;
     }
+    var knob = MixUltra.eqKnob[knobId] || (MixUltra.eqKnob[knobId] = {hw: undefined, key: ""});
+    var target = group + key;
+    var current = engine.getParameter(group, key);
+    var set = MixUltra.eqSet[target];
+    // picked up: this knob set it last and nothing else moved it since
+    var picked = knob.key === key && set !== undefined && Math.abs(current - set) < 0.01;
+    if (!picked) {
+        var near = Math.abs(hw - current) < 0.02;
+        var crossed = knob.hw !== undefined && (knob.hw - current) * (hw - current) <= 0;
+        picked = near || crossed;
+    }
+    knob.hw = hw;
+    if (!picked) {
+        // not this knob's value yet: the other set keeps its own until the knob gets there
+        if (knob.key !== key) {
+            knob.key = key;
+        }
+        MixUltra.eqSet[target] = undefined;
+        return;
+    }
+    knob.key = key;
+    engine.setParameter(group, key, hw);
+    MixUltra.eqSet[target] = hw;
 };
 
 // Called by DJ Mantra on Android after every (re)connect over USB or Bluetooth:

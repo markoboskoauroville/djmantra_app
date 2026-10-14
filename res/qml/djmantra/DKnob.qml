@@ -25,11 +25,23 @@ Item {
     property string toastPrefix: ""
     property string resetText: "0 dB"
 
+    // CONCENTRIC (Marko 14.10.2026, SSL / big analog mixers): a second control on the same knob,
+    // its own outer ring of dots; the inner knob is the active one. The EQ: inner = the mode's
+    // band, outer = the other mode's (EQ <-> NEURAL MIX); a mode switch swaps them. A touch on
+    // the outer ring turns (or, held, resets) the outer one.
+    property string outerKey: ""
+    property string outerLabel: ""
+    property color outerColor: Style.line
+    readonly property bool concentric: outerKey !== ""
+    readonly property real outerTurn: concentric ? Math.min(1, outerControl.parameter) : 0
+    readonly property real outerDb: outerControl.value > 0.0005 ? 20 * Math.log(outerControl.value) / Math.LN10 : -999
+
     function reset() {
         resetRamp.stop();
-        resetRamp.to = root.defaultParameter * root.span;
+        resetRamp.target = knobArea.outer ? outerControl : control;
+        resetRamp.to = knobArea.outer ? root.defaultParameter : root.defaultParameter * root.span;
         resetRamp.start();
-        Toasts.show(root.toastPrefix + root.label + " \u2192 " + root.resetText);
+        Toasts.show(root.toastPrefix + (knobArea.outer ? root.outerLabel : root.label) + " \u2192 " + root.resetText);
         Mixxx.DJMantra.log("knob reset " + root.group + "," + root.key);
     }
     readonly property int dots: 15
@@ -68,6 +80,13 @@ Item {
         key: root.key
     }
 
+    Mixxx.ControlProxy {
+        id: outerControl
+
+        group: root.group
+        key: root.concentric ? root.outerKey : root.key
+    }
+
     // Marko 14.10.2026: "always ramping is the rule ... no snapping anywhere": a reset glides
     // there, easing in and out
     NumberAnimation {
@@ -95,10 +114,11 @@ Item {
 
                 // -135° .. +135°, 0° straight up
                 readonly property real angle: (-135 + 270 * index / (root.dots - 1)) * Math.PI / 180
-                readonly property real ringRadius: dial.width / 2 - size / 2
-                readonly property real size: Math.max(3, dial.width * 0.085)
+                readonly property real ringRadius: root.concentric ? dial.width * 0.255 : dial.width / 2 - size / 2
+                readonly property real size: Math.max(2.5, dial.width * (root.concentric ? 0.06 : 0.085))
                 readonly property bool lit: root.turn > 0.001 && (index + 0.5) / root.dots <= root.turn + 0.5 / root.dots
 
+                z: 2 // over the concentric outer knob
                 width: size
                 height: size
                 radius: size / 2
@@ -109,11 +129,72 @@ Item {
             }
         }
 
+        Repeater {
+            // the outer ring: the concentric second control
+            model: root.concentric ? root.dots : 0
+
+            delegate: Rectangle {
+                required property int index
+
+                readonly property real angle: (-135 + 270 * index / (root.dots - 1)) * Math.PI / 180
+                readonly property real size: Math.max(3, dial.width * 0.07)
+                readonly property real ringRadius: dial.width / 2 - size / 2
+                readonly property bool lit: root.outerTurn > 0.001 && (index + 0.5) / root.dots <= root.outerTurn + 0.5 / root.dots
+
+                width: size
+                height: size
+                radius: size / 2
+                x: dial.width / 2 + ringRadius * Math.sin(angle) - size / 2
+                y: dial.height / 2 - ringRadius * Math.cos(angle) - size / 2
+                color: lit ? root.outerColor : Style.tile
+                opacity: lit ? 0.85 : 0.6
+            }
+        }
+
+        Rectangle {
+            // the outer knob (concentric, as the reference: a larger dark ring round the inner
+            // cap) with its own pointer
+            visible: root.concentric
+            anchors.centerIn: parent
+            width: dial.width * 0.84
+            height: width
+            radius: width / 2
+            color: "#05070f"
+            border.color: Style.line
+            border.width: 1
+
+            Rectangle {
+                // the hole the inner knob sits in
+                anchors.centerIn: parent
+                width: dial.width * 0.60
+                height: width
+                radius: width / 2
+                color: Style.background
+            }
+
+            Rectangle {
+                // the outer pointer: -135° (0) .. +135° (1)
+                width: 2.5
+                height: parent.height * 0.13
+                radius: 1.25
+                color: root.outerColor
+                x: parent.width / 2 - width / 2
+                y: 2
+                transformOrigin: Item.Center
+                transform: Rotation {
+                    origin.x: 1.25
+                    origin.y: dial.width * 0.42 - 2
+                    angle: -135 + 270 * root.outerTurn
+                }
+            }
+        }
+
         Rectangle {
             id: body
 
+            z: 3
             anchors.centerIn: parent
-            width: dial.width * 0.62
+            width: dial.width * (root.concentric ? 0.40 : 0.62)
             height: width
             radius: width / 2
             color: Style.tile
@@ -144,7 +225,10 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         fontSizeMode: Text.HorizontalFit
         minimumPixelSize: 8
-        text: root.dbShown ? root.label + " " + root.dbText + " dB" : root.label
+        text: (root.dbShown ? root.label + " " + root.dbText + " dB" : root.label)
+              + (root.concentric && root.outerDb < -0.5
+                 ? "  \u00B7  " + root.outerLabel + " " + (root.outerDb <= -998 ? "\u2212\u221E" : "\u2212" + Math.round(-root.outerDb))
+                 : "")
         color: root.dbShown ? (root.dbMode === "gain" ? Style.accent : root.arcColor) : Style.subText
         font.pixelSize: 11
         font.bold: true
@@ -190,13 +274,17 @@ Item {
         property real startY: 0
         property real startParameter: 0
         property bool flipped: false
+        // the touch began on the outer ring (concentric): it turns the outer control
+        property bool outer: false
 
         anchors.fill: dial
         preventStealing: true
         onPressed: (mouse) => {
             resetRamp.stop();
             startY = mouse.y;
-            startParameter = root.turn;
+            outer = root.concentric
+                    && Math.hypot(mouse.x - dial.width / 2, mouse.y - dial.height / 2) > dial.width * 0.36;
+            startParameter = outer ? root.outerTurn : root.turn;
             flipped = false;
             hold.restart();
         }
@@ -206,7 +294,10 @@ Item {
             if (flipped)
                 return;
             const p = startParameter + (startY - mouse.y) / 254; // ~2 px per MIDI step
-            control.parameter = Math.max(0, Math.min(1, p)) * root.span;
+            if (outer)
+                outerControl.parameter = Math.max(0, Math.min(1, p));
+            else
+                control.parameter = Math.max(0, Math.min(1, p)) * root.span;
         }
         onReleased: hold.stop()
         onCanceled: hold.stop()
