@@ -159,6 +159,16 @@ bool AnalyzerBeats::shouldAnalyze(TrackPointer pTrack) const {
         return true;
     }
 
+    // DJ Mantra 14.10.2026: a beat map from the old "auto" default while the steady grid is
+    // chosen (now the default): analysed again into one tempo, as djay
+#ifdef __ANDROID_PORT__
+    if (!pBeats->hasConstantTempo() && beatGridMode() == 0) {
+        qInfo().noquote() << QStringLiteral("Beats: %1\ta beat map, the steady grid is chosen: again")
+                                     .arg(QFileInfo(pTrack->getLocation()).fileName());
+        return true;
+    }
+#endif
+
     QString subVersion = pBeats->getSubVersion();
     if (subVersion == mixxx::rekordboxconstants::beatsSubversion) {
         return m_bPreferencesReanalyzeImported;
@@ -233,7 +243,9 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
                 extraVersionInfo,
                 m_bPreferencesFixedTempo,
                 m_sampleRate,
-                beatGridMode() == 0);
+                // 14.10.2026 (djay compare): 0 is now the steady grid, as djay's (Aum
+                // Ganesha: djay 115, our beat map drifted 91 / 110 / 118); 1 = beat map
+                beatGridMode() == 1);
         qDebug() << "AnalyzerBeats plugin detected" << beats.size()
                  << "beats. Predominant BPM:"
                  << (pBeats ? pBeats->getBpmInRange(
@@ -263,18 +275,24 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
     // V8, verbose: the beat options of Settings for this song
     qInfo().noquote() << QStringLiteral("Beats options: %1\tgrid %2\ton the kick %3")
                                  .arg(QFileInfo(pTrack->getLocation()).fileName(),
-                                         beatGridMode() == 0 ? QStringLiteral("auto (beat map for live drums)")
+                                         beatGridMode() == 1 ? QStringLiteral("auto (beat map for live drums)")
                                                              : QStringLiteral("constant"),
                                          beatOnKick() ? QStringLiteral("on") : QStringLiteral("off"));
     pTrack->trySetBeats(pBeats);
 }
 
-// V8: Settings -> beats ([DJMantra] in the user settings; 0 = auto, 1 = constant)
+// V8: Settings -> beats ([DJMantra] in the user settings). 14.10.2026: 0 = constant (the
+// default, as djay; the old "auto" value 0 turns into it), 1 = auto (a beat map for live drums)
 int AnalyzerBeats::beatGridMode() const {
+#ifdef __ANDROID_PORT__
+    constexpr int kDefault = 0; // the steady grid, as djay
+#else
+    constexpr int kDefault = 1; // desktop: Mixxx's own behaviour (the test suite)
+#endif
     return m_pConfig ? m_pConfig->getValue(ConfigKey(QStringLiteral("[DJMantra]"),
                                                    QStringLiteral("beat_grid_mode")),
-                               0)
-                     : 0;
+                               kDefault)
+                     : kDefault;
 }
 
 bool AnalyzerBeats::beatOnKick() const {

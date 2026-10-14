@@ -563,10 +563,12 @@ Rectangle {
             }
 
             Repeater {
-                model: [{value: 0, label: qsTr("AUTO (default)"),
-                         about: qsTr("A steady grid; a beat map that follows the drummer when the tempo drifts (live drums).")},
-                        {value: 1, label: qsTr("ALWAYS A STEADY GRID"),
-                         about: qsTr("One tempo for the whole song, even with live drums.")}]
+                // 14.10.2026: the steady grid is the default, as djay's (its BPMs are one tempo
+                // per song; our beat map drifted on Aum Ganesha: 91 / 110 / 118 against djay's 115)
+                model: [{value: 0, label: qsTr("STEADY GRID (default, as djay)"),
+                         about: qsTr("One tempo for the whole song.")},
+                        {value: 1, label: qsTr("FOLLOW LIVE DRUMS"),
+                         about: qsTr("A beat map that follows the drummer when the tempo drifts.")}]
 
                 delegate: DButton {
                     required property var modelData
