@@ -11,15 +11,24 @@ Canvas {
     id: root
 
     property string time: "--:--"
-    readonly property int columns: 5 * 6 + 1
-    readonly property int rows: 7 + 2
+    // Marko 14.10.2026: while recording, two rows: the clock on top, the recording's
+    // time under it (m:ss, h:mm:ss after an hour), both red
+    property string recTime: ""
+    readonly property var lines: recording ? [time, recTime] : [time]
+    readonly property int longest: Math.max(5, ...lines.map(l => l.length))
+    readonly property int columns: longest * 6 + 1
+    readonly property int rows: lines.length * 8 + 1
     readonly property real pitch: Math.min(width / columns, height / rows)
 
     readonly property bool recording: Recorder.recording
-    onRecordingChanged: requestPaint()
+    onRecordingChanged: {
+        recTime = "0:00";
+        requestPaint();
+    }
+    onRecTimeChanged: requestPaint()
 
     implicitHeight: 24
-    implicitWidth: columns * implicitHeight / rows
+    implicitWidth: columns * height / rows
 
     Timer {
         interval: 1000
@@ -37,6 +46,19 @@ Canvas {
         }
     }
 
+    Timer {
+        // the recording's time, twice a second (it turns on the whole second)
+        interval: 500
+        repeat: true
+        running: root.recording
+        onTriggered: {
+            const t = Math.max(0, Math.floor((Date.now() - Recorder.startedAt) / 1000));
+            const two = (n) => (n < 10 ? "0" : "") + n;
+            const h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, sec = t % 60;
+            root.recTime = h > 0 ? h + ":" + two(m) + ":" + two(sec) : m + ":" + two(sec);
+        }
+    }
+
     onPaint: {
         const ctx = getContext("2d");
         ctx.reset();
@@ -45,12 +67,18 @@ Canvas {
         ctx.fillStyle = "#04060e";
         ctx.fillRect(0, 0, width, height);
         const lit = {};
-        for (let i = 0; i < time.length; ++i) {
-            const g = PixelFont.glyph(time[i]);
-            for (let gx = 0; gx < 5; ++gx)
-                for (let gy = 0; gy < 7; ++gy)
-                    if (g[gy] & (16 >> gx))
-                        lit[(1 + i * 6 + gx) + "," + (1 + gy)] = true;
+        for (let line = 0; line < lines.length; ++line) {
+            const text = lines[line];
+            // each row centred
+            const left = 1 + Math.floor((columns - 1 - text.length * 6) / 2);
+            const top = 1 + line * 8;
+            for (let i = 0; i < text.length; ++i) {
+                const g = PixelFont.glyph(text[i]);
+                for (let gx = 0; gx < 5; ++gx)
+                    for (let gy = 0; gy < 7; ++gy)
+                        if (g[gy] & (16 >> gx))
+                            lit[(left + i * 6 + gx) + "," + (top + gy)] = true;
+            }
         }
         for (let y = 0; y < rows; ++y)
             for (let x = 0; x < columns; ++x) {

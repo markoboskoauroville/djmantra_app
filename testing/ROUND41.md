@@ -90,3 +90,6 @@ tempo slider work over Bluetooth too (7-bit steps there); no "mis-matched" warni
 ## 23. (V46) EQ knobs in dB (Marko 14.10.2026): under each HIGH / MID / LOW ring "−∞" at the left end (full kill) and
 "0 dB" at the right end (no cut, the top); while cut, the caption shows the cut ("LOW −12 dB", in the knob's colour).
 Turn LOW down step by step: −1 ... −6 ... −20 ... −∞; long press: back to "LOW" (0 dB). Nothing overlaps.
+## 24. (V46) Recording time under the clock (Marko 14.10.2026): while recording, the clock has two rows in the matrix
+font: the time of day on top, the recording's time under it (0:00, 0:01 ... 12:34, 1:02:45 after an hour), both red;
+stop: back to one row. Start / stop by a long press on the clock or Menu -> RECORD MIX.

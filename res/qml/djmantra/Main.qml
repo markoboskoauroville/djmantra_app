@@ -289,7 +289,8 @@ Window {
                 anchors.right: usageMeter.left
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
-                height: 24
+                // two rows while recording: the clock and the recording's time
+                height: Recorder.recording ? 40 : 24
                 width: implicitWidth
             }
 
