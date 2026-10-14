@@ -119,8 +119,14 @@ void StemEq::processFrame(const Gains& gains) {
     m_gLow += kGainSmoothing * (gains.low - m_gLow);
     m_gMid += kGainSmoothing * (gains.mid - m_gMid);
     m_gHigh += kGainSmoothing * (gains.high - m_gHigh);
-    m_blend = gains.stems ? std::min(1.0, m_blend + kBlendStep)
-                          : std::max(0.0, m_blend - kBlendStep);
+    m_gDrums += kGainSmoothing * (gains.drums - m_gDrums);
+    m_gVocals += kGainSmoothing * (gains.vocals - m_gVocals);
+    m_gHarmonies += kGainSmoothing * (gains.harmonies - m_gHarmonies);
+    // the separation runs while a stem is cut (or on its way back)
+    const bool stemCut = std::fabs(gains.drums - 1) > 1e-4 || std::fabs(gains.vocals - 1) > 1e-4 ||
+            std::fabs(gains.harmonies - 1) > 1e-4;
+    m_blend = stemCut ? std::min(1.0, m_blend + kBlendStep)
+                      : std::max(0.0, m_blend - kBlendStep);
 
     for (int c = 0; c < 2; ++c) {
         for (int i = 0; i < kSize; ++i) {
@@ -131,7 +137,7 @@ void StemEq::processFrame(const Gains& gains) {
     // the magnitude of both channels, remembered for the harmonic median; only
     // with the stems on (or on the way): the 9 frames fill again in ~50 ms, well
     // inside the 0.2 s cross-fade
-    if (gains.stems || m_blend > 0) {
+    if (stemCut || m_blend > 0) {
         std::vector<double>& now = m_history[m_historyPos];
         for (int k = 0; k < kBins; ++k) {
             const double l = std::sqrt(m_re[0][k] * m_re[0][k] + m_im[0][k] * m_im[0][k]);
@@ -143,7 +149,7 @@ void StemEq::processFrame(const Gains& gains) {
     }
 
     const bool unity = std::fabs(m_gLow - 1) < 1e-4 && std::fabs(m_gMid - 1) < 1e-4 &&
-            std::fabs(m_gHigh - 1) < 1e-4;
+            std::fabs(m_gHigh - 1) < 1e-4 && m_blend <= 0;
     if (unity) {
         std::fill(m_mask.begin(), m_mask.end(), 1.0);
     } else {
@@ -201,8 +207,8 @@ void StemEq::processFrame(const Gains& gains) {
                 vocals = (1 - drums) * centre * m_vocalBand[k];
             }
             const double harmonies = std::max(0.0, 1 - drums - vocals);
-            const double stems = m_gLow * drums + m_gMid * vocals + m_gHigh * harmonies;
-            m_mask[k] = m_blend * stems + (1 - m_blend) * normal;
+            const double stems = m_gDrums * drums + m_gVocals * vocals + m_gHarmonies * harmonies;
+            m_mask[k] = normal * (m_blend * stems + (1 - m_blend));
         }
     }
 

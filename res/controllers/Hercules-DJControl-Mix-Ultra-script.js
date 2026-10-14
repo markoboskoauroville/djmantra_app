@@ -482,6 +482,27 @@ MixUltra.jumpToBeat = function(deck, pad) {
     }
 };
 
+// The EQ knobs (V63, Marko 14.10.2026: "shift does opposite of what the knob is for ... if I
+// am in the EQ mode, if I press shift and I'm turning, let's say, mids, suddenly I am in the
+// [Neural Mix] mode ... temporarily overriding the actual function"). The screen's mode (EQ /
+// NEURAL MIX, button_parameter4) picks the knobs' set: LOW / MID / HIGH = parameter1..3,
+// DRUMS / VOCALS / HARMONIES = parameter4..6; with SHIFT held (the deck's SHIFT layer, B4 /
+// B5) the other set. 14-bit: MSB 02..04, LSB 22..24.
+MixUltra.eqMsb = {};
+MixUltra.eq = function(channel, control, value, status, group) {
+    var band = (control & 0x1F) - 1; // 1 low, 2 mid, 3 high
+    var shifted = (status & 0x0F) >= 4;
+    var stems = engine.getValue(group, "button_parameter4") > 0;
+    var key = "parameter" + (stems !== shifted ? band + 3 : band);
+    var id = group + band;
+    if (control < 0x20) {
+        MixUltra.eqMsb[id] = value;
+        engine.setParameter(group, key, value / 127);
+    } else {
+        engine.setParameter(group, key, ((MixUltra.eqMsb[id] || 0) * 128 + value) / 16383);
+    }
+};
+
 // Called by DJ Mantra on Android after every (re)connect over USB or Bluetooth:
 // the controller's LEDs are dark again, the knob positions were requested already.
 var djmantraControllerConnected = function() {

@@ -6,10 +6,10 @@
 #include "effects/backends/builtin/stemeq.h"
 #include "effects/backends/effectprocessor.h"
 
-/// DJ Mantra: the deck EQ with a "Neural Mix" mode (djmantra::StemEq): the same
-/// three knobs and kills as the other mixing EQs; the button "stems" turns them into
-/// drums (low), vocals (mid) and harmonies (high).
-/// [EqualizerRack1_[ChannelN]_Effect1],button_parameter4 = the mode.
+/// DJ Mantra: the deck EQ and the "Neural Mix" (djmantra::StemEq): the three bands
+/// (parameter1..3, kills button_parameter1..3) and the stem levels drums, vocals,
+/// harmonies (parameter4..6), all applied together (V63). button_parameter4 = which
+/// three the knobs turn (the screen's mode; the controller's SHIFT flips it).
 class StemEQEffectGroupState final : public EffectState {
   public:
     explicit StemEQEffectGroupState(const mixxx::EngineParameters& engineParameters)
@@ -53,6 +53,9 @@ class StemEQEffect : public EffectProcessorImpl<StemEQEffectGroupState> {
     EngineEffectParameterPointer m_pKillMid;
     EngineEffectParameterPointer m_pKillHigh;
     EngineEffectParameterPointer m_pStems;
+    EngineEffectParameterPointer m_pDrums;
+    EngineEffectParameterPointer m_pVocals;
+    EngineEffectParameterPointer m_pHarmonies;
 
     PollingControlProxy m_pLoFreqCorner;
     PollingControlProxy m_pHiFreqCorner;

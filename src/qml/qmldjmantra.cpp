@@ -148,6 +148,24 @@ QmlDJMantra::QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent)
             this,
             [this](const QString& group, TrackPointer pNewTrack, TrackPointer) {
                 lookUpGenre(group, pNewTrack);
+                // a new song starts fresh (Marko 14.10.2026: "on loading next song, you need to
+                // reset all EQs and all neural filtering ... without inheritance of the old
+                // settings"): the bands and the stem levels at 0 dB, no kills, the FILTER off
+                if (pNewTrack && (group == QStringLiteral("[Channel1]") ||
+                                         group == QStringLiteral("[Channel2]"))) {
+                    const QString eq = QStringLiteral("[EqualizerRack1_") + group +
+                            QStringLiteral("_Effect1]");
+                    for (int i = 1; i <= 6; ++i) {
+                        setControl(eq, QStringLiteral("parameter%1").arg(i), 1.0);
+                    }
+                    for (int i = 1; i <= 3; ++i) {
+                        setControl(eq, QStringLiteral("button_parameter%1").arg(i), 0.0);
+                    }
+                    setControl(QStringLiteral("[QuickEffectRack1_") + group + QChar(']'),
+                            QStringLiteral("super1"),
+                            0.5);
+                    qInfo().noquote() << "New song on" << group << ": EQ, Neural Mix and FILTER reset";
+                }
             });
 #endif
 }

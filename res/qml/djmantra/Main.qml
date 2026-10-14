@@ -811,7 +811,7 @@ Window {
         // the EQ starts flat (0 dB = value 1): Mixxx keeps the last values, and a
         // bug before V34 left them at the maximum (r40: HIGH / MID / LOW at max at start)
         for (const deck of ["[Channel1]", "[Channel2]"]) {
-            for (const key of ["parameter1", "parameter2", "parameter3"])
+            for (const key of ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5", "parameter6"])
                 Mixxx.DJMantra.setControl("[EqualizerRack1_" + deck + "_Effect1]", key, 1);
             // GAIN at 0 dB (V62: no GAIN knob; every song is normalized to -1 dBFS)
             Mixxx.DJMantra.setControl(deck, "pregain", 1);

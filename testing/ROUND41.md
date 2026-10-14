@@ -214,3 +214,12 @@ dBFS again for ..."). Two very different songs (a quiet and a loud master) peak 
 the faders up. The Mixer tab, per deck from the top: HIGH, MID, LOW, FILTER (blue; middle = off, left low-pass, right
 high-pass; long press = back to off, gliding, toast "DECK N  FILTER → OFF"), then FX and the headphone button. No GAIN
 knob. The Mix Ultra's FILTER knob moves the screen's FILTER; SHIFT + HIGH does nothing (no gain).
+## 53. (V63) EQ AND NEURAL MIX ARE SEPARATE KNOB SETS; SHIFT = THE OTHER SET (Marko 14.10.2026). The three bands (LOW /
+MID / HIGH) and the three stems (DRUMS / VOCALS / HARMONIES) now have their own values and both act at once. Mixer tab:
+cut MID to the bottom in EQ, switch to NEURAL MIX: the knobs show DRUMS / VOCALS / HARMONIES at 0 dB (full rings), the
+MID cut stays audible; cut VOCALS; back to EQ: MID still cut, the vocal cut still audible. The Mix Ultra in EQ mode:
+the EQ knobs turn LOW / MID / HIGH (the screen's knobs follow); hold the deck's SHIFT and turn its MID knob: VOCALS
+moves instead (switch the screen to NEURAL MIX to see it), release SHIFT: MID again. In NEURAL MIX mode the opposite.
+## 54. (V63) A NEW SONG STARTS FRESH: cut LOW, VOCALS and the FILTER on deck 1, then load another song onto deck 1 (tap a
+song, the controller's LOAD, or AutoMix's next song): all six knobs back at 0 dB and the FILTER off (logcat "New song on
+[Channel1] : EQ, Neural Mix and FILTER reset"). Deck 2 untouched.

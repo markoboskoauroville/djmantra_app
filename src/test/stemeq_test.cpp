@@ -55,6 +55,11 @@ TEST(StemEqTest, transparentAtUnityInBothModes) {
     for (bool stems : {false, true}) {
         djmantra::StemEq::Gains gains;
         gains.low = gains.mid = gains.high = 0.999; // not the unity shortcut
+        if (stems) {
+            // V63: the stem levels are their own knobs, applied with the bands
+            gains.low = gains.mid = gains.high = 1;
+            gains.drums = gains.vocals = gains.harmonies = 0.999;
+        }
         gains.stems = stems;
         const auto y = run(x, gains);
         const int delay = djmantra::StemEq::latencyFrames();
@@ -75,13 +80,13 @@ TEST(StemEqTest, vocalsMidAndDrumsLow) {
     const double before = toneLevel(x, kRate, 0);
     djmantra::StemEq::Gains gains;
     gains.stems = true;
-    gains.mid = 0; // vocals off: the steady tone in the middle goes
+    gains.vocals = 0; // vocals off: the steady tone in the middle goes
     EXPECT_LT(toneLevel(run(x, gains), kRate, delay), 0.05 * before);
-    gains.mid = 1;
-    gains.low = 0; // drums off: a steady tone is not a drum, it stays
+    gains.vocals = 1;
+    gains.drums = 0; // drums off: a steady tone is not a drum, it stays
     EXPECT_GT(toneLevel(run(x, gains), kRate, delay), 0.8 * before);
     gains.stems = false;
-    gains.low = 1;
+    gains.drums = 1;
     gains.mid = 0; // the normal mid band: 440 Hz is in it
     EXPECT_LT(toneLevel(run(x, gains), kRate, delay), 0.05 * before);
 }

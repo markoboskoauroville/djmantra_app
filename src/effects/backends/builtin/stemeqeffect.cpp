@@ -19,8 +19,9 @@ EffectManifestPointer StemEQEffect::getManifest() {
     pManifest->setAuthor("DJ Mantra");
     pManifest->setVersion("1.0");
     pManifest->setDescription(QObject::tr(
-            "A 3-band equalizer; its STEMS button turns the low, mid and high "
-            "knobs into drums, vocals and harmonies."));
+            "A 3-band equalizer and the Neural Mix levels (drums, vocals, "
+            "harmonies), applied together; the STEMS button says which three the "
+            "knobs turn."));
     pManifest->setEffectRampsFromDry(true);
     pManifest->setIsMixingEQ(true);
 
@@ -34,6 +35,22 @@ EffectManifestPointer StemEQEffect::getManifest() {
     stems->setValueScaler(EffectManifestParameter::ValueScaler::Toggle);
     stems->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
     stems->setRange(0, 0, 1);
+
+    // parameter4..6: the Neural Mix levels, cut only as the bands (V63)
+    const struct {
+        const char* id;
+        const char* name;
+    } stemLevels[] = {{"drums", "Drums"}, {"vocals", "Vocals"}, {"harmonies", "Harmonies"}};
+    for (const auto& level : stemLevels) {
+        EffectManifestParameterPointer p = pManifest->addParameter();
+        p->setId(level.id);
+        p->setName(QObject::tr(level.name));
+        p->setDescription(QObject::tr("Neural Mix level"));
+        p->setValueScaler(EffectManifestParameter::ValueScaler::Logarithmic);
+        p->setUnitsHint(EffectManifestParameter::UnitsHint::Unknown);
+        p->setNeutralPointOnScale(1.0);
+        p->setRange(0, 1.0, 1.0);
+    }
     return pManifest;
 }
 
@@ -51,6 +68,9 @@ void StemEQEffect::loadEngineEffectParameters(
     m_pKillMid = parameters.value("killMid");
     m_pKillHigh = parameters.value("killHigh");
     m_pStems = parameters.value("stems");
+    m_pDrums = parameters.value("drums");
+    m_pVocals = parameters.value("vocals");
+    m_pHarmonies = parameters.value("harmonies");
 }
 
 void StemEQEffect::processChannel(
@@ -69,6 +89,9 @@ void StemEQEffect::processChannel(
         gains.mid = m_pKillMid->toBool() ? 0.0 : m_pPotMid->value();
         gains.high = m_pKillHigh->toBool() ? 0.0 : m_pPotHigh->value();
         gains.stems = m_pStems && m_pStems->toBool();
+        gains.drums = m_pDrums ? m_pDrums->value() : 1.0;
+        gains.vocals = m_pVocals ? m_pVocals->value() : 1.0;
+        gains.harmonies = m_pHarmonies ? m_pHarmonies->value() : 1.0;
     }
     pState->m_eq.process(pInput,
             pOutput,

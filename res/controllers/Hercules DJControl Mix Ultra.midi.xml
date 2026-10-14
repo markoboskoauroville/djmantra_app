@@ -329,50 +329,98 @@
             <!-- Deck 1 EQ low (MSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>parameter1</key>
+                <key>MixUltra.eq</key>
                 <status>0xB1</status>
                 <midino>0x02</midino>
-                <options><fourteen-bit-msb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 1 EQ low (LSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>parameter1</key>
+                <key>MixUltra.eq</key>
                 <status>0xB1</status>
                 <midino>0x22</midino>
-                <options><fourteen-bit-lsb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 1 EQ mid (MSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>parameter2</key>
+                <key>MixUltra.eq</key>
                 <status>0xB1</status>
                 <midino>0x03</midino>
-                <options><fourteen-bit-msb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 1 EQ mid (LSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>parameter2</key>
+                <key>MixUltra.eq</key>
                 <status>0xB1</status>
                 <midino>0x23</midino>
-                <options><fourteen-bit-lsb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 1 EQ high (MSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>parameter3</key>
+                <key>MixUltra.eq</key>
                 <status>0xB1</status>
                 <midino>0x04</midino>
-                <options><fourteen-bit-msb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 1 EQ high (LSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel1]_Effect1]</group>
-                <key>parameter3</key>
+                <key>MixUltra.eq</key>
                 <status>0xB1</status>
                 <midino>0x24</midino>
-                <options><fourteen-bit-lsb/></options>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 1 EQ low + SHIFT (MSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB4</status>
+                <midino>0x02</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 1 EQ low + SHIFT (LSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB4</status>
+                <midino>0x22</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 1 EQ mid + SHIFT (MSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB4</status>
+                <midino>0x03</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 1 EQ mid + SHIFT (LSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB4</status>
+                <midino>0x23</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 1 EQ high + SHIFT (MSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB4</status>
+                <midino>0x04</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 1 EQ high + SHIFT (LSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB4</status>
+                <midino>0x24</midino>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 1: no gain on SHIFT + EQ high (V62: every song normalized to -1 dBFS, no GAIN) -->
             <!-- Deck 1 tempo fader (MSB). No soft takeover (Marko 14.10.2026: the screen's TEMPO
@@ -1651,50 +1699,98 @@
             <!-- Deck 2 EQ low (MSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>parameter1</key>
+                <key>MixUltra.eq</key>
                 <status>0xB2</status>
                 <midino>0x02</midino>
-                <options><fourteen-bit-msb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 2 EQ low (LSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>parameter1</key>
+                <key>MixUltra.eq</key>
                 <status>0xB2</status>
                 <midino>0x22</midino>
-                <options><fourteen-bit-lsb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 2 EQ mid (MSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>parameter2</key>
+                <key>MixUltra.eq</key>
                 <status>0xB2</status>
                 <midino>0x03</midino>
-                <options><fourteen-bit-msb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 2 EQ mid (LSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>parameter2</key>
+                <key>MixUltra.eq</key>
                 <status>0xB2</status>
                 <midino>0x23</midino>
-                <options><fourteen-bit-lsb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 2 EQ high (MSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>parameter3</key>
+                <key>MixUltra.eq</key>
                 <status>0xB2</status>
                 <midino>0x04</midino>
-                <options><fourteen-bit-msb/></options>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 2 EQ high (LSB) -->
             <control>
                 <group>[EqualizerRack1_[Channel2]_Effect1]</group>
-                <key>parameter3</key>
+                <key>MixUltra.eq</key>
                 <status>0xB2</status>
                 <midino>0x24</midino>
-                <options><fourteen-bit-lsb/></options>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 2 EQ low + SHIFT (MSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB5</status>
+                <midino>0x02</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 2 EQ low + SHIFT (LSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB5</status>
+                <midino>0x22</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 2 EQ mid + SHIFT (MSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB5</status>
+                <midino>0x03</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 2 EQ mid + SHIFT (LSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB5</status>
+                <midino>0x23</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 2 EQ high + SHIFT (MSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB5</status>
+                <midino>0x04</midino>
+                <options><script-binding/></options>
+            </control>
+            <!-- Deck 2 EQ high + SHIFT (LSB): the other mode's knob (EQ <-> NEURAL MIX), V63 -->
+            <control>
+                <group>[EqualizerRack1_[Channel2]_Effect1]</group>
+                <key>MixUltra.eq</key>
+                <status>0xB5</status>
+                <midino>0x24</midino>
+                <options><script-binding/></options>
             </control>
             <!-- Deck 2: no gain on SHIFT + EQ high (V62: every song normalized to -1 dBFS, no GAIN) -->
             <!-- Deck 2 tempo fader (MSB) -->

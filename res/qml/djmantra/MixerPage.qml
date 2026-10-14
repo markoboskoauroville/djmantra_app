@@ -162,9 +162,9 @@ Item {
                     anchors.right: deck.index === 1 ? parent.right : undefined
                     spacing: 2
 
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter6" : "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter5" : "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter4" : "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
                     DKnob {
                         // FILTER at the bottom, as on the Mix Ultra (Marko 14.10.2026: no GAIN knob, every
                         // song is normalized to -1 dBFS and the faders set the volume): the Pioneer DJM filter,

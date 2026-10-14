@@ -31,7 +31,13 @@ class StemEq {
     struct Gains {
         double low = 1;  // normal: the low band; stems: drums
         double mid = 1;  // normal: the mid band; stems: vocals
-        double high = 1; // normal: the high band; stems: harmonies
+        double high = 1; // the high band
+        // the Neural Mix levels (V63, Marko 14.10.2026: SHIFT turns the other mode's knobs):
+        // their own knobs, applied together with the bands; "stems" only says which of
+        // the two sets the screen's and the controller's knobs turn
+        double drums = 1;
+        double vocals = 1;
+        double harmonies = 1;
         bool stems = false;
     };
 
@@ -67,8 +73,9 @@ class StemEq {
     std::vector<double> m_mask, m_scratch, m_sorted;
     int m_fill = 0;
     // smoothed per frame
-    double m_blend = 0; // 0 normal .. 1 stems
+    double m_blend = 0; // 0 no stem cut .. 1 the stem levels applied (gates the analysis)
     double m_gLow = 1, m_gMid = 1, m_gHigh = 1;
+    double m_gDrums = 1, m_gVocals = 1, m_gHarmonies = 1;
 };
 
 } // namespace djmantra
