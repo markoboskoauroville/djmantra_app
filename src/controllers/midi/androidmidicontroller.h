@@ -5,9 +5,6 @@
 #include <QQueue>
 
 #include <functional>
-#include <memory>
-
-#include "control/controlobject.h"
 
 #include "controllers/controllerenumerator.h"
 #include "controllers/midi/midicontroller.h"
@@ -40,6 +37,10 @@ class MidiStreamParser {
 /// reconnects, so its mapping stays loaded; after every (re)connect it asks
 /// the controller for all knob positions (B0 7F 7F) and lets the mapping
 /// refresh its LEDs (djmantraControllerConnected() in the script, if any).
+/// The Mix Ultra's link now (0 none, 1 USB, 2 Bluetooth), for [DJMantra],controller_link
+/// even when the controller connected before that control existed
+int androidMidiControllerLink();
+
 class AndroidMidiController : public MidiController {
     Q_OBJECT
   public:
@@ -75,9 +76,6 @@ class AndroidMidiController : public MidiController {
     QAtomicInt m_wakePending;
     void wake();
     MidiStreamParser m_parser;
-    // [DJMantra],controller_link: 0 not connected, 1 USB, 2 Bluetooth (the top bar's
-    // controller badge, Marko 14.10.2026)
-    std::unique_ptr<ControlObject> m_pLink;
 };
 
 class AndroidMidiEnumerator : public ControllerEnumerator {

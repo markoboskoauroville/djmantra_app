@@ -1,5 +1,6 @@
 #include "controllers/midi/androidmidicontroller.h"
 
+#include "control/controlobject.h"
 #include "controllers/scripting/legacy/controllerscriptenginelegacy.h"
 #include "moc_androidmidicontroller.cpp"
 #include "util/time.h"
@@ -75,10 +76,16 @@ JNIEXPORT void JNICALL Java_com_djmantra_app_MidiBridge_nativeConnected(
 } // extern "C"
 #endif
 
+namespace {
+QAtomicInt s_link = 0;
+} // namespace
+
+int androidMidiControllerLink() {
+    return s_link.loadRelaxed();
+}
+
 AndroidMidiController::AndroidMidiController(const QString& name)
-        : MidiController(name),
-          m_pLink(std::make_unique<ControlObject>(
-                  ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("controller_link")))) {
+        : MidiController(name) {
     setInputDevice(true);
     setOutputDevice(true);
 }
@@ -149,7 +156,10 @@ void AndroidMidiController::wake() {
 void AndroidMidiController::connectedFromJava(bool connected, const QString& transport) {
     kLogger.info() << getName() << (connected ? "connected over" : "disconnected from")
                    << transport;
-    m_pLink->set(connected ? (transport == QStringLiteral("bluetooth") ? 2 : 1) : 0);
+    // the screen's badge ([DJMantra],controller_link, made by QmlDJMantra at the start)
+    s_link.storeRelaxed(connected ? (transport == QStringLiteral("bluetooth") ? 2 : 1) : 0);
+    ControlObject::set(ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("controller_link")),
+            s_link.loadRelaxed());
     if (connected) {
         m_connectedEvents.ref();
         wake();

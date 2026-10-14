@@ -28,6 +28,7 @@
 
 #include "control/controlobject.h"
 #include "control/controlproxy.h"
+#include "controllers/midi/androidmidicontroller.h"
 #include "engine/controls/sectiondetector.h"
 #include "library/library.h"
 #include "library/trackcollectionmanager.h"
@@ -91,10 +92,17 @@ void QmlDJMantra::registerUserSettings(UserSettingsPointer pConfig) {
                      {"section_sensitivity", 3},
                      {"beat_grid_mode", 0},
                      {"beat_on_kick", 1},
-                     {"stop_time", 0}}) {
+                     {"stop_time", 0},
+                     // the Mix Ultra's link for the screen's badge (0 none, 1 USB, 2 Bluetooth),
+                     // set by AndroidMidiController; made here, before the QML binds to it
+                     {"controller_link", 0}}) {
             const ConfigKey configKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(key));
             auto pControl = std::make_unique<ControlObject>(configKey);
             pControl->set(pConfig->getValue(configKey, fallback));
+            if (qstrcmp(key, "controller_link") == 0) {
+                // the controller may have connected already
+                pControl->set(androidMidiControllerLink());
+            }
             s_controllerControls.push_back(std::move(pControl));
         }
     }
