@@ -61,7 +61,7 @@ typing; ✕ clears; sorting still works. "FIND ON PHONE": the same words through
 media index: phone, SD card, USB stick), at most 300, toast "FOUND ON PHONE: N" (log `find on phone ...`, logcat
 DJMantraStorage `findSongs`); a tap loads the hit onto the free deck; typing more searches again. Also from the
 Folders level. Opening another folder clears the search. Check with a song in Download and one in Music.
-## 16. (V43) BEATS = a STEADY GRID by default, as djay (djay compare: Aum Ganesha djay 115, ours drifted 91 / 109.9 /
+## 16. BEATS = a STEADY GRID by default, as djay (djay compare: Aum Ganesha djay 115, ours drifted 91 / 109.9 /
 117.8). Settings -> BEATS: "STEADY GRID (default, as djay)" / "FOLLOW LIVE DRUMS". Songs analysed into a beat map
 before are analysed again (logcat `Beats: ... a beat map, the steady grid is chosen: again`). Aum Ganesha: the deck
 shows ~114.6-115 at the start, the middle and the end.
