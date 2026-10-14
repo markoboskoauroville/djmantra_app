@@ -35,6 +35,13 @@ Item {
     readonly property bool concentric: outerKey !== ""
     readonly property real outerTurn: concentric ? Math.min(1, outerControl.parameter) : 0
     readonly property real outerDb: outerControl.value > 0.0005 ? 20 * Math.log(outerControl.value) / Math.LN10 : -999
+    function dbString(db) {
+        if (db <= -998)
+            return "\u2212\u221E";
+        if (Math.abs(db) < 0.5)
+            return "0";
+        return (db < 0 ? "\u2212" : "+") + Math.round(Math.abs(db));
+    }
 
     function reset() {
         resetRamp.stop();
@@ -102,8 +109,10 @@ Item {
         id: dial
 
         // the ring and the knob inside it
-        width: Math.min(root.width, root.height - caption.height - 1)
+        width: Math.min(root.width, root.height - caption.height - (root.concentric ? topCaption.height + 1 : 0) - 1)
         height: width
+        anchors.top: root.concentric ? topCaption.bottom : parent.top
+        anchors.topMargin: root.concentric ? 1 : 0
         anchors.horizontalCenter: parent.horizontalCenter
 
         Repeater {
@@ -147,7 +156,7 @@ Item {
                 x: dial.width / 2 + ringRadius * Math.sin(angle) - size / 2
                 y: dial.height / 2 - ringRadius * Math.cos(angle) - size / 2
                 color: lit ? root.outerColor : Style.tile
-                opacity: lit ? 0.85 : 0.6
+                opacity: lit ? 1 : 0.6
             }
         }
 
@@ -216,6 +225,25 @@ Item {
     }
 
     Text {
+        // concentric: the outer ring's value on top (Marko 14.10.2026: "at the top ... the number
+        // of outside ring, at the bottom number of inside ring")
+        id: topCaption
+
+        visible: root.concentric
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: root.width
+        height: root.concentric ? 13 : 0
+        horizontalAlignment: Text.AlignHCenter
+        fontSizeMode: Text.HorizontalFit
+        minimumPixelSize: 8
+        text: root.outerLabel + " " + root.dbString(root.outerDb) + " dB"
+        color: root.outerColor
+        font.pixelSize: 11
+        font.bold: true
+    }
+
+    Text {
         id: caption
 
         anchors.top: dial.bottom
@@ -225,11 +253,9 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         fontSizeMode: Text.HorizontalFit
         minimumPixelSize: 8
-        text: (root.dbShown ? root.label + " " + root.dbText + " dB" : root.label)
-              + (root.concentric && root.outerDb < -0.5
-                 ? "  \u00B7  " + root.outerLabel + " " + (root.outerDb <= -998 ? "\u2212\u221E" : "\u2212" + Math.round(-root.outerDb))
-                 : "")
-        color: root.dbShown ? (root.dbMode === "gain" ? Style.accent : root.arcColor) : Style.subText
+        text: root.concentric ? root.label + " " + root.dbText + " dB"
+              : root.dbShown ? root.label + " " + root.dbText + " dB" : root.label
+        color: root.concentric || root.dbShown ? (root.dbMode === "gain" ? Style.accent : root.arcColor) : Style.subText
         font.pixelSize: 11
         font.bold: true
     }

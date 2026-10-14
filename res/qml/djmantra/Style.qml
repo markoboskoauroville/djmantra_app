@@ -18,6 +18,8 @@ QtObject {
     readonly property color earth: "#6CCB72"
     readonly property color air: "#F2D35B"
     readonly property color water: "#5AA2F0"
+    // NEURAL MIX (V65): its own colour on the concentric EQ knobs, the EQ keeps the elements'
+    readonly property color neural: "#B48CFF"
     // both decks yellow (Marko, round 19: "I prefer yellow color for both
     // players: their times and also beat LEDs and buttons"); the marked states
     // (beat 1 lit, a beat waiting to launch / jump) are white instead

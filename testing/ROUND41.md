@@ -232,3 +232,7 @@ one; drag starting on the outer ring: the outer one; a long press on either rese
 turn MID a little: VOCALS does NOT jump to the knob; turn it up to where VOCALS is (0 dB, the top): from there VOCALS
 follows. Release SHIFT, turn: MID does not jump until the knob reaches MID's value. Same after the screen's knob or a new
 song changed a value: the hardware knob first has to reach it.
+## 57. (V65) CONCENTRIC KNOB COLOURS AND NUMBERS: EQ = the band colours (HIGH blue, MID green, LOW red), NEURAL MIX =
+violet. In EQ mode the inner dots are the band colour, the outer ring's dots and pointer violet; in NEURAL MIX mode the
+other way round. Two numbers per knob: on TOP the outer ring's ("VOCALS −9 dB", its colour), at the BOTTOM the inner
+one's ("MID −4 dB"), always shown (0 dB too).
