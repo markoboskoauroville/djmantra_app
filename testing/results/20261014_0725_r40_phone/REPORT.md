@@ -18,3 +18,6 @@ Tester: Claude Code on the Mac (hub session), adb over USB. APK DJMantra-V41-0fa
 | 0 | volume fader cuts sound? | ? | deck 1 alone: fader near bottom `Output level: peak 0.036`, fader top `0.041` (quiet part of the song). As in r39: the logged peak barely follows the fader — to check by ear |
 | 0 | LEDs matrix | PASS | time left, bar.beat (4.4, 5.1, 7.3), countdown and the running lights move while playing (screenshots) |
 | 0 | **BPM / key on load** | NOTE | library row says 114.6 BPM 10A and 118.0 BPM 2B; after loading, `sync [Channel1]: deck 1 90.07 bpm, deck 2 90.07 bpm` and deck 2 shows key **1B** (header `10A > 1B clash`). The deck's tempo differs from the library's |
+| 1 | MIXER: no FILTER knob | PASS | each deck: GAIN, HIGH, MID, LOW only, FX button, headphones button |
+| 1 | nothing overlaps, bigger | PASS | 411x914 portrait: knobs, labels, faders, FX/headphones buttons clear of each other, above the crossfader |
+| 1 | double tap: knob middle, fader top | PASS | see part 0 rows |
