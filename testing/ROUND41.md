@@ -99,3 +99,7 @@ current one; a tap switches, toast "CONTROLLER → USB / BLUETOOTH"). Settings a
 read it). HOT CUE / LOOP / FX / NEURAL MIX switch Songs / Phrasing / Mixer / AutoMix (`controller: page N`), SHIFT +
 NEURAL MIX (= SAMPLER, 91 16) -> Keys; the same button twice after a screen tab tap works again. Also check BROWSE
 turn / press and LOAD (same kind of message): if they fail too, say so.
+## 27. (V47) TEMPO direction (r41 part 20 failed: opposite to the console). The screen's TEMPO handle now sits where
+the console's tempo slider is: console bottom = screen bottom. Faster is DOWN on both (as Pioneer, Mixxx's default:
+"+" % and the higher BPM are at the BOTTOM of the scale, "−" at the top). Move the console slider down: the handle goes
+down, the BPM rises; drag the screen handle down: faster too.

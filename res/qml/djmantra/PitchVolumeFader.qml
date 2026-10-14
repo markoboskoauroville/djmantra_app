@@ -31,16 +31,19 @@ Item {
     Mixxx.ControlProxy { id: fileBpm; group: root.group; key: "local_bpm" }
     Mixxx.ControlProxy { id: bpm; group: root.group; key: "bpm" }
 
-    // the pitch as "faster" (-1..1, up = faster whatever the rate direction)
+    // r41 (Marko: "it reacts in the opposite way"): the TEMPO handle sits where the console's
+    // tempo slider is (rate -1 at the bottom, +1 at the top, as its MIDI), and the scale
+    // says which way is faster from the deck's rate direction (Mixxx's default, as Pioneer:
+    // DOWN = faster, "+" at the bottom)
     readonly property real dir: rateDir.value < 0 ? -1 : 1
     readonly property real faster: dir * rate.value
     // the handle's place, 0 = bottom, 1 = top
-    readonly property real position: pitch ? (faster + 1) / 2 : volume.parameter
+    readonly property real position: pitch ? (rate.value + 1) / 2 : volume.parameter
 
     function setPosition(p) {
         p = Math.max(0, Math.min(1, p));
         if (pitch)
-            rate.value = (2 * p - 1) * dir;
+            rate.value = 2 * p - 1;
         else
             volume.parameter = p;
     }
@@ -72,13 +75,14 @@ Item {
 
         delegate: Item {
             required property int index
-            readonly property real f: -1 + index / 4 // -1 .. 1
+            // the mark's rate (-1 bottom .. 1 top) and its speed change (+ = faster)
+            readonly property real f: root.dir * (-1 + index / 4)
             readonly property real percent: f * rateRange.value * 100
             readonly property bool major: index % 2 === 0
 
             width: root.width
             height: 1
-            y: root.trackBottom - (f + 1) / 2 * root.span
+            y: root.trackBottom - index / 8 * root.span // physical: bottom to top
 
             Rectangle {
                 x: root.width / 2 - width / 2
