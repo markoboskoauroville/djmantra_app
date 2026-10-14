@@ -126,3 +126,5 @@ PREVIOUS: the song before is loaded onto the waiting deck and mixed in the same 
 there. Also: AutoMix's bass swap now returns the EQ to 0 dB (the top), not the middle (a cut).
 ## 35. (V49) Battery line (Marko 14.10.2026): a thin vertical line between the clock and the CPU / GPU meter, filled
 from the bottom with the battery %, green; red at 10 % or less (checked once a minute).
+## 36. (V50) Thumbnails: BPM and key moved to the BOTTOM LEFT of the cover, in the same dark box and white bold text as
+the length at the bottom right (Marko 14.10.2026); nothing on the top left any more.

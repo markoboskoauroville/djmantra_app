@@ -824,8 +824,11 @@ Rectangle {
     component LengthBadge: Rectangle {
         property alias text: label.text
         property int fontSize: 12
+        // bottom left instead of bottom right (the thumbnails' BPM and key, Marko 14.10.2026)
+        property bool onLeft: false
 
-        anchors.right: parent.right
+        anchors.right: onLeft ? undefined : parent.right
+        anchors.left: onLeft ? parent.left : undefined
         anchors.bottom: parent.bottom
         anchors.margins: 2
         visible: text !== ""
@@ -918,18 +921,13 @@ Rectangle {
                     font.pixelSize: 40
                 }
 
-                Text {
-                    // BPM and key, top left, as small as the length
-                    anchors.left: parent.left
-                    anchors.top: parent.top
+                LengthBadge {
+                    // BPM and key bottom left, in the same box as the length (Marko 14.10.2026)
+                    onLeft: true
                     anchors.margins: 4
-                    visible: text !== ""
-                    text: tile.isFolder ? "" : (tile.bpm > 0 ? tile.bpm.toFixed(0) : "") + (tile.key !== "" ? " " + tile.key : "")
-                    color: "white"
-                    style: Text.Outline
-                    styleColor: "#cc000000"
-                    font.pixelSize: 11
-                    font.bold: true
+                    text: tile.isFolder ? "" : ((tile.bpm > 0 ? tile.bpm.toFixed(0) : "")
+                            + (tile.bpm > 0 && tile.key !== "" ? "  " : "") + tile.key)
+                    fontSize: 12
                 }
 
                 LengthBadge {
