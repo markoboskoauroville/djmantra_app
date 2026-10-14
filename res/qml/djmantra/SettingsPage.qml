@@ -411,6 +411,67 @@ Rectangle {
                 }
             }
 
+            // TIDAL (Marko 14.10.2026: "we need to have file picker for tidal data"): the key file
+            // with the app's TIDAL Client ID, picked from djmantra_app/Keys, Download or Documents
+            // (only the Client ID is read; the secret is never needed nor read)
+            Text {
+                text: qsTr("TIDAL: Client ID ") + tidalId.shown
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+
+                QtObject {
+                    id: tidalId
+
+                    property string value: Mixxx.DJMantra.tidalClientId()
+                    readonly property string shown: value.length > 6 ? value.substring(0, 4) + "..." + value.substring(value.length - 2) : value
+                }
+            }
+
+            Flow {
+                width: column.width - 12
+                spacing: 6
+
+                Repeater {
+                    id: keyFiles
+
+                    model: Mixxx.DJMantra.tidalKeyFiles()
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "tidalKey_" + modelData.name
+                        width: Math.min(column.width - 12, Math.max(140, keyLabel.implicitWidth + 24))
+                        height: 42
+                        mode: ""
+                        text: modelData.name
+                        fontSize: 12
+                        onClicked: {
+                            const id = Mixxx.DJMantra.tidalUseKeyFile(modelData.path);
+                            tidalId.value = Mixxx.DJMantra.tidalClientId();
+                            Toasts.show(id !== "" ? qsTr("TIDAL KEY FILE LOADED: LOG IN AGAIN") : qsTr("NO TIDAL CLIENT ID IN ") + modelData.name);
+                        }
+
+                        Text {
+                            id: keyLabel
+
+                            visible: false
+                            text: parent.text
+                            font.pixelSize: 12
+                        }
+                    }
+                }
+
+                Text {
+                    visible: keyFiles.count === 0
+                    width: column.width - 12
+                    wrapMode: Text.WordWrap
+                    text: qsTr("No key files: put the TIDAL key file (.txt / .json) in Music/djmantra_app/Keys or Download")
+                    color: Style.subText
+                    font.pixelSize: 13
+                }
+            }
+
             // RECORDING (Marko 14.10.2026): the mix recorded lossless (FLAC, or WAV) into
             // djmantra_app/Recordings as "<name> - <date> <time>" (Menu -> RECORD MIX)
             Text {

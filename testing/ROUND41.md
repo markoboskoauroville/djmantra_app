@@ -189,3 +189,17 @@ link, e.g. https://suno.com/song/<id> or https://suno.com/s/<code>), PASTE (seve
 under it shows the remembered links (title · playlist). × closes: PLAYLISTS shows "Suno" with "SUNO PLAYLIST · N songs";
 inside it the songs (files in /sdcard/Music/djmantra_app/Suno/<title>.mp3) load, play, analyse and mix as any song,
 AutoMix too. The same link again: not saved twice. logcat DJMantraSuno (report "no audio on ..." errors: a private song).
+## 48. (V58) SUNO WITH THE OWNER'S LOGIN. Tested in the cloud on Marko's 4 links: Suno gives the AUDIO only to the
+logged-in owner ("audio_url": ".../api/forbidden", "is_public": false), so ADD now REMEMBERS each link with its TITLE
+("Remembered: 1 svemir, one day porcupine tree (GET it ...)"). Each such song has GET: Suno's song page in a browser
+inside the app: log in to Suno ONCE (the login stays; Google's login may refuse an in-app browser: then e-mail /
+Discord / Apple), the song's ... menu -> Download -> MP3; the bar says "Saved: <title>.mp3 (N KB)"; DONE: the panel
+finds it, the song is in the Suno playlist (GET disappears, the row turns white). ALSO: a song downloaded with the
+Suno app or Chrome into Download is found by its title when the SUNO panel opens (copied into djmantra_app/Suno).
+Report what the Download does in the in-app browser (saved or nothing): logcat DJMantraSuno.
+## 49. (V58) TIDAL, NEW APP (Marko's own developer app "DJ Mantra", Client ID JjTAmDVohiV7GgOL, built in). Settings ->
+TIDAL: "Client ID JjTA...OL"; the key files in Music/djmantra_app/Keys, Download, Documents as buttons: a tap reads ONLY
+the Client ID from it (toast "TIDAL KEY FILE LOADED: LOG IN AGAIN"; the secret is never read). Songs -> PLAYLISTS ->
+TIDAL -> LOG IN (PKCE) -> his TIDAL playlists; TAKE IN one; SYNC ALL PLAYLISTS TO TIDAL: every app playlist to TIDAL
+(one after another, "found/total" each, then "N playlists synced to TIDAL"); SYNC again: no duplicate playlists, only
+missing songs added. Check on TIDAL (app or web) that the playlists are there with the songs.

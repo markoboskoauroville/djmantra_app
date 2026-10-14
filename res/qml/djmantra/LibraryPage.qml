@@ -1365,8 +1365,28 @@ Rectangle {
     function openSuno() {
         sunoOpen = true;
         sunoStatus = "";
-        sunoKnown = Mixxx.DJMantra.sunoLinks();
+        sunoFind();
         sunoName.text = inPlaylist ? folder.substring(9) : qsTr("Suno");
+    }
+
+    // the songs waiting for their file: found by title in djmantra_app/Suno and Download
+    function sunoFind() {
+        const n = Mixxx.DJMantra.sunoScan();
+        if (n > 0) {
+            sunoStatus = n + qsTr(" Suno songs came in");
+            Toasts.show(qsTr("SUNO: ") + n + qsTr(" SONGS IN"));
+            ++playlistsVersion;
+        }
+        sunoKnown = Mixxx.DJMantra.sunoLinks();
+    }
+
+    // back from GET (the Suno browser): its download is matched at once
+    Connections {
+        target: Qt.application
+        function onStateChanged() {
+            if (root.sunoOpen && Qt.application.state === Qt.ApplicationActive)
+                root.sunoFind();
+        }
     }
 
     function addSuno() {
@@ -1386,13 +1406,16 @@ Rectangle {
         function onSunoResult(action, result) {
             if (action === "song") {
                 root.sunoStatus = qsTr("Saved: ") + result;
+            } else if (action === "title") {
+                root.sunoStatus = qsTr("Remembered: ") + result + qsTr(" (GET it with your Suno login)");
             } else if (action === "error") {
                 root.sunoStatus = result;
             } else if (action === "done") {
                 const p = result.split("|");
                 root.sunoBusy = false;
                 root.sunoStatus = p[0] + qsTr(" songs in ") + sunoName.text
-                        + (p[1] !== "0" ? ", " + p[1] + qsTr(" could not be saved") : "");
+                        + (p[1] !== "0" ? ", " + p[1] + qsTr(" could not be read") : "")
+                        + (p[2] && p[2] !== "0" ? ", " + p[2] + qsTr(" to GET with your Suno login (Suno keeps the audio for its owner)") : "");
                 Toasts.show(qsTr("SUNO: ") + p[0] + qsTr(" SONGS IN ") + sunoName.text.toUpperCase());
             }
             root.sunoKnown = Mixxx.DJMantra.sunoLinks();
@@ -1544,16 +1567,41 @@ Rectangle {
                 clip: true
                 model: root.sunoKnown
 
-                delegate: Text {
+                delegate: Item {
+                    id: sunoRow
+
                     required property var modelData
 
                     width: ListView.view.width
-                    height: 30
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                    text: (modelData.title ? modelData.title : modelData.url) + "   \u00B7  " + modelData.playlist
-                    color: modelData.file ? Style.text : Style.subText
-                    font.pixelSize: 13
+                    height: 44
+
+                    Text {
+                        anchors.left: parent.left
+                        anchors.right: getButton.left
+                        anchors.rightMargin: 6
+                        anchors.verticalCenter: parent.verticalCenter
+                        elide: Text.ElideRight
+                        text: (sunoRow.modelData.title ? sunoRow.modelData.title : sunoRow.modelData.url)
+                              + "   \u00B7  " + sunoRow.modelData.playlist
+                        color: sunoRow.modelData.file ? Style.text : Style.subText
+                        font.pixelSize: 13
+                    }
+
+                    DButton {
+                        // no file yet: Suno's own download, logged in (SunoActivity)
+                        id: getButton
+
+                        objectName: "sunoGet"
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: !sunoRow.modelData.file
+                        width: visible ? 64 : 0
+                        height: 38
+                        mode: ""
+                        text: qsTr("GET")
+                        fontSize: 11
+                        onClicked: Mixxx.DJMantra.sunoGet(sunoRow.modelData.url, sunoRow.modelData.title || "")
+                    }
                 }
             }
         }
@@ -1599,6 +1647,10 @@ Rectangle {
                 const p = result.split("|");
                 root.tidalStatus = p[1].indexOf("/") > 0 ? p[0] + qsTr(" on TIDAL: ") + p[1] + qsTr(" songs found") : p[1];
                 Toasts.show(qsTr("SENT TO TIDAL: ") + p[0]);
+            } else if (action === "sync") {
+                root.tidalStatus = result + qsTr(" playlists synced to TIDAL");
+                Toasts.show(qsTr("TIDAL SYNC: ") + result + qsTr(" PLAYLISTS"));
+                Mixxx.DJMantra.tidalPlaylists();
             } else if (action === "logout") {
                 root.tidalLists = [];
                 root.tidalStatus = qsTr("Logged out");
@@ -1667,6 +1719,21 @@ Rectangle {
                     root.tidalBusy = true;
                     root.tidalStatus = qsTr("Finding the songs on TIDAL ...");
                     Mixxx.DJMantra.tidalPush(root.folder.substring(9));
+                }
+            }
+
+            DButton {
+                // every app playlist to TIDAL (Marko 14.10.2026: "Every playlist from the
+                // application goes to Tidal"); a TIDAL playlist of the same name gets only what it lacks
+                objectName: "tidalSyncAll"
+                visible: root.tidalOn
+                width: parent.width
+                height: 48
+                text: qsTr("SYNC ALL PLAYLISTS TO TIDAL")
+                onClicked: {
+                    root.tidalBusy = true;
+                    root.tidalStatus = qsTr("Sending every playlist to TIDAL ...");
+                    Mixxx.DJMantra.tidalSyncAll();
                 }
             }
 

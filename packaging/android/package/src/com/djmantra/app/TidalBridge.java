@@ -31,7 +31,10 @@ import java.security.SecureRandom;
  */
 public final class TidalBridge {
     private static final String TAG = "DJMantraTidal";
-    private static final String CLIENT_ID = "Etv8AkwIcduV4SYO";
+    // the DJ Mantra app on Marko's TIDAL developer account (14.10.2026, public); a key file picked
+    // in Settings -> TIDAL can set another one (only its Client ID is read, never the secret:
+    // PKCE needs none)
+    private static final String DEFAULT_CLIENT_ID = "JjTAmDVohiV7GgOL";
     private static final int PORT = 8765;
     private static final String REDIRECT = "http://localhost:" + PORT + "/tidal-callback";
     private static final String SCOPES =
@@ -43,12 +46,24 @@ public final class TidalBridge {
         return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 
+    public static String clientId(Context context) {
+        return prefs(context).getString("client_id", DEFAULT_CLIENT_ID);
+    }
+
+    /** Another Client ID (from a key file): the old login is dropped. */
+    public static void setClientId(Context context, String id) {
+        String clean = id == null ? "" : id.trim();
+        prefs(context).edit().clear().putString("client_id", clean.isEmpty() ? DEFAULT_CLIENT_ID : clean).apply();
+        Log.i(TAG, "client ID set (" + clean.length() + " characters)");
+    }
+
     public static boolean loggedIn(Context context) {
         return !prefs(context).getString("refresh", "").isEmpty();
     }
 
     public static void logout(Context context) {
-        prefs(context).edit().clear().apply();
+        String id = clientId(context);
+        prefs(context).edit().clear().putString("client_id", id).apply();
     }
 
     // --- login ------------------------------------------------------------------
@@ -65,7 +80,7 @@ public final class TidalBridge {
             new SecureRandom().nextBytes(stateBytes);
             String state = b64(stateBytes);
             String url = "https://login.tidal.com/authorize?response_type=code"
-                    + "&client_id=" + enc(CLIENT_ID) + "&redirect_uri=" + enc(REDIRECT)
+                    + "&client_id=" + enc(clientId(context)) + "&redirect_uri=" + enc(REDIRECT)
                     + "&scope=" + enc(SCOPES) + "&code_challenge_method=S256"
                     + "&code_challenge=" + enc(challenge) + "&state=" + enc(state);
             try (ServerSocket server = new ServerSocket(PORT, 1, InetAddress.getByName("127.0.0.1"))) {
@@ -89,7 +104,7 @@ public final class TidalBridge {
                         }
                         reply(socket, "TIDAL is connected. Go back to DJ Mantra.");
                         JSONObject token = postForm(context, "grant_type=authorization_code&client_id="
-                                + enc(CLIENT_ID) + "&code=" + enc(code) + "&redirect_uri=" + enc(REDIRECT)
+                                + enc(clientId(context)) + "&code=" + enc(code) + "&redirect_uri=" + enc(REDIRECT)
                                 + "&code_verifier=" + enc(verifier) + "&scope=" + enc(SCOPES));
                         if (token == null) {
                             return "the token exchange failed";
@@ -236,11 +251,36 @@ public final class TidalBridge {
                     found.put(new JSONObject().put("id", id).put("type", "tracks"));
                 }
             }
-            JSONObject body = new JSONObject().put("data", new JSONObject().put("type", "playlists")
-                    .put("attributes", new JSONObject().put("name", name)
-                            .put("description", "From DJ Mantra")));
-            JSONObject created = send(context, "POST", "/playlists?countryCode=" + country, body);
-            String playlistId = created.getJSONObject("data").getString("id");
+            // a TIDAL playlist of that name already (an earlier sync): only the songs not in it yet
+            String playlistId = null;
+            int already = 0;
+            JSONArray mine = new JSONArray(playlists(context));
+            for (int i = 0; i < mine.length() && playlistId == null; ++i) {
+                if (name.equals(mine.getJSONObject(i).optString("name"))) {
+                    playlistId = mine.getJSONObject(i).getString("id");
+                }
+            }
+            if (playlistId != null) {
+                java.util.Set<String> there = itemIds(context, playlistId, country);
+                JSONArray fresh = new JSONArray();
+                for (int i = 0; i < found.length(); ++i) {
+                    if (!there.contains(found.getJSONObject(i).getString("id"))) {
+                        fresh.put(found.get(i));
+                    }
+                }
+                Log.i(TAG, name + ": on TIDAL already, " + fresh.length() + " new songs");
+                already = found.length() - fresh.length();
+                found = fresh;
+                if (fresh.length() == 0) {
+                    return already + "/" + songs.length();
+                }
+            } else {
+                JSONObject body = new JSONObject().put("data", new JSONObject().put("type", "playlists")
+                        .put("attributes", new JSONObject().put("name", name)
+                                .put("description", "From DJ Mantra")));
+                JSONObject created = send(context, "POST", "/playlists?countryCode=" + country, body);
+                playlistId = created.getJSONObject("data").getString("id");
+            }
             for (int start = 0; start < found.length(); start += 20) {
                 JSONArray batch = new JSONArray();
                 for (int i = start; i < Math.min(found.length(), start + 20); ++i) {
@@ -250,11 +290,26 @@ public final class TidalBridge {
                         new JSONObject().put("data", batch));
             }
             Log.i(TAG, "pushed " + name + ": " + found.length() + "/" + songs.length());
-            return found.length() + "/" + songs.length();
+            return (already + found.length()) + "/" + songs.length();
         } catch (Exception e) {
             Log.w(TAG, "push: " + e);
             return "error: " + e.getMessage();
         }
+    }
+
+    // the track IDs a TIDAL playlist holds
+    private static java.util.Set<String> itemIds(Context context, String id, String country) throws Exception {
+        java.util.Set<String> ids = new java.util.HashSet<>();
+        String next = "/playlists/" + id + "/relationships/items?countryCode=" + country;
+        for (int page = 0; next != null && page < 100; ++page) {
+            JSONObject doc = get(context, next);
+            JSONArray data = doc.optJSONArray("data");
+            for (int i = 0; data != null && i < data.length(); ++i) {
+                ids.add(data.getJSONObject(i).getString("id"));
+            }
+            next = nextLink(doc);
+        }
+        return ids;
     }
 
     /** The TIDAL track ID of recording `isrc` (exact), "" if none or not logged in. Blocking. */
@@ -302,7 +357,7 @@ public final class TidalBridge {
         if (refresh.isEmpty()) {
             throw new Exception("not logged in to TIDAL");
         }
-        JSONObject token = postForm(context, "grant_type=refresh_token&client_id=" + enc(CLIENT_ID)
+        JSONObject token = postForm(context, "grant_type=refresh_token&client_id=" + enc(clientId(context))
                 + "&refresh_token=" + enc(refresh));
         if (token == null) {
             throw new Exception("TIDAL login expired: log in again");

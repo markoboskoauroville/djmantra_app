@@ -15,7 +15,8 @@ import java.util.regex.Pattern;
  * SUNO PLAYLISTS (Marko 14.10.2026): a pasted Suno song link (suno.com/song/<id>, or a short
  * suno.com/s/<code> link) into a file the decks can play. The song's public page is read as any
  * link preview reads it (its Open Graph tags: og:title, og:audio), no Suno API; the MP3 it names
- * is saved in `dir` as "<title>.mp3". Returns "path|title", or "error: ...".
+ * is saved in `dir` as "<title>.mp3". Returns "path|title", "noaudio|title" (the page names no
+ * audio for a visitor: the song's title only), or "error: ...".
  */
 public final class SunoBridge {
     private static final String TAG = "DJMantraSuno";
@@ -37,10 +38,14 @@ public final class SunoBridge {
                 Matcher m = Pattern.compile("https://cdn\\d*\\.suno\\.ai/[A-Za-z0-9-]+\\.mp3").matcher(page);
                 audio = m.find() ? m.group() : "";
             }
-            if (audio.isEmpty()) {
-                return "error: no audio on " + link + " (is the song public?)";
-            }
             String title = meta(page, "og:title").replaceAll("\\s*\\|\\s*Suno\\s*$", "").trim();
+            if (audio.isEmpty() || audio.contains("/forbidden")) {
+                // Suno gives the audio only to its logged-in owner (14.10.2026: "audio_url" is
+                // ".../api/forbidden" for a song shared by link): the title is kept, the song
+                // comes by GET (Suno's own download, logged in) or a file matched by its title
+                Log.i(TAG, link + ": title only (" + title + ")");
+                return title.isEmpty() ? "error: no song on " + link : "noaudio|" + title;
+            }
             if (title.isEmpty()) {
                 title = audio.substring(audio.lastIndexOf('/') + 1).replace(".mp3", "");
             }

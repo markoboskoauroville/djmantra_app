@@ -136,6 +136,15 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE void tidalImport(const QString& id, const QString& name);
     // one of the app's playlists to TIDAL (a new TIDAL playlist of the same name)
     Q_INVOKABLE void tidalPush(const QString& name);
+    // every app playlist to TIDAL, one after another (an existing TIDAL playlist of the same name
+    // gets only the songs it lacks): tidalResult("push", ...) each, then ("sync", "<n>")
+    Q_INVOKABLE void tidalSyncAll();
+    // the TIDAL key file (Marko 14.10.2026: "we need to have file picker for tidal data"): the
+    // text files in djmantra_app/Keys, Download and Documents; one picked sets the app's TIDAL
+    // Client ID (only that is read; the secret is never read into the app)
+    Q_INVOKABLE QVariantList tidalKeyFiles() const;
+    Q_INVOKABLE QString tidalUseKeyFile(const QString& path);
+    Q_INVOKABLE QString tidalClientId() const;
     // SUNO PLAYLISTS (Marko 14.10.2026): Suno song links pasted (any text: every suno.com link
     // in it) into playlist `name`; the links are remembered (djmantra_app/Suno/links.json), each
     // song saved as djmantra_app/Suno/<title>.mp3 (SunoBridge.java) and put in the playlist.
@@ -143,6 +152,12 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int sunoAdd(const QString& name, const QString& text);
     // the remembered links: [{url, playlist, title, file}]
     Q_INVOKABLE QVariantList sunoLinks() const;
+    // GET: the song's Suno page in the app's browser, logged in to Suno, its Download saved as
+    // djmantra_app/Suno/<title>.mp3 (SunoActivity.java)
+    Q_INVOKABLE void sunoGet(const QString& url, const QString& title);
+    // the remembered songs without a file: matched by title in djmantra_app/Suno and Download
+    // (Suno's downloads), put in their playlists; returns how many were found
+    Q_INVOKABLE int sunoScan();
     // BEATSTATS (Marko 14.10.2026): beatstats.com in a WebView (BeatStatsActivity), READ CHART
     // there reads the chart's rows from the page (no AI) with each song's ISRC and stores them in
     // djmantra_app/BeatStats/charts.json, read here
