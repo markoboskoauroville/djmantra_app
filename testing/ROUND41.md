@@ -257,3 +257,8 @@ microphone appears when plugged), ANALYZER (violet live spectrum), CORRECTION GU
 "Test", measure one place there, switch back: each room keeps its places; restart the app: rooms, places and the
 correction kept (Music/djmantra_app/Room_Correction/rooms.json). The recording (RECORD MIX) is NOT corrected. logcat
 DJMantraRoomEq ("sweep 8 s, input 0, peak X dBFS").
+## 60. (V69) ROOM FILES AND SAVE: Room_Corrections in Music/djmantra_app holds one file per room, "<room>.json", written
+by itself after each measurement, APPLY, a band dragged, FLAT, a place in / out. SAVE (next to ROOM): toast "SAVED:
+Room_Corrections/<room>.json". NEW ROOM "Test", measure and APPLY there; choose the first room again: ITS correction
+curve comes back; choose "Test": its curve. RENAME: the file is renamed; DELETE: the file is gone (adb shell ls
+/sdcard/Music/djmantra_app/Room_Corrections).

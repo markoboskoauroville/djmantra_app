@@ -1882,10 +1882,10 @@ QVariantList QmlDJMantra::roomBands() const {
 
 static QString roomDir() {
 #if defined(Q_OS_ANDROID)
-    return QStringLiteral("/sdcard/Music/djmantra_app/Room_Correction");
+    return QStringLiteral("/sdcard/Music/djmantra_app/Room_Corrections");
 #else
     return QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
-            QStringLiteral("/djmantra_app/Room_Correction");
+            QStringLiteral("/djmantra_app/Room_Corrections");
 #endif
 }
 
@@ -1980,21 +1980,50 @@ void QmlDJMantra::roomEqLive(bool on, int inputId) {
 #endif
 }
 
-QString QmlDJMantra::roomsLoad() const {
-    QFile file(roomDir() + QStringLiteral("/rooms.json"));
-    if (!file.open(QIODevice::ReadOnly)) {
-        return QStringLiteral("[]");
-    }
-    return QString::fromUtf8(file.readAll());
+static QString roomFile(const QString& name) {
+    QString safe = name.trimmed();
+    safe.replace(QRegularExpression(QStringLiteral("[/\\\\:*?\"<>|]")), QStringLiteral("_"));
+    return roomDir() + QChar('/') + (safe.isEmpty() ? QStringLiteral("Room") : safe) + QStringLiteral(".json");
 }
 
-void QmlDJMantra::roomsSave(const QString& json) {
+QString QmlDJMantra::roomsLoad() const {
+    QJsonArray rooms;
+    const auto files = QDir(roomDir()).entryInfoList({QStringLiteral("*.json")}, QDir::Files, QDir::Name | QDir::IgnoreCase);
+    for (const QFileInfo& info : files) {
+        QFile file(info.absoluteFilePath());
+        if (!file.open(QIODevice::ReadOnly)) {
+            continue;
+        }
+        const QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+        if (doc.isObject() && doc.object().contains(QStringLiteral("points"))) {
+            rooms.append(doc.object());
+        } else if (doc.isArray()) {
+            // V68 kept all rooms in one rooms.json: taken over, one file each
+            for (const auto& room : doc.array()) {
+                rooms.append(room);
+                const_cast<QmlDJMantra*>(this)->roomSave(
+                        QString::fromUtf8(QJsonDocument(room.toObject()).toJson()));
+            }
+            QFile::remove(info.absoluteFilePath());
+        }
+    }
+    return QString::fromUtf8(QJsonDocument(rooms).toJson(QJsonDocument::Compact));
+}
+
+QString QmlDJMantra::roomSave(const QString& json) {
+    const QJsonObject room = QJsonDocument::fromJson(json.toUtf8()).object();
+    const QString path = roomFile(room.value(QStringLiteral("name")).toString());
     QDir().mkpath(roomDir());
-    QSaveFile file(roomDir() + QStringLiteral("/rooms.json"));
+    QSaveFile file(path);
     if (file.open(QIODevice::WriteOnly)) {
-        file.write(json.toUtf8());
+        file.write(QJsonDocument(room).toJson(QJsonDocument::Indented));
         file.commit();
     }
+    return path;
+}
+
+void QmlDJMantra::roomDelete(const QString& name) {
+    QFile::remove(roomFile(name));
 }
 
 QString QmlDJMantra::roomEqLiveColumns() const {

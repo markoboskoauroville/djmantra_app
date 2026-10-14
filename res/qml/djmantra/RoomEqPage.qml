@@ -64,11 +64,25 @@ Rectangle {
         current = Math.max(0, Math.min(list.length - 1, Number(Mixxx.DJMantra.setting("room_current", "0"))));
     }
 
+    // every change is saved at once: the room's own file, Music/djmantra_app/Room_Corrections/<name>.json
     function saveRooms() {
-        Mixxx.DJMantra.roomsSave(JSON.stringify(rooms));
+        if (room)
+            lastSaved = Mixxx.DJMantra.roomSave(JSON.stringify(room));
         Mixxx.DJMantra.setSetting("room_current", current);
         rooms = rooms.slice(); // the bindings see the change
         graph.requestPaint();
+    }
+
+    property string lastSaved: ""
+
+    // a room chosen: its own correction comes back with it (FLAT if it has none yet)
+    function useRoom(index) {
+        current = index;
+        Mixxx.DJMantra.setSetting("room_current", current);
+        const corr = room && room.correction && room.correction.length === 31 ? room.correction : null;
+        for (let b = 0; b < 31; ++b)
+            Mixxx.DJMantra.setRoomBand(b, corr ? corr[b] : 0);
+        refreshBands();
     }
 
     function setRoom(change) {
@@ -176,8 +190,10 @@ Rectangle {
         // smoothed over the neighbours: no narrow peaks and notches a third apart
         const s = c.map((v, i) => i === 0 || i === 30 ? v : 0.25 * c[i - 1] + 0.5 * v + 0.25 * c[i + 1]);
         const lift = Math.max(0, Math.max.apply(null, s));
+        const finalBands = s.map((v) => Math.round(Math.max(-12, v - lift) * 10) / 10);
         for (let b = 0; b < 31; ++b)
-            Mixxx.DJMantra.setRoomBand(b, Math.max(-12, s[b] - lift));
+            Mixxx.DJMantra.setRoomBand(b, finalBands[b]);
+        setRoom((r) => { r.correction = finalBands; });
         setBypass(false);
         refreshBands();
         const used = room.points.filter((p) => p && p.use).length;
@@ -186,10 +202,17 @@ Rectangle {
         Toasts.show(qsTr("ROOM CORRECTION APPLIED"));
     }
 
+    // the curve as it is now, kept with the room
+    function keepCorrection() {
+        const now = Mixxx.DJMantra.roomBands();
+        setRoom((r) => { r.correction = now.map((v) => Math.round(v * 10) / 10); });
+    }
+
     function flat() {
         for (let b = 0; b < 31; ++b)
             Mixxx.DJMantra.setRoomBand(b, 0);
         refreshBands();
+        keepCorrection();
         Toasts.show(qsTr("ROOM CORRECTION → FLAT"));
     }
 
@@ -393,10 +416,13 @@ Rectangle {
                 }
             }
 
+            Row {
+                spacing: 6
+
             DButton {
                 // the room (rooms are kept; tap: choose, add, rename, delete)
                 objectName: "roomChoose"
-                width: parent.width
+                width: content.width - 6 - 84
                 height: 40
                 mode: ""
                 text: qsTr("ROOM: ") + (root.room ? root.room.name : "") + "   "
@@ -404,6 +430,22 @@ Rectangle {
                 fontSize: 13
                 lit: root.panel === "rooms"
                 onClicked: root.panel = root.panel === "rooms" ? "" : "rooms"
+            }
+
+            DButton {
+                // SAVE (Marko 14.10.2026): every change is saved by itself; this one saves and
+                // says where (Music/djmantra_app/Room_Corrections/<room>.json)
+                objectName: "roomSave"
+                width: 84
+                height: 40
+                mode: ""
+                text: qsTr("SAVE")
+                fontSize: 13
+                onClicked: {
+                    root.keepCorrection();
+                    Toasts.show(qsTr("SAVED: Room_Corrections/") + root.lastSaved.substring(root.lastSaved.lastIndexOf("/") + 1));
+                }
+            }
             }
 
             Canvas {
@@ -547,8 +589,10 @@ Rectangle {
                         root.refreshBands();
                     }
                     onReleased: {
-                        if (band >= 0)
+                        if (band >= 0) {
                             Toasts.show(name(band) + " " + (root.bands[band] > 0 ? "+" : "") + root.bands[band].toFixed(1) + " dB");
+                            root.keepCorrection();
+                        }
                         band = -1;
                         graph.requestPaint();
                     }
@@ -556,6 +600,7 @@ Rectangle {
                         const b = nearest(mouse.x);
                         Mixxx.DJMantra.setRoomBand(b, 0);
                         root.refreshBands();
+                        root.keepCorrection();
                         Toasts.show(name(b) + " → 0 dB");
                     }
                 }
@@ -876,8 +921,7 @@ Rectangle {
                     fontSize: 13
                     lit: index === root.current
                     onClicked: {
-                        root.current = index;
-                        root.saveRooms();
+                        root.useRoom(index);
                         root.panel = "";
                         Toasts.show(qsTr("ROOM → ") + modelData.name);
                     }
@@ -923,7 +967,7 @@ Rectangle {
                     onClicked: {
                         const name = roomName.text.trim() || (qsTr("Room ") + (root.rooms.length + 1));
                         root.rooms = root.rooms.concat([root.emptyRoom(name)]);
-                        root.current = root.rooms.length - 1;
+                        root.useRoom(root.rooms.length - 1);
                         root.saveRooms();
                         roomName.text = "";
                         root.panel = "";
@@ -941,6 +985,7 @@ Rectangle {
                         const name = roomName.text.trim();
                         if (name === "")
                             return;
+                        Mixxx.DJMantra.roomDelete(root.room.name);
                         root.setRoom((r) => { r.name = name; });
                         roomName.text = "";
                         Toasts.show(qsTr("ROOM → ") + name);
@@ -954,6 +999,7 @@ Rectangle {
                     text: qsTr("DELETE")
                     fontSize: 12
                     onClicked: {
+                        Mixxx.DJMantra.roomDelete(root.room.name);
                         if (root.rooms.length <= 1) {
                             root.rooms = [root.emptyRoom(qsTr("My room"))];
                         } else {
@@ -961,7 +1007,7 @@ Rectangle {
                             copy.splice(root.current, 1);
                             root.rooms = copy;
                         }
-                        root.current = 0;
+                        root.useRoom(0);
                         root.saveRooms();
                         root.panel = "";
                         Toasts.show(qsTr("ROOM DELETED"));
@@ -1068,7 +1114,9 @@ Rectangle {
                     + "to the next place, press again. BYPASS compares with and without the correction.<br><br>"
                     + "<b>ROOMS</b><br>"
                     + "Every venue can have its own room: ROOM at the top chooses, adds, renames or deletes one. "
-                    + "A room keeps its places, target and strength (Music/djmantra_app/Room_Correction).<br><br>"
+                    + "A room keeps its places, target, strength and correction, saved by itself as a file of its own: "
+                    + "Music/djmantra_app/Room_Corrections/&lt;room&gt;.json (SAVE also saves and shows the file). Choosing a "
+                    + "room brings its correction back.<br><br>"
                     + "<b>BY HAND</b><br>"
                     + "Drag any band up or down on the graph; double tap it for 0 dB. FLAT clears the correction.")
             }

@@ -35,10 +35,12 @@ rooms saved, seven places, BYPASS, a correction guide, the phone's or an externa
 5. (target - measured) x STRENGTH (50 / 75 / 100 %), limited to -12 / +6 dB, smoothed 1-2-1 over the neighbours.
 6. Shifted so the highest band is 0 dB: cut only (never drives the speakers harder, never clips).
 
-## Rooms
+## Rooms (V69)
 
-`Music/djmantra_app/Room_Correction/rooms.json`: `[{name, target, strength, points: [7 x null | {thirds[31],
-columns[61], kind, level, time, use}]}]`; the room in use: setting `room_current`. The applied curve: setting `room_eq`
+One JSON file per room, saved by itself on every change: `Music/djmantra_app/Room_Corrections/<room>.json`:
+`{name, target, strength, correction[31], points: [7 x null | {thirds[31], columns[61], kind, level, time, use}]}`
+(the test signals' WAVs sit there too). SAVE saves and shows the file; choosing a room brings its correction back; RENAME
+moves the file, DELETE removes it. The room in use: setting `room_current`. The applied curve: setting `room_eq`
 (31 values), `room_eq_on`.
 
 ## Open

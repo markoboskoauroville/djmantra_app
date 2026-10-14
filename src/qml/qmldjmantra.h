@@ -162,9 +162,12 @@ class QmlDJMantra : public QObject {
     // the live microphone analyzer under the curve (61 columns, 1/6 octave, dB)
     Q_INVOKABLE void roomEqLive(bool on, int inputId = 0);
     Q_INVOKABLE QString roomEqLiveColumns() const;
-    // the rooms (djmantra_app/Room_Correction/rooms.json): their places' measurements
+    // the rooms (Marko 14.10.2026): one JSON file per room in djmantra_app/Room_Corrections
+    // (<name>.json: its places' measurements, target, strength and correction); all as an array
     Q_INVOKABLE QString roomsLoad() const;
-    Q_INVOKABLE void roomsSave(const QString& json);
+    // writes one room (its "name" names the file); returns the file's path
+    Q_INVOKABLE QString roomSave(const QString& json);
+    Q_INVOKABLE void roomDelete(const QString& name);
     // SUNO PLAYLISTS (Marko 14.10.2026): Suno song links pasted (any text: every suno.com link
     // in it) into playlist `name`; the links are remembered (djmantra_app/Suno/links.json), each
     // song saved as djmantra_app/Suno/<title>.mp3 (SunoBridge.java) and put in the playlist.
