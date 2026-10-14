@@ -619,6 +619,12 @@ Window {
     Component.onCompleted: {
         // the decks' FILTER = the Pioneer DJM filter (also for the controller's filter knob)
         Mixxx.DJMantra.useDjmFilter();
+        // the EQ starts flat (0 dB = value 1): Mixxx keeps the last values, and a
+        // bug before V34 left them at the maximum (r40: HIGH / MID / LOW at max at start)
+        for (const deck of ["[Channel1]", "[Channel2]"]) {
+            for (const key of ["parameter1", "parameter2", "parameter3"])
+                Mixxx.DJMantra.setControl("[EqualizerRack1_" + deck + "_Effect1]", key, 1);
+        }
         Mixxx.DJMantra.log("interface ready " + width + "x" + height);
         Mixxx.DJMantra.hideBars();
     }

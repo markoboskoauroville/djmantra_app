@@ -12,3 +12,6 @@ title and artist under each, the length bottom right on the cover, BPM and key t
 tick; a tap loads onto the free deck; folders open. Tap again: LIST. Leave the app and come back: the view is kept
 (log `library view: ...`). The controller's BROWSE knob / LOAD work in both views.
 ## 3. Screenshots of both views (downscaled) into the results folder.
+## 4. r40 fixes: right after start HIGH / MID / LOW on both decks are in the middle (log: no EQ at max); the
+volume fader: its label must say VOLUME while testing it (a still hold of 0.5 s flips it to PITCH, which would explain
+r40's "fader barely changes the peak" and "90.07 BPM": grep `fader [Channel` in logcat).
