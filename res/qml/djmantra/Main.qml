@@ -23,6 +23,7 @@ Window {
     color: Style.background
     title: "DJ Mantra"
 
+    property bool libraryFull: false // the song list over the decks (LibraryPage FULL / DOCK)
     property int page: 0 // 0 songs (the playlist), 1 phrasing, 2 mixer, 3 automix, 4 keys (Camelot wheel, key match)
     readonly property bool landscape: width > height
     property string overlay: "" // "", "menu"
@@ -505,19 +506,21 @@ Window {
             // the rest: the playlist, the mixer or the keys; the crossfader; the tabs
             id: rest
 
-            anchors.top: window.landscape ? topBar.bottom : decks.bottom
+            // the song list FULL screen (Marko 14.10.2026): over the decks, under the top bar
+            readonly property bool libraryFull: window.libraryFull && window.page === 0
+            anchors.top: window.landscape || libraryFull ? topBar.bottom : decks.bottom
             anchors.topMargin: Style.gap
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             // landscape: only while browsing, in front of the decks
             visible: !window.landscape || window.browsing
-            z: window.landscape ? 5 : 0
+            z: window.landscape || libraryFull ? 5 : 0
 
             Rectangle {
                 anchors.fill: parent
                 anchors.topMargin: -Style.gap
-                visible: window.landscape
+                visible: window.landscape || rest.libraryFull
                 color: Style.background
             }
 
@@ -538,6 +541,11 @@ Window {
                     anchors.fill: parent
                     visible: window.page === 0
                     deck: window.libraryDeck
+                    fullScreen: window.libraryFull
+                    onToggleFullScreen: {
+                        window.libraryFull = !window.libraryFull;
+                        Toasts.show(window.libraryFull ? qsTr("SONGS \u2192 FULL SCREEN") : qsTr("SONGS \u2192 DOCKED"));
+                    }
                     onDone: {
                         window.libraryDeck = ""; // loaded: the next song to the free deck
                         window.closeBrowser();

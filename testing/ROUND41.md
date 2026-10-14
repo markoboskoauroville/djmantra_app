@@ -128,3 +128,15 @@ there. Also: AutoMix's bass swap now returns the EQ to 0 dB (the top), not the m
 from the bottom with the battery %, green; red at 10 % or less (checked once a minute).
 ## 36. (V50) Thumbnails: BPM and key moved to the BOTTOM LEFT of the cover, in the same dark box and white bold text as
 the length at the bottom right (Marko 14.10.2026); nothing on the top left any more.
+## 37. (V50) Controller BROWSE / LOAD / BACK (r41: no reaction; the script's set-and-reset pulse was read as 0): BROWSE
+turn moves the highlighted song (log `controller: browse N`), press opens a folder / loads, LOAD A / B loads onto that
+deck, BACK goes up; the list's view button reads LIST / GRID (no empty boxes).
+## 38. (V50) PLAYLISTS (Marko 14.10.2026): the Songs tab's top level has FOLDERS | PLAYLISTS. PLAYLISTS lists the app's
+playlists (NAME, CREATED, SONGS, LENGTH: sortable, filterable, LIST / GRID like folders); M3U / M3U8 files in
+Music/Playlists are taken in once (logcat `Playlists: imported ...`, djay's exported ones). A playlist opens like a
+folder (its songs in its order; sort / filter / grid / length / % as a folder); ← back to the playlists. A LONG PRESS
+(1 s) on any song (folder, playlist, phone search, list or grid) opens ADD TO PLAYLIST: every playlist (with its song
+count), a NEW PLAYLIST name + CREATE, inside a playlist REMOVE FROM <it>, CANCEL; toasts ADDED TO / ALREADY IN /
+REMOVED FROM. The playlists survive a restart.
+## 39. (V50) FULL / DOCK button in the song list's top bar (both views): FULL lays the list over the decks (top bar,
+crossfader and tabs stay), DOCK puts it back (toasts).

@@ -12,6 +12,11 @@
 #include <QDateTime>
 #include <QFile>
 #include <QRegularExpression>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QSaveFile>
+#include <QUrl>
 #include <thread>
 #if defined(Q_OS_LINUX) || defined(Q_OS_ANDROID)
 #include <unistd.h>
@@ -771,9 +776,193 @@ QVariantList QmlDJMantra::musicRoots() const {
     return roots;
 }
 
+namespace {
+
+QString playlistsFile() {
+    const QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir().mkpath(dir);
+    return dir + QStringLiteral("/playlists.json");
+}
+
+QJsonArray readPlaylists() {
+    QFile file(playlistsFile());
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QJsonArray();
+    }
+    return QJsonDocument::fromJson(file.readAll()).array();
+}
+
+void writePlaylists(const QJsonArray& playlists) {
+    QSaveFile file(playlistsFile());
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(QJsonDocument(playlists).toJson(QJsonDocument::Compact));
+        file.commit();
+    }
+}
+
+int findPlaylist(const QJsonArray& playlists, const QString& name) {
+    for (int i = 0; i < playlists.size(); ++i) {
+        if (playlists[i].toObject().value(QStringLiteral("name")).toString() == name) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+QString playlistsFolder() {
+#if defined(Q_OS_ANDROID)
+    return QStringLiteral("/sdcard/Music/Playlists");
+#else
+    return QStandardPaths::writableLocation(QStandardPaths::MusicLocation) + QStringLiteral("/Playlists");
+#endif
+}
+
+// M3U / M3U8 files in Music/Playlists, each taken in once (by its name)
+void importM3uPlaylists() {
+    QJsonArray playlists = readPlaylists();
+    bool changed = false;
+    const QDir dir(playlistsFolder());
+    const auto files = dir.entryInfoList({QStringLiteral("*.m3u"), QStringLiteral("*.m3u8")}, QDir::Files);
+    for (const QFileInfo& info : files) {
+        const QString name = info.completeBaseName();
+        if (findPlaylist(playlists, name) >= 0) {
+            continue;
+        }
+        QFile file(info.absoluteFilePath());
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            continue;
+        }
+        QJsonArray songs;
+        while (!file.atEnd()) {
+            QString line = QString::fromUtf8(file.readLine()).trimmed();
+            if (line.isEmpty() || line.startsWith(QChar('#'))) {
+                continue;
+            }
+            if (line.startsWith(QStringLiteral("file://"))) {
+                line = QUrl(line).toLocalFile();
+            }
+            const QString path = QFileInfo(line).isRelative() ? dir.absoluteFilePath(line) : line;
+            if (QFileInfo::exists(path)) {
+                songs.append(QFileInfo(path).absoluteFilePath());
+            }
+        }
+        QJsonObject playlist;
+        playlist[QStringLiteral("name")] = name;
+        playlist[QStringLiteral("created")] = static_cast<double>(info.lastModified().toMSecsSinceEpoch());
+        playlist[QStringLiteral("songs")] = songs;
+        playlists.append(playlist);
+        changed = true;
+        qInfo().noquote() << "Playlists: imported" << info.fileName() << songs.size() << "songs";
+    }
+    if (changed) {
+        writePlaylists(playlists);
+    }
+}
+
+} // namespace
+
+QVariantList QmlDJMantra::playlistRoots() {
+    importM3uPlaylists();
+    QVariantList roots;
+    const QJsonArray playlists = readPlaylists();
+    for (const auto& value : playlists) {
+        const QJsonObject playlist = value.toObject();
+        QVariantMap entry;
+        const QString name = playlist.value(QStringLiteral("name")).toString();
+        entry[QStringLiteral("name")] = name;
+        entry[QStringLiteral("path")] = QStringLiteral("playlist:") + name;
+        entry[QStringLiteral("isFolder")] = true;
+        entry[QStringLiteral("created")] = playlist.value(QStringLiteral("created")).toDouble();
+        entry[QStringLiteral("count")] = playlist.value(QStringLiteral("songs")).toArray().size();
+        roots << entry;
+    }
+    return roots;
+}
+
+bool QmlDJMantra::addToPlaylist(const QString& name, const QString& path) {
+    const QString clean = name.trimmed();
+    if (clean.isEmpty() || path.isEmpty()) {
+        return false;
+    }
+    QJsonArray playlists = readPlaylists();
+    int i = findPlaylist(playlists, clean);
+    if (i < 0) {
+        QJsonObject playlist;
+        playlist[QStringLiteral("name")] = clean;
+        playlist[QStringLiteral("created")] = static_cast<double>(QDateTime::currentMSecsSinceEpoch());
+        playlist[QStringLiteral("songs")] = QJsonArray();
+        playlists.append(playlist);
+        i = playlists.size() - 1;
+    }
+    QJsonObject playlist = playlists[i].toObject();
+    QJsonArray songs = playlist.value(QStringLiteral("songs")).toArray();
+    if (songs.contains(path)) {
+        return false;
+    }
+    songs.append(path);
+    playlist[QStringLiteral("songs")] = songs;
+    playlists[i] = playlist;
+    writePlaylists(playlists);
+    qInfo().noquote() << "Playlists: added" << path << "to" << clean;
+    return true;
+}
+
+bool QmlDJMantra::removeFromPlaylist(const QString& name, const QString& path) {
+    QJsonArray playlists = readPlaylists();
+    const int i = findPlaylist(playlists, name);
+    if (i < 0) {
+        return false;
+    }
+    QJsonObject playlist = playlists[i].toObject();
+    QJsonArray songs = playlist.value(QStringLiteral("songs")).toArray();
+    for (int k = 0; k < songs.size(); ++k) {
+        if (songs[k].toString() == path) {
+            songs.removeAt(k);
+            playlist[QStringLiteral("songs")] = songs;
+            playlists[i] = playlist;
+            writePlaylists(playlists);
+            qInfo().noquote() << "Playlists: removed" << path << "from" << name;
+            return true;
+        }
+    }
+    return false;
+}
+
+double QmlDJMantra::playlistLength(const QString& name) const {
+    const QJsonArray playlists = readPlaylists();
+    const int i = findPlaylist(playlists, name);
+    if (i < 0) {
+        return 0;
+    }
+    double total = 0;
+    for (const auto& song : playlists[i].toObject().value(QStringLiteral("songs")).toArray()) {
+        total += songInfo(song.toString()).value(QStringLiteral("duration")).toDouble();
+    }
+    return total;
+}
+
 QVariantList QmlDJMantra::listFolder(const QString& folder) const {
     QVariantList folders;
     QVariantList songs;
+    if (folder.startsWith(QStringLiteral("playlist:"))) {
+        // a playlist: its songs in its order (the ones still on the phone)
+        const QJsonArray playlists = readPlaylists();
+        const int i = findPlaylist(playlists, folder.mid(9));
+        if (i >= 0) {
+            for (const auto& song : playlists[i].toObject().value(QStringLiteral("songs")).toArray()) {
+                const QFileInfo info(song.toString());
+                if (!info.exists()) {
+                    continue;
+                }
+                QVariantMap entry;
+                entry[QStringLiteral("name")] = info.completeBaseName();
+                entry[QStringLiteral("path")] = info.absoluteFilePath();
+                entry[QStringLiteral("isFolder")] = false;
+                songs << entry;
+            }
+        }
+        return songs;
+    }
     const QDir dir(folder);
     const auto entries = dir.entryInfoList(
             QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Readable,

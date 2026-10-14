@@ -12,7 +12,21 @@ Rectangle {
 
     property string folder: ""
     property string deck: "" // a deck's cover was tapped: onto that deck
-    property var entries: folder === "" ? Mixxx.DJMantra.musicRoots() : Mixxx.DJMantra.listFolder(folder)
+    // Marko 14.10.2026: two views, FOLDERS (the phone's folders) and PLAYLISTS (the app's own);
+    // playlistsVersion makes the lists read again after a song is added / removed
+    property bool playlistsView: Mixxx.DJMantra.setting("library_mode", "folders") === "playlists"
+    property int playlistsVersion: 0
+    readonly property bool inPlaylist: folder.startsWith("playlist:")
+    readonly property bool playlistsRoot: folder === "" && playlistsView
+    property var entries: {
+        // read again after a playlist change only where playlists are shown
+        const version = (playlistsRoot || inPlaylist) ? playlistsVersion : 0;
+        return folder === "" ? (playlistsView ? Mixxx.DJMantra.playlistRoots() : Mixxx.DJMantra.musicRoots())
+                             : Mixxx.DJMantra.listFolder(folder);
+    }
+    // full screen / docked (Marko 14.10.2026), Main.qml lays it out
+    property bool fullScreen: false
+    signal toggleFullScreen()
     // DJ Pro style (Marko, round 19): cover, title, artist, BPM, key; a tap
     // on a column header sorts by it (again: the other way round)
     // the songs played in this session (Marko, round 22: "mark played songs
@@ -35,10 +49,15 @@ Rectangle {
     readonly property bool searching: filterText !== "" || phoneMode
     readonly property var shownModel: searching ? found : songs
 
+    function playlistInfo(e) {
+        const d = new Date(e.created || 0);
+        return (e.count || 0) + qsTr(" songs") + (e.created > 0 ? "  \u00B7  " + d.toLocaleDateString(Qt.locale(), Locale.ShortFormat) : "");
+    }
+
     function rowCopy(r) {
         return {name: r.name, path: r.path, isFolder: r.isFolder, artist: r.artist || "",
                 title: r.title || r.name, bpm: r.bpm || 0, key: r.key || "", cover: r.cover || "",
-                duration: r.duration || 0, known: true};
+                duration: r.duration || 0, created: r.created || 0, count: r.count || 0, known: true};
     }
 
     function refilter() {
@@ -102,7 +121,10 @@ Rectangle {
             let done = 0;
             while (next < found.count && done < 3) {
                 const row = found.get(next);
-                if (!row.known) {
+                if (!row.known && row.path.startsWith("playlist:")) {
+                    songs.set(root.filled, {duration: Mixxx.DJMantra.playlistLength(row.path.substring(9)), known: true});
+                    ++done;
+                } else if (!row.known) {
                     const i = Mixxx.DJMantra.songInfo(row.path);
                     found.set(next, {bpm: i.bpm || 0, key: i.key || "", cover: i.cover || "",
                                      artist: i.artist || row.artist, title: i.title || row.title,
@@ -200,8 +222,11 @@ Rectangle {
     onEntriesChanged: {
         songs.clear();
         for (const e of entries)
-            songs.append({name: e.name, path: e.path, isFolder: root.folder === "" || e.isFolder === true, artist: "", title: e.name,
-                          bpm: 0.0, key: "", cover: "", duration: 0.0, known: root.folder === "" || e.isFolder === true});
+            songs.append({name: e.name, path: e.path, isFolder: root.folder === "" || e.isFolder === true,
+                          artist: root.playlistsRoot ? root.playlistInfo(e) : "", title: e.name,
+                          bpm: 0.0, key: "", cover: "", duration: 0.0, created: e.created || 0, count: e.count || 0,
+                          // a playlist's length is added up by the filler
+                          known: (root.folder === "" || e.isFolder === true) && !root.playlistsRoot});
         filled = 0;
         filler.restart();
     }
@@ -297,12 +322,15 @@ Rectangle {
         for (let i = 0; i < songs.count; ++i) {
             const r = songs.get(i);
             rows.push({name: r.name, path: r.path, isFolder: r.isFolder, artist: r.artist, title: r.title,
-                       bpm: r.bpm, key: r.key, cover: r.cover, duration: r.duration, known: r.known});
+                       bpm: r.bpm, key: r.key, cover: r.cover, duration: r.duration, created: r.created,
+                       count: r.count, known: r.known});
         }
         // Camelot keys in wheel order: 1A 1B 2A ... 12B
         const keyRank = (k) => k === "" ? 99 : parseInt(k) * 2 + (k.endsWith("B") ? 1 : 0);
         const value = (r) => key === "bpm" ? (r.bpm > 0 ? r.bpm : 1e9)
                 : key === "duration" ? (r.duration > 0 ? r.duration : 1e9)
+                : key === "created" ? r.created
+                : key === "count" ? r.count
                 : key === "key" ? keyRank(r.key)
                 : String(r[key]).toLowerCase();
         rows.sort((a, b) => {
@@ -327,6 +355,10 @@ Rectangle {
     function back() {
         if (folder === "") {
             done();
+            return;
+        }
+        if (inPlaylist) {
+            folder = "";
             return;
         }
         const roots = Mixxx.DJMantra.musicRoots();
@@ -440,14 +472,30 @@ Rectangle {
         }
 
         DButton {
+            // full screen / docked (Marko 14.10.2026)
+            id: fullButton
+
+            objectName: "libraryFull"
+            anchors.right: closeButton.left
+            anchors.rightMargin: 6
+            anchors.verticalCenter: parent.verticalCenter
+            width: 48
+            height: 40
+            text: root.fullScreen ? qsTr("DOCK") : qsTr("FULL")
+            fontSize: 11
+            lit: root.fullScreen
+            onClicked: root.toggleFullScreen()
+        }
+
+        DButton {
             // list / thumbnails
             id: viewButton
 
             objectName: "libraryView"
-            anchors.right: closeButton.left
+            anchors.right: fullButton.left
             anchors.rightMargin: 6
             anchors.verticalCenter: parent.verticalCenter
-            visible: root.folder !== ""
+            visible: root.folder !== "" || root.playlistsRoot
             width: visible ? 44 : 0
             height: 40
             // r41: the glyphs were empty boxes in the phone's font: words
@@ -492,13 +540,44 @@ Rectangle {
             }
         }
 
+        Row {
+            // FOLDERS | PLAYLISTS at the top level (Marko 14.10.2026)
+            anchors.left: backButton.right
+            anchors.leftMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            visible: root.folder === ""
+            spacing: 4
+
+            Repeater {
+                model: [[false, qsTr("FOLDERS")], [true, qsTr("PLAYLISTS")]]
+
+                delegate: DButton {
+                    required property var modelData
+
+                    objectName: modelData[0] ? "viewPlaylists" : "viewFolders"
+                    width: 92
+                    height: 36
+                    mode: ""
+                    text: modelData[1]
+                    fontSize: 11
+                    lit: root.playlistsView === modelData[0]
+                    onClicked: {
+                        root.playlistsView = modelData[0];
+                        Mixxx.DJMantra.setSetting("library_mode", modelData[0] ? "playlists" : "folders");
+                        Toasts.show(modelData[0] ? qsTr("VIEW \u2192 PLAYLISTS") : qsTr("VIEW \u2192 FOLDERS"));
+                    }
+                }
+            }
+        }
+
         Text {
             anchors.left: backButton.right
             anchors.leftMargin: 12
             anchors.right: target.left
             anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
-            text: root.folder === "" ? qsTr("Folders") : root.folder.substring(root.folder.lastIndexOf("/") + 1)
+            visible: root.folder !== ""
+            text: root.inPlaylist ? root.folder.substring(9) : root.folder.substring(root.folder.lastIndexOf("/") + 1)
             color: Style.text
             font.pixelSize: 20
             font.bold: true
@@ -611,13 +690,16 @@ Rectangle {
         anchors.top: searchRow.bottom
         width: parent.width
         height: 32
-        visible: root.folder !== "" || root.phoneMode
+        visible: root.folder !== "" || root.phoneMode || root.playlistsRoot
 
         Repeater {
             // Marko 14.10.2026: also by LENGTH
-            model: [{key: "title", label: qsTr("TITLE"), w: 0.32}, {key: "artist", label: qsTr("ARTIST"), w: 0.24},
-                    {key: "duration", label: qsTr("LENGTH"), w: 0.16}, {key: "bpm", label: qsTr("BPM"), w: 0.14},
-                    {key: "key", label: qsTr("KEY"), w: 0.14}]
+            model: root.playlistsRoot
+                   ? [{key: "title", label: qsTr("NAME"), w: 0.40}, {key: "created", label: qsTr("CREATED"), w: 0.24},
+                      {key: "count", label: qsTr("SONGS"), w: 0.16}, {key: "duration", label: qsTr("LENGTH"), w: 0.20}]
+                   : [{key: "title", label: qsTr("TITLE"), w: 0.32}, {key: "artist", label: qsTr("ARTIST"), w: 0.24},
+                      {key: "duration", label: qsTr("LENGTH"), w: 0.16}, {key: "bpm", label: qsTr("BPM"), w: 0.14},
+                      {key: "key", label: qsTr("KEY"), w: 0.14}]
 
             delegate: Rectangle {
                 id: column
@@ -756,7 +838,7 @@ Rectangle {
 
                 Text {
                     width: parent.width
-                    text: row.isFolder ? qsTr("Folder") : row.artist
+                    text: row.isFolder ? (row.artist !== "" ? row.artist : qsTr("Folder")) : row.artist
                     color: row.wasPlayed ? Style.line : Style.subText
                     font.pixelSize: 13
                     elide: Text.ElideRight
@@ -770,7 +852,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: list.width * 0.16
                 horizontalAlignment: Text.AlignHCenter
-                text: row.isFolder ? "" : root.lengthText(row.duration)
+                text: row.isFolder && !row.path.startsWith("playlist:") ? "" : root.lengthText(row.duration)
                 color: Style.subText
                 font.pixelSize: 14
             }
@@ -804,6 +886,9 @@ Rectangle {
                 id: rowArea
 
                 anchors.fill: parent
+                pressAndHoldInterval: 1000
+                // a long press on a song: add it to a playlist (Marko 14.10.2026)
+                onPressAndHold: if (!row.isFolder) root.askPlaylist(row.path)
                 onClicked: {
                     if (row.isFolder)
                         root.folder = row.path;
@@ -955,7 +1040,7 @@ Rectangle {
 
                 Text {
                     width: parent.width
-                    text: tile.isFolder ? qsTr("Folder") : tile.artist
+                    text: tile.isFolder ? (tile.artist !== "" ? tile.artist : qsTr("Folder")) : tile.artist
                     color: tile.wasPlayed ? Style.line : Style.subText
                     font.pixelSize: 11
                     elide: Text.ElideRight
@@ -966,6 +1051,8 @@ Rectangle {
                 id: tileArea
 
                 anchors.fill: parent
+                pressAndHoldInterval: 1000
+                onPressAndHold: if (!tile.isFolder) root.askPlaylist(tile.path)
                 onClicked: {
                     if (tile.isFolder)
                         root.folder = tile.path;
@@ -1026,6 +1113,160 @@ Rectangle {
                         text: qsTr("LOAD")
                         lit: true
                         onClicked: root.load(root.pendingPath, root.pendingGroup, true)
+                    }
+                }
+            }
+        }
+    }
+
+    // ADD TO PLAYLIST (Marko 14.10.2026: "a long press on the song ... all the possible playlists
+    // or create new playlist"); inside a playlist also REMOVE
+    property string playlistSong: ""
+    property var playlistChoices: []
+
+    function askPlaylist(path) {
+        playlistSong = path;
+        playlistChoices = Mixxx.DJMantra.playlistRoots();
+        newPlaylistName.text = "";
+        Mixxx.DJMantra.log("playlist popup for " + path);
+    }
+
+    function addSong(name) {
+        const added = Mixxx.DJMantra.addToPlaylist(name, playlistSong);
+        Toasts.show((added ? qsTr("ADDED TO ") : qsTr("ALREADY IN ")) + name);
+        playlistSong = "";
+        ++playlistsVersion;
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        visible: root.playlistSong !== ""
+        color: "#b0000000"
+        z: 50
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.playlistSong = ""
+        }
+
+        Rectangle {
+            anchors.centerIn: parent
+            width: parent.width - 32
+            height: Math.min(parent.height - 32, popupColumn.implicitHeight + 24)
+            radius: 12
+            color: Style.surface
+            clip: true
+
+            MouseArea {
+                anchors.fill: parent
+            }
+
+            Flickable {
+                anchors.fill: parent
+                anchors.margins: 12
+                contentHeight: popupColumn.implicitHeight
+                clip: true
+
+                Column {
+                    id: popupColumn
+
+                    width: parent.width
+                    spacing: 8
+
+                    Text {
+                        width: parent.width
+                        text: qsTr("ADD TO PLAYLIST")
+                        color: Style.accent
+                        font.pixelSize: 16
+                        font.bold: true
+                    }
+
+                    Text {
+                        width: parent.width
+                        text: root.playlistSong.substring(root.playlistSong.lastIndexOf("/") + 1)
+                        color: Style.subText
+                        font.pixelSize: 13
+                        elide: Text.ElideMiddle
+                    }
+
+                    Repeater {
+                        model: root.playlistChoices
+
+                        delegate: DButton {
+                            required property var modelData
+
+                            width: popupColumn.width
+                            height: 46
+                            mode: ""
+                            text: modelData.name + "   (" + modelData.count + ")"
+                            fontSize: 14
+                            onClicked: root.addSong(modelData.name)
+                        }
+                    }
+
+                    Row {
+                        spacing: 6
+
+                        Rectangle {
+                            width: popupColumn.width - 6 - 90
+                            height: 46
+                            radius: Style.radius
+                            color: Style.tile
+
+                            TextInput {
+                                id: newPlaylistName
+
+                                objectName: "newPlaylist"
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                verticalAlignment: TextInput.AlignVCenter
+                                color: Style.text
+                                font.pixelSize: 15
+                                clip: true
+                                onAccepted: if (text.trim() !== "") root.addSong(text.trim())
+
+                                Text {
+                                    anchors.fill: parent
+                                    visible: newPlaylistName.text === "" && !newPlaylistName.activeFocus
+                                    text: qsTr("New playlist name")
+                                    color: Style.line
+                                    font.pixelSize: 15
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                            }
+                        }
+
+                        DButton {
+                            width: 90
+                            height: 46
+                            mode: ""
+                            text: qsTr("CREATE")
+                            fontSize: 13
+                            lit: newPlaylistName.text.trim() !== ""
+                            onClicked: if (newPlaylistName.text.trim() !== "") root.addSong(newPlaylistName.text.trim())
+                        }
+                    }
+
+                    DButton {
+                        visible: root.inPlaylist
+                        width: popupColumn.width
+                        height: 46
+                        mode: ""
+                        text: qsTr("REMOVE FROM ") + root.folder.substring(9)
+                        fontSize: 13
+                        onClicked: {
+                            Mixxx.DJMantra.removeFromPlaylist(root.folder.substring(9), root.playlistSong);
+                            Toasts.show(qsTr("REMOVED FROM ") + root.folder.substring(9));
+                            root.playlistSong = "";
+                            ++root.playlistsVersion;
+                        }
+                    }
+
+                    DButton {
+                        width: popupColumn.width
+                        height: 46
+                        text: qsTr("CANCEL")
+                        onClicked: root.playlistSong = ""
                     }
                 }
             }

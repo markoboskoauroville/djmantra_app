@@ -125,6 +125,13 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    // PLAYLISTS (Marko 14.10.2026): the app's own playlists (playlists.json in the app's data;
+    // M3U / M3U8 files in Music/Playlists are taken in once, e.g. djay's exported ones).
+    // A playlist is listed as a folder "playlist:<name>" (listFolder gives its songs).
+    Q_INVOKABLE QVariantList playlistRoots();
+    Q_INVOKABLE bool addToPlaylist(const QString& name, const QString& path);
+    Q_INVOKABLE bool removeFromPlaylist(const QString& name, const QString& path);
+    Q_INVOKABLE double playlistLength(const QString& name) const;
     // the phone's battery in % (-1: unknown, e.g. on the desktop)
     Q_INVOKABLE int batteryPercent() const;
     // AUTO GAIN (Settings, on by default): every song's peak to -1 dBFS (the ReplayGain stage)
