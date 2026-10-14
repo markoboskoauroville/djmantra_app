@@ -207,10 +207,11 @@ missing songs added. Check on TIDAL (app or web) that the playlists are there wi
 (was an empty box); in the dropdown, the collapse button shows a drawn arrow pointing up; PREVIOUS SONG / NEXT SONG
 in words (no glyph boxes anywhere in the AutoMix dropdown).
 ## 51. (V60) NORMALIZED GAIN (Marko 14.10.2026: "When it's on zero, the song peak reaches the zero on dB ... song
-never can peak with the gain"). Every song's peak is measured in the analysis and brought to 0 dBFS (AUTO GAIN, on by
-default; logcat "Auto gain: ... peak X dB, gain Y dB"; songs analysed before are moved from -1 to 0 dBFS without a new
+never can peak with the gain"). Every song's peak is measured in the analysis and brought to 0 dBFS (always; V61: no AUTO GAIN switch in
+Settings any more; logcat "Auto gain: ... peak X dB, gain Y dB"; songs analysed before are moved from -1 to 0 dBFS without a new
 analysis: "Auto gain: 0 dBFS now for ..."). The GAIN knob is cut only, like the EQ: at the start both decks' GAIN is
 at the TOP = 0 dB (full ring, ends labelled "−∞" and "0 dB"), turning down shows "GAIN −6 dB" etc., at the bottom
 silence; it cannot go above 0 dB. Double tap: back to the top, gliding (toast "GAIN → 0 dB"). Two very different songs
 (a quiet and a loud master) at GAIN 0 dB peak at the same level on the VU meters. The Mix Ultra's GAIN (SHIFT + HIGH):
 its full turn = silence .. 0 dB, the screen's knob follows (USB and Bluetooth).
+## 52. (V61) Settings has NO "AUTO GAIN" button any more (normalization is always on; GAIN only cuts from 0 dB).
