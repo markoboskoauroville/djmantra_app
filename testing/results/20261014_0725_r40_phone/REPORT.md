@@ -35,3 +35,6 @@ Tester: Claude Code on the Mac (hub session), adb over USB. APK DJMantra-V41-0fa
 | 3 | come back: goes on | PASS | `Analysis: folder .../Partner Yoga, 11 songs`, continues with 16., 17., ...; `analysis in advance finished`; header 100 % green |
 | 3 | **total time in the header** | FAIL | on opening Partner Yoga it showed "26 2:56:03", ~5 s later (when the analysis began) "26 0:00", and it stays 0:00 at 100 % (screens h2/h5) |
 | 3 | note | NOTE | some analysed BPMs are doubled for this slow devotional music: 258.4, 208.x, 206.7, 184.6, 178.2 (`Analysis: 03. ... bpm 258.4000`) |
+| 4 | lanes thin (djay) by default | PASS | Settings shows LANE: THIN (djay) selected; deck 1 lane (Aum Ganesha, playing) wave ~20-25 % of the lane (p4_phrasing_thin.png) |
+| 4 | Settings -> LANE HEIGHT | PASS? | `Settings: lane_height = tall`, `... = djay`; but on this quiet devotional passage TALL and THIN look nearly the same (p4_lane_tall_top_thin_bottom.png, top TALL, bottom THIN) — to recheck on a loud song |
+| 4 | pairs vs djay | later | part of the djay compare job |
