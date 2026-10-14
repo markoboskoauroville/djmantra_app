@@ -3,7 +3,8 @@ import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
 // A fader: vertical (volume) or horizontal (crossfader); the handle follows
-// the finger from where it is touched
+// the finger from where it is touched; a long press (0.5 s, finger still) resets it with
+// a toast (Marko 14.10.2026: double taps are not practical)
 Item {
     id: root
 
@@ -13,6 +14,21 @@ Item {
     objectName: "fader_" + group + "," + key
     property bool vertical: true
     property color barColor: Style.accent
+    property string label: "CROSSFADER"
+    property real defaultParameter: vertical ? 1 : 0.5
+    property string resetText: qsTr("middle")
+
+    Timer {
+        id: hold
+
+        interval: 500
+        onTriggered: {
+            area.held = true;
+            control.parameter = root.defaultParameter;
+            Toasts.show(root.label + " \u2192 " + root.resetText);
+            Mixxx.DJMantra.log("fader reset " + root.group + "," + root.key);
+        }
+    }
 
     Mixxx.ControlProxy {
         id: control
@@ -44,20 +60,30 @@ Item {
     }
 
     MouseArea {
+        id: area
+
         property real startPos: 0
         property real startParameter: 0
+        property bool held: false
 
         anchors.fill: parent
         preventStealing: true
         onPressed: (mouse) => {
             startPos = root.vertical ? mouse.y : mouse.x;
             startParameter = control.parameter;
+            held = false;
+            hold.restart();
         }
+        onReleased: hold.stop()
+        onCanceled: hold.stop()
         onPositionChanged: (mouse) => {
+            if (Math.abs((root.vertical ? mouse.y : mouse.x) - startPos) > 8)
+                hold.stop();
+            if (held)
+                return;
             const span = root.vertical ? root.height - handle.height : root.width - handle.width;
             const delta = root.vertical ? startPos - mouse.y : mouse.x - startPos;
             control.parameter = Math.max(0, Math.min(1, startParameter + delta / span));
         }
-        onDoubleClicked: control.parameter = root.vertical ? 1 : 0.5
     }
 }

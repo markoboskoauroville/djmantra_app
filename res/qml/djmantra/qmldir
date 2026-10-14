@@ -1,5 +1,6 @@
 singleton Style 1.0 Style.qml
 singleton PixelFont 1.0 PixelFont.qml
+singleton Toasts 1.0 Toasts.qml
 AutoCue 1.0 AutoCue.qml
 AutoMix 1.0 AutoMix.qml
 AutoPhase 1.0 AutoPhase.qml

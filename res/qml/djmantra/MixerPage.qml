@@ -47,6 +47,7 @@ Item {
         stems1.value = on ? 1 : 0;
         stems2.value = on ? 1 : 0;
         Mixxx.DJMantra.log("EQ mode: " + (on ? "Neural Mix EQ" : "Equalizer"));
+        Toasts.show(on ? "EQ \u2192 NEURAL MIX" : "EQ \u2192 EQUALIZER");
     }
 
     function effectIndex(deck) {
@@ -172,15 +173,20 @@ Item {
                         key: deck.gainIsFilter ? "super1" : "pregain"
                         label: deck.gainIsFilter ? "FILTER" : "GAIN"
                         arcColor: deck.gainIsFilter ? Style.water : Style.text
+                        // long press = GAIN <-> FILTER, so a double tap resets
+                        longPressAction: true
+                        toastPrefix: "DECK " + deck.number + "  "
+                        resetText: deck.gainIsFilter ? qsTr("OFF") : "0 dB"
                         onLongPressed: {
                             deck.gainIsFilter = !deck.gainIsFilter;
+                            Toasts.show("DECK " + deck.number + "  " + (deck.gainIsFilter ? "GAIN \u2192 FILTER" : "FILTER \u2192 GAIN"));
                             Mixxx.DJMantra.setSetting("gain_filter_" + deck.number, deck.gainIsFilter ? "1" : "0");
                             Mixxx.DJMantra.log("knob " + deck.modelData + ": " + label);
                         }
                     }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water; defaultParameter: 1; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth; defaultParameter: 1; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire; defaultParameter: 1; toastPrefix: "DECK " + deck.number + "  " }
                     DButton {
                         // tap = on / off, hold = choose the effect
                         id: fxButton
@@ -211,6 +217,7 @@ Item {
                             if (deck.choice === 3)
                                 Mixxx.DJMantra.setControl(deck.fxGroup, "enabled", 1);
                             fxEnabled.value = fxEnabled.value > 0 ? 0 : 1;
+                            Toasts.show("DECK " + deck.number + "  " + text + (fxEnabled.value > 0 ? " ON" : " OFF"));
                             const slot = Mixxx.EffectsManager.getEffectSlot(deck.number, 1);
                             Mixxx.DJMantra.log("FX: deck " + deck.number + " " + text
                                     + (fxEnabled.value > 0 ? " on" : " off")
@@ -352,6 +359,7 @@ Item {
                         const n = root.chooserDeck;
                         Mixxx.DJMantra.setSetting("fx_choice_" + n, index);
                         root.loadEffect(n, index);
+                        Toasts.show("DECK " + n + "  FX \u2192 " + modelData.name);
                         // choosing turns it on, as in djay
                         Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + n + "_Effect1]", root.fxKey(index), 1);
                         root.chooserDeck = 0;
@@ -384,6 +392,8 @@ Item {
                 group: "[EffectRack1_EffectUnit" + Math.max(1, root.chooserDeck) + "_Effect1]"
                 key: root.chooserEffect >= 0 ? root.effects[root.chooserEffect].depth : "parameter1"
                 barColor: Style.accent
+                label: "DECK " + Math.max(1, root.chooserDeck) + "  DEPTH"
+                resetText: "50 %"
             }
 
             Row {

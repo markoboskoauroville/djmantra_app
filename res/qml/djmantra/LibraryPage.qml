@@ -201,6 +201,7 @@ Rectangle {
         // Camelot keys in wheel order: 1A 1B 2A ... 12B
         const keyRank = (k) => k === "" ? 99 : parseInt(k) * 2 + (k.endsWith("B") ? 1 : 0);
         const value = (r) => key === "bpm" ? (r.bpm > 0 ? r.bpm : 1e9)
+                : key === "duration" ? (r.duration > 0 ? r.duration : 1e9)
                 : key === "key" ? keyRank(r.key)
                 : String(r[key]).toLowerCase();
         rows.sort((a, b) => {
@@ -354,6 +355,7 @@ Rectangle {
                 root.thumbnails = !root.thumbnails;
                 Mixxx.DJMantra.setSetting("library_view", root.thumbnails ? "thumbnails" : "list");
                 Mixxx.DJMantra.log("library view: " + (root.thumbnails ? "thumbnails" : "list"));
+                Toasts.show(root.thumbnails ? qsTr("VIEW \u2192 THUMBNAILS") : qsTr("VIEW \u2192 LIST"));
                 if (keep >= 0) {
                     root.view.currentIndex = keep;
                     root.view.positionViewAtIndex(keep, ListView.Contain);
@@ -411,8 +413,10 @@ Rectangle {
         visible: root.folder !== ""
 
         Repeater {
-            model: [{key: "title", label: qsTr("TITLE"), w: 0.40}, {key: "artist", label: qsTr("ARTIST"), w: 0.30},
-                    {key: "bpm", label: qsTr("BPM"), w: 0.15}, {key: "key", label: qsTr("KEY"), w: 0.15}]
+            // Marko 14.10.2026: also by LENGTH
+            model: [{key: "title", label: qsTr("TITLE"), w: 0.32}, {key: "artist", label: qsTr("ARTIST"), w: 0.24},
+                    {key: "duration", label: qsTr("LENGTH"), w: 0.16}, {key: "bpm", label: qsTr("BPM"), w: 0.14},
+                    {key: "key", label: qsTr("KEY"), w: 0.14}]
 
             delegate: Rectangle {
                 id: column
@@ -436,8 +440,10 @@ Rectangle {
                     id: area
 
                     anchors.fill: parent
-                    onClicked: root.sortBy(column.modelData.key,
-                            root.sortKey === column.modelData.key ? !root.sortUp : true)
+                    onClicked: {
+                        root.sortBy(column.modelData.key, root.sortKey === column.modelData.key ? !root.sortUp : true);
+                        Toasts.show(qsTr("SORTED BY ") + column.modelData.label + (root.sortUp ? " \u25B2" : " \u25BC"));
+                    }
                 }
             }
         }
@@ -533,7 +539,7 @@ Rectangle {
                 // title over artist, as wide as the TITLE and ARTIST columns
                 anchors.left: art.right
                 anchors.leftMargin: 8
-                anchors.right: bpmText.left
+                anchors.right: lengthText.left
                 anchors.rightMargin: 6
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -557,11 +563,23 @@ Rectangle {
             }
 
             Text {
+                id: lengthText
+
+                anchors.right: bpmText.left
+                anchors.verticalCenter: parent.verticalCenter
+                width: list.width * 0.16
+                horizontalAlignment: Text.AlignHCenter
+                text: row.isFolder ? "" : root.lengthText(row.duration)
+                color: Style.subText
+                font.pixelSize: 14
+            }
+
+            Text {
                 id: bpmText
 
                 anchors.right: keyText.left
                 anchors.verticalCenter: parent.verticalCenter
-                width: list.width * 0.15
+                width: list.width * 0.14
                 horizontalAlignment: Text.AlignHCenter
                 text: !row.isFolder && row.bpm > 0 ? row.bpm.toFixed(1) : ""
                 color: Style.text
@@ -573,7 +591,7 @@ Rectangle {
 
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                width: list.width * 0.15
+                width: list.width * 0.14
                 horizontalAlignment: Text.AlignHCenter
                 text: row.isFolder ? "" : row.key
                 color: Style.accent

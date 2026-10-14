@@ -616,6 +616,55 @@ Window {
     onPageChanged: mapTimer.restart()
     onLandscapeChanged: mapTimer.restart()
 
+    Rectangle {
+        // the toast (Toasts.show): what a long press / double tap did, above the finger
+        id: toast
+
+        objectName: "toast"
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: Math.round(parent.height * 0.12)
+        z: 1000
+        width: Math.min(parent.width - 32, toastText.implicitWidth + 32)
+        height: toastText.implicitHeight + 18
+        radius: height / 2
+        color: "#E6000000"
+        border.color: Style.accent
+        border.width: 1
+        opacity: 0
+        visible: opacity > 0
+
+        Behavior on opacity { NumberAnimation { duration: 180 } }
+
+        Text {
+            id: toastText
+
+            anchors.centerIn: parent
+            width: Math.min(implicitWidth, toast.parent.width - 64)
+            horizontalAlignment: Text.AlignHCenter
+            elide: Text.ElideRight
+            color: Style.text
+            font.pixelSize: 17
+            font.bold: true
+        }
+
+        Timer {
+            id: toastTimer
+
+            interval: 1400
+            onTriggered: toast.opacity = 0
+        }
+
+        Connections {
+            target: Toasts
+            function onShown(text) {
+                toastText.text = text;
+                toast.opacity = 1;
+                toastTimer.restart();
+                Mixxx.DJMantra.log("toast: " + text);
+            }
+        }
+    }
+
     Component.onCompleted: {
         // the decks' FILTER = the Pioneer DJM filter (also for the controller's filter knob)
         Mixxx.DJMantra.useDjmFilter();

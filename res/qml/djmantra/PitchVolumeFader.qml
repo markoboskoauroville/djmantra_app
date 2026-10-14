@@ -15,6 +15,7 @@ Item {
 
     property string group
     property color barColor: Style.accent
+    readonly property string deckName: group === "[Channel2]" ? "DECK 2  " : "DECK 1  "
     property bool pitch: Mixxx.DJMantra.setting("fader_pitch_" + group, "0") === "1"
     readonly property color pitchColor: Style.water
     objectName: "fader_" + group + (pitch ? ",rate" : ",volume")
@@ -46,6 +47,7 @@ Item {
         pitch = !pitch;
         Mixxx.DJMantra.setSetting("fader_pitch_" + group, pitch ? "1" : "0");
         Mixxx.DJMantra.log("fader " + group + ": " + (pitch ? "PITCH" : "VOLUME"));
+        Toasts.show(deckName + (pitch ? "VOLUME \u2192 PITCH" : "PITCH \u2192 VOLUME"));
     }
 
     readonly property real trackTop: 13
@@ -181,6 +183,7 @@ Item {
                 rate.value = 0;
             else
                 volume.parameter = 1;
+            Toasts.show(root.deckName + (root.pitch ? "PITCH \u2192 0 %" : "VOLUME \u2192 0 dB"));
         }
     }
 }

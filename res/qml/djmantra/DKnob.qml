@@ -5,8 +5,9 @@ import QtQuick 2.12
 // A knob with an LED ring, as the OXI E16 (Marko, 12.10.2026): a circle of
 // separate dots round the knob, lit from the start up to the value in the
 // knob's colour, the others dim. With the cut-only EQs a full ring is 0 dB and
-// it empties as the cut deepens. Drag up / down to turn; a double tap: its
-// rest position.
+// it empties as the cut deepens. Drag up / down to turn. Marko 14.10.2026: a long press
+// (0.5 s, finger still) resets the knob; a knob whose long press does something else
+// (GAIN -> FILTER) resets on a double tap instead. Every reset shows a toast.
 Item {
     id: root
 
@@ -16,8 +17,19 @@ Item {
     objectName: "knob_" + group + "," + key
     property string label
     property color arcColor: Style.accent
-    // a double tap: the knob's rest position (EQs: the top = 0 dB, cut only)
+    // the knob's rest position (EQs: the top = 0 dB, cut only)
     property real defaultParameter: 0.5
+    // the long press has its own action (longPressed): then a double tap resets
+    property bool longPressAction: false
+    // the toast: "<toastPrefix><label> → <resetText>", e.g. "DECK 1  LOW → 0 dB"
+    property string toastPrefix: ""
+    property string resetText: "0 dB"
+
+    function reset() {
+        control.parameter = root.defaultParameter;
+        Toasts.show(root.toastPrefix + root.label + " \u2192 " + root.resetText);
+        Mixxx.DJMantra.log("knob reset " + root.group + "," + root.key);
+    }
     readonly property int dots: 15
 
     implicitWidth: 52
@@ -106,7 +118,10 @@ Item {
         interval: 500
         onTriggered: {
             knobArea.flipped = true;
-            root.longPressed();
+            if (root.longPressAction)
+                root.longPressed();
+            else
+                root.reset();
         }
     }
 
@@ -137,7 +152,8 @@ Item {
         onCanceled: hold.stop()
         onDoubleClicked: {
             hold.stop();
-            control.parameter = root.defaultParameter;
+            if (root.longPressAction)
+                root.reset();
         }
     }
 }
