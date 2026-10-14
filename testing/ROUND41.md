@@ -67,3 +67,7 @@ before are analysed again (logcat `Beats: ... a beat map, the steady grid is cho
 shows ~114.6-115 at the start, the middle and the end.
 ## 12b. (V43) the controller badge again: V42 showed no pill (the control was made after the screen bound to it).
 At start with the Mix Ultra on USB: the green USB pill at once; then the switching steps with toasts.
+## 17. (V43) r41 part 15/16 fixes: the FILTER follows every letter while typing (Gboard's composing word too); the
+clear button is a visible "×"; FIND ON PHONE hits get their BPM, key and cover after a moment. A song whose tempo
+drifts gets its AVERAGE tempo on the steady grid (logcat `Beats: the tempo drifts; the average ...`): Aum Ganesha
+~115 as djay (was 116.7); every song analysed before is analysed again once when loaded (`an older grid: again`).

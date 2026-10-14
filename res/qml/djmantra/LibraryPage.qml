@@ -63,8 +63,13 @@ Rectangle {
         phoneMode = true;
         found.clear();
         const hits = Mixxx.DJMantra.findSongs(filterText);
-        for (const h of hits)
-            found.append(rowCopy(h));
+        for (const h of hits) {
+            const row = rowCopy(h);
+            row.known = false; // its BPM, key and cover: read a few at a time (foundFiller)
+            found.append(row);
+        }
+        foundFiller.next = 0;
+        foundFiller.restart();
         Toasts.show(qsTr("FOUND ON PHONE: ") + hits.length);
         Mixxx.DJMantra.log("find on phone '" + filterText + "': " + hits.length);
     }
@@ -83,6 +88,32 @@ Rectangle {
             phoneSearchDelay.restart();
         else
             refilter();
+    }
+
+    Timer {
+        // r41: the phone's hits get their BPM, key and cover as the folder's songs do
+        id: foundFiller
+
+        property int next: 0
+
+        interval: 30
+        repeat: true
+        onTriggered: {
+            let done = 0;
+            while (next < found.count && done < 3) {
+                const row = found.get(next);
+                if (!row.known) {
+                    const i = Mixxx.DJMantra.songInfo(row.path);
+                    found.set(next, {bpm: i.bpm || 0, key: i.key || "", cover: i.cover || "",
+                                     artist: i.artist || row.artist, title: i.title || row.title,
+                                     duration: i.duration || row.duration, known: true});
+                    ++done;
+                }
+                ++next;
+            }
+            if (next >= found.count || !root.phoneMode)
+                stop();
+        }
     }
 
     Timer {
@@ -516,7 +547,10 @@ Rectangle {
                 font.pixelSize: 16
                 clip: true
                 inputMethodHints: Qt.ImhNoPredictiveText
-                onTextChanged: root.filterText = text.trim()
+                // r41: Gboard keeps the word being typed as "composing" text until space /
+                // Enter; the filter follows it too, letter by letter
+                onTextChanged: root.filterText = (text + preeditText).trim()
+                onPreeditTextChanged: root.filterText = (text + preeditText).trim()
                 onAccepted: focus = false
 
                 Text {
@@ -537,9 +571,9 @@ Rectangle {
                 width: visible ? 32 : 0
                 visible: searchInput.text !== ""
                 horizontalAlignment: Text.AlignHCenter
-                text: "\u2715"
+                text: "\u00D7" // r41: U+2715 was an empty box in the phone's font
                 color: Style.subText
-                font.pixelSize: 16
+                font.pixelSize: 24
 
                 MouseArea {
                     anchors.fill: parent

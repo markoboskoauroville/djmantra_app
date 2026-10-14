@@ -162,6 +162,14 @@ bool AnalyzerBeats::shouldAnalyze(TrackPointer pTrack) const {
     // DJ Mantra 14.10.2026: a beat map from the old "auto" default while the steady grid is
     // chosen (now the default): analysed again into one tempo, as djay
 #ifdef __ANDROID_PORT__
+    // a grid made before the 14.10.2026 rules (a drifting song's average tempo): again
+    // (only our own analysis' grids: not imported, typed or tapped ones)
+    if (pBeats->getSubVersion().contains(QStringLiteral("vamp_plugin_id")) &&
+            !pBeats->getSubVersion().contains(QStringLiteral("djm=2"))) {
+        qInfo().noquote() << QStringLiteral("Beats: %1\tan older grid: again")
+                                     .arg(QFileInfo(pTrack->getLocation()).fileName());
+        return true;
+    }
     if (!pBeats->hasConstantTempo() && beatGridMode() == 0) {
         qInfo().noquote() << QStringLiteral("Beats: %1\ta beat map, the steady grid is chosen: again")
                                      .arg(QFileInfo(pTrack->getLocation()).fileName());
@@ -366,5 +374,9 @@ QHash<QString, QString> AnalyzerBeats::getExtraVersionInfo(
     if (bPreferencesFastAnalysis) {
         extraVersionInfo["fast_analysis"] = "1";
     }
+#ifdef __ANDROID_PORT__
+    // DJ Mantra's grid rules (14.10.2026: steady by default, a drifting song at its average)
+    extraVersionInfo["djm"] = "2";
+#endif
     return extraVersionInfo;
 }
