@@ -63,3 +63,12 @@ Tester: Claude Code on the Mac (hub session), adb over USB. APK DJMantra-V41-0fa
 | 8 | choosing switches the effect ON | NOTE | after choosing, the FX button is lit and the first tap logs `... off`; intended? |
 | 8 | in time with the beat, DEPTH, sound | not verified | no capturable audio on V41 (see part 7) and the menu has no Rec in V41 (Settings / Library / Camelot wheel only); DEPTH not moved |
 | 8 | Aum Ganesha bpm across the song | NOTE | PITCH handle at rate 0: 91.0 (fresh load, other run), 109.9 (start, 09:57), 117.8 (at the end, 10:06) — the grid's tempo changes along the song. No `Analysis: ...Aum` line in logcat (only `Fine wave: ... Aum`): it was analysed before this logcat buffer |
+| 9 | Mix Ultra link | PASS | on the Mac's USB for power only; on the phone over BLE MIDI: `dumpsys midi` shows DJControl Mix Ultra, client UID 10358 (DJ Mantra) connected |
+| 9 | PLAY left (Marko) | PASS | `Quick: button [Channel1],play 1` |
+| 9 | crossfader fully right | PASS | app crossfader followed (screen); no log line |
+| 9 | left volume fader down / up | PASS | app fader followed (screen) |
+| 9 | left LOW fully left / back to full | PASS | pointer at min, dots off; Marko: the EQ must be cut-only, full = 0 dB |
+| 9 | SYNC right deck on the console | FAIL? | app SYNC press logged `sync_enabled 1`; the console's SYNC press after it changed nothing (still lit, no log). Left-deck SYNC test not done (stopped by Marko) |
+| 9 | FILTER knob, FX buttons, pads + beat lights, CUE, EQ HIGH/MID | not tested | testing stopped by Marko at 11:20 |
+
+**Round 40 stopped by Marko at ~11:20 (14.10.2026): "tests are coming from the cloud. Now stop all the testing and wait for new instructions."**
