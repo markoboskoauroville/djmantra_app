@@ -18,6 +18,10 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   feedback 0 / 0.55), DJM TRANS (tremolo, square, 2 per beat), DJM PAN (autopan, 2 beats); presets in
   MixerPage.qml `effects[].params`, the DEPTH slider on `effects[].depth`. Pioneer does not publish its filter
   curves; the values are by ear and from manuals (DJM-600/800).
+- CI 14.10 00:21 UTC: V41 (0fa0d39) GREEN on Android and Linux (V38-V40 builds were cancelled by newer pushes;
+  V41 contains them all). Release android-latest = "DJ Mantra V41": phone-arm64 and emulator-x86_64 APKs.
+- The cloud emulator is not usable for the app: software rendering only (no KVM), the V33 app opened a window but
+  wrote no log line; by 00:21 the emulator had gone (adb: no devices). Test on the Mac (Pixel 7 emulator / phone).
 - Test plan: testing/ROUND40.md parts 0-8 (V34-V41). Open from the tester: the fader vs output peak, FX tap
   glitches after the chooser closes, Cooldown state, CQ USB-input meters in Stereo, CQ tap delay.
 
