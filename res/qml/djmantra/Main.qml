@@ -66,18 +66,29 @@ Window {
             controllerPage.value = 0;
         }
     }
+    // the Mix Ultra's BROWSE, LOAD and its PLAY with a stop time: each value stays until it
+    // is handled here and set back to 0 (r41: a set-and-reset pulse was read as 0)
     Mixxx.ControlProxy {
+        id: browseMove
+
         group: "[DJMantra]"; key: "browse_move"
         onValueChanged: if (value !== 0) {
+            const steps = Math.round(value);
+            value = 0;
+            Mixxx.DJMantra.log("controller: browse " + steps);
             if (!window.browsing)
                 window.openBrowser();
             else
-                playlistPage.moveSelection(value);
+                playlistPage.moveSelection(steps);
         }
     }
     Mixxx.ControlProxy {
+        id: browsePress
+
         group: "[DJMantra]"; key: "browse_press"
         onValueChanged: if (value > 0) {
+            value = 0;
+            Mixxx.DJMantra.log("controller: browse press");
             if (!window.browsing)
                 window.openBrowser();
             else
@@ -91,6 +102,7 @@ Window {
         group: "[DJMantra]"; key: "stop_deck"
         onValueChanged: if (value >= 1) {
             const t = Math.round(value) === 2 ? turntable2 : turntable1;
+            value = 0;
             if (t.braking)
                 t.cancel();
             else
@@ -99,12 +111,18 @@ Window {
     }
     Mixxx.ControlProxy {
         group: "[DJMantra]"; key: "browse_back"
-        onValueChanged: if (value > 0 && window.browsing) playlistPage.back()
+        onValueChanged: if (value > 0) {
+            value = 0;
+            if (window.browsing)
+                playlistPage.back();
+        }
     }
     Mixxx.ControlProxy {
         group: "[DJMantra]"; key: "load"
         onValueChanged: if (value >= 1) {
             const group = "[Channel" + Math.round(value) + "]";
+            value = 0;
+            Mixxx.DJMantra.log("controller: load " + group);
             if (!window.browsing)
                 window.openBrowser(group);
             else

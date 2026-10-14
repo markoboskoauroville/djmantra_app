@@ -278,9 +278,14 @@ MixUltra.shiftPfl = function(channel, control, value, status, group) {
 MixUltra.PAGE_BUTTONS = {0x0F: 1, 0x10: 2, 0x11: 3, 0x12: 4, 0x16: 5};
 
 // A pulse on one of the app's [DJMantra] controls (back to 0: the same value twice still counts)
+// r41: not a pulse any more (set and straight back to 0: the screen read the 0 and did
+// nothing, BROWSE / LOAD / the tabs): the value stays until the app has handled it and set
+// it back to 0 itself; BROWSE's turns add up until then
 MixUltra.tellApp = function(key, value) {
+    if (key === "browse_move") {
+        value += engine.getValue("[DJMantra]", key);
+    }
     engine.setValue("[DJMantra]", key, value);
-    engine.setValue("[DJMantra]", key, 0);
 };
 
 MixUltra.modeButton = function(channel, control, value, status, group) {

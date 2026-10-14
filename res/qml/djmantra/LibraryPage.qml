@@ -450,8 +450,9 @@ Rectangle {
             visible: root.folder !== ""
             width: visible ? 44 : 0
             height: 40
-            text: root.thumbnails ? "\u2630" : "\u25A6"
-            fontSize: 20
+            // r41: the glyphs were empty boxes in the phone's font: words
+            text: root.thumbnails ? qsTr("LIST") : qsTr("GRID")
+            fontSize: 11
             onClicked: {
                 const keep = root.view.currentIndex;
                 root.thumbnails = !root.thumbnails;
