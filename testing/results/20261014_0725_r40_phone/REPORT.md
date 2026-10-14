@@ -29,3 +29,9 @@ Tester: Claude Code on the Mac (hub session), adb over USB. APK DJMantra-V41-0fa
 | 2 | "The playlist has ended" | not tested | 8 songs = ~35 min; left for a short folder |
 | 2 | layout | minor | while running, NEXT UP item 7 sits under the crossfader handle (the list is not clipped above the crossfader) |
 | 2 | xruns during mixes | PASS | xruns 0, late 0 throughout |
+| 3 | Songs header in matrix font | PASS | Music: "8 36:02" + "100%" green |
+| 3 | analysis only in the open folder, 3 s after open | PASS | Partner Yoga (26 m4a, never opened before): `Quick: Analysis: folder .../Partner Yoga, 26 songs`, then `Analysis: 01. ... bpm 145.96 key 8A ...`, ~2 s a song; header 0 % -> 38 % |
+| 3 | leave halfway: stops | PASS | at 15/26 `Analysis: stopped (the folder was left)` |
+| 3 | come back: goes on | PASS | `Analysis: folder .../Partner Yoga, 11 songs`, continues with 16., 17., ...; `analysis in advance finished`; header 100 % green |
+| 3 | **total time in the header** | FAIL | on opening Partner Yoga it showed "26 2:56:03", ~5 s later (when the analysis began) "26 0:00", and it stays 0:00 at 100 % (screens h2/h5) |
+| 3 | note | NOTE | some analysed BPMs are doubled for this slow devotional music: 258.4, 208.x, 206.7, 184.6, 178.2 (`Analysis: 03. ... bpm 258.4000`) |
