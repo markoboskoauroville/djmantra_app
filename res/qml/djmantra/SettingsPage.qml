@@ -378,8 +378,8 @@ Rectangle {
             }
 
             // no AUTO GAIN switch (Marko 14.10.2026: "Auto gain feature is not necessary ... gain is just
-            // extending the arm of auto gain to reduce auto gain"): every song is normalized to a 0 dBFS peak,
-            // always; the GAIN knob only cuts from there
+            // extending the arm of auto gain to reduce auto gain"): every song is normalized to a -1 dBFS peak,
+            // always; V62: no GAIN knob either, the faders set the volume
 
             DButton {
                 // djay's "Auto-play when moving crossfader" (Marko 14.10.2026)

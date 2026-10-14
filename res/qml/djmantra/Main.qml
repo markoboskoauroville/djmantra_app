@@ -806,15 +806,14 @@ Window {
     Component.onCompleted: {
         // the decks' FILTER = the Pioneer DJM filter (also for the controller's filter knob)
         Mixxx.DJMantra.useDjmFilter();
-        // every song normalized to a 0 dBFS peak, always (Marko 14.10.2026: GAIN "can only be reduced
-        // because it's normalized anyway"); no switch any more
+        // every song normalized to a -1 dBFS peak, always (Marko 14.10.2026); no switch, no GAIN knob
         Mixxx.DJMantra.setAutoGain(true);
         // the EQ starts flat (0 dB = value 1): Mixxx keeps the last values, and a
         // bug before V34 left them at the maximum (r40: HIGH / MID / LOW at max at start)
         for (const deck of ["[Channel1]", "[Channel2]"]) {
             for (const key of ["parameter1", "parameter2", "parameter3"])
                 Mixxx.DJMantra.setControl("[EqualizerRack1_" + deck + "_Effect1]", key, 1);
-            // GAIN at 0 dB, its top (V60: cut only, never above the song's normalized peak)
+            // GAIN at 0 dB (V62: no GAIN knob; every song is normalized to -1 dBFS)
             Mixxx.DJMantra.setControl(deck, "pregain", 1);
         }
         Mixxx.DJMantra.log("interface ready " + width + "x" + height);

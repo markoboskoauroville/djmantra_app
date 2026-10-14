@@ -2,8 +2,8 @@ import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
-// The mixer, as on the Mix Ultra: per deck GAIN, HIGH, MID, LOW (V34: no FILTER), the FX
-// button and the headphone button; the VU meters and the volume faders in the middle.
+// The mixer, as on the Mix Ultra: per deck HIGH, MID, LOW, FILTER (V62: no GAIN, every song is
+// normalized to -1 dBFS), the FX button and the headphone button; the VU meters and the volume faders in the middle.
 // V18 (Marko 13.10.2026, djay Android): ONE "EQ" dropdown at the top switches both
 // decks' knobs (Equalizer / Neural Mix EQ: drums, vocals, harmonies); per deck ONE FX
 // button: tap = the effect on / off, hold = a drop-up chooser (Flanger, Underwater,
@@ -143,7 +143,6 @@ Item {
                 readonly property int number: index + 1
                 readonly property string fxGroup: "[EffectRack1_EffectUnit" + number + "_Effect1]"
                 property int choice: root.effectIndex(number)
-                property bool gainIsFilter: Mixxx.DJMantra.setting("gain_filter_" + number, "0") === "1"
                 // knobs and two buttons share the column's height
                 // Marko 13.10.2026: the FILTER knob is gone, the rest grows (4 knobs, 2 buttons)
                 readonly property real knobHeight: (knobs.height - 2 * 52 - 5 * knobs.spacing) / 4
@@ -163,34 +162,24 @@ Item {
                     anchors.right: deck.index === 1 ? parent.right : undefined
                     spacing: 2
 
-                    DKnob {
-                        // GAIN, or (long press) the Pioneer DJM FILTER: left low-pass,
-                        // middle off, right high-pass (Marko 13.10.2026)
-                        objectName: "gainFilter" + deck.number
-                        width: knobs.width
-                        height: deck.knobHeight
-                        group: deck.gainIsFilter ? "[QuickEffectRack1_" + deck.modelData + "]" : deck.modelData
-                        key: deck.gainIsFilter ? "super1" : "pregain"
-                        label: deck.gainIsFilter ? "FILTER" : "GAIN"
-                        arcColor: deck.gainIsFilter ? Style.water : Style.text
-                        // long press = GAIN <-> FILTER, so a double tap resets
-                        longPressAction: true
-                        // GAIN in dB (Marko 14.10.2026), the FILTER without
-                        dbMode: deck.gainIsFilter ? "" : "gain"
-                        // GAIN: 0 dB (each song's peak at 0 dBFS) at the top, as the EQ; FILTER off in the middle
-                        defaultParameter: deck.gainIsFilter ? 0.5 : 1
-                        toastPrefix: "DECK " + deck.number + "  "
-                        resetText: deck.gainIsFilter ? qsTr("OFF") : "0 dB"
-                        onLongPressed: {
-                            deck.gainIsFilter = !deck.gainIsFilter;
-                            Toasts.show("DECK " + deck.number + "  " + (deck.gainIsFilter ? "GAIN \u2192 FILTER" : "FILTER \u2192 GAIN"));
-                            Mixxx.DJMantra.setSetting("gain_filter_" + deck.number, deck.gainIsFilter ? "1" : "0");
-                            Mixxx.DJMantra.log("knob " + deck.modelData + ": " + label);
-                        }
-                    }
                     DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
                     DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
                     DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob {
+                        // FILTER at the bottom, as on the Mix Ultra (Marko 14.10.2026: no GAIN knob, every
+                        // song is normalized to -1 dBFS and the faders set the volume): the Pioneer DJM filter,
+                        // left low-pass, middle off, right high-pass; a long press resets it to off
+                        objectName: "filter" + deck.number
+                        width: knobs.width
+                        height: deck.knobHeight
+                        group: "[QuickEffectRack1_" + deck.modelData + "]"
+                        key: "super1"
+                        label: "FILTER"
+                        arcColor: Style.water
+                        defaultParameter: 0.5
+                        toastPrefix: "DECK " + deck.number + "  "
+                        resetText: qsTr("OFF")
+                    }
                     DButton {
                         // tap = on / off, hold = choose the effect
                         id: fxButton
