@@ -77,3 +77,6 @@ freely through the whole song (log `scrub [ChannelN] to ... s` on release); AUTO
 ## 19. (V44) Dragging the ZOOMED waveform (Phrasing): the wave follows the finger, so zoomed out it runs fast through
 the song and zoomed in slower (it was the other way round); at the deepest zooms it never crawls (at least 0.25 s per
 100 px). Check at zoom 6, 3, 1, 0.25, 0.04: a full-width drag moves about width/100 x zoom seconds (0.25 at least).
+## 20. (V45) TEMPO (Marko 14.10.2026): the screen fader's second mode is called TEMPO (label, toasts "VOLUME → TEMPO"),
+as on the Mix Ultra. The console's tempo slider sets the tempo where it stands at its first move (no soft takeover), and
+the screen's TEMPO fader follows it: move the console slider, the screen handle and BPM move with it (same direction?).

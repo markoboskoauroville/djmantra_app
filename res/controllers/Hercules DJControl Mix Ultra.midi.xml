@@ -390,13 +390,14 @@
                 <midino>0x24</midino>
                 <options><fourteen-bit-lsb/></options>
             </control>
-            <!-- Deck 1 tempo fader (MSB) -->
+            <!-- Deck 1 tempo fader (MSB). No soft takeover (Marko 14.10.2026: the screen's TEMPO
+                 fader and this one in sync: a move sets the tempo where the slider is) -->
             <control>
                 <group>[Channel1]</group>
                 <key>rate</key>
                 <status>0xB1</status>
                 <midino>0x08</midino>
-                <options><fourteen-bit-msb/><soft-takeover/></options>
+                <options><fourteen-bit-msb/></options>
             </control>
             <!-- Deck 1 tempo fader (LSB) -->
             <control>
@@ -404,7 +405,7 @@
                 <key>rate</key>
                 <status>0xB1</status>
                 <midino>0x28</midino>
-                <options><fourteen-bit-lsb/><soft-takeover/></options>
+                <options><fourteen-bit-lsb/></options>
             </control>
             <!-- Deck 1 pad 1 (00) -->
             <control>
@@ -1732,7 +1733,7 @@
                 <key>rate</key>
                 <status>0xB2</status>
                 <midino>0x08</midino>
-                <options><fourteen-bit-msb/><soft-takeover/></options>
+                <options><fourteen-bit-msb/></options>
             </control>
             <!-- Deck 2 tempo fader (LSB) -->
             <control>
@@ -1740,7 +1741,7 @@
                 <key>rate</key>
                 <status>0xB2</status>
                 <midino>0x28</midino>
-                <options><fourteen-bit-lsb/><soft-takeover/></options>
+                <options><fourteen-bit-lsb/></options>
             </control>
             <!-- Deck 2 pad 1 (00) -->
             <control>

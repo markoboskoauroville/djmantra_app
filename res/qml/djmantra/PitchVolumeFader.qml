@@ -2,6 +2,8 @@ import "."
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
 
+// A deck's channel fader that is also its TEMPO fader (Marko 14.10.2026: named TEMPO as on
+// the Mix Ultra, whose tempo slider it follows; the code still calls the mode "pitch")
 // A deck's channel fader that is also its pitch fader (Marko 13.10.2026: "Long press
 // just flips the fader to pitch slider, and it changed the color of the knob ... under
 // the fader, there will be a label ... the scale adapting to the song BPM, and also
@@ -46,8 +48,8 @@ Item {
     function flip() {
         pitch = !pitch;
         Mixxx.DJMantra.setSetting("fader_pitch_" + group, pitch ? "1" : "0");
-        Mixxx.DJMantra.log("fader " + group + ": " + (pitch ? "PITCH" : "VOLUME"));
-        Toasts.show(deckName + (pitch ? "VOLUME \u2192 PITCH" : "PITCH \u2192 VOLUME"));
+        Mixxx.DJMantra.log("fader " + group + ": " + (pitch ? "TEMPO" : "VOLUME"));
+        Toasts.show(deckName + (pitch ? "VOLUME \u2192 TEMPO" : "TEMPO \u2192 VOLUME"));
     }
 
     readonly property real trackTop: 13
@@ -146,7 +148,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         height: 16
-        text: root.pitch ? qsTr("PITCH") : qsTr("VOLUME")
+        text: root.pitch ? qsTr("TEMPO") : qsTr("VOLUME")
         color: root.pitch ? root.pitchColor : Style.subText
         font.pixelSize: 11
         font.bold: true
@@ -193,7 +195,7 @@ Item {
                 rate.value = 0;
             else
                 volume.parameter = 1;
-            Toasts.show(root.deckName + (root.pitch ? "PITCH \u2192 0 %" : "VOLUME \u2192 0 dB"));
+            Toasts.show(root.deckName + (root.pitch ? "TEMPO \u2192 0 %" : "VOLUME \u2192 0 dB"));
         }
     }
 }
