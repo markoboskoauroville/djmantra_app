@@ -7,7 +7,7 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
 
 ## 14.10.2026 21:00 UTC (latest): V76 pushed (a246d79), the phone has V71, the tester stopped for the night
 
-**State.** Branch ccr-eb7d1019-d3kubd, V76 = a246d79 (CI was running at 21:00; the routine "V76 CI check" re-checks,
+**State.** Branch ccr-eb7d1019-d3kubd, V76 = a246d79, **GREEN on Android and Linux, published 21:10 UTC as android-latest "DJ Mantra V76"** (earlier note: the routine "V76 CI check" re-checked,
 re-runs a flaky emulator launch test once, and messages the tester when green). The real Pixel 7 has **V71**. Tester:
 the Mac session "Pixel wireless debugging connection" (session_01NA5hr4KrMJbJix74JCBFvL); Marko switched the Mac and
 the phone off for the night. CLAUDE.md still names the old tester session id (01HGBd..., gone) and the old TIDAL Client ID.
