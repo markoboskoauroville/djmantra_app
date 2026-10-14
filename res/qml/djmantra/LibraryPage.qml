@@ -196,7 +196,7 @@ Rectangle {
         for (let i = 0; i < songs.count; ++i) {
             const r = songs.get(i);
             rows.push({name: r.name, path: r.path, isFolder: r.isFolder, artist: r.artist, title: r.title,
-                       bpm: r.bpm, key: r.key, cover: r.cover, known: r.known});
+                       bpm: r.bpm, key: r.key, cover: r.cover, duration: r.duration, known: r.known});
         }
         // Camelot keys in wheel order: 1A 1B 2A ... 12B
         const keyRank = (k) => k === "" ? 99 : parseInt(k) * 2 + (k.endsWith("B") ? 1 : 0);
@@ -244,25 +244,38 @@ Rectangle {
     // The controller (Marko, 12.10.2026): its BROWSE knob moves a highlighted
     // row, a press or a deck's LOAD takes it
     property bool controllerSelect: false
+    // Marko 14.10.2026: "two views: list view and thumbnail view" (remembered)
+    property bool thumbnails: Mixxx.DJMantra.setting("library_view", "list") === "thumbnails"
+    readonly property Item view: thumbnails ? grid : list
+
+    // a song's length as YouTube writes it on its thumbnails: 3:07, 1:02:45
+    function lengthText(seconds) {
+        if (!(seconds > 0))
+            return "";
+        const t = Math.round(seconds);
+        const h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, sec = t % 60;
+        const ss = (sec < 10 ? "0" : "") + sec;
+        return h > 0 ? h + ":" + (m < 10 ? "0" : "") + m + ":" + ss : m + ":" + ss;
+    }
 
     function moveSelection(steps) {
         if (songs.count === 0)
             return;
         controllerSelect = true;
-        const index = list.currentIndex < 0 ? 0 : list.currentIndex + steps;
-        list.currentIndex = Math.max(0, Math.min(songs.count - 1, index));
-        list.positionViewAtIndex(list.currentIndex, ListView.Contain);
+        const index = view.currentIndex < 0 ? 0 : view.currentIndex + steps;
+        view.currentIndex = Math.max(0, Math.min(songs.count - 1, index));
+        view.positionViewAtIndex(view.currentIndex, ListView.Contain);
     }
 
     // a press (group "": the free deck, or the deck whose cover was tapped)
     // or a deck's LOAD: a folder opens, a song loads (a playing deck: the same
     // press again confirms)
     function activate(group) {
-        if (list.currentIndex < 0 || list.currentIndex >= songs.count) {
+        if (view.currentIndex < 0 || view.currentIndex >= songs.count) {
             moveSelection(0);
             return;
         }
-        const item = songs.get(list.currentIndex);
+        const item = songs.get(view.currentIndex);
         if (item.isFolder) {
             Mixxx.DJMantra.log("controller: open folder " + item.path);
             folder = item.path;
@@ -323,11 +336,36 @@ Rectangle {
             }
         }
 
+        DButton {
+            // list / thumbnails
+            id: viewButton
+
+            objectName: "libraryView"
+            anchors.right: closeButton.left
+            anchors.rightMargin: 6
+            anchors.verticalCenter: parent.verticalCenter
+            visible: root.folder !== ""
+            width: visible ? 44 : 0
+            height: 40
+            text: root.thumbnails ? "\u2630" : "\u25A6"
+            fontSize: 20
+            onClicked: {
+                const keep = root.view.currentIndex;
+                root.thumbnails = !root.thumbnails;
+                Mixxx.DJMantra.setSetting("library_view", root.thumbnails ? "thumbnails" : "list");
+                Mixxx.DJMantra.log("library view: " + (root.thumbnails ? "thumbnails" : "list"));
+                if (keep >= 0) {
+                    root.view.currentIndex = keep;
+                    root.view.positionViewAtIndex(keep, ListView.Contain);
+                }
+            }
+        }
+
         Column {
             // the playlist: songs, total time (matrix font, as the clock) and % analysed
             id: target
 
-            anchors.right: closeButton.left
+            anchors.right: viewButton.left
             anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
             visible: root.folder !== ""
@@ -429,9 +467,12 @@ Rectangle {
             }
         }
 
+        visible: !root.thumbnails
+
         delegate: Rectangle {
             id: row
 
+            required property real duration
             required property string name
             required property string path
             required property bool isFolder
@@ -480,6 +521,11 @@ Rectangle {
                     text: row.isFolder ? "\uD83D\uDCC1" : "\u266B"
                     color: row.isFolder ? Style.accent : Style.subText
                     font.pixelSize: 20
+                }
+
+                LengthBadge {
+                    text: row.isFolder ? "" : root.lengthText(row.duration)
+                    fontSize: 9
                 }
             }
 
@@ -552,6 +598,163 @@ Rectangle {
                 width: parent.width
                 height: 1
                 color: Style.surface
+            }
+        }
+    }
+
+    // YouTube's length on the thumbnail: white on a dark rounded box, bottom right
+    component LengthBadge: Rectangle {
+        property alias text: label.text
+        property int fontSize: 12
+
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 2
+        visible: text !== ""
+        width: label.implicitWidth + 2 * Math.round(fontSize / 3)
+        height: label.implicitHeight
+        radius: 3
+        color: "#cc000000"
+
+        Text {
+            id: label
+
+            anchors.centerIn: parent
+            color: "white"
+            font.pixelSize: parent.fontSize
+            font.bold: true
+        }
+    }
+
+    GridView {
+        // the thumbnail view: big covers, 3 a row upright (more on a wide screen)
+        id: grid
+
+        objectName: "libraryGrid"
+        anchors.top: header.visible ? header.bottom : bar.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.leftMargin: 4
+        width: parent.width - 8
+        visible: root.thumbnails
+        clip: true
+        model: songs
+        readonly property int columns: Math.max(3, Math.floor(width / 150))
+        cellWidth: width / columns
+        cellHeight: cellWidth + 44
+
+        delegate: Item {
+            id: tile
+
+            required property real duration
+            required property string name
+            required property string path
+            required property bool isFolder
+            required property string artist
+            required property string title
+            required property real bpm
+            required property string key
+            required property string cover
+            required property int index
+            readonly property bool wasPlayed: !isFolder && root.played[path] === true
+
+            width: grid.cellWidth
+            height: grid.cellHeight
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: 2
+                radius: 8
+                color: tileArea.pressed ? Style.pressed : "transparent"
+                border.color: root.controllerSelect && tile.index === grid.currentIndex ? Style.accent : "transparent"
+                border.width: 2
+            }
+
+            Rectangle {
+                id: thumb
+
+                x: 5
+                y: 5
+                width: tile.width - 10
+                height: width
+                radius: 8
+                color: Style.tile
+                clip: true
+                opacity: tile.wasPlayed ? 0.5 : 1
+
+                Image {
+                    anchors.fill: parent
+                    visible: !tile.isFolder && tile.cover !== ""
+                    source: tile.isFolder ? "" : tile.cover
+                    sourceSize.width: 256
+                    sourceSize.height: 256
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                }
+
+                Text {
+                    anchors.centerIn: parent
+                    visible: tile.isFolder || tile.cover === ""
+                    text: tile.isFolder ? "\uD83D\uDCC1" : "\u266B"
+                    color: tile.isFolder ? Style.accent : Style.subText
+                    font.pixelSize: 40
+                }
+
+                Text {
+                    // BPM and key, top left, as small as the length
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.margins: 4
+                    visible: text !== ""
+                    text: tile.isFolder ? "" : (tile.bpm > 0 ? tile.bpm.toFixed(0) : "") + (tile.key !== "" ? " " + tile.key : "")
+                    color: "white"
+                    style: Text.Outline
+                    styleColor: "#cc000000"
+                    font.pixelSize: 11
+                    font.bold: true
+                }
+
+                LengthBadge {
+                    anchors.margins: 4
+                    text: tile.isFolder ? "" : root.lengthText(tile.duration)
+                    fontSize: 12
+                }
+            }
+
+            Column {
+                anchors.top: thumb.bottom
+                anchors.topMargin: 3
+                x: 5
+                width: tile.width - 10
+
+                Text {
+                    width: parent.width
+                    text: (tile.wasPlayed ? "\u2713 " : "") + (tile.isFolder ? tile.name : tile.title)
+                    color: tile.wasPlayed ? Style.line : Style.text
+                    font.pixelSize: 13
+                    font.bold: true
+                    elide: Text.ElideRight
+                }
+
+                Text {
+                    width: parent.width
+                    text: tile.isFolder ? qsTr("Folder") : tile.artist
+                    color: tile.wasPlayed ? Style.line : Style.subText
+                    font.pixelSize: 11
+                    elide: Text.ElideRight
+                }
+            }
+
+            MouseArea {
+                id: tileArea
+
+                anchors.fill: parent
+                onClicked: {
+                    if (tile.isFolder)
+                        root.folder = tile.path;
+                    else
+                        root.load(tile.path, root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false);
+                }
             }
         }
     }
