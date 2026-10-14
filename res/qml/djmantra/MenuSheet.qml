@@ -70,6 +70,22 @@ Rectangle {
                 text: qsTr("CAMELOT WHEEL")
                 onClicked: root.wheel()
             }
+            DButton {
+                // record the mix (Marko 14.10.2026), lossless; Settings: its name and format
+                objectName: "menuRecord"
+                width: parent.width
+                height: 52
+                mode: ""
+                lit: recStatus.value > 0
+                litColor: Style.red
+                text: recStatus.value > 0 ? qsTr("\u25A0 STOP RECORDING") : qsTr("\u25CF RECORD MIX")
+                onClicked: {
+                    Recorder.toggle();
+                    root.done();
+                }
+
+                Mixxx.ControlProxy { id: recStatus; group: "[Recording]"; key: "status" }
+            }
         }
     }
 }

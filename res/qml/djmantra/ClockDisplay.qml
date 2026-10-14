@@ -4,7 +4,9 @@ import QtQuick 2.12
 // A real-time clock in the matrix display style, top of the screen (Marko,
 // 12.10.2026: "real-time clock in the matrix display style"): HH:MM, 24 hours,
 // the colon static (Marko: "2 dots ... should be static, not blinking");
-// checked once a second, repainted only when the minute turns.
+// checked once a second, repainted only when the minute turns. The hidden easter egg
+// (Marko 14.10.2026): a long press on the clock starts / stops recording the mix, and
+// the clock is red while it records.
 Canvas {
     id: root
 
@@ -12,6 +14,9 @@ Canvas {
     readonly property int columns: 5 * 6 + 1
     readonly property int rows: 7 + 2
     readonly property real pitch: Math.min(width / columns, height / rows)
+
+    readonly property bool recording: Recorder.recording
+    onRecordingChanged: requestPaint()
 
     implicitHeight: 24
     implicitWidth: columns * implicitHeight / rows
@@ -49,8 +54,14 @@ Canvas {
         }
         for (let y = 0; y < rows; ++y)
             for (let x = 0; x < columns; ++x) {
-                ctx.fillStyle = lit[x + "," + y] ? String(Style.accent) : "#121735";
+                ctx.fillStyle = lit[x + "," + y] ? String(root.recording ? Style.red : Style.accent) : "#121735";
                 ctx.fillRect(x * p + (p - dot) / 2, y * p + (p - dot) / 2, dot, dot);
             }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        pressAndHoldInterval: 600
+        onPressAndHold: Recorder.toggle()
     }
 }

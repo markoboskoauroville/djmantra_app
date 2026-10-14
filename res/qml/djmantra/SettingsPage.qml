@@ -230,6 +230,63 @@ Rectangle {
                 }
             }
 
+            // RECORDING (Marko 14.10.2026): the mix recorded lossless (FLAC, or WAV) into
+            // Music/DJ Mantra Recordings as "<name> - <date> <time>" (Menu -> RECORD MIX)
+            Text {
+                text: qsTr("RECORDING (Menu -> RECORD MIX; Music/DJ Mantra Recordings)")
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Row {
+                spacing: 6
+
+                Rectangle {
+                    width: column.width - 12 - 2 * 80
+                    height: 42
+                    radius: Style.radius
+                    color: Style.tile
+                    border.color: Style.surface
+
+                    TextInput {
+                        objectName: "recName"
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        verticalAlignment: TextInput.AlignVCenter
+                        color: Style.text
+                        font.pixelSize: 16
+                        clip: true
+                        text: Mixxx.DJMantra.setting("rec_name", "DJ Mantra Mix")
+                        onEditingFinished: {
+                            Mixxx.DJMantra.setSetting("rec_name", text.trim() === "" ? "DJ Mantra Mix" : text.trim());
+                            Toasts.show(qsTr("RECORDING NAME \u2192 ") + (text.trim() === "" ? "DJ Mantra Mix" : text.trim()));
+                        }
+                    }
+                }
+
+                Repeater {
+                    model: ["FLAC", "WAV"]
+
+                    delegate: DButton {
+                        required property string modelData
+
+                        objectName: "recFormat_" + modelData
+                        width: 80
+                        height: 42
+                        mode: ""
+                        text: modelData
+                        fontSize: 14
+                        lit: Mixxx.DJMantra.setting("rec_format", "FLAC") === modelData
+                        onClicked: {
+                            Mixxx.DJMantra.setSetting("rec_format", modelData);
+                            lit = true;
+                            Toasts.show(qsTr("RECORDING \u2192 ") + modelData);
+                        }
+                    }
+                }
+            }
+
             // the Allen & Heath CQ mixer on the network (Marko 13.10.2026): its delay
             // in time with the decks, triggered from the app
             Text {

@@ -125,6 +125,13 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    // Recording the mix (Marko 14.10.2026: "djay has a recording function ... build so
+    // we can compare"): lossless FLAC (or WAV) of the master output into
+    // Music/DJ Mantra Recordings, by Mixxx's RecordingManager ([Recording] controls).
+    // Returns the new file's path ("" if a recording runs already).
+    Q_INVOKABLE QString startRecording(const QString& format, const QString& name);
+    Q_INVOKABLE void stopRecording();
+    Q_INVOKABLE QString recordingPath() const;
     /// The decks' FILTER knob = the Pioneer DJM filter (loads it into the quick effect slots)
     Q_INVOKABLE void useDjmFilter();
 

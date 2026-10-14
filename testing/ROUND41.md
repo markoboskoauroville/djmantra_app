@@ -28,3 +28,10 @@ cut, the reset and start position); r40's "EQ at max at start" was right. Now:
 ## 7. Songs: a LENGTH column (sortable, tap again = reverse; songs without a length last).
 ## 8. PITCH on DECK 2: the BPM numbers on the left of the scale are there (they were hidden under the VU meter), the
 % on the right; both decks' scales fully readable (no number cut).
+## 9. RECORDING (Marko 14.10.2026): Menu -> "● RECORD MIX" starts recording the master output, lossless FLAC
+(Settings -> RECORDING: FLAC / WAV, and the NAME, default "DJ Mantra Mix") into /sdcard/Music/DJ Mantra Recordings as
+"DJ Mantra Mix - 2026-10-14 15h30.flac" (log `Recording: started ...`, toast "● RECORDING ..."). The hidden easter
+egg: a LONG PRESS on the CLOCK starts / stops it too, and the clock is RED while recording. Stop (menu or clock): the
+toast "RECORDING SAVED: ...", log `Recording: stopped <path> <bytes>`. Pull the file: plays, 48 kHz stereo, the length
+right, the sound = what was heard (EQ / FILTER / FX moves audible in it). Change the name in Settings: the next file
+has it.

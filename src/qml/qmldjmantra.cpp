@@ -883,6 +883,55 @@ void QmlDJMantra::useDjmFilter() {
     }
 }
 
+QString QmlDJMantra::startRecording(const QString& format, const QString& name) {
+    if (!m_pConfig) {
+        return QString();
+    }
+    if (ControlObject::get(ConfigKey(QStringLiteral("[Recording]"), QStringLiteral("status"))) > 0) {
+        return QString();
+    }
+#if defined(Q_OS_ANDROID)
+    const QString dir = QStringLiteral("/sdcard/Music/DJ Mantra Recordings");
+#else
+    const QString dir = QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
+            QStringLiteral("/DJ Mantra Recordings");
+#endif
+    QDir().mkpath(dir);
+    const ConfigKey encoding(QStringLiteral("[Recording]"), QStringLiteral("Encoding"));
+    m_pConfig->set(ConfigKey(QStringLiteral("[Recording]"), QStringLiteral("Directory")), dir);
+    // no characters a file name cannot have
+    QString prefix = name.trimmed();
+    prefix.replace(QRegularExpression(QStringLiteral("[/\\\\:*?\"<>|]")), QStringLiteral("-"));
+    m_pConfig->set(ConfigKey(QStringLiteral("[Recording]"), QStringLiteral("NamePrefix")),
+            prefix.isEmpty() ? QStringLiteral("DJ Mantra Mix") : prefix);
+    m_pConfig->set(encoding,
+            format.compare(QStringLiteral("WAV"), Qt::CaseInsensitive) == 0
+                    ? QStringLiteral("WAV")
+                    : QStringLiteral("FLAC"));
+    // a push: RecordingManager toggles on the press
+    setControl(QStringLiteral("[Recording]"), QStringLiteral("toggle_recording"), 1);
+    setControl(QStringLiteral("[Recording]"), QStringLiteral("toggle_recording"), 0);
+    const QString path = recordingPath();
+    qInfo() << "Recording: started" << m_pConfig->getValueString(encoding) << path;
+    return path;
+}
+
+void QmlDJMantra::stopRecording() {
+    if (ControlObject::get(ConfigKey(QStringLiteral("[Recording]"), QStringLiteral("status"))) <= 0) {
+        return;
+    }
+    const QString path = recordingPath();
+    setControl(QStringLiteral("[Recording]"), QStringLiteral("toggle_recording"), 1);
+    setControl(QStringLiteral("[Recording]"), QStringLiteral("toggle_recording"), 0);
+    qInfo() << "Recording: stopped" << path << QFileInfo(path).size() << "bytes";
+}
+
+QString QmlDJMantra::recordingPath() const {
+    return m_pConfig ? m_pConfig->getValueString(
+                               ConfigKey(QStringLiteral("[Recording]"), QStringLiteral("Path")))
+                     : QString();
+}
+
 void QmlDJMantra::stopAnalysis() {
     // Marko 13.10.2026: only the folder that is open is analysed; leaving it stops
     // the analysis (the next visit goes on from the songs not done yet)
