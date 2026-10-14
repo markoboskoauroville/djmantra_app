@@ -65,3 +65,5 @@ Folders level. Opening another folder clears the search. Check with a song in Do
 117.8). Settings -> BEATS: "STEADY GRID (default, as djay)" / "FOLLOW LIVE DRUMS". Songs analysed into a beat map
 before are analysed again (logcat `Beats: ... a beat map, the steady grid is chosen: again`). Aum Ganesha: the deck
 shows ~114.6-115 at the start, the middle and the end.
+## 12b. (V43) the controller badge again: V42 showed no pill (the control was made after the screen bound to it).
+At start with the Mix Ultra on USB: the green USB pill at once; then the switching steps with toasts.
