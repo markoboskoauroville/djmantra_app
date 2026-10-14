@@ -76,7 +76,9 @@ JNIEXPORT void JNICALL Java_com_djmantra_app_MidiBridge_nativeConnected(
 #endif
 
 AndroidMidiController::AndroidMidiController(const QString& name)
-        : MidiController(name) {
+        : MidiController(name),
+          m_pLink(std::make_unique<ControlObject>(
+                  ConfigKey(QStringLiteral("[DJMantra]"), QStringLiteral("controller_link")))) {
     setInputDevice(true);
     setOutputDevice(true);
 }
@@ -147,6 +149,7 @@ void AndroidMidiController::wake() {
 void AndroidMidiController::connectedFromJava(bool connected, const QString& transport) {
     kLogger.info() << getName() << (connected ? "connected over" : "disconnected from")
                    << transport;
+    m_pLink->set(connected ? (transport == QStringLiteral("bluetooth") ? 2 : 1) : 0);
     if (connected) {
         m_connectedEvents.ref();
         wake();

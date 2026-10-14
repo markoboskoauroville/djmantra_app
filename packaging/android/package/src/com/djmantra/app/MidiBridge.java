@@ -119,7 +119,17 @@ public final class MidiBridge {
         mMidi.registerDeviceCallback(new MidiManager.DeviceCallback() {
             @Override
             public void onDeviceAdded(MidiDeviceInfo info) {
-                if (mDevice == null && matches(info)) {
+                if (!matches(info)) {
+                    return;
+                }
+                if (mDevice == null) {
+                    open(info);
+                } else if ("bluetooth".equals(mTransport)
+                        && info.getType() == MidiDeviceInfo.TYPE_USB) {
+                    // the cable plugged in while on Bluetooth: USB wins (no radio
+                    // latency, powered by the phone) (Marko 14.10.2026)
+                    Log.i(TAG, "USB plugged in: switching from Bluetooth to USB");
+                    closeDevice();
                     open(info);
                 }
             }

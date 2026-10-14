@@ -5,6 +5,9 @@
 #include <QQueue>
 
 #include <functional>
+#include <memory>
+
+#include "control/controlobject.h"
 
 #include "controllers/controllerenumerator.h"
 #include "controllers/midi/midicontroller.h"
@@ -72,6 +75,9 @@ class AndroidMidiController : public MidiController {
     QAtomicInt m_wakePending;
     void wake();
     MidiStreamParser m_parser;
+    // [DJMantra],controller_link: 0 not connected, 1 USB, 2 Bluetooth (the top bar's
+    // controller badge, Marko 14.10.2026)
+    std::unique_ptr<ControlObject> m_pLink;
 };
 
 class AndroidMidiEnumerator : public ControllerEnumerator {

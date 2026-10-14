@@ -217,6 +217,49 @@ Window {
                     }
                 }
 
+                Rectangle {
+                    // the controller's link on the menu button's corner (Marko 14.10.2026):
+                    // USB / BT in green while the Mix Ultra is connected, nothing when not
+                    objectName: "controllerLink"
+                    x: parent.width - width + 8
+                    y: -4
+                    z: 2
+                    visible: controllerLink.value > 0
+                    width: linkText.implicitWidth + 6
+                    height: 14
+                    radius: 4
+                    color: Style.earth
+                    border.color: Style.background
+                    border.width: 1
+
+                    Text {
+                        id: linkText
+
+                        anchors.centerIn: parent
+                        text: controllerLink.value === 2 ? "BT" : "USB"
+                        color: Style.inkOnAccent
+                        font.pixelSize: 9
+                        font.bold: true
+                    }
+
+                    Mixxx.ControlProxy {
+                        id: controllerLink
+
+                        group: "[DJMantra]"
+                        key: "controller_link"
+                        property int last: 0
+                        onValueChanged: {
+                            const v = Math.round(value);
+                            if (v === last)
+                                return;
+                            Toasts.show(v === 0 ? qsTr("CONTROLLER DISCONNECTED")
+                                    : qsTr("CONTROLLER CONNECTED \u00B7 ") + (v === 2 ? "BLUETOOTH" : "USB"));
+                            Mixxx.DJMantra.log("controller link: " + (v === 0 ? "none" : v === 2 ? "bluetooth" : "usb"));
+                            last = v;
+                        }
+                    }
+                }
+
                 MouseArea {
                     id: menuArea
 

@@ -44,3 +44,9 @@ the %; a tap while it moves stops it (toast). Time it with a stopwatch: 16 beats
 with a song: moving the fader towards deck 2 starts deck 2 at once, on the beat (toast "AUTO-PLAY → DECK 2", log
 `crossfader auto-play`). Not when the deck plays already or is empty; once per move away from an end. OFF in
 Settings: nothing starts. Compare with djay's own (Settings -> Crossfader FX -> Auto-play when moving crossfader).
+## 12. CONTROLLER LINK (Marko 14.10.2026): a green USB / BT pill on the menu button's corner while the Mix Ultra is
+connected, nothing when not; toasts "CONTROLLER CONNECTED · USB" / "· BLUETOOTH" / "CONTROLLER DISCONNECTED" (log
+`controller link: ...`). Switching: on Bluetooth, plug the USB cable (phone <-> Mix Ultra): it switches to USB at once
+(logcat DJMantraMIDI `USB plugged in: switching from Bluetooth to USB`); unplug: DISCONNECTED, then within ~3-10 s
+back on Bluetooth (the scan). Power off the controller: DISCONNECTED; on again: connected. After each switch: move
+the crossfader, a volume fader, an EQ knob, press PLAY: the screen follows (Marko moves them; one action at a time).
