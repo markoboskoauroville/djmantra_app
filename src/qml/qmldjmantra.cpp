@@ -1166,9 +1166,131 @@ void QmlDJMantra::tidalPush(const QString& name) {
 #endif
 }
 
+namespace {
+
+QString sunoDir() {
+#if defined(Q_OS_ANDROID)
+    return QStringLiteral("/sdcard/Music/djmantra_app/Suno");
+#else
+    return QStandardPaths::writableLocation(QStandardPaths::MusicLocation) + QStringLiteral("/djmantra_app/Suno");
+#endif
+}
+
+QJsonArray readSunoLinks() {
+    QFile file(sunoDir() + QStringLiteral("/links.json"));
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QJsonArray();
+    }
+    return QJsonDocument::fromJson(file.readAll()).array();
+}
+
+void writeSunoLinks(const QJsonArray& links) {
+    QDir().mkpath(sunoDir());
+    QSaveFile file(sunoDir() + QStringLiteral("/links.json"));
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(QJsonDocument(links).toJson());
+        file.commit();
+    }
+}
+
+} // namespace
+
+int QmlDJMantra::sunoAdd(const QString& name, const QString& text) {
+    const QString playlist = name.trimmed().isEmpty() ? QStringLiteral("Suno") : name.trimmed();
+    static const QRegularExpression linkPattern(
+            QStringLiteral("https?://(?:www\\.|app\\.)?suno\\.(?:com|ai)/(?:song|s)/[A-Za-z0-9-]+"));
+    QStringList urls;
+    auto it = linkPattern.globalMatch(text);
+    while (it.hasNext()) {
+        const QString url = it.next().captured(0);
+        if (!urls.contains(url)) {
+            urls << url;
+        }
+    }
+    if (urls.isEmpty()) {
+        return 0;
+    }
+    // remembered at once (also those not saved yet: they are fetched again next time)
+    QJsonArray links = readSunoLinks();
+    for (const QString& url : std::as_const(urls)) {
+        bool known = false;
+        for (const auto& value : std::as_const(links)) {
+            const QJsonObject link = value.toObject();
+            if (link.value(QStringLiteral("url")).toString() == url &&
+                    link.value(QStringLiteral("playlist")).toString() == playlist) {
+                known = true;
+            }
+        }
+        if (!known) {
+            QJsonObject link;
+            link[QStringLiteral("url")] = url;
+            link[QStringLiteral("playlist")] = playlist;
+            link[QStringLiteral("added")] = static_cast<double>(QDateTime::currentMSecsSinceEpoch());
+            links.append(link);
+        }
+    }
+    writeSunoLinks(links);
+    qInfo().noquote() << "Suno:" << urls.size() << "links for" << playlist;
+#if defined(Q_OS_ANDROID)
+    QPointer<QmlDJMantra> guard(this);
+    const QString dir = sunoDir();
+    std::thread([guard, urls, playlist, dir]() {
+        int added = 0;
+        int failed = 0;
+        for (const QString& url : urls) {
+            const QString answer = QJniObject::callStaticObjectMethod("com/djmantra/app/SunoBridge",
+                    "fetch",
+                    "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+                    QJniObject::fromString(url).object<jstring>(),
+                    QJniObject::fromString(dir).object<jstring>())
+                                           .toString();
+            const bool ok = !answer.startsWith(QStringLiteral("error"));
+            ok ? ++added : ++failed;
+            QMetaObject::invokeMethod(qApp, [guard, url, playlist, answer, ok]() {
+                if (!guard) {
+                    return;
+                }
+                if (!ok) {
+                    emit guard->sunoResult(QStringLiteral("error"), answer);
+                    return;
+                }
+                const QString path = answer.section(QChar('|'), 0, 0);
+                const QString title = answer.section(QChar('|'), 1);
+                guard->addToPlaylist(playlist, path);
+                QJsonArray links = readSunoLinks();
+                for (int i = 0; i < links.size(); ++i) {
+                    QJsonObject link = links[i].toObject();
+                    if (link.value(QStringLiteral("url")).toString() == url) {
+                        link[QStringLiteral("title")] = title;
+                        link[QStringLiteral("file")] = path;
+                        links[i] = link;
+                    }
+                }
+                writeSunoLinks(links);
+                emit guard->sunoResult(QStringLiteral("song"), title);
+            }, Qt::QueuedConnection);
+        }
+        QMetaObject::invokeMethod(qApp, [guard, added, failed]() {
+            if (guard) {
+                emit guard->sunoResult(QStringLiteral("done"), QStringLiteral("%1|%2").arg(added).arg(failed));
+            }
+        }, Qt::QueuedConnection);
+    }).detach();
+#endif
+    return urls.size();
+}
+
+QVariantList QmlDJMantra::sunoLinks() const {
+    return readSunoLinks().toVariantList();
+}
+
 QVariantList QmlDJMantra::playlistRoots() {
     importM3uPlaylists();
     QVariantList roots;
+    QSet<QString> sunoPlaylists;
+    for (const auto& link : readSunoLinks()) {
+        sunoPlaylists.insert(link.toObject().value(QStringLiteral("playlist")).toString());
+    }
     const QJsonArray playlists = readPlaylists();
     for (const auto& value : playlists) {
         const QJsonObject playlist = value.toObject();
@@ -1179,6 +1301,9 @@ QVariantList QmlDJMantra::playlistRoots() {
         entry[QStringLiteral("isFolder")] = true;
         entry[QStringLiteral("created")] = playlist.value(QStringLiteral("created")).toDouble();
         entry[QStringLiteral("count")] = playlist.value(QStringLiteral("songs")).toArray().size();
+        if (sunoPlaylists.contains(name)) {
+            entry[QStringLiteral("artist")] = QStringLiteral("SUNO PLAYLIST");
+        }
         roots << entry;
     }
     return roots;

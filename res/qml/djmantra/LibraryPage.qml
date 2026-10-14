@@ -74,7 +74,7 @@ Rectangle {
 
     function playlistInfo(e) {
         const d = new Date(e.created || 0);
-        return (e.count || 0) + qsTr(" songs") + (e.created > 0 ? "  \u00B7  " + d.toLocaleDateString(Qt.locale(), Locale.ShortFormat) : "");
+        return (e.artist ? e.artist + "  ·  " : "") + (e.count || 0) + qsTr(" songs") + (e.created > 0 ? "  \u00B7  " + d.toLocaleDateString(Qt.locale(), Locale.ShortFormat) : "");
     }
 
     function rowCopy(r) {
@@ -637,7 +637,7 @@ Rectangle {
         Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 8
-            anchors.right: tidalButton.left
+            anchors.right: sunoButton.left
             anchors.rightMargin: 6
             anchors.verticalCenter: parent.verticalCenter
             height: 38
@@ -701,6 +701,23 @@ Rectangle {
                     onClicked: root.clearSearch()
                 }
             }
+        }
+
+        DButton {
+            // SUNO PLAYLISTS (Marko 14.10.2026): paste Suno links, the songs come in
+            id: sunoButton
+
+            objectName: "sunoPlaylists"
+            anchors.right: tidalButton.left
+            anchors.rightMargin: visible ? 6 : 0
+            anchors.verticalCenter: parent.verticalCenter
+            visible: root.playlistsRoot || root.inPlaylist
+            width: visible ? 64 : 0
+            height: 38
+            mode: ""
+            text: qsTr("SUNO")
+            fontSize: 11
+            onClicked: root.openSuno()
         }
 
         DButton {
@@ -1332,6 +1349,211 @@ Rectangle {
                         text: qsTr("CANCEL")
                         onClicked: root.playlistSong = ""
                     }
+                }
+            }
+        }
+    }
+
+    // SUNO PLAYLISTS (Marko 14.10.2026: "the user will paste the links from Suno, and they will
+    // be remembered in the app"): the links pasted go into a playlist (Suno by default, or the
+    // one open), each song saved in djmantra_app/Suno and playable / mixable as any song
+    property bool sunoOpen: false
+    property bool sunoBusy: false
+    property string sunoStatus: ""
+    property var sunoKnown: []
+
+    function openSuno() {
+        sunoOpen = true;
+        sunoStatus = "";
+        sunoKnown = Mixxx.DJMantra.sunoLinks();
+        sunoName.text = inPlaylist ? folder.substring(9) : qsTr("Suno");
+    }
+
+    function addSuno() {
+        const n = Mixxx.DJMantra.sunoAdd(sunoName.text, sunoPaste.text);
+        if (n === 0) {
+            sunoStatus = qsTr("No Suno links found: paste links like https://suno.com/song/...");
+            return;
+        }
+        sunoBusy = true;
+        sunoStatus = n + qsTr(" links remembered, saving the songs ...");
+        sunoPaste.text = "";
+        sunoKnown = Mixxx.DJMantra.sunoLinks();
+    }
+
+    Connections {
+        target: Mixxx.DJMantra
+        function onSunoResult(action, result) {
+            if (action === "song") {
+                root.sunoStatus = qsTr("Saved: ") + result;
+            } else if (action === "error") {
+                root.sunoStatus = result;
+            } else if (action === "done") {
+                const p = result.split("|");
+                root.sunoBusy = false;
+                root.sunoStatus = p[0] + qsTr(" songs in ") + sunoName.text
+                        + (p[1] !== "0" ? ", " + p[1] + qsTr(" could not be saved") : "");
+                Toasts.show(qsTr("SUNO: ") + p[0] + qsTr(" SONGS IN ") + sunoName.text.toUpperCase());
+            }
+            root.sunoKnown = Mixxx.DJMantra.sunoLinks();
+            ++root.playlistsVersion;
+        }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        visible: root.sunoOpen
+        color: Style.background
+        z: 60
+
+        MouseArea {
+            anchors.fill: parent
+        }
+
+        Column {
+            id: sunoColumn
+
+            anchors.fill: parent
+            anchors.margins: 12
+            spacing: 8
+
+            Item {
+                width: parent.width
+                height: 44
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("SUNO PLAYLIST")
+                    color: Style.accent
+                    font.pixelSize: 18
+                    font.bold: true
+                }
+
+                CloseButton {
+                    objectName: "sunoClose"
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    onClicked: {
+                        root.sunoOpen = false;
+                        ++root.playlistsVersion;
+                    }
+                }
+            }
+
+            Rectangle {
+                // the playlist the songs go into
+                width: parent.width
+                height: 40
+                radius: Style.radius
+                color: Style.tile
+
+                TextInput {
+                    id: sunoName
+
+                    objectName: "sunoName"
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    verticalAlignment: TextInput.AlignVCenter
+                    color: Style.text
+                    font.pixelSize: 16
+                    clip: true
+                }
+            }
+
+            Rectangle {
+                // the links: paste one or many (any text; every Suno link in it is taken)
+                width: parent.width
+                height: 110
+                radius: Style.radius
+                color: Style.tile
+                border.color: sunoPaste.activeFocus ? Style.accent : Style.surface
+
+                Flickable {
+                    anchors.fill: parent
+                    anchors.margins: 8
+                    contentHeight: sunoPaste.implicitHeight
+                    clip: true
+
+                    TextEdit {
+                        id: sunoPaste
+
+                        objectName: "sunoPaste"
+                        width: parent.width
+                        color: Style.text
+                        font.pixelSize: 14
+                        wrapMode: TextEdit.WrapAnywhere
+                        inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhUrlCharactersOnly
+
+                        Text {
+                            anchors.fill: parent
+                            visible: sunoPaste.text === "" && !sunoPaste.activeFocus
+                            text: qsTr("Paste Suno links here (https://suno.com/song/...)")
+                            color: Style.line
+                            font.pixelSize: 14
+                            wrapMode: Text.WordWrap
+                        }
+                    }
+                }
+            }
+
+            Row {
+                spacing: 6
+
+                DButton {
+                    objectName: "sunoPasteButton"
+                    width: (sunoColumn.width - 6) / 2
+                    height: 46
+                    mode: ""
+                    text: qsTr("PASTE")
+                    onClicked: {
+                        sunoPaste.selectAll();
+                        sunoPaste.paste();
+                    }
+                }
+
+                DButton {
+                    objectName: "sunoAdd"
+                    width: (sunoColumn.width - 6) / 2
+                    height: 46
+                    text: qsTr("ADD TO ") + sunoName.text.toUpperCase()
+                    fontSize: 12
+                    lit: true
+                    enabled: !root.sunoBusy
+                    onClicked: root.addSuno()
+                }
+            }
+
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: (root.sunoBusy ? "... " : "") + root.sunoStatus
+                color: Style.text
+                font.pixelSize: 14
+            }
+
+            Text {
+                text: root.sunoKnown.length + qsTr(" SUNO LINKS REMEMBERED")
+                color: Style.subText
+                font.pixelSize: 12
+                font.bold: true
+            }
+
+            ListView {
+                width: parent.width
+                height: Math.max(0, sunoColumn.height - y)
+                clip: true
+                model: root.sunoKnown
+
+                delegate: Text {
+                    required property var modelData
+
+                    width: ListView.view.width
+                    height: 30
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    text: (modelData.title ? modelData.title : modelData.url) + "   \u00B7  " + modelData.playlist
+                    color: modelData.file ? Style.text : Style.subText
+                    font.pixelSize: 13
                 }
             }
         }

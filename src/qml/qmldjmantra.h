@@ -136,6 +136,13 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE void tidalImport(const QString& id, const QString& name);
     // one of the app's playlists to TIDAL (a new TIDAL playlist of the same name)
     Q_INVOKABLE void tidalPush(const QString& name);
+    // SUNO PLAYLISTS (Marko 14.10.2026): Suno song links pasted (any text: every suno.com link
+    // in it) into playlist `name`; the links are remembered (djmantra_app/Suno/links.json), each
+    // song saved as djmantra_app/Suno/<title>.mp3 (SunoBridge.java) and put in the playlist.
+    // sunoResult("song", "<title>") per song, ("error", text), ("done", "added|failed")
+    Q_INVOKABLE int sunoAdd(const QString& name, const QString& text);
+    // the remembered links: [{url, playlist, title, file}]
+    Q_INVOKABLE QVariantList sunoLinks() const;
     // BEATSTATS (Marko 14.10.2026): beatstats.com in a WebView (BeatStatsActivity), READ CHART
     // there reads the chart's rows from the page (no AI) with each song's ISRC and stores them in
     // djmantra_app/BeatStats/charts.json, read here
@@ -237,6 +244,7 @@ class QmlDJMantra : public QObject {
     void analysisChanged();
     void cqChanged();
     void tidalResult(const QString& action, const QString& result);
+    void sunoResult(const QString& action, const QString& result);
 
   protected:
     bool eventFilter(QObject* pObject, QEvent* pEvent) override;

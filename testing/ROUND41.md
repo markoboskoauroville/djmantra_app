@@ -182,3 +182,10 @@ status), ▴ or a tap beside it collapses it; START collapses it by itself. Whil
 lit "PLAYING", the next one "NEXT", a status line at the bottom ("AUTOMIX Playing ..., mix in N s"); a song tapped in
 the list is mixed in next on the next phrase (toast "NEXT: ... ON THE NEXT PHRASE"). The Songs tab has no AUTOMIX
 button and loads songs as before.
+## 47. (V57) SUNO PLAYLISTS (Marko 14.10.2026: paste Suno links, the app remembers them). Songs -> PLAYLISTS -> SUNO:
+the playlist name (Suno, or the playlist open), a box for the links: copy a Suno song link (Suno app: Share -> Copy
+link, e.g. https://suno.com/song/<id> or https://suno.com/s/<code>), PASTE (several links at once work), ADD TO SUNO.
+"N links remembered, saving the songs ...", then "Saved: <title>" per song, then "N songs in Suno"; toast. The list
+under it shows the remembered links (title · playlist). × closes: PLAYLISTS shows "Suno" with "SUNO PLAYLIST · N songs";
+inside it the songs (files in /sdcard/Music/djmantra_app/Suno/<title>.mp3) load, play, analyse and mix as any song,
+AutoMix too. The same link again: not saved twice. logcat DJMantraSuno (report "no audio on ..." errors: a private song).
