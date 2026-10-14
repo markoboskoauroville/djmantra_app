@@ -14,6 +14,9 @@ import QtQuick 2.12
 Item {
     id: root
 
+    // r40: the NEXT UP list ran under the crossfader: the tab ends above it
+    clip: true
+
     property var library // LibraryPage: songPaths(), folder
     property bool running: false
     property int beats: Number(Mixxx.DJMantra.setting("automix_beats", "16"))
