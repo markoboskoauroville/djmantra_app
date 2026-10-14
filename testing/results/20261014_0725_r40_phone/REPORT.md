@@ -43,3 +43,13 @@ Tester: Claude Code on the Mac (hub session), adb over USB. APK DJMantra-V41-0fa
 | 5 | deepest zoom 0.04 | PASS / can't judge motion | one thin signed line like djay (p5_zoom004_3frames.png); beat lines move ~200-250 px a frame, visible only in a few frames — smoothness not measurable there |
 | 5 | play head still, beat lines no flicker | PASS | play head at x=540 in every frame (the shift script excluded it, it never moved); beat lines present in each frame at 3 and 0.40 |
 | 5 | zoom steps | NOTE | `waveform zoom` 4.50, 3.00, 2.00, 1.33, 0.89, 0.59, 0.40, 0.26, 0.18, 0.12, 0.08, 0.05, 0.04 (no 0.5 step) |
+| 6 | (b) where 90 BPM comes from | FOUND | app restarted, Aum Ganesha loaded fresh, nothing touched; long press deck 1 fader -> `fader [Channel1]: PITCH`: scale middle **114.6** (library), handle **91.0** at **0 %**. So rate = 0 and the deck's own bpm = 91.0 (analysis / beat grid), not the library's 114.6 |
+| 6 | (b) SYNC on deck 2 only | info | cura (library 118.0, 2B) on deck 2, SYNC deck 2: `sync [Channel2]: deck 1 91.01 bpm, deck 2 91.01 bpm`; deck 2 key display 2B -> **4B** (big pitch change) |
+| 6 | (a) VOLUME fader cuts the sound | PASS | deck 2 playing, label VOLUME: fully down `Output level: peak 0`, fully up `0.239`, `0.223`. (Part 0's doubt was a quiet passage; withdrawn) |
+| 6 | long press flips VOLUME <-> PITCH | PASS | `Settings: fader_pitch_[Channel1] = 1`, `Quick: fader [Channel1]: PITCH`; blue handle with the BPM, label PITCH, BPM scale left, % right, 9 marks |
+| 6 | up = faster | PASS | drag up: 91.0 -> 95.9 (+5.4 %) |
+| 6 | **scale vs handle** | FAIL | the left scale is built from the library BPM (114.6 middle, 119/124 above) while the handle shows the deck's 91.0 / 95.9: at +5.4 % the scale reads ~121, the handle 95.9 |
+| 6 | double tap pitch -> middle | PASS | 95.9 -> 91.0, 0 % |
+| 6 | mode remembered per deck | PASS | after force-stop + start: deck 1 PITCH (empty deck: "--"), deck 2 VOLUME |
+| 6 | follows sync / tempo blend during AutoMix | not tested | |
+| 6 | EQ at max on a fresh start | FAIL (again) | p6_fresh_load_eq_max_volume.png; builder says fixed in V42 62ad896 |
