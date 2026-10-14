@@ -152,7 +152,7 @@ Rectangle {
     Timer {
         id: holdTimer
 
-        interval: 450
+        interval: 1000 // Marko 14.10.2026: every long press is 1 s
         onTriggered: root.longPressed()
     }
 

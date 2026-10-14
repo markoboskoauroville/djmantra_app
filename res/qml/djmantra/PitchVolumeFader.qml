@@ -48,6 +48,35 @@ Item {
             volume.parameter = p;
     }
 
+    // resets glide (Marko 14.10.2026: no snapping): TEMPO to 0 %, VOLUME to the top
+    NumberAnimation {
+        id: rateRamp
+
+        target: rate
+        property: "value"
+        to: 0
+        duration: 600
+        easing.type: Easing.InOutCubic
+    }
+    NumberAnimation {
+        id: volumeRamp
+
+        target: volume
+        property: "parameter"
+        to: 1
+        duration: 450
+        easing.type: Easing.InOutCubic
+    }
+    function resetGlide() {
+        if (pitch) {
+            rateRamp.stop();
+            rateRamp.start();
+        } else {
+            volumeRamp.stop();
+            volumeRamp.start();
+        }
+    }
+
     function flip() {
         pitch = !pitch;
         Mixxx.DJMantra.setSetting("fader_pitch_" + group, pitch ? "1" : "0");
@@ -183,7 +212,7 @@ Item {
         // the long press that flips the fader
         id: hold
 
-        interval: 500
+        interval: 1000 // every long press is 1 s
         onTriggered: {
             area.flipped = true;
             root.flip();
@@ -200,6 +229,8 @@ Item {
         anchors.fill: parent
         preventStealing: true
         onPressed: (mouse) => {
+            rateRamp.stop();
+            volumeRamp.stop();
             startY = mouse.y;
             startPosition = root.position;
             flipped = false;
@@ -212,14 +243,20 @@ Item {
                 return;
             root.setPosition(startPosition + (startY - mouse.y) / root.span);
         }
-        onReleased: hold.stop()
+        onReleased: (mouse) => {
+            hold.stop();
+            // the CDJ's TEMPO RESET: a tap (no drag) on the 0 % mark glides the tempo to 0
+            const zeroY = root.trackBottom - root.span / 2;
+            if (root.pitch && !flipped && Math.abs(mouse.y - startY) < 6 && Math.abs(mouse.y - zeroY) < 14) {
+                root.resetGlide();
+                Toasts.show(root.deckName + "TEMPO \u2192 0 %");
+                Mixxx.DJMantra.log("tempo reset " + root.group);
+            }
+        }
         onCanceled: hold.stop()
         onDoubleClicked: {
             hold.stop();
-            if (root.pitch)
-                rate.value = 0;
-            else
-                volume.parameter = 1;
+            root.resetGlide();
             Toasts.show(root.deckName + (root.pitch ? "TEMPO \u2192 0 %" : "VOLUME \u2192 0 dB"));
         }
     }

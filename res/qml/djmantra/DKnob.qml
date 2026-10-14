@@ -26,7 +26,9 @@ Item {
     property string resetText: "0 dB"
 
     function reset() {
-        control.parameter = root.defaultParameter;
+        resetRamp.stop();
+        resetRamp.to = root.defaultParameter;
+        resetRamp.start();
         Toasts.show(root.toastPrefix + root.label + " \u2192 " + root.resetText);
         Mixxx.DJMantra.log("knob reset " + root.group + "," + root.key);
     }
@@ -59,6 +61,17 @@ Item {
 
         group: root.group
         key: root.key
+    }
+
+    // Marko 14.10.2026: "always ramping is the rule ... no snapping anywhere": a reset glides
+    // there, easing in and out
+    NumberAnimation {
+        id: resetRamp
+
+        target: control
+        property: "parameter"
+        duration: 450
+        easing.type: Easing.InOutCubic
     }
 
     Item {
@@ -157,7 +170,7 @@ Item {
     Timer {
         id: hold
 
-        interval: 500
+        interval: 1000 // Marko 14.10.2026: every long press is 1 s
         onTriggered: {
             knobArea.flipped = true;
             if (root.longPressAction)
@@ -177,6 +190,7 @@ Item {
         anchors.fill: dial
         preventStealing: true
         onPressed: (mouse) => {
+            resetRamp.stop();
             startY = mouse.y;
             startParameter = control.parameter;
             flipped = false;

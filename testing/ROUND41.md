@@ -113,3 +113,10 @@ log `cue held 1 s`), the deck paused there; a short CUE press works as before (b
 ## 31. (V49) TEMPO RANGE as a Pioneer CDJ (Marko 14.10.2026): under a TEMPO fader the label reads "TEMPO ±10" (the
 default); a tap steps ±6 -> ±10 -> ±16 -> WIDE (±100) -> ±6 (toast "DECK 1 TEMPO RANGE → ±16 %"), the scale's BPM / %
 follow, and the tempo playing stays the same where it fits. Settings -> TEMPO RANGE sets both decks. Remembered.
+## 32. (V49) "No snapping anywhere, always ramping" (Marko 14.10.2026): every long press is 1 s (knob / fader resets,
+GAIN <-> FILTER, VOLUME <-> TEMPO, FX chooser); every reset GLIDES there, easing in and out (~0.5 s): EQ to the top, GAIN
+to 0 dB, crossfader to the middle, volume to the top, TEMPO to 0 %. TEMPO RESET as a CDJ: a tap on the 0 % mark of a
+TEMPO fader glides the tempo to 0 % (toast "DECK 1 TEMPO → 0 %"). The AUTOMIX glide eases in and out too.
+## 33. (V49) AUTO GAIN as djay (Settings, on by default): each song's peak is measured (logcat `Auto gain: <song> peak
+-x dB, gain +y dB`) and played at -1 dBFS (+-12 dB at most): quiet and loud masters come out at the same peak. Songs
+analysed before are measured again once. OFF in Settings: as before. The GAIN knob stays at 0 dB (it adds on top).

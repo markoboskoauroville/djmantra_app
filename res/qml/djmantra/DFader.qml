@@ -18,13 +18,26 @@ Item {
     property real defaultParameter: vertical ? 1 : 0.5
     property string resetText: qsTr("middle")
 
+    // Marko 14.10.2026: "always ramping is the rule ... no snapping anywhere": a reset glides
+    // there, easing in and out
+    NumberAnimation {
+        id: resetRamp
+
+        target: control
+        property: "parameter"
+        duration: 450
+        easing.type: Easing.InOutCubic
+    }
+
     Timer {
         id: hold
 
-        interval: 500
+        interval: 1000 // every long press is 1 s
         onTriggered: {
             area.held = true;
-            control.parameter = root.defaultParameter;
+            resetRamp.stop();
+            resetRamp.to = root.defaultParameter;
+            resetRamp.start();
             Toasts.show(root.label + " \u2192 " + root.resetText);
             Mixxx.DJMantra.log("fader reset " + root.group + "," + root.key);
         }
@@ -69,6 +82,7 @@ Item {
         anchors.fill: parent
         preventStealing: true
         onPressed: (mouse) => {
+            resetRamp.stop();
             startPos = root.vertical ? mouse.y : mouse.x;
             startParameter = control.parameter;
             held = false;

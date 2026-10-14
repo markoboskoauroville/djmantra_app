@@ -225,7 +225,9 @@ Rectangle {
         running: root.fading
         onTriggered: {
             const u = Math.min(1, (Date.now() - root.fadeStart) / root.fadeMs);
-            fader.value = root.fadeFrom + (root.fadeTo - root.fadeFrom) * u;
+            // eased in and out, as every move in the app (Marko 14.10.2026)
+            const e = u * u * (3 - 2 * u);
+            fader.value = root.fadeFrom + (root.fadeTo - root.fadeFrom) * e;
             if (u >= 1) {
                 root.fading = false;
                 Mixxx.DJMantra.log("automix: done, " + root.from + " out");
