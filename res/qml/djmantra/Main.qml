@@ -507,7 +507,7 @@ Window {
             id: rest
 
             // the song list FULL screen (Marko 14.10.2026): over the decks, under the top bar
-            readonly property bool libraryFull: window.libraryFull && window.page === 0
+            readonly property bool libraryFull: window.libraryFull && (window.page === 0 || window.page === 3)
             anchors.top: window.landscape || libraryFull ? topBar.bottom : decks.bottom
             anchors.topMargin: Style.gap
             anchors.bottom: parent.bottom
@@ -539,7 +539,14 @@ Window {
                     played: window.playedSongs
                     closable: window.browsing
                     anchors.fill: parent
-                    visible: window.page === 0
+                    // the AutoMix tab is the same song list with the AUTOMIX dropdown (Marko 14.10.2026)
+                    visible: window.page === 0 || window.page === 3
+                    automixMode: window.page === 3
+                    automixRunning: automixPage.running
+                    automixNow: automixPage.nowPath
+                    automixNext: automixPage.nextPath
+                    onAutomixMenu: automixPage.open = !automixPage.open
+                    onAutomixPick: (path) => automixPage.pick(path)
                     deck: window.libraryDeck
                     fullScreen: window.libraryFull
                     onToggleFullScreen: {
@@ -558,6 +565,8 @@ Window {
 
                 // AutoMix (Marko 13.10.2026): always made, so the mix goes on on every tab
                 AutoMixPage {
+                    id: automixPage
+
                     objectName: "automix"
                     library: playlistPage
                     anchors.fill: parent

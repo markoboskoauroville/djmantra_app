@@ -174,3 +174,11 @@ itself: rank, title, artists, the Beatport track ID; each ISRC from its Beatport
 "artist · ISRC <code>" per song. SPOT opens Spotify's search for isrc:<ISRC> (the one recording); TIDAL opens the exact
 TIDAL track (tidal.com/browse/track/<id>) when logged in to TIDAL, else TIDAL's search; YT M searches artist + title.
 + puts the same exact link in the queue file. logcat DJMantraBeatStats (report if the ISRCs stay 0: Beatport blocked).
+## 46. (V56) AUTOMIX TAB = THE SONG LIST + THE DJ ROBOT (Marko 14.10.2026: "it looks same as songs with only just few
+additional buttons"). The AutoMix tab shows the same song list as the Songs tab (the same folder / playlist, sorting,
+filter, LIST / GRID, FULL / DOCK). Its top bar has AUTOMIX ▾: a tap drops down the AutoMix settings (what it plays:
+the folder / playlist open, in the order shown; MIX OVER 4-64 BEATS; START / STOP AUTOMIX; PREVIOUS / NEXT; the
+status), ▴ or a tap beside it collapses it; START collapses it by itself. While it runs: the playing song's row is
+lit "PLAYING", the next one "NEXT", a status line at the bottom ("AUTOMIX Playing ..., mix in N s"); a song tapped in
+the list is mixed in next on the next phrase (toast "NEXT: ... ON THE NEXT PHRASE"). The Songs tab has no AUTOMIX
+button and loads songs as before.

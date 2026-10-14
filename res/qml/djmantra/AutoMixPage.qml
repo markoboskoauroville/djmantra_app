@@ -14,7 +14,6 @@ import QtQuick 2.12
 Item {
     id: root
 
-    // r40: the NEXT UP list ran under the crossfader: the tab ends above it
     clip: true
 
     property var library // LibraryPage: songPaths(), folder
@@ -33,7 +32,7 @@ Item {
     property real mixStart: 0
     property real mixSeconds: 8
     property bool waitingToPlay: false
-    property string status: qsTr("Open a folder on the Songs tab, sort it, then START")
+    property string status: qsTr("Open a folder or a playlist, sort it, then START")
 
     function name(path) {
         return path ? path.substring(path.lastIndexOf("/") + 1) : "";
@@ -64,7 +63,7 @@ Item {
     function start() {
         songs = root.library ? root.library.songPaths() : [];
         if (songs.length === 0) {
-            status = qsTr("No songs: open a folder on the Songs tab first");
+            status = qsTr("No songs: open a folder or a playlist first");
             return;
         }
         index = 0;
@@ -252,127 +251,209 @@ Item {
     DeckControls { id: deck1; deckGroup: "[Channel1]" }
     DeckControls { id: deck2; deckGroup: "[Channel2]" }
 
-    // the tab's face
-    Column {
+    // the tab's face (Marko 14.10.2026: "it looks same as songs with only just few additional
+    // buttons ... automix will open automix settings and user adjust and collapse"): the Songs
+    // list itself is shown (Main.qml); here only the AUTOMIX dropdown under its top bar and,
+    // while it runs, a status line at the bottom
+    property bool open: false
+    readonly property string nowPath: running && index < songs.length ? songs[index] : ""
+    readonly property string nextPath: running && nextIndex < songs.length ? songs[nextIndex] : ""
+
+    // a song tapped in the list while AutoMix runs: mixed in next, on the next phrase
+    function pick(path) {
+        const t = songs.indexOf(path);
+        if (t < 0) {
+            Toasts.show(qsTr("NOT IN THE AUTOMIX LIST: STOP AND START IN THIS FOLDER"));
+            return;
+        }
+        if (t === index) {
+            Toasts.show(qsTr("PLAYING ALREADY"));
+            return;
+        }
+        skip(t - index);
+    }
+
+    MouseArea {
+        // a tap beside the open dropdown collapses it
         anchors.fill: parent
-        anchors.margins: 12
-        spacing: 12
+        visible: root.open
+        onClicked: root.open = false
+    }
 
-        Text {
-            width: parent.width
-            text: qsTr("AUTOMIX")
-            color: Style.accent
-            font.pixelSize: 18
-            font.bold: true
+    Rectangle {
+        id: panel
+
+        objectName: "automixPanel"
+        visible: root.open
+        anchors.top: parent.top
+        anchors.topMargin: 46
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        width: Math.min(parent.width - 16, 460)
+        height: face.implicitHeight + 24
+        radius: Style.radius
+        color: Style.surface
+        border.color: Style.accent
+        border.width: 1
+
+        MouseArea {
+            anchors.fill: parent // taps inside stay inside
         }
 
-        Text {
-            width: parent.width
-            wrapMode: Text.WordWrap
-            text: root.library && root.library.folder !== ""
-                    ? qsTr("Folder: ") + root.name(root.library.folder) + qsTr(" (the order of the Songs tab)")
-                    : qsTr("No folder open on the Songs tab")
-            color: Style.subText
-            font.pixelSize: 13
-        }
+        Column {
+            id: face
 
-        Text {
-            text: qsTr("MIX OVER")
-            color: Style.subText
-            font.pixelSize: 12
-            font.bold: true
-        }
+            x: 12
+            y: 12
+            width: parent.width - 24
+            spacing: 10
 
-        Row {
-            spacing: 6
+            Item {
+                width: parent.width
+                height: 32
 
-            Repeater {
-                model: [4, 8, 16, 32, 64]
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("AUTOMIX: THE DJ ROBOT")
+                    color: Style.accent
+                    font.pixelSize: 16
+                    font.bold: true
+                }
 
-                delegate: DButton {
-                    required property int modelData
-
-                    objectName: "automixBeats_" + modelData
-                    width: (root.width - 24 - 4 * 6) / 5
-                    height: 44
+                DButton {
+                    objectName: "automixCollapse"
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 44
+                    height: 32
                     mode: ""
-                    text: modelData + qsTr(" BEATS")
-                    fontSize: 12
-                    lit: root.beats === modelData
-                    onClicked: {
-                        root.beats = modelData;
-                        Mixxx.DJMantra.setSetting("automix_beats", modelData);
+                    text: "\u25B4"
+                    fontSize: 16
+                    onClicked: root.open = false
+                }
+            }
+
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: root.library && root.library.folder !== ""
+                        ? qsTr("Plays: ") + (root.library.inPlaylist ? root.library.folder.substring(9)
+                                                                      : root.name(root.library.folder))
+                          + qsTr(" (in the order shown)")
+                        : qsTr("Open a folder or a playlist first")
+                color: Style.subText
+                font.pixelSize: 13
+            }
+
+            Text {
+                text: qsTr("MIX OVER")
+                color: Style.subText
+                font.pixelSize: 12
+                font.bold: true
+            }
+
+            Row {
+                spacing: 6
+
+                Repeater {
+                    model: [4, 8, 16, 32, 64]
+
+                    delegate: DButton {
+                        required property int modelData
+
+                        objectName: "automixBeats_" + modelData
+                        width: (face.width - 4 * 6) / 5
+                        height: 42
+                        mode: ""
+                        text: modelData + qsTr(" BEATS")
+                        fontSize: 11
+                        lit: root.beats === modelData
+                        onClicked: {
+                            root.beats = modelData;
+                            Mixxx.DJMantra.setSetting("automix_beats", modelData);
+                            Toasts.show(qsTr("AUTOMIX OVER ") + modelData + qsTr(" BEATS"));
+                        }
                     }
                 }
             }
-        }
-
-        DButton {
-            objectName: "automixStart"
-            width: parent.width
-            height: 64
-            mode: ""
-            text: root.running ? qsTr("STOP AUTOMIX") : qsTr("START AUTOMIX")
-            fontSize: 18
-            lit: root.running
-            onClicked: root.running ? root.stop() : root.start()
-        }
-
-        Row {
-            // PREVIOUS / NEXT song, mixed in on the next phrase (Marko 14.10.2026)
-            spacing: 6
 
             DButton {
-                objectName: "automixPrevious"
-                width: (root.width - 24 - 6) / 2
-                height: 52
+                objectName: "automixStart"
+                width: parent.width
+                height: 56
                 mode: ""
-                text: qsTr("\u25C0\u25C0 PREVIOUS")
-                fontSize: 15
-                enabled: root.running
-                onClicked: root.skip(-1)
+                text: root.running ? qsTr("STOP AUTOMIX") : qsTr("START AUTOMIX")
+                fontSize: 17
+                lit: root.running
+                onClicked: {
+                    if (root.running) {
+                        root.stop();
+                    } else {
+                        root.start();
+                        if (root.running)
+                            root.open = false; // started: the robot mixes, the list shows
+                    }
+                    Toasts.show(root.running ? qsTr("AUTOMIX ON") : qsTr("AUTOMIX OFF"));
+                }
             }
 
-            DButton {
-                objectName: "automixNext"
-                width: (root.width - 24 - 6) / 2
-                height: 52
-                mode: ""
-                text: qsTr("NEXT \u25B6\u25B6")
-                fontSize: 15
-                enabled: root.running
-                onClicked: root.skip(1)
+            Row {
+                // PREVIOUS / NEXT song, mixed in on the next phrase (Marko 14.10.2026)
+                spacing: 6
+
+                DButton {
+                    objectName: "automixPrevious"
+                    width: (face.width - 6) / 2
+                    height: 48
+                    mode: ""
+                    text: qsTr("\u25C0\u25C0 PREVIOUS")
+                    fontSize: 14
+                    enabled: root.running
+                    onClicked: root.skip(-1)
+                }
+
+                DButton {
+                    objectName: "automixNext"
+                    width: (face.width - 6) / 2
+                    height: 48
+                    mode: ""
+                    text: qsTr("NEXT \u25B6\u25B6")
+                    fontSize: 14
+                    enabled: root.running
+                    onClicked: root.skip(1)
+                }
             }
-        }
 
-        Text {
-            width: parent.width
-            wrapMode: Text.WordWrap
-            text: root.status
-            color: Style.text
-            font.pixelSize: 15
-        }
-
-        Text {
-            visible: root.songs.length > 0
-            text: qsTr("NEXT UP")
-            color: Style.subText
-            font.pixelSize: 12
-            font.bold: true
-        }
-
-        Repeater {
-            model: root.running ? Math.min(6, root.songs.length - root.index - 1) : 0
-
-            delegate: Text {
-                required property int index
-
-                width: root.width - 24
-                elide: Text.ElideRight
-                text: (root.index + index + 2) + ". " + root.name(root.songs[root.index + index + 1])
-                color: index === 0 ? Style.accent : Style.text
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: root.status + (root.running ? qsTr("\nTap a song in the list: it is mixed in next.") : "")
+                color: Style.text
                 font.pixelSize: 14
             }
+        }
+    }
+
+    Rectangle {
+        // while it runs: what the robot does, at the bottom of the list
+        objectName: "automixStatus"
+        visible: root.running && !root.open
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 30
+        color: Style.surface
+
+        Text {
+            anchors.fill: parent
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            text: qsTr("AUTOMIX  ") + root.status
+            color: Style.accent
+            font.pixelSize: 13
+            font.bold: true
         }
     }
 }

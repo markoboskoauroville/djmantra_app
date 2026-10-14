@@ -35,6 +35,21 @@ Rectangle {
     // full screen / docked (Marko 14.10.2026), Main.qml lays it out
     property bool fullScreen: false
     signal toggleFullScreen()
+    // the AutoMix tab is this same song list (Marko 14.10.2026: "same as songs with only just few
+    // additional buttons"): an AUTOMIX button opens its dropdown, the playing and the next song
+    // are marked, a song tapped while AutoMix runs is mixed in next
+    property bool automixMode: false
+    property bool automixRunning: false
+    property string automixNow: ""
+    property string automixNext: ""
+    signal automixMenu()
+    signal automixPick(string path)
+    function pick(path) {
+        if (automixMode && automixRunning)
+            automixPick(path);
+        else
+            load(path, deck !== "" ? deck : Mixxx.DJMantra.freeDeck(), false);
+    }
     // DJ Pro style (Marko, round 19): cover, title, artist, BPM, key; a tap
     // on a column header sorts by it (again: the other way round)
     // the songs played in this session (Marko, round 22: "mark played songs
@@ -496,11 +511,28 @@ Rectangle {
         }
 
         DButton {
+            // the AutoMix tab: its settings drop down from here
+            id: automixButton
+
+            objectName: "automixMenu"
+            anchors.right: fullButton.left
+            anchors.rightMargin: visible ? 6 : 0
+            anchors.verticalCenter: parent.verticalCenter
+            visible: root.automixMode
+            width: visible ? 84 : 0
+            height: 40
+            text: qsTr("AUTOMIX ▾")
+            fontSize: 11
+            lit: root.automixRunning
+            onClicked: root.automixMenu()
+        }
+
+        DButton {
             // list / thumbnails
             id: viewButton
 
             objectName: "libraryView"
-            anchors.right: fullButton.left
+            anchors.right: automixButton.left
             anchors.rightMargin: 6
             anchors.verticalCenter: parent.verticalCenter
             visible: root.folder !== "" || root.playlistsRoot
@@ -801,9 +833,13 @@ Rectangle {
 
             width: list.width
             height: 56
+            readonly property bool autoNow: root.automixMode && root.automixRunning && path === root.automixNow
+            readonly property bool autoNext: root.automixMode && root.automixRunning && path === root.automixNext
+
             color: rowArea.pressed ? Style.pressed
-                    : root.controllerSelect && index === list.currentIndex ? Style.surface : "transparent"
-            border.color: root.controllerSelect && index === list.currentIndex ? Style.accent : "transparent"
+                    : root.controllerSelect && index === list.currentIndex || autoNow ? Style.surface : "transparent"
+            border.color: root.controllerSelect && index === list.currentIndex || autoNow ? Style.accent
+                    : autoNext ? Style.line : "transparent"
             border.width: 2
 
             Rectangle {
@@ -854,8 +890,9 @@ Rectangle {
                 Text {
                     width: parent.width
                     // played in this set: dimmed, with a tick
-                    text: (row.wasPlayed ? "\u2713 " : "") + (row.isFolder ? row.name : row.title)
-                    color: row.wasPlayed ? Style.line : Style.text
+                    text: (row.autoNow ? qsTr("PLAYING  ") : row.autoNext ? qsTr("NEXT  ") : "")
+                          + (row.wasPlayed ? "\u2713 " : "") + (row.isFolder ? row.name : row.title)
+                    color: row.autoNow ? Style.accent : row.wasPlayed ? Style.line : Style.text
                     font.pixelSize: 15
                     font.bold: true
                     elide: Text.ElideRight
@@ -918,7 +955,7 @@ Rectangle {
                     if (row.isFolder)
                         root.folder = row.path;
                     else
-                        root.load(row.path, root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false);
+                        root.pick(row.path);
                 }
             }
 
@@ -1056,7 +1093,9 @@ Rectangle {
 
                 Text {
                     width: parent.width
-                    text: (tile.wasPlayed ? "\u2713 " : "") + (tile.isFolder ? tile.name : tile.title)
+                    text: (root.automixMode && root.automixRunning && tile.path === root.automixNow ? qsTr("PLAYING  ")
+                          : root.automixMode && root.automixRunning && tile.path === root.automixNext ? qsTr("NEXT  ") : "")
+                          + (tile.wasPlayed ? "\u2713 " : "") + (tile.isFolder ? tile.name : tile.title)
                     color: tile.wasPlayed ? Style.line : Style.text
                     font.pixelSize: 13
                     font.bold: true
@@ -1082,7 +1121,7 @@ Rectangle {
                     if (tile.isFolder)
                         root.folder = tile.path;
                     else
-                        root.load(tile.path, root.deck !== "" ? root.deck : Mixxx.DJMantra.freeDeck(), false);
+                        root.pick(tile.path);
                 }
             }
         }
