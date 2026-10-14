@@ -125,6 +125,8 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    // the phone's battery in % (-1: unknown, e.g. on the desktop)
+    Q_INVOKABLE int batteryPercent() const;
     // AUTO GAIN (Settings, on by default): every song's peak to -1 dBFS (the ReplayGain stage)
     Q_INVOKABLE void setAutoGain(bool on);
     // the controller's link, one or the other (Settings): "usb" or "bluetooth"

@@ -290,12 +290,45 @@ Window {
                 // the time of day, left of the usage meter (Marko, 12.10.2026);
                 // the middle of the bar is the camera hole
                 objectName: "clock"
-                anchors.right: usageMeter.left
+                anchors.right: battery.left
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
                 // two rows while recording: the clock and the recording's time
                 height: Recorder.recording ? 40 : 24
                 width: implicitWidth
+            }
+
+            Rectangle {
+                // the phone's battery (Marko 14.10.2026): a thin vertical line between the
+                // clock and the CPU / GPU meter, filled from the bottom, green; red at 10 % or less
+                id: battery
+
+                property int percent: -1
+
+                objectName: "battery"
+                anchors.right: usageMeter.left
+                anchors.rightMargin: 6
+                anchors.verticalCenter: parent.verticalCenter
+                width: percent >= 0 ? 5 : 0
+                height: 24
+                radius: 1
+                color: "#121735"
+
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    width: parent.width
+                    height: Math.max(1, parent.height * battery.percent / 100)
+                    radius: 1
+                    color: battery.percent <= 10 ? Style.red : Style.earth
+                }
+
+                Timer {
+                    interval: 60000
+                    repeat: true
+                    running: true
+                    triggeredOnStart: true
+                    onTriggered: battery.percent = Mixxx.DJMantra.batteryPercent()
+                }
             }
 
             UsageMeter {

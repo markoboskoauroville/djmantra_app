@@ -957,6 +957,17 @@ void QmlDJMantra::useDjmFilter() {
     }
 }
 
+int QmlDJMantra::batteryPercent() const {
+#if defined(Q_OS_ANDROID)
+    return QJniObject::callStaticMethod<jint>("com/djmantra/app/WindowBridge",
+            "battery",
+            "(Landroid/content/Context;)I",
+            QNativeInterface::QAndroidApplication::context().object());
+#else
+    return -1;
+#endif
+}
+
 void QmlDJMantra::setAutoGain(bool on) {
     // Mixxx's ReplayGain stage applies each song's ratio (made peak-based by
     // AnalyzerEbur128 on Android): on = the song to -1 dBFS, no extra boost

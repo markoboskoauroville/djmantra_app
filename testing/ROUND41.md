@@ -120,3 +120,9 @@ TEMPO fader glides the tempo to 0 % (toast "DECK 1 TEMPO → 0 %"). The AUTOMIX 
 ## 33. (V49) AUTO GAIN as djay (Settings, on by default): each song's peak is measured (logcat `Auto gain: <song> peak
 -x dB, gain +y dB`) and played at -1 dBFS (+-12 dB at most): quiet and loud masters come out at the same peak. Songs
 analysed before are measured again once. OFF in Settings: as before. The GAIN knob stays at 0 dB (it adds on top).
+## 34. (V49) AutoMix PREVIOUS / NEXT (Marko 14.10.2026): with AutoMix running, NEXT: the next song (already waiting)
+is mixed in on beat 1 of the playing deck's NEXT PHRASE (toast "NEXT: <song> ON THE NEXT PHRASE", log `AutoMix: next`);
+PREVIOUS: the song before is loaded onto the waiting deck and mixed in the same way; after it, the order goes on from
+there. Also: AutoMix's bass swap now returns the EQ to 0 dB (the top), not the middle (a cut).
+## 35. (V49) Battery line (Marko 14.10.2026): a thin vertical line between the clock and the CPU / GPU meter, filled
+from the bottom with the battery %, green; red at 10 % or less (checked once a minute).

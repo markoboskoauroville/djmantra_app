@@ -22,6 +22,11 @@ Item {
     property int beats: Number(Mixxx.DJMantra.setting("automix_beats", "16"))
     property var songs: []
     property int index: 0 // the song on the active deck
+    // the song the next mix goes to: index + 1, or the one PREVIOUS / NEXT chose
+    property int nextIndex: 1
+    // PREVIOUS / NEXT (Marko 14.10.2026): the mix starts on the active deck's next phrase
+    property bool skipArmed: false
+    property int lastBeat: -1
     property string active: "[Channel1]"
     readonly property string other: active === "[Channel1]" ? "[Channel2]" : "[Channel1]"
     property bool mixing: false
@@ -63,11 +68,13 @@ Item {
             return;
         }
         index = 0;
+        nextIndex = 1;
+        skipArmed = false;
         active = "[Channel1]";
         mixing = false;
         crossfader.value = -1;
-        deck1.lowEq.parameter = 0.5;
-        deck2.lowEq.parameter = 0.5;
+        deck1.lowEq.parameter = 1;
+        deck2.lowEq.parameter = 1;
         deck2.play.value = 0;
         load("[Channel1]", 0);
         load("[Channel2]", 1);
@@ -98,7 +105,7 @@ Item {
         b.play.value = 1;
         mixStart = Date.now();
         mixing = true;
-        Mixxx.DJMantra.log("AutoMix: mix " + name(songs[index]) + " -> " + name(songs[index + 1])
+        Mixxx.DJMantra.log("AutoMix: mix " + name(songs[index]) + " -> " + name(songs[nextIndex])
                 + " over " + beats + " beats (" + mixSeconds.toFixed(1) + " s)");
     }
 
@@ -108,15 +115,42 @@ Item {
         crossfader.value = active === "[Channel1]" ? 1 : -1;
         a.play.value = 0;
         a.sync.value = 0;
-        a.lowEq.parameter = 0.5;
-        b.lowEq.parameter = 0.5;
+        a.lowEq.parameter = 1;
+        b.lowEq.parameter = 1;
         mixing = false;
         const old = active;
         active = other;
-        index += 1;
+        index = nextIndex;
+        nextIndex = index + 1;
         // the old deck gets the song after the next
         if (!load(old, index + 1))
             Mixxx.DJMantra.log("AutoMix: the last song is playing");
+    }
+
+    // PREVIOUS (-1) / NEXT (+1): that song onto the waiting deck, mixed in on the playing
+    // deck's next phrase (Marko 14.10.2026: "skip or go back through the playlist but with
+    // mixing transition")
+    function skip(step) {
+        if (!running || waitingToPlay) {
+            Toasts.show(qsTr("START AUTOMIX FIRST"));
+            return;
+        }
+        if (mixing) {
+            Toasts.show(qsTr("MIXING ALREADY"));
+            return;
+        }
+        const t = index + step;
+        if (t < 0 || t >= songs.length) {
+            Toasts.show(step < 0 ? qsTr("THE FIRST SONG IS PLAYING") : qsTr("THE LAST SONG IS PLAYING"));
+            return;
+        }
+        nextIndex = t;
+        if (!holds(other, t))
+            load(other, t);
+        skipArmed = true;
+        lastBeat = -1;
+        Toasts.show((step < 0 ? qsTr("PREVIOUS: ") : qsTr("NEXT: ")) + name(songs[t]) + qsTr(" ON THE NEXT PHRASE"));
+        Mixxx.DJMantra.log("AutoMix: " + (step < 0 ? "previous" : "next") + " -> " + name(songs[t]) + " on the next phrase");
     }
 
     Timer {
@@ -140,12 +174,33 @@ Item {
                 if (p >= 0.5) {
                     // the basses swap at the middle: one bassline at a time
                     a.lowEq.parameter = 0;
-                    b.lowEq.parameter = 0.5;
+                    b.lowEq.parameter = 1;
                 }
-                root.status = qsTr("Mixing into ") + root.name(root.songs[root.index + 1])
+                root.status = qsTr("Mixing into ") + root.name(root.songs[root.nextIndex])
                         + " (" + Math.round(p * 100) + " %)";
                 if (p >= 1)
                     root.finishMix();
+                return;
+            }
+            if (root.skipArmed) {
+                // PREVIOUS / NEXT: the mix starts on beat 1 of the playing deck's next phrase
+                if (!root.holds(root.other, root.nextIndex)) {
+                    root.status = qsTr("Loading ") + root.name(root.songs[root.nextIndex]);
+                    return;
+                }
+                const beat = Math.floor(a.beatNumber.value);
+                const length = a.phraseLength.value >= 2 ? Math.round(a.phraseLength.value) : 8;
+                if (beat !== root.lastBeat) {
+                    const first = root.lastBeat >= 0;
+                    root.lastBeat = beat;
+                    if (first && beat >= 0 && beat % length === 0) {
+                        root.skipArmed = false;
+                        root.beginMix();
+                        return;
+                    }
+                }
+                root.status = qsTr("Mixing into ") + root.name(root.songs[root.nextIndex])
+                        + qsTr(" on the next phrase");
                 return;
             }
             const duration = a.duration.value;
@@ -156,7 +211,7 @@ Item {
             const left = (end - a.position.value) * duration / rate;
             const bpm = a.bpm.value > 0 ? a.bpm.value : 120;
             const mixSeconds = root.beats * 60 / bpm;
-            const hasNext = root.holds(root.other, root.index + 1);
+            const hasNext = root.holds(root.other, root.nextIndex);
             if (hasNext && left <= mixSeconds) {
                 root.beginMix();
             } else if (!hasNext && a.play.value === 0) {
@@ -186,6 +241,8 @@ Item {
         property Mixxx.ControlProxy samples: Mixxx.ControlProxy { group: deckGroup; key: "track_samples" }
         property Mixxx.ControlProxy introStart: Mixxx.ControlProxy { group: deckGroup; key: "intro_start_position" }
         property Mixxx.ControlProxy outroEnd: Mixxx.ControlProxy { group: deckGroup; key: "outro_end_position" }
+        property Mixxx.ControlProxy beatNumber: Mixxx.ControlProxy { group: deckGroup; key: "beat_number" }
+        property Mixxx.ControlProxy phraseLength: Mixxx.ControlProxy { group: deckGroup; key: "phrase_length" }
         property Mixxx.ControlProxy lowEq: Mixxx.ControlProxy {
             group: "[EqualizerRack1_" + deckGroup + "_Effect1]"
             key: "parameter1"
@@ -259,6 +316,33 @@ Item {
             fontSize: 18
             lit: root.running
             onClicked: root.running ? root.stop() : root.start()
+        }
+
+        Row {
+            // PREVIOUS / NEXT song, mixed in on the next phrase (Marko 14.10.2026)
+            spacing: 6
+
+            DButton {
+                objectName: "automixPrevious"
+                width: (root.width - 24 - 6) / 2
+                height: 52
+                mode: ""
+                text: qsTr("\u25C0\u25C0 PREVIOUS")
+                fontSize: 15
+                enabled: root.running
+                onClicked: root.skip(-1)
+            }
+
+            DButton {
+                objectName: "automixNext"
+                width: (root.width - 24 - 6) / 2
+                height: 52
+                mode: ""
+                text: qsTr("NEXT \u25B6\u25B6")
+                fontSize: 15
+                enabled: root.running
+                onClicked: root.skip(1)
+            }
         }
 
         Text {

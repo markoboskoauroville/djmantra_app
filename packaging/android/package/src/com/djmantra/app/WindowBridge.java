@@ -11,6 +11,7 @@ package com.djmantra.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.BatteryManager;
 import android.graphics.Insets;
 import android.graphics.Rect;
 import android.os.Build;
@@ -125,6 +126,12 @@ public final class WindowBridge {
 
     /// The radius of the screen's rounded corners in pixels (round 19: the
     /// top right meter was cut by the corner)
+    /** The battery's charge in % (Marko 14.10.2026: the battery line by the clock), -1 unknown. */
+    public static int battery(Context context) {
+        BatteryManager manager = context.getSystemService(BatteryManager.class);
+        return manager != null ? manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) : -1;
+    }
+
     public static int cornerRadius() {
         return sCorner;
     }
