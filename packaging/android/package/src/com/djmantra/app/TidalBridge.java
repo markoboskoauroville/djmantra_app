@@ -257,6 +257,21 @@ public final class TidalBridge {
         }
     }
 
+    /** The TIDAL track ID of recording `isrc` (exact), "" if none or not logged in. Blocking. */
+    public static String trackByIsrc(Context context, String isrc) {
+        if (isrc == null || isrc.isEmpty() || !loggedIn(context)) {
+            return "";
+        }
+        try {
+            JSONArray data = get(context, "/tracks?filter%5Bisrc%5D=" + enc(isrc)
+                    + "&countryCode=" + country(context)).optJSONArray("data");
+            return data != null && data.length() > 0 ? data.getJSONObject(0).getString("id") : "";
+        } catch (Exception e) {
+            Log.w(TAG, "isrc " + isrc + ": " + e);
+            return "";
+        }
+    }
+
     // --- HTTP ---------------------------------------------------------------------
 
     private static String country(Context context) throws Exception {

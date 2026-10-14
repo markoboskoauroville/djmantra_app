@@ -68,9 +68,7 @@ Rectangle {
             objectName: "openBeatStats"
             width: parent.width
             height: 48
-            text: Mixxx.DJMantra.setting("groq_key", "") === ""
-                  ? qsTr("OPEN BEATSTATS (type the Groq key in Settings first)")
-                  : qsTr("OPEN BEATSTATS  →  a chart  →  READ CHART")
+            text: qsTr("OPEN BEATSTATS  →  a chart  →  READ CHART")
             fontSize: 12
             lit: true
             onClicked: Mixxx.DJMantra.openBeatStats()
@@ -177,7 +175,7 @@ Rectangle {
 
                 Text {
                     width: parent.width
-                    text: song.modelData.artist + (song.modelData.label ? "  ·  " + song.modelData.label : "")
+                    text: song.modelData.artist + (song.modelData.isrc ? "  ·  ISRC " + song.modelData.isrc : "")
                     color: Style.subText
                     font.pixelSize: 12
                     elide: Text.ElideRight
@@ -204,7 +202,8 @@ Rectangle {
                         text: modelData[1]
                         fontSize: 10
                         onClicked: Qt.openUrlExternally(Mixxx.DJMantra.searchLink(modelData[0],
-                                song.modelData.artist, song.modelData.title))
+                                song.modelData.artist, song.modelData.title,
+                                song.modelData.isrc || "", song.modelData.tidal || ""))
                     }
                 }
 
@@ -262,7 +261,8 @@ Rectangle {
                     text: modelData.toUpperCase()
                     onClicked: {
                         const added = Mixxx.DJMantra.addToDownloadQueue(modelData,
-                                root.queueSong.artist, root.queueSong.title);
+                                root.queueSong.artist, root.queueSong.title,
+                                root.queueSong.isrc || "", root.queueSong.tidal || "");
                         Toasts.show((added ? qsTr("ADDED TO ") : qsTr("ALREADY IN ")) + modelData.toUpperCase());
                         root.queueSong = null;
                     }

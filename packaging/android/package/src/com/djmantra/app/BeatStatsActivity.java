@@ -24,7 +24,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -33,8 +32,8 @@ import java.io.ByteArrayOutputStream;
 /**
  * BEATSTATS (Marko 14.10.2026): beatstats.com in a real browser engine (Cloudflare's check is
  * passed by hand once, the cookie stays), the categories flipped there as on the site. READ CHART
- * takes the page's text and Groq (a text model, the key typed once in Settings on the phone)
- * turns it into {chart_title, entries: [{rank, artist, title}]}, stored in
+ * reads the chart's rows from the page itself (exact text, no AI, no OCR: Marko 14.10.2026):
+ * {chart_title, entries: [{rank, title, artist, beatport (the Beatport track ID)}]}, stored in
  * djmantra_app/BeatStats/charts.json (newest first, one per chart title) for the app's chart view.
  */
 public final class BeatStatsActivity extends Activity {
@@ -44,13 +43,11 @@ public final class BeatStatsActivity extends Activity {
 
     private WebView mWeb;
     private TextView mStatus;
-    private String mKey = "";
     private final Handler mMain = new Handler(Looper.getMainLooper());
 
     /** Opens the BeatStats browser (from QmlDJMantra::openBeatStats). */
-    public static void open(Context context, String groqKey) {
+    public static void open(Context context) {
         Intent intent = new Intent(context, BeatStatsActivity.class);
-        intent.putExtra("key", groqKey == null ? "" : groqKey);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -60,10 +57,6 @@ public final class BeatStatsActivity extends Activity {
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        mKey = getIntent().getStringExtra("key");
-        if (mKey == null) {
-            mKey = "";
-        }
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setBackgroundColor(Color.parseColor("#0B1026"));
@@ -114,75 +107,107 @@ public final class BeatStatsActivity extends Activity {
         }
     }
 
+    // the chart rows as BeatStats draws them (article.rank-row--track): rank, title, artists and
+    // the Beatport track ID from the row's Beatport link (the exact record; its ISRC later)
+    private static final String READ_JS = "(function(){"
+            + "var head=document.querySelector('.chart-table-head');"
+            + "var t=head?((head.querySelector('small')||{}).innerText||'')+' '+((head.querySelector('h2')||{}).innerText||''):document.title;"
+            + "var rows=[].slice.call(document.querySelectorAll('article.rank-row--track')).map(function(r){"
+            + "var a=r.querySelector('a[href*=\"beatport.com/track/\"]');"
+            + "var m=a?a.href.match(/\\/(\\d+)(\\?|$)/):null;"
+            + "var artists=[].slice.call(r.querySelectorAll('.artist-list > span')).map(function(s){return s.innerText.trim();}).filter(function(x){return x;});"
+            + "return {rank:parseInt((r.querySelector('.rank-number')||{}).innerText)||0,"
+            + "title:((r.querySelector('.rank-name strong')||{}).innerText||'').trim(),"
+            + "artist:artists.join(', '),beatport:m?m[1]:'',url:a?a.href:''};});"
+            + "return JSON.stringify({chart_title:t.trim(),url:location.href,entries:rows});})()";
+
     private void readChart() {
-        if (mKey.isEmpty()) {
-            mStatus.setText("Type the Groq API key in Settings first");
-            return;
-        }
         mStatus.setText("Reading the chart ...");
-        mWeb.evaluateJavascript("(function(){return document.title + '\\n' + document.body.innerText;})()", value -> {
-            String text;
+        mWeb.evaluateJavascript(READ_JS, value -> {
             try {
-                text = new JSONArray("[" + value + "]").getString(0);
+                String json = new JSONArray("[" + value + "]").getString(0);
+                JSONObject chart = new JSONObject(json);
+                int count = chart.getJSONArray("entries").length();
+                if (count == 0) {
+                    mStatus.setText("No chart rows on this page: open a chart (TRACKS, a genre)");
+                    return;
+                }
+                chart.put("read", System.currentTimeMillis());
+                store(chart);
+                Log.i(TAG, "Chart " + chart.optString("chart_title") + ": " + count + " songs");
+                mStatus.setText(chart.optString("chart_title") + ": " + count + " songs read, finding ISRCs ...");
+                findCodes(chart);
             } catch (Exception e) {
-                text = value;
+                Log.w(TAG, "read: " + e);
+                mStatus.setText("Could not read this page: " + e.getMessage());
             }
-            final String page = text.length() > 60000 ? text.substring(0, 60000) : text;
-            new Thread(() -> parse(page)).start();
         });
     }
 
-    private void parse(String page) {
-        try {
-            JSONObject body = new JSONObject();
-            body.put("model", "llama-3.3-70b-versatile");
-            body.put("temperature", 0);
-            body.put("response_format", new JSONObject().put("type", "json_object"));
-            JSONArray messages = new JSONArray();
-            messages.put(new JSONObject().put("role", "system").put("content",
-                    "You read the text of a beatstats.com chart page. Return JSON: {\"chart_title\": "
-                    + "string, \"entries\": [{\"rank\": int, \"artist\": string, \"title\": string, "
-                    + "\"label\": string}]}, every song of the chart in its order, the title with its "
-                    + "mix / remix name. Nothing else."));
-            messages.put(new JSONObject().put("role", "user").put("content", page));
-            body.put("messages", messages);
-
-            HttpURLConnection connection =
-                    (HttpURLConnection) new URL("https://api.groq.com/openai/v1/chat/completions").openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Authorization", "Bearer " + mKey);
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setConnectTimeout(20000);
-            connection.setReadTimeout(120000);
-            connection.setDoOutput(true);
-            try (OutputStream out = connection.getOutputStream()) {
-                out.write(body.toString().getBytes(StandardCharsets.UTF_8));
+    /**
+     * Off the UI thread: each song's ISRC (from Beatport) and, when logged in to TIDAL, its exact
+     * TIDAL track ID (by ISRC), stored with the chart as they come.
+     */
+    private void findCodes(JSONObject chart) {
+        final Context app = getApplicationContext();
+        new Thread(() -> {
+            try {
+                JSONArray entries = chart.getJSONArray("entries");
+                int codes = 0;
+                for (int i = 0; i < entries.length(); ++i) {
+                    JSONObject song = entries.getJSONObject(i);
+                    String code = isrc(song.optString("beatport"));
+                    if (code.isEmpty()) {
+                        continue;
+                    }
+                    ++codes;
+                    song.put("isrc", code);
+                    song.put("tidal", TidalBridge.trackByIsrc(app, code));
+                    status(chart.optString("chart_title") + ": ISRC " + codes + "/" + entries.length());
+                }
+                store(chart);
+                status(chart.optString("chart_title") + ": " + entries.length() + " songs, " + codes + " ISRCs");
+            } catch (Exception e) {
+                Log.w(TAG, "codes: " + e);
+                status("ISRCs: " + e.getMessage());
             }
-            int code = connection.getResponseCode();
-            InputStream in = code < 400 ? connection.getInputStream() : connection.getErrorStream();
+        }).start();
+    }
+
+    /**
+     * The ISRC of Beatport track `id` (the exact recording's code, Marko 14.10.2026): from the
+     * track page's embedded data ("isrc":"..."), "" if not found. Blocking: off the UI thread.
+     */
+    public static String isrc(String id) {
+        if (id == null || id.isEmpty()) {
+            return "";
+        }
+        try {
+            HttpURLConnection c = (HttpURLConnection) new URL("https://www.beatport.com/track/x/" + id).openConnection();
+            c.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 16; Pixel 7) AppleWebKit/537.36 "
+                    + "(KHTML, like Gecko) Chrome/140.0 Mobile Safari/537.36");
+            c.setConnectTimeout(15000);
+            c.setReadTimeout(20000);
+            int code = c.getResponseCode();
+            if (code >= 400) {
+                Log.w(TAG, "Beatport " + id + ": HTTP " + code);
+                return "";
+            }
+            InputStream in = c.getInputStream();
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            byte[] buffer = new byte[8192];
+            byte[] buffer = new byte[16384];
             int n;
-            while (in != null && (n = in.read(buffer)) > 0) {
+            while ((n = in.read(buffer)) > 0) {
                 bytes.write(buffer, 0, n);
             }
-            String response = bytes.toString("UTF-8");
-            if (code >= 400) {
-                Log.w(TAG, "Groq " + code + ": " + response);
-                status("Groq error " + code);
-                return;
-            }
-            String content = new JSONObject(response).getJSONArray("choices").getJSONObject(0)
-                                     .getJSONObject("message").getString("content");
-            JSONObject chart = new JSONObject(content);
-            chart.put("read", System.currentTimeMillis());
-            int count = chart.optJSONArray("entries") != null ? chart.getJSONArray("entries").length() : 0;
-            store(chart);
-            Log.i(TAG, "Chart " + chart.optString("chart_title") + ": " + count + " songs");
-            status(chart.optString("chart_title") + ": " + count + " songs read");
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("\"isrc\"\\s*:\\s*\"([A-Z0-9]{12})\"")
+                    .matcher(bytes.toString("UTF-8"));
+            String isrc = m.find() ? m.group(1) : "";
+            Log.i(TAG, "Beatport " + id + " ISRC " + isrc);
+            return isrc;
         } catch (Exception e) {
-            Log.w(TAG, "read: " + e);
-            status("Could not read: " + e.getMessage());
+            Log.w(TAG, "isrc " + id + ": " + e);
+            return "";
         }
     }
 

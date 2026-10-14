@@ -137,14 +137,23 @@ class QmlDJMantra : public QObject {
     // one of the app's playlists to TIDAL (a new TIDAL playlist of the same name)
     Q_INVOKABLE void tidalPush(const QString& name);
     // BEATSTATS (Marko 14.10.2026): beatstats.com in a WebView (BeatStatsActivity), READ CHART
-    // there stores the chart (via Groq) in djmantra_app/BeatStats/charts.json, read here
+    // there reads the chart's rows from the page (no AI) with each song's ISRC and stores them in
+    // djmantra_app/BeatStats/charts.json, read here
     Q_INVOKABLE void openBeatStats();
     Q_INVOKABLE QVariantList beatStatsCharts() const;
     // DOWNLOAD QUEUES (Marko 14.10.2026): one text file per service in
     // djmantra_app/Download_Queue/ (Spotify.txt, TIDAL.txt, YouTube_Music.txt), a line per song:
-    // "artist | title | link" (the service's search link); exportable as it is
-    Q_INVOKABLE QString searchLink(const QString& service, const QString& artist, const QString& title) const;
-    Q_INVOKABLE bool addToDownloadQueue(const QString& service, const QString& artist, const QString& title);
+    // "artist | title | link" (the exact recording by ISRC when known, else a search link)
+    Q_INVOKABLE QString searchLink(const QString& service,
+            const QString& artist,
+            const QString& title,
+            const QString& isrc = QString(),
+            const QString& tidalId = QString()) const;
+    Q_INVOKABLE bool addToDownloadQueue(const QString& service,
+            const QString& artist,
+            const QString& title,
+            const QString& isrc = QString(),
+            const QString& tidalId = QString());
     Q_INVOKABLE QVariantList downloadQueue(const QString& service) const;
     Q_INVOKABLE bool removeFromDownloadQueue(const QString& service, int index);
     Q_INVOKABLE QString downloadQueueFile(const QString& service) const;

@@ -167,3 +167,10 @@ playlists list (name, count). TAKE IN: the playlist appears among the app's play
 Inside one of the app's playlists -> TIDAL -> SEND "<name>" TO TIDAL: a new TIDAL playlist of that name with the songs
 TIDAL finds ("found/total"); needs the playlists.write permission (if TIDAL refuses: the status says so; then the
 developer dashboard has to allow it, Marko). logcat DJMantraTidal. LOG OUT clears the tokens.
+## 45. (V55) BEATSTATS WITHOUT AI (Marko 14.10.2026: the exact record by its unique code). The Groq key is gone from
+Settings. Menu -> BEATSTATS CHARTS -> OPEN BEATSTATS -> a chart (e.g. ORGANIC HOUSE top tracks) -> READ CHART: the bar
+says "<chart>: N songs read, finding ISRCs ...", then "ISRC k/N", then "N songs, k ISRCs" (rows read from the page
+itself: rank, title, artists, the Beatport track ID; each ISRC from its Beatport page). CLOSE: the chart shows
+"artist · ISRC <code>" per song. SPOT opens Spotify's search for isrc:<ISRC> (the one recording); TIDAL opens the exact
+TIDAL track (tidal.com/browse/track/<id>) when logged in to TIDAL, else TIDAL's search; YT M searches artist + title.
++ puts the same exact link in the queue file. logcat DJMantraBeatStats (report if the ISRCs stay 0: Beatport blocked).

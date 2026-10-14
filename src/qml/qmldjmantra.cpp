@@ -914,12 +914,24 @@ void writeQueue(const QString& service, const QStringList& lines) {
 
 } // namespace
 
-QString QmlDJMantra::searchLink(const QString& service, const QString& artist, const QString& title) const {
+QString QmlDJMantra::searchLink(const QString& service,
+        const QString& artist,
+        const QString& title,
+        const QString& isrc,
+        const QString& tidalId) const {
+    // the exact recording when its code is known (Marko 14.10.2026): Spotify by isrc:<ISRC>, TIDAL
+    // by its track ID found by ISRC; YouTube Music has no ISRC search, so artist + title there
     const QString query = QString::fromUtf8(QUrl::toPercentEncoding((artist + QChar(' ') + title).simplified()));
     if (service.startsWith(QStringLiteral("Spotify"), Qt::CaseInsensitive)) {
+        if (!isrc.isEmpty()) {
+            return QStringLiteral("https://open.spotify.com/search/isrc%3A") + isrc;
+        }
         return QStringLiteral("https://open.spotify.com/search/") + query;
     }
     if (service.startsWith(QStringLiteral("TIDAL"), Qt::CaseInsensitive)) {
+        if (!tidalId.isEmpty()) {
+            return QStringLiteral("https://tidal.com/browse/track/") + tidalId;
+        }
         return QStringLiteral("https://tidal.com/search?q=") + query;
     }
     if (service.startsWith(QStringLiteral("YouTube Music"), Qt::CaseInsensitive)) {
@@ -928,10 +940,14 @@ QString QmlDJMantra::searchLink(const QString& service, const QString& artist, c
     return QStringLiteral("https://www.youtube.com/results?search_query=") + query;
 }
 
-bool QmlDJMantra::addToDownloadQueue(const QString& service, const QString& artist, const QString& title) {
+bool QmlDJMantra::addToDownloadQueue(const QString& service,
+        const QString& artist,
+        const QString& title,
+        const QString& isrc,
+        const QString& tidalId) {
     QStringList lines = queueLines(service);
     const QString line = artist.simplified() + QStringLiteral(" | ") + title.simplified() +
-            QStringLiteral(" | ") + searchLink(service, artist, title);
+            QStringLiteral(" | ") + searchLink(service, artist, title, isrc, tidalId);
     if (lines.contains(line)) {
         return false;
     }
@@ -970,13 +986,10 @@ QString QmlDJMantra::downloadQueueFile(const QString& service) const {
 
 void QmlDJMantra::openBeatStats() {
 #if defined(Q_OS_ANDROID)
-    // the Groq key lives only in the phone's settings (Settings -> BEATSTATS)
-    const QString key = setting(QStringLiteral("groq_key"), QString()).toString();
     QJniObject::callStaticMethod<void>("com/djmantra/app/BeatStatsActivity",
             "open",
-            "(Landroid/content/Context;Ljava/lang/String;)V",
-            QNativeInterface::QAndroidApplication::context().object(),
-            QJniObject::fromString(key).object<jstring>());
+            "(Landroid/content/Context;)V",
+            QNativeInterface::QAndroidApplication::context().object());
 #endif
     qInfo() << "BeatStats: opened";
 }
