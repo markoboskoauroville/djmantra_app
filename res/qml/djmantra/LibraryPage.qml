@@ -828,7 +828,7 @@ Rectangle {
             property bool barWasShown: false
 
             width: list.width
-            height: Math.max(0, list.height - list.count * 56)
+            height: Math.max(0, list.height - list.count * 30)
             onPressed: barWasShown = Mixxx.DJMantra.barsVisible()
             onClicked: {
                 if (!barWasShown) {
@@ -840,6 +840,10 @@ Rectangle {
 
         visible: !root.thumbnails
 
+        // compact, as a macOS list view (Marko 14.10.2026: "even more compact ... without folder text
+        // ... as much as possible text on the screen and without cutting ... half size"): one line per
+        // row, 30 px; a folder's name has the whole row; a song's title, artist, length, BPM and key
+        // sit under their column headers; a playlist row shows its date, songs and length
         delegate: Rectangle {
             id: row
 
@@ -852,40 +856,42 @@ Rectangle {
             required property real bpm
             required property string key
             required property string cover
+            required property real created
+            required property int count
             readonly property bool wasPlayed: !isFolder && root.played[path] === true
+            readonly property bool autoNow: root.automixMode && root.automixRunning && path === root.automixNow
+            readonly property bool autoNext: root.automixMode && root.automixRunning && path === root.automixNext
+            readonly property bool playlistRow: isFolder && path.startsWith("playlist:")
+            readonly property real w: list.width
 
             required property int index
 
             width: list.width
-            height: 56
-            readonly property bool autoNow: root.automixMode && root.automixRunning && path === root.automixNow
-            readonly property bool autoNext: root.automixMode && root.automixRunning && path === root.automixNext
-
+            height: 30
             color: rowArea.pressed ? Style.pressed
                     : root.controllerSelect && index === list.currentIndex || autoNow ? Style.surface : "transparent"
             border.color: root.controllerSelect && index === list.currentIndex || autoNow ? Style.accent
                     : autoNext ? Style.line : "transparent"
-            border.width: 2
+            border.width: 1
 
             Rectangle {
-                // the cover (DJ Pro style), a note while there is none
+                // the cover (small), a folder or a note while there is none
                 id: art
 
-                anchors.left: parent.left
-                anchors.leftMargin: 8
+                x: 6
                 anchors.verticalCenter: parent.verticalCenter
-                width: 44
-                height: 44
-                radius: 6
-                color: Style.tile
+                width: 22
+                height: 22
+                radius: 3
+                color: row.isFolder ? "transparent" : Style.tile
                 clip: true
 
                 Image {
                     anchors.fill: parent
                     visible: !row.isFolder && row.cover !== ""
                     source: row.isFolder ? "" : row.cover
-                    sourceSize.width: 88
-                    sourceSize.height: 88
+                    sourceSize.width: 44
+                    sourceSize.height: 44
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                 }
@@ -895,78 +901,94 @@ Rectangle {
                     visible: row.isFolder || row.cover === ""
                     text: row.isFolder ? "\uD83D\uDCC1" : "\u266B"
                     color: row.isFolder ? Style.accent : Style.subText
-                    font.pixelSize: 20
-                }
-
-                LengthBadge {
-                    text: row.isFolder ? "" : root.lengthText(row.duration)
-                    fontSize: 9
+                    font.pixelSize: row.isFolder ? 15 : 12
                 }
             }
 
-            Column {
-                // title over artist, as wide as the TITLE and ARTIST columns
+            Text {
+                // the name: a folder's runs to the row's end; a playlist's and a song's to its column
                 anchors.left: art.right
-                anchors.leftMargin: 8
-                anchors.right: lengthText.left
-                anchors.rightMargin: 6
+                anchors.leftMargin: 6
                 anchors.verticalCenter: parent.verticalCenter
+                width: row.isFolder && !row.playlistRow ? row.w - x - 8
+                       : row.playlistRow ? row.w * 0.40 - x - 4 : row.w * 0.32 - x - 4
+                text: (row.autoNow ? qsTr("PLAYING  ") : row.autoNext ? qsTr("NEXT  ") : "")
+                      + (row.wasPlayed ? "\u2713 " : "") + (row.isFolder ? row.name : row.title)
+                color: row.autoNow ? Style.accent : row.wasPlayed ? Style.line : Style.text
+                font.pixelSize: 14
+                font.bold: row.isFolder
+                elide: Text.ElideRight
+            }
+
+            Text {
+                // the artist (songs)
+                x: row.w * 0.32
+                width: row.w * 0.24 - 4
+                anchors.verticalCenter: parent.verticalCenter
+                visible: !row.isFolder
+                text: row.artist
+                color: row.wasPlayed ? Style.line : Style.subText
+                font.pixelSize: 13
+                elide: Text.ElideRight
+            }
+
+            Row {
+                // a playlist: its date, songs, length (NAME / CREATED / SONGS / LENGTH)
+                x: row.w * 0.40
+                anchors.verticalCenter: parent.verticalCenter
+                visible: row.playlistRow
 
                 Text {
-                    width: parent.width
-                    // played in this set: dimmed, with a tick
-                    text: (row.autoNow ? qsTr("PLAYING  ") : row.autoNext ? qsTr("NEXT  ") : "")
-                          + (row.wasPlayed ? "\u2713 " : "") + (row.isFolder ? row.name : row.title)
-                    color: row.autoNow ? Style.accent : row.wasPlayed ? Style.line : Style.text
-                    font.pixelSize: 15
-                    font.bold: true
-                    elide: Text.ElideRight
-                }
-
-                Text {
-                    width: parent.width
-                    text: row.isFolder ? (row.artist !== "" ? row.artist : qsTr("Folder")) : row.artist
-                    color: row.wasPlayed ? Style.line : Style.subText
+                    width: row.w * 0.24
+                    horizontalAlignment: Text.AlignHCenter
+                    text: row.created > 0 ? new Date(row.created).toLocaleDateString(Qt.locale(), Locale.ShortFormat) : ""
+                    color: Style.subText
                     font.pixelSize: 13
-                    elide: Text.ElideRight
+                }
+                Text {
+                    width: row.w * 0.16
+                    horizontalAlignment: Text.AlignHCenter
+                    text: row.count
+                    color: Style.subText
+                    font.pixelSize: 13
+                }
+                Text {
+                    width: row.w * 0.20
+                    horizontalAlignment: Text.AlignHCenter
+                    text: root.lengthText(row.duration)
+                    color: Style.subText
+                    font.pixelSize: 13
                 }
             }
 
-            Text {
-                id: lengthText
-
-                anchors.right: bpmText.left
+            Row {
+                // a song: LENGTH, BPM, KEY under their headers
+                x: row.w * 0.56
                 anchors.verticalCenter: parent.verticalCenter
-                width: list.width * 0.16
-                horizontalAlignment: Text.AlignHCenter
-                text: row.isFolder && !row.path.startsWith("playlist:") ? "" : root.lengthText(row.duration)
-                color: Style.subText
-                font.pixelSize: 14
-            }
+                visible: !row.isFolder
 
-            Text {
-                id: bpmText
-
-                anchors.right: keyText.left
-                anchors.verticalCenter: parent.verticalCenter
-                width: list.width * 0.14
-                horizontalAlignment: Text.AlignHCenter
-                text: !row.isFolder && row.bpm > 0 ? row.bpm.toFixed(1) : ""
-                color: Style.text
-                font.pixelSize: 14
-            }
-
-            Text {
-                id: keyText
-
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                width: list.width * 0.14
-                horizontalAlignment: Text.AlignHCenter
-                text: row.isFolder ? "" : row.key
-                color: Style.accent
-                font.pixelSize: 14
-                font.bold: true
+                Text {
+                    width: row.w * 0.16
+                    horizontalAlignment: Text.AlignHCenter
+                    text: root.lengthText(row.duration)
+                    color: Style.subText
+                    font.pixelSize: 13
+                }
+                Text {
+                    width: row.w * 0.14
+                    horizontalAlignment: Text.AlignHCenter
+                    text: row.bpm > 0 ? row.bpm.toFixed(1) : ""
+                    color: Style.text
+                    font.pixelSize: 13
+                }
+                Text {
+                    width: row.w * 0.14
+                    horizontalAlignment: Text.AlignHCenter
+                    text: row.key
+                    color: Style.accent
+                    font.pixelSize: 13
+                    font.bold: true
+                }
             }
 
             MouseArea {
@@ -986,7 +1008,8 @@ Rectangle {
 
             Rectangle {
                 anchors.bottom: parent.bottom
-                width: parent.width
+                x: 6
+                width: parent.width - 12
                 height: 1
                 color: Style.surface
             }

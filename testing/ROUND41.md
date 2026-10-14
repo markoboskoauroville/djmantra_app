@@ -286,3 +286,8 @@ ring right round it (its own violet / band-colour pointer), then two LED rings o
 knob's (closer) and the outer knob's (outermost). Above: the outer value small ("VOCALS −9"), below: the inner ("MID −4"),
 no "−∞ / 0 dB" end labels on these knobs, NO text overlapping anything (screenshot the whole mixer column, both decks,
 EQ and NEURAL MIX mode).
+## 65. (V74) COMPACT LIST, as a macOS list view (Marko 14.10.2026: half the height, no "Folder" text, whole names). Songs
+in LIST view: every row 30 px, one line. A folder: its icon and its WHOLE name across the row (no "Folder" under it, no
+"..." while the name fits: "HOTEL KORINJAK {by ...}" now complete). A song: small cover, TITLE / ARTIST / LENGTH / BPM /
+KEY under their headers. PLAYLISTS: name, CREATED, SONGS, LENGTH under theirs. Twice as many rows on screen as V73; tap,
+long press (add to a playlist), the controller's BROWSE highlight and AutoMix's PLAYING / NEXT marks still work.
