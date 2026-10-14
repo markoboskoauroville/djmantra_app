@@ -125,6 +125,8 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int analyzeDecksAgain();
     /// Stops the folder's analysis (the folder was left)
     Q_INVOKABLE void stopAnalysis();
+    // AUTO GAIN (Settings, on by default): every song's peak to -1 dBFS (the ReplayGain stage)
+    Q_INVOKABLE void setAutoGain(bool on);
     // the controller's link, one or the other (Settings): "usb" or "bluetooth"
     Q_INVOKABLE void setControllerLink(const QString& link);
     // FIND SONG (Marko 14.10.2026): audio files anywhere on the phone (Android's media index)

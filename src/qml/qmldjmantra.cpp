@@ -957,6 +957,16 @@ void QmlDJMantra::useDjmFilter() {
     }
 }
 
+void QmlDJMantra::setAutoGain(bool on) {
+    // Mixxx's ReplayGain stage applies each song's ratio (made peak-based by
+    // AnalyzerEbur128 on Android): on = the song to -1 dBFS, no extra boost
+    ControlObject::set(ConfigKey(QStringLiteral("[ReplayGain]"), QStringLiteral("ReplayGainEnabled")), on ? 1 : 0);
+    ControlObject::set(ConfigKey(QStringLiteral("[ReplayGain]"), QStringLiteral("ReplayGainBoost")), 1);
+    ControlObject::set(ConfigKey(QStringLiteral("[ReplayGain]"), QStringLiteral("DefaultBoost")), 1);
+    setSetting(QStringLiteral("auto_gain"), on ? QStringLiteral("1") : QStringLiteral("0"));
+    qInfo() << "Auto gain:" << (on ? "on" : "off");
+}
+
 void QmlDJMantra::setControllerLink(const QString& link) {
     setSetting(QStringLiteral("controller_link_mode"), link);
 #if defined(Q_OS_ANDROID)

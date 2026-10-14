@@ -378,6 +378,23 @@ Rectangle {
             }
 
             DButton {
+                // AUTO GAIN as djay's (Marko 14.10.2026): every song's peak at -1 dB
+                objectName: "autoGain"
+                property bool on: Mixxx.DJMantra.setting("auto_gain", "1") === "1"
+                width: column.width - 12
+                height: 42
+                mode: ""
+                text: qsTr("AUTO GAIN (every song's peak at \u22121 dB): ") + (on ? qsTr("ON") : qsTr("OFF"))
+                fontSize: 13
+                lit: on
+                onClicked: {
+                    on = !on;
+                    Mixxx.DJMantra.setAutoGain(on);
+                    Toasts.show(qsTr("AUTO GAIN ") + (on ? qsTr("ON") : qsTr("OFF")));
+                }
+            }
+
+            DButton {
                 // djay's "Auto-play when moving crossfader" (Marko 14.10.2026)
                 objectName: "crossfaderAutoplay"
                 property bool on: Mixxx.DJMantra.setting("crossfader_autoplay", "1") === "1"

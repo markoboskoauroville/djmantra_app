@@ -717,6 +717,8 @@ Window {
     Component.onCompleted: {
         // the decks' FILTER = the Pioneer DJM filter (also for the controller's filter knob)
         Mixxx.DJMantra.useDjmFilter();
+        // AUTO GAIN, as djay's, on by default (Marko 14.10.2026)
+        Mixxx.DJMantra.setAutoGain(Mixxx.DJMantra.setting("auto_gain", "1") === "1");
         // the EQ starts flat (0 dB = value 1): Mixxx keeps the last values, and a
         // bug before V34 left them at the maximum (r40: HIGH / MID / LOW at max at start)
         for (const deck of ["[Channel1]", "[Channel2]"]) {
