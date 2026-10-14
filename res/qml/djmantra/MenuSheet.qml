@@ -11,6 +11,7 @@ Rectangle {
     signal settings()
     signal queues()
     signal beatStats()
+    signal roomEq()
     signal done()
 
     color: "#8c000000"
@@ -87,6 +88,14 @@ Rectangle {
                 height: 52
                 text: qsTr("DOWNLOAD QUEUES")
                 onClicked: root.queues()
+            }
+            DButton {
+                // the room correction EQ on the main output (Marko 14.10.2026)
+                objectName: "menuRoomEq"
+                width: parent.width
+                height: 52
+                text: qsTr("ROOM EQ (calibrate the room)")
+                onClicked: root.roomEq()
             }
             Row {
                 // the controller's link, one or the other (Marko 14.10.2026: in the menu too,

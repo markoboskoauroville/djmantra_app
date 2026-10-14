@@ -674,8 +674,9 @@ Window {
             anchors.left: parent.left
             anchors.right: parent.right
             active: window.overlay === "menu" || window.overlay === "settings" || window.overlay === "queues"
-                    || window.overlay === "beatstats"
+                    || window.overlay === "beatstats" || window.overlay === "roomeq"
             sourceComponent: window.overlay === "settings" ? settingsComponent
+                           : window.overlay === "roomeq" ? roomEqComponent
                            : window.overlay === "queues" ? queuesComponent
                            : window.overlay === "beatstats" ? beatStatsComponent : menuComponent
         }
@@ -693,10 +694,19 @@ Window {
             onSettings: window.overlay = "settings"
             onQueues: window.overlay = "queues"
             onBeatStats: window.overlay = "beatstats"
+            onRoomEq: window.overlay = "roomeq"
             onWheel: {
                 window.page = 4;
                 window.overlay = "";
             }
+            onDone: window.overlay = ""
+        }
+    }
+
+    Component {
+        id: roomEqComponent
+
+        RoomEqPage {
             onDone: window.overlay = ""
         }
     }
@@ -806,6 +816,8 @@ Window {
     Component.onCompleted: {
         // the decks' FILTER = the Pioneer DJM filter (also for the controller's filter knob)
         Mixxx.DJMantra.useDjmFilter();
+        // the room correction on the main output, as it was left (Menu -> ROOM EQ)
+        Mixxx.DJMantra.useRoomEq();
         // every song normalized to a -1 dBFS peak, always (Marko 14.10.2026); no switch, no GAIN knob
         Mixxx.DJMantra.setAutoGain(true);
         // the EQ starts flat (0 dB = value 1): Mixxx keeps the last values, and a

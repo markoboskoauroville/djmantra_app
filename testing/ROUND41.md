@@ -236,3 +236,13 @@ song changed a value: the hardware knob first has to reach it.
 violet. In EQ mode the inner dots are the band colour, the outer ring's dots and pointer violet; in NEURAL MIX mode the
 other way round. Two numbers per knob: on TOP the outer ring's ("VOCALS −9 dB", its colour), at the BOTTOM the inner
 one's ("MID −4 dB"), always shown (0 dB too).
+## 58. (V67) ROOM EQ (Marko 14.10.2026: an EQ on the output to correct the room, FabFilter style, analyzer, noise /
+sweep, three places averaged). Menu -> ROOM EQ: a graph 20 Hz - 20 kHz (+12 .. -18 dB), ten yellow handles (31 Hz ..
+16 kHz) on the yellow EQ curve. ON / OFF (the main output only: the recording is not corrected). ANALYZER: Android asks
+for the microphone once (allow); the violet live spectrum moves with the sound (talk, clap). Drag a handle up / down:
+the curve follows, toast "63 Hz −5.0 dB"; double tap a handle: 0 dB. PINK NOISE (or SWEEP), 5 s: MEASURE 1 plays the
+test signal from the phone's speaker / the USB output while "LISTENING ...", then "PLACE 1 measured", a blue line; move,
+MEASURE 2 (green), MEASURE 3 (red); the dashed white line is their average. APPLY THE AVERAGE: the handles move to the
+inverse of the average, the highest band at 0 dB (cut only), ROOM EQ ON. FLAT: all at 0. Leave and come back, restart
+the app: the curve and ON / OFF are kept. Play a song: ON vs OFF is audible (e.g. less boom where the room had it).
+logcat DJMantraRoomEq.

@@ -145,6 +145,19 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE QVariantList tidalKeyFiles() const;
     Q_INVOKABLE QString tidalUseKeyFile(const QString& path);
     Q_INVOKABLE QString tidalClientId() const;
+    // ROOM EQ (Marko 14.10.2026): ten octave bands (31.5 Hz .. 16 kHz, dB) on the main output
+    // only (the speakers, not the recording): DJ Mantra Room EQ in [OutputEffectRack_[Master]];
+    // its curve measured in the room (pink noise or a sweep, the microphone; up to three
+    // places averaged) or drawn by hand. Kept in the settings (room_eq, room_eq_on).
+    Q_INVOKABLE void useRoomEq();
+    Q_INVOKABLE void setRoomEqOn(bool on);
+    Q_INVOKABLE void setRoomBand(int band, double db);
+    Q_INVOKABLE QVariantList roomBands() const;
+    // the test: roomEqResult("measure", "b0,..,b9|c0,..,c60" or "error: ...")
+    Q_INVOKABLE void roomEqMeasure(const QString& signal, double seconds);
+    // the live microphone analyzer under the curve (61 columns, 1/6 octave, dB)
+    Q_INVOKABLE void roomEqLive(bool on);
+    Q_INVOKABLE QString roomEqLiveColumns() const;
     // SUNO PLAYLISTS (Marko 14.10.2026): Suno song links pasted (any text: every suno.com link
     // in it) into playlist `name`; the links are remembered (djmantra_app/Suno/links.json), each
     // song saved as djmantra_app/Suno/<title>.mp3 (SunoBridge.java) and put in the playlist.
@@ -259,6 +272,7 @@ class QmlDJMantra : public QObject {
     void analysisChanged();
     void cqChanged();
     void tidalResult(const QString& action, const QString& result);
+    void roomEqResult(const QString& action, const QString& result);
     void sunoResult(const QString& action, const QString& result);
 
   protected:

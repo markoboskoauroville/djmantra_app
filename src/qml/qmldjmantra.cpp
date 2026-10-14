@@ -30,6 +30,7 @@
 
 #if defined(Q_OS_ANDROID)
 #include <QJniEnvironment>
+#include <QPermissions>
 #include <QJniObject>
 #endif
 
@@ -1804,6 +1805,137 @@ void QmlDJMantra::useDjmFilter() {
         pSlot->loadEffectWithDefaults(pManifest);
         qInfo().noquote() << "DJM filter: loaded on" << group;
     }
+}
+
+namespace {
+const QString kRoomEqGroup = QStringLiteral("[OutputEffectRack_[Master]_Effect1]");
+
+#if defined(Q_OS_ANDROID)
+// the microphone, asked for once; `then` runs when it is allowed
+void withMicrophone(QObject* pContext, std::function<void(bool)> then) {
+    QMicrophonePermission microphone;
+    if (qApp->checkPermission(microphone) == Qt::PermissionStatus::Granted) {
+        then(true);
+        return;
+    }
+    qApp->requestPermission(microphone, pContext, [then](const QPermission& permission) {
+        then(permission.status() == Qt::PermissionStatus::Granted);
+    });
+}
+#endif
+} // namespace
+
+void QmlDJMantra::useRoomEq() {
+    const auto pEffects = QmlEffectsManagerProxy::effectsManager();
+    if (!pEffects) {
+        return;
+    }
+    const EffectManifestPointer pManifest = pEffects->getBackendManager()->getManifest(
+            QStringLiteral("org.djmantra.effects.roomeq"), EffectBackendType::BuiltIn);
+    const auto pChain = pEffects->getOutputEffectChain();
+    if (!pManifest || !pChain) {
+        qWarning() << "Room EQ: not available";
+        return;
+    }
+    const EffectSlotPointer pSlot = pChain->getEffectSlot(0);
+    if (pSlot && !(pSlot->getManifest() && pSlot->getManifest()->id() == pManifest->id())) {
+        pSlot->loadEffectWithDefaults(pManifest);
+        qInfo() << "Room EQ: loaded on the main output";
+    }
+    const QStringList saved = setting(QStringLiteral("room_eq"), QString()).toString().split(QChar(','));
+    for (int i = 0; i < 10; ++i) {
+        setControl(kRoomEqGroup, QStringLiteral("parameter%1").arg(i + 1),
+                i < saved.size() ? saved[i].toDouble() : 0.0);
+    }
+    setRoomEqOn(setting(QStringLiteral("room_eq_on"), QStringLiteral("0")).toString() == QStringLiteral("1"));
+}
+
+void QmlDJMantra::setRoomEqOn(bool on) {
+    setControl(kRoomEqGroup, QStringLiteral("enabled"), on ? 1.0 : 0.0);
+    setSetting(QStringLiteral("room_eq_on"), on ? QStringLiteral("1") : QStringLiteral("0"));
+}
+
+void QmlDJMantra::setRoomBand(int band, double db) {
+    if (band < 0 || band >= 10) {
+        return;
+    }
+    setControl(kRoomEqGroup, QStringLiteral("parameter%1").arg(band + 1), std::clamp(db, -12.0, 12.0));
+    QStringList values;
+    for (const QVariant& v : roomBands()) {
+        values << QString::number(v.toDouble(), 'f', 1);
+    }
+    setSetting(QStringLiteral("room_eq"), values.join(QChar(',')));
+}
+
+QVariantList QmlDJMantra::roomBands() const {
+    QVariantList bands;
+    for (int i = 0; i < 10; ++i) {
+        ControlProxy proxy(ConfigKey(kRoomEqGroup, QStringLiteral("parameter%1").arg(i + 1)),
+                nullptr,
+                ControlFlag::NoWarnIfMissing);
+        bands << (proxy.valid() ? proxy.get() : 0.0);
+    }
+    return bands;
+}
+
+void QmlDJMantra::roomEqMeasure(const QString& signal, double seconds) {
+#if defined(Q_OS_ANDROID)
+    QPointer<QmlDJMantra> guard(this);
+    withMicrophone(this, [guard, signal, seconds](bool allowed) {
+        if (!guard) {
+            return;
+        }
+        if (!allowed) {
+            emit guard->roomEqResult(QStringLiteral("measure"),
+                    QStringLiteral("error: DJ Mantra may not use the microphone"));
+            return;
+        }
+        std::thread([guard, signal, seconds]() {
+            const QString result = QJniObject::callStaticObjectMethod("com/djmantra/app/RoomEqBridge",
+                    "measure",
+                    "(Ljava/lang/String;D)Ljava/lang/String;",
+                    QJniObject::fromString(signal).object<jstring>(),
+                    static_cast<jdouble>(seconds))
+                                           .toString();
+            QMetaObject::invokeMethod(qApp, [guard, result]() {
+                if (guard) {
+                    emit guard->roomEqResult(QStringLiteral("measure"), result);
+                }
+            }, Qt::QueuedConnection);
+        }).detach();
+    });
+#else
+    Q_UNUSED(signal);
+    Q_UNUSED(seconds);
+    emit roomEqResult(QStringLiteral("measure"), QStringLiteral("error: only on the phone"));
+#endif
+}
+
+void QmlDJMantra::roomEqLive(bool on) {
+#if defined(Q_OS_ANDROID)
+    const auto start = [on](bool allowed) {
+        QJniObject::callStaticMethod<void>("com/djmantra/app/RoomEqBridge", "live", "(Z)V",
+                static_cast<jboolean>(on && allowed));
+    };
+    if (on) {
+        withMicrophone(this, start);
+    } else {
+        start(false);
+    }
+#else
+    Q_UNUSED(on);
+#endif
+}
+
+QString QmlDJMantra::roomEqLiveColumns() const {
+#if defined(Q_OS_ANDROID)
+    return QJniObject::callStaticObjectMethod("com/djmantra/app/RoomEqBridge",
+            "liveColumns",
+            "()Ljava/lang/String;")
+            .toString();
+#else
+    return QString();
+#endif
 }
 
 int QmlDJMantra::batteryPercent() const {
