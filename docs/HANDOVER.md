@@ -1,11 +1,48 @@
 # DJ Mantra handover
 
 Read this first in any new session (any account). It is kept current by every session before it
-stops; the newest state wins over older notes. Last update: **2026-10-14 10:20 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
+stops; the newest state wins over older notes. Last update: **2026-10-14 21:00 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 14.10.2026 10:20 UTC (latest): V42 green (2d135b4), round 40 done in parts, round 41 next
+## 14.10.2026 21:00 UTC (latest): V76 pushed (a246d79), the phone has V71, the tester stopped for the night
+
+**State.** Branch ccr-eb7d1019-d3kubd, V76 = a246d79 (CI was running at 21:00; the routine "V76 CI check" re-checks,
+re-runs a flaky emulator launch test once, and messages the tester when green). The real Pixel 7 has **V71**. Tester:
+the Mac session "Pixel wireless debugging connection" (session_01NA5hr4KrMJbJix74JCBFvL); Marko switched the Mac and
+the phone off for the night. CLAUDE.md still names the old tester session id (01HGBd..., gone) and the old TIDAL Client ID.
+
+**Built since V42 (all in testing/ROUND41.md parts 45-68):** V55 BeatStats without AI (chart rows read from the page,
+ISRC from Beatport, Spotify isrc: / TIDAL by ISRC links); V56 AutoMix tab = the song list + an AUTOMIX dropdown; V57-V58
+Suno playlists (links remembered; Suno serves audio only to the logged-in owner: GET opens Suno in the app
+(SunoActivity) and saves its download; files matched by title); V58 TIDAL: Marko's own developer app, Client ID
+JjTAmDVohiV7GgOL (third party; redirect http://localhost:8765/tidal-callback; scopes incl. playlists.write), key-file
+picker (reads only the Client ID), SYNC ALL PLAYLISTS TO TIDAL; V59 AutoMix arrow drawn (font glyphs are empty boxes on
+the phone: draw them); V62 every song normalized to -1 dBFS peak always, NO GAIN knob, FILTER at the bottom of each deck;
+V63 EQ bands and Neural Mix stems are separate knob sets (parameter1..3 / 4..6) both applied, a new song resets EQ /
+Neural Mix / FILTER, the Mix Ultra's SHIFT turns the other set; V64-V66/V73 concentric knobs (inner = active mode, outer
+ring = the other; two aligned LED rings outside; values above / below; a finger turns only the inner one) and
+Ableton-style PICKUP on the controller's EQ knobs; V67-V69/V72 ROOM CORRECTION (docs/ROOM_CORRECTION.md: 31 thirds on
+[MasterOutput] only, log-sweep / pink-noise measurement through sampler 9, 7 places per room, rooms as JSON files in
+Music/djmantra_app/Room_Corrections, BYPASS, guide; effect slots have 32 knob parameters on Android now); V70
+ScreenEdges for every extra Activity + BACK (manifest system-bars §5b); V71 Songs top bar fit; V74 compact list (30 px
+rows); V75 playlists are folders (a "Playlists" folder at the top level); V76 empty folders / playlists hidden, the Mix
+Ultra's browser ignores 1.5 s after a (re)connect.
+
+**Round 41 on the phone:** PASS 61, 62, 54, 57, 51 (screen + controller FILTER), 53/55 screen halves, 59-60 partly
+(fixed in V72). **Open:** install V76, then parts 63, 64, 65, 66-68, 56 and the controller halves of 53 (Mix Ultra over
+Bluetooth), 45-49 (BeatStats ISRC, AutoMix tab, Suno GET with Marko's Suno login, TIDAL login + SYNC ALL), 50, 52, 58.
+Reports: testing/results/20261014_r41_v70_phone/REPORT.md.
+
+**Other open items:** IK manuals (the tester was to download them with Marko's IK login into djmantra-test-songs
+manuals/ik/; Marko said yes); the djay waveform / sound compare; the key detector; the progress page (djmantra.pages.dev,
+last v27) needs the V42-V76 milestones.
+
+**Cloud tooling:** the Android SDK is installed by the manifest's tools/cloud-android/setup.sh (testing/README.md);
+compile all Java with javac against android-36 and run tools/qml/check_djmantra_qml.py before each push. The QML can be
+rendered to PNG offscreen with PySide6 + QT_QUICK_BACKEND=software (grabWindow) to check a screen before pushing.
+
+## 14.10.2026 10:20 UTC: V42 green (2d135b4), round 40 done in parts, round 41 next
 
 - Tester now: the Mac session "Pixel wireless debugging connection" (session_01NA5hr4KrMJbJix74JCBFvL), the real
   Pixel 7 (adb over Wi-Fi 192.168.1.103:5555, the phone's USB has the Mix Ultra), djay 5.6.9 on the same phone.
