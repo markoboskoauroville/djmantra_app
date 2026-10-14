@@ -270,10 +270,12 @@ MixUltra.shiftPfl = function(channel, control, value, status, group) {
     }
 };
 
-// DJ Mantra (Marko, 12.10.2026): the pad mode buttons also choose the app's tabs at the bottom:
-// HOT CUE = Songs, LOOP = Phrasing, FX = Mixer, NEURAL MIX = Keys. The controller still switches
-// its own pad mode (it does so itself), so the pads are read in that mode as before.
-MixUltra.PAGE_BUTTONS = {0x0F: 1, 0x10: 2, 0x11: 3, 0x12: 4};
+// DJ Mantra (Marko, 12.10.2026; 14.10.2026): the pad mode buttons also choose the app's tabs at
+// the bottom, one to one in their order: HOT CUE = Songs, LOOP = Phrasing, FX = Mixer,
+// NEURAL MIX = AutoMix, SHIFT + NEURAL MIX (SAMPLER) = Keys (either deck's buttons). The
+// controller still switches its own pad mode (it does so itself), so the pads are read in that
+// mode as before.
+MixUltra.PAGE_BUTTONS = {0x0F: 1, 0x10: 2, 0x11: 3, 0x12: 4, 0x16: 5};
 
 // A pulse on one of the app's [DJMantra] controls (back to 0: the same value twice still counts)
 MixUltra.tellApp = function(key, value) {

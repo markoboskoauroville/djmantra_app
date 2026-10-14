@@ -17,7 +17,9 @@ Rectangle {
         anchors.fill: parent
 
         Repeater {
-            model: [qsTr("Songs"), qsTr("Phrasing"), qsTr("Mixer"), qsTr("Keys"), qsTr("AutoMix")]
+            // Marko 14.10.2026: in the order of the Mix Ultra's pad-mode buttons (HOT CUE, LOOP, FX,
+            // NEURAL MIX, SHIFT+NEURAL MIX = SAMPLER), which switch these tabs
+            model: [qsTr("Songs"), qsTr("Phrasing"), qsTr("Mixer"), qsTr("AutoMix"), qsTr("Keys")]
 
             delegate: Item {
                 id: tab
@@ -59,7 +61,7 @@ Rectangle {
 
                     Rectangle {
                         // the wheel
-                        visible: tab.index === 3
+                        visible: tab.index === 4
                         anchors.centerIn: parent
                         width: 18
                         height: 18
@@ -97,7 +99,7 @@ Rectangle {
 
                     Canvas {
                         // AutoMix: two arrows crossing over, one song into the next
-                        visible: tab.index === 4
+                        visible: tab.index === 3
                         anchors.fill: parent
                         property color ink: tab.tint
                         onInkChanged: requestPaint()

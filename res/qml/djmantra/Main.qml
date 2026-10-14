@@ -23,7 +23,7 @@ Window {
     color: Style.background
     title: "DJ Mantra"
 
-    property int page: 0 // 0 songs (the playlist), 1 phrasing, 2 mixer, 3 keys (Camelot wheel, key match)
+    property int page: 0 // 0 songs (the playlist), 1 phrasing, 2 mixer, 3 automix, 4 keys (Camelot wheel, key match)
     readonly property bool landscape: width > height
     property string overlay: "" // "", "menu"
     property string libraryDeck: ""
@@ -55,7 +55,8 @@ Window {
     // the pad mode buttons choose the tabs (res/controllers/...Mix-Ultra-script.js)
     Mixxx.ControlProxy {
         group: "[DJMantra]"; key: "page"
-        onValueChanged: if (value >= 1 && value <= 4) {
+        // 1 Songs, 2 Phrasing, 3 Mixer, 4 AutoMix, 5 Keys (the pad mode buttons' order)
+        onValueChanged: if (value >= 1 && value <= 5) {
             Mixxx.DJMantra.log("controller: page " + value);
             window.browsing = false;
             window.page = value - 1;
@@ -278,7 +279,7 @@ Window {
                 anchors.left: menuButton.right
                 anchors.leftMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
-                onWheelRequested: window.page = 3
+                onWheelRequested: window.page = 4
             }
 
             ClockDisplay {
@@ -496,7 +497,7 @@ Window {
                     objectName: "automix"
                     library: playlistPage
                     anchors.fill: parent
-                    visible: window.page === 4
+                    visible: window.page === 3
                 }
 
                 // round 22: ~80 % CPU on every tab: a hidden tab costs nothing
@@ -523,7 +524,7 @@ Window {
 
                 Loader {
                     anchors.fill: parent
-                    active: window.page === 3 && rest.visible
+                    active: window.page === 4 && rest.visible
                     visible: active
 
                     sourceComponent: Item {
@@ -615,7 +616,7 @@ Window {
             }
             onSettings: window.overlay = "settings"
             onWheel: {
-                window.page = 3;
+                window.page = 4;
                 window.overlay = "";
             }
             onDone: window.overlay = ""

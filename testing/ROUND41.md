@@ -52,3 +52,6 @@ back on Bluetooth (the scan). Power off the controller: DISCONNECTED; on again: 
 the crossfader, a volume fader, an EQ knob, press PLAY: the screen follows (Marko moves them; one action at a time).
 ## 13. Console SYNC (r40 part 9: "SYNC from the console did not register"): a press on the Mix Ultra's SYNC toggles
 the deck's sync lock, the same as the screen's SYNC (it lights / unlights; log `MixUltra: SYNC [ChannelN] -> 1/0`).
+## 14. TABS = the Mix Ultra's pad-mode buttons (Marko 14.10.2026): the tab bar is now Songs | Phrasing | Mixer |
+AutoMix | Keys. On the controller (either deck): HOT CUE -> Songs, LOOP -> Phrasing, FX -> Mixer, NEURAL MIX ->
+AutoMix, SHIFT + NEURAL MIX (SAMPLER) -> Keys (log `controller: page 1..5`). Also the key badge (top left) opens Keys.
