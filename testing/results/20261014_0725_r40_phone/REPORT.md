@@ -38,3 +38,8 @@ Tester: Claude Code on the Mac (hub session), adb over USB. APK DJMantra-V41-0fa
 | 4 | lanes thin (djay) by default | PASS | Settings shows LANE: THIN (djay) selected; deck 1 lane (Aum Ganesha, playing) wave ~20-25 % of the lane (p4_phrasing_thin.png) |
 | 4 | Settings -> LANE HEIGHT | PASS? | `Settings: lane_height = tall`, `... = djay`; but on this quiet devotional passage TALL and THIN look nearly the same (p4_lane_tall_top_thin_bottom.png, top TALL, bottom THIN) — to recheck on a loud song |
 | 4 | pairs vs djay | later | part of the djay compare job |
+| 5 | smoothness zoom 3.00 | PASS | `adb shell screenrecord` 3 s, 180 frames at ~60 fps, deck 1 playing; beat-line x per frame (p5_lines.py, rows 965-995): shift **-2..-5 px every frame, 155 of 179 exactly -3**, no frozen frames, no jumps |
+| 5 | smoothness zoom 0.40 (nearest step to 0.5: 0.59 / 0.40) | PASS | shift -15..-32 px, 90 % within -20..-25; the spread follows the recorder's own frame times (14-20 ms, one 39 ms gap), no 0 frames |
+| 5 | deepest zoom 0.04 | PASS / can't judge motion | one thin signed line like djay (p5_zoom004_3frames.png); beat lines move ~200-250 px a frame, visible only in a few frames — smoothness not measurable there |
+| 5 | play head still, beat lines no flicker | PASS | play head at x=540 in every frame (the shift script excluded it, it never moved); beat lines present in each frame at 3 and 0.40 |
+| 5 | zoom steps | NOTE | `waveform zoom` 4.50, 3.00, 2.00, 1.33, 0.89, 0.59, 0.40, 0.26, 0.18, 0.12, 0.08, 0.05, 0.04 (no 0.5 step) |
