@@ -184,9 +184,9 @@ Item {
                             Mixxx.DJMantra.log("knob " + deck.modelData + ": " + label);
                         }
                     }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water; defaultParameter: 1; toastPrefix: "DECK " + deck.number + "  " }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth; defaultParameter: 1; toastPrefix: "DECK " + deck.number + "  " }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire; defaultParameter: 1; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; arcColor: Style.water; defaultParameter: 1; dbScale: true; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter2"; label: root.stems ? "VOCALS" : "MID"; arcColor: Style.earth; defaultParameter: 1; dbScale: true; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: "parameter1"; label: root.stems ? "DRUMS" : "LOW"; arcColor: Style.fire; defaultParameter: 1; dbScale: true; toastPrefix: "DECK " + deck.number + "  " }
                     DButton {
                         // tap = on / off, hold = choose the effect
                         id: fxButton

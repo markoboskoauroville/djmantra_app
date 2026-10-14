@@ -31,6 +31,17 @@ Item {
         Mixxx.DJMantra.log("knob reset " + root.group + "," + root.key);
     }
     readonly property int dots: 15
+    // Marko 14.10.2026 (the cut-only EQ is like no other mixer's): the ends of the ring
+    // labelled in dB, "−∞" (full kill) on the left, "0" (no cut) on the right, and the cut
+    // in the caption while there is one ("LOW −12 dB"); the value is the linear gain
+    property bool dbScale: false
+    readonly property string dbText: {
+        const v = control.value;
+        if (v <= 0.0005)
+            return "\u2212\u221E";
+        const db = 20 * Math.log(v) / Math.LN10;
+        return db > -0.5 ? "0" : "\u2212" + Math.round(-db);
+    }
 
     implicitWidth: 52
     implicitHeight: 64
@@ -103,10 +114,32 @@ Item {
         anchors.top: dial.bottom
         anchors.topMargin: 1
         anchors.horizontalCenter: parent.horizontalCenter
-        text: root.label
-        color: Style.subText
+        width: root.width
+        horizontalAlignment: Text.AlignHCenter
+        fontSizeMode: Text.HorizontalFit
+        minimumPixelSize: 8
+        text: root.dbScale && control.value < 0.94 ? root.label + " " + root.dbText + " dB" : root.label
+        color: root.dbScale && control.value < 0.94 ? root.arcColor : Style.subText
         font.pixelSize: 11
         font.bold: true
+    }
+
+    Repeater {
+        // the dB at the ring's two ends (below its first and last dot)
+        model: root.dbScale ? [[-135, "\u2212\u221E"], [135, "0 dB"]] : []
+
+        delegate: Text {
+            required property var modelData
+            readonly property real angle: modelData[0] * Math.PI / 180
+            readonly property real ringRadius: dial.width / 2 - dial.width * 0.0425
+
+            x: dial.x + dial.width / 2 + ringRadius * Math.sin(angle) - width / 2
+            y: dial.y + dial.height / 2 - ringRadius * Math.cos(angle) + 3
+            text: modelData[1]
+            color: Style.subText
+            font.pixelSize: 9
+            font.bold: true
+        }
     }
 
     // a long press (0.5 s, finger still): the GAIN knob flips to FILTER (MixerPage)
