@@ -72,7 +72,7 @@ Item {
         color: "transparent"
         border.color: root.barColor
         border.width: 2
-        opacity: 0.5
+        opacity: 0.75
         x: root.vertical ? handle.x : Math.max(0, root.ghost.position) * (root.width - width)
         y: root.vertical ? (1 - Math.max(0, root.ghost.position)) * (root.height - height) : handle.y
 
@@ -81,7 +81,7 @@ Item {
             anchors.margins: 3
             radius: 3
             color: root.barColor
-            opacity: 0.35
+            opacity: 0.5
         }
     }
 

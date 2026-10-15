@@ -213,15 +213,15 @@ Item {
             Rectangle {
                 // the outer knob's GHOST: the controller's knob, not picked up yet
                 visible: root.outerGhostTurn >= 0
-                width: 4
+                width: 6
                 height: (root.outerKnobSize - root.innerKnobSize) / 2 - 3
-                radius: 2
+                radius: 3
                 color: root.outerColor
-                opacity: 0.45
+                opacity: 0.7
                 x: outerKnob.width / 2 - width / 2
                 y: 2
                 transform: Rotation {
-                    origin.x: 2
+                    origin.x: 3
                     origin.y: outerKnob.height / 2 - 2
                     angle: -135 + 270 * Math.max(0, root.outerGhostTurn)
                 }
@@ -255,11 +255,11 @@ Item {
             Rectangle {
                 // the GHOST pointer: the controller's knob, not picked up yet (half transparent)
                 visible: root.ghostTurn >= 0
-                width: 4
+                width: 6
                 height: body.height / 2 - 3
-                radius: 2
+                radius: 3
                 color: root.arcColor
-                opacity: 0.5
+                opacity: 0.7
                 x: body.width / 2 - width / 2
                 y: 3
                 transformOrigin: Item.Bottom
@@ -278,7 +278,8 @@ Item {
             delegate: Rectangle {
                 required property var modelData
                 readonly property real angle: (-135 + 270 * Math.max(0, modelData[0])) * Math.PI / 180
-                readonly property real size: Math.max(6, dial.width * (root.concentric ? 0.11 : 0.085 * 1.8))
+                // r42 (V77: "the ghost is faint and small, easy to miss"): bigger, filled
+                readonly property real size: Math.max(9, dial.width * (root.concentric ? 0.16 : 0.085 * 2.2))
 
                 visible: modelData[0] >= 0
                 z: 4
@@ -287,10 +288,10 @@ Item {
                 radius: size / 2
                 x: dial.width / 2 + modelData[1] * Math.sin(angle) - size / 2
                 y: dial.height / 2 - modelData[1] * Math.cos(angle) - size / 2
-                color: "transparent"
+                color: Qt.rgba(modelData[2].r, modelData[2].g, modelData[2].b, 0.45)
                 border.color: modelData[2]
-                border.width: 1.5
-                opacity: 0.7
+                border.width: 2
+                opacity: 0.9
             }
         }
     }

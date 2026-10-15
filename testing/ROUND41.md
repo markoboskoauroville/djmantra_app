@@ -360,3 +360,6 @@ in V76 / V77 / V78 and the whole song: docs/ui-reference/waveform-sections-v76-v
 harmony color. Low color is same as drums color. Meaning the font must have the same color in the labels"). Mixer tab,
 both decks, EQ and NEURAL MIX mode: HIGH and HARMONY both blue, MID and VOCALS both green, LOW and DRUMS both red, in
 the labels above and below, the outer knob's pointer and the ghost markers; no violet left on these knobs.
+## 78. (V78) GHOSTS EASIER TO SEE (r42 part 72 note: "the ghost is faint and small, easy to miss on the phone"): the
+ghost pointer is wider and stronger (70 %), the rim marker bigger and filled with the knob's colour; the fader's ghost
+handle (FX depth pop-up) stronger too. Repeat part 72's test: the ghost is obvious at arm's length.
