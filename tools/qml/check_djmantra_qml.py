@@ -33,7 +33,7 @@ STUB = {
     "WaveformOverview.qml": "import QtQuick 2.12\nItem {\n enum Channels { LeftChannel, RightChannel, BothChannels }\n"
                             " enum Renderer { RGB, Filtered, HSV, Djay }\n property var player\n property int channels\n"
                             " property int renderer\n property color colorHigh\n property color colorMid\n"
-                            " property color colorLow\n property bool normalize\n property bool threeBand\n}\n",
+                            " property color colorLow\n property bool normalize\n property bool threeBand\n property bool djayMix\n}\n",
     "ControlProxy.qml": "import QtQuick 2.12\nQtObject {\n property string group\n property string key\n"
                         " property real value: 0\n property real parameter: 0\n property int maxRate: 0\n}\n",
     "PlayerManager.qml": "pragma Singleton\nimport QtQuick 2.12\nQtObject {\n"
