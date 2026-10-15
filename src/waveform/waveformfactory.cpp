@@ -12,8 +12,18 @@ Waveform* WaveformFactory::loadWaveformFromAnalysis(
 }
 
 // static
+// static
+bool WaveformFactory::djayBands() {
+#ifdef __ANDROID_PORT__
+    return true;
+#else
+    static const bool on = qEnvironmentVariableIsSet("DJMANTRA_DJAY_BANDS");
+    return on;
+#endif
+}
+
 WaveformFactory::VersionClass WaveformFactory::waveformVersionToVersionClass(const QString& version) {
-    if (version == WAVEFORM_CURRENT_VERSION) {
+    if (version == currentWaveformVersion()) {
         // use, since is our version
         return VC_USE;
     }
@@ -39,7 +49,7 @@ WaveformFactory::VersionClass WaveformFactory::waveformVersionToVersionClass(con
 
 // static
 WaveformFactory::VersionClass WaveformFactory::waveformSummaryVersionToVersionClass(const QString& version) {
-    if (version == WAVEFORMSUMMARY_CURRENT_VERSION) {
+    if (version == currentWaveformSummaryVersion()) {
         // use, since is our version
         return VC_USE;
     }
@@ -65,20 +75,24 @@ WaveformFactory::VersionClass WaveformFactory::waveformSummaryVersionToVersionCl
 
 // static
 QString WaveformFactory::currentWaveformVersion() {
-    return WAVEFORM_CURRENT_VERSION;
+    // other bands, other data: analysed again
+    return djayBands() ? QStringLiteral(WAVEFORM_CURRENT_VERSION "-djay") : QStringLiteral(WAVEFORM_CURRENT_VERSION);
 }
 
 // static
 QString WaveformFactory::currentWaveformSummaryVersion() {
-    return WAVEFORMSUMMARY_CURRENT_VERSION;
+    // other bands, other data: analysed again
+    return djayBands() ? QStringLiteral(WAVEFORMSUMMARY_CURRENT_VERSION "-djay") : QStringLiteral(WAVEFORMSUMMARY_CURRENT_VERSION);
 }
 
 // static
 QString WaveformFactory::currentWaveformDescription() {
-    return WAVEFORM_CURRENT_DESCRIPTION;
+    // other bands, other data: analysed again
+    return djayBands() ? QStringLiteral(WAVEFORM_CURRENT_DESCRIPTION " (djay bands)") : QStringLiteral(WAVEFORM_CURRENT_DESCRIPTION);
 }
 
 // static
 QString WaveformFactory::currentWaveformSummaryDescription() {
-    return WAVEFORMSUMMARY_CURRENT_DESCRIPTION;
+    // other bands, other data: analysed again
+    return djayBands() ? QStringLiteral(WAVEFORMSUMMARY_CURRENT_DESCRIPTION " (djay bands)") : QStringLiteral(WAVEFORMSUMMARY_CURRENT_DESCRIPTION);
 }

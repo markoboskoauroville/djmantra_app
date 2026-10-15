@@ -45,6 +45,11 @@ class WaveformFactory {
             const AnalysisDao::AnalysisInfo& analysis);
     static VersionClass waveformVersionToVersionClass(const QString& version);
     static VersionClass waveformSummaryVersionToVersionClass(const QString& version);
+    /// DJ Mantra: djay's bands for the waveform colours (bass below 200 Hz
+    /// red, mids to 2.5 kHz green, highs blue) instead of Mixxx's 600 Hz /
+    /// 4 kHz. On Android always; on the desktop with DJMANTRA_DJAY_BANDS set
+    /// (the skin renders), so Mixxx's own tests keep their reference data.
+    static bool djayBands();
     static QString currentWaveformVersion();
     static QString currentWaveformDescription();
     static QString currentWaveformSummaryVersion();

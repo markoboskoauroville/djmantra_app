@@ -17,6 +17,10 @@ class WaveformRenderBeat : public WaveformRendererAbstract {
   private:
     QColor m_beatColor;
     QVector<QLineF> m_beats;
+    // DJ Mantra (skin <BarNumbers>true</BarNumbers>): the bar number at the
+    // top of every bar's first beat, as djay shows it
+    bool m_barNumbers = false;
+    QColor m_barNumberColor;
 
     DISALLOW_COPY_AND_ASSIGN(WaveformRenderBeat);
 };

@@ -421,6 +421,13 @@ bool WaveformWidgetFactory::setConfig(UserSettingsPointer config) {
             m_config->getValueString(ConfigKey("[Waveform]","WaveformType")).toInt(&ok));
     // Store the widget type on m_configType for later initialization.
     // We will initialize the objects later because of a problem with GL on QT 5.14.2 on Windows
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: djay's waveform, every column in the colour of its
+    // frequencies (bass red, mids green, highs blue); the phone has no GL
+    // waveforms, so the software RGB one (Marko, 15.10.2026)
+    type = WaveformWidgetType::RGBWaveform;
+    ok = true;
+#endif
     if (!ok || !setWidgetType(type, &m_configType)) {
         setWidgetType(autoChooseWidgetType(), &m_configType);
     }

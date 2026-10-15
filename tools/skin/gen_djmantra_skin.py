@@ -270,6 +270,13 @@ def bpm(n, align="center", size="-1me,-1min"):
 </Number>""" % (size, align, grp(n))
 
 
+# djay's waveform colours (Marko's screenshots of djay One Deck, 15.10.2026):
+# bass red, mids green, highs blue; their mixes give yellow, orange, cyan
+DJAY_RGB = ("<SignalRGBLowColor>#ff2a1e</SignalRGBLowColor>"
+            "<SignalRGBMidColor>#3ee03e</SignalRGBMidColor>"
+            "<SignalRGBHighColor>#3c78ff</SignalRGBHighColor>")
+
+
 def overview(n, height=26):
     # height None: as tall as there is room
     return """<Overview>
@@ -278,7 +285,8 @@ def overview(n, height=26):
   <Group>%s</Group>
   <BgColor>%s</BgColor>
   <SignalColor>#ff4040</SignalColor>
-  <PlayedOverlayColor>#60000000</PlayedOverlayColor>
+  %s
+  <PlayedOverlayColor>#00000000</PlayedOverlayColor>
   <PlayPosColor>%s</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
   <LabelFontSize>9</LabelFontSize>
@@ -304,7 +312,7 @@ def overview(n, height=26):
     <DisabledOpacity>0.3</DisabledOpacity>
   </MarkRange>
   <Connection><ConfigKey>%s,playposition</ConfigKey></Connection>
-</Overview>""" % ("-1me" if height is None else "%df" % height, grp(n), TOPBAR, RED, grp(n))
+</Overview>""" % ("-1me" if height is None else "%df" % height, grp(n), TOPBAR, DJAY_RGB, RED, grp(n))
 
 
 def visual(n, vertical):
@@ -312,13 +320,17 @@ def visual(n, vertical):
   <ObjectName>Waveform</ObjectName>
   <TooltipId>waveform_display</TooltipId>
   <SizePolicy>me,me</SizePolicy>
-  <Channel>%d</Channel>
-  <Orientation>%s</Orientation>
+  <Channel>%(n)d</Channel>
+  <Orientation>%(o)s</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  %(rgb)s
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
-  <PlayPosColor>%s</PlayPosColor>
+  <PlayPosColor>%(red)s</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
   <DefaultMark>
     <Align>bottom|right</Align>
@@ -342,7 +354,7 @@ def visual(n, vertical):
     <DisabledColor>#ffffff</DisabledColor>
     <DisabledOpacity>0.2</DisabledOpacity>
   </MarkRange>
-</Visual>""" % (n, "vertical" if vertical else "horizontal", RED)
+</Visual>""" % dict(n=n, o="vertical" if vertical else "horizontal", red=RED, rgb=DJAY_RGB)
 
 
 # --------------------------------------------------------------------------

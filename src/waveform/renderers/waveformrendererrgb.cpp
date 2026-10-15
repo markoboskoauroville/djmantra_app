@@ -13,7 +13,9 @@ WaveformRendererRGB::WaveformRendererRGB(
 WaveformRendererRGB::~WaveformRendererRGB() {
 }
 
-void WaveformRendererRGB::onSetup(const QDomNode& /* node */) {
+void WaveformRendererRGB::onSetup(const QDomNode& node) {
+    m_fullHeight = node.firstChildElement(QStringLiteral("SignalFullHeight")).text() ==
+            QLatin1String("true");
 }
 
 void WaveformRendererRGB::draw(
@@ -88,7 +90,9 @@ void WaveformRendererRGB::draw(
     const int breadth = m_waveformRenderer->getBreadth();
     const float halfBreadth = static_cast<float>(breadth) / 2.0f;
 
-    const float heightFactor = allGain * halfBreadth / sqrtf(255 * 255 * 3);
+    const float heightFactor = m_fullHeight
+            ? allGain * halfBreadth * 0.96f / 255
+            : allGain * halfBreadth / sqrtf(255 * 255 * 3);
 
     // Draw reference line
     painter->setPen(m_pColors->getAxesColor());
@@ -186,8 +190,8 @@ void WaveformRendererRGB::draw(
                     break;
                 default:
                     painter->drawLine(
-                        x, (int)(halfBreadth - heightFactor * sqrtf(maxAll)),
-                        x, (int)(halfBreadth + heightFactor * sqrtf(maxAllNext)));
+                        x, (int)(halfBreadth - math_min(halfBreadth, heightFactor * sqrtf(maxAll))),
+                        x, (int)(halfBreadth + math_min(halfBreadth, heightFactor * sqrtf(maxAllNext))));
             }
         }
     }

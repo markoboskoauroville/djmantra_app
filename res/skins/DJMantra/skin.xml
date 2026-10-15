@@ -167,7 +167,8 @@
   <Group>[Channel1]</Group>
   <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
-  <PlayedOverlayColor>#60000000</PlayedOverlayColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <PlayedOverlayColor>#00000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
   <LabelFontSize>9</LabelFontSize>
@@ -266,7 +267,8 @@
   <Group>[Channel2]</Group>
   <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
-  <PlayedOverlayColor>#60000000</PlayedOverlayColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <PlayedOverlayColor>#00000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
   <LabelFontSize>9</LabelFontSize>
@@ -804,8 +806,12 @@
   <Channel>1</Channel>
   <Orientation>vertical</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
@@ -840,8 +846,12 @@
   <Channel>2</Channel>
   <Orientation>vertical</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
@@ -2693,7 +2703,8 @@
   <Group>[Channel1]</Group>
   <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
-  <PlayedOverlayColor>#60000000</PlayedOverlayColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <PlayedOverlayColor>#00000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
   <LabelFontSize>9</LabelFontSize>
@@ -2805,7 +2816,8 @@
   <Group>[Channel2]</Group>
   <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
-  <PlayedOverlayColor>#60000000</PlayedOverlayColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <PlayedOverlayColor>#00000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
   <LabelFontSize>9</LabelFontSize>
@@ -3615,8 +3627,12 @@
   <Channel>1</Channel>
   <Orientation>horizontal</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
@@ -3651,8 +3667,12 @@
   <Channel>2</Channel>
   <Orientation>horizontal</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
@@ -5253,8 +5273,12 @@
   <Channel>1</Channel>
   <Orientation>vertical</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
@@ -5289,8 +5313,12 @@
   <Channel>2</Channel>
   <Orientation>vertical</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
@@ -5354,8 +5382,12 @@
   <Channel>1</Channel>
   <Orientation>horizontal</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
@@ -5390,8 +5422,12 @@
   <Channel>2</Channel>
   <Orientation>horizontal</Orientation>
   <BgColor>#000000</BgColor>
-  <SignalColor>#ff4040</SignalColor>
-  <BeatColor>#5a5a60</BeatColor>
+  <SignalColor>#2e2e33</SignalColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <SignalFullHeight>true</SignalFullHeight>
+  <BeatColor>#4a4a4f</BeatColor>
+  <BarNumbers>true</BarNumbers>
+  <BarNumberColor>#9a9a9a</BarNumberColor>
   <AxesColor>#00000000</AxesColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
@@ -5583,7 +5619,8 @@
   <Group>[Channel1]</Group>
   <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
-  <PlayedOverlayColor>#60000000</PlayedOverlayColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <PlayedOverlayColor>#00000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
   <LabelFontSize>9</LabelFontSize>
@@ -5828,7 +5865,8 @@
   <Group>[Channel1]</Group>
   <BgColor>#0e1011</BgColor>
   <SignalColor>#ff4040</SignalColor>
-  <PlayedOverlayColor>#60000000</PlayedOverlayColor>
+  <SignalRGBLowColor>#ff2a1e</SignalRGBLowColor><SignalRGBMidColor>#3ee03e</SignalRGBMidColor><SignalRGBHighColor>#3c78ff</SignalRGBHighColor>
+  <PlayedOverlayColor>#00000000</PlayedOverlayColor>
   <PlayPosColor>#ff2a2a</PlayPosColor>
   <EndOfTrackColor>#ff6600</EndOfTrackColor>
   <LabelFontSize>9</LabelFontSize>
