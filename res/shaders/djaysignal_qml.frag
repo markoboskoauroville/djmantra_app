@@ -38,7 +38,7 @@ layout(std140, binding = 0) uniform buf {
     int fineLength;    // the real wave's points (0 = not built yet), qml/finewave.h
     int fineStride;
     float pixelRatio;  // device pixels per item pixel (sharp edges, V77)
-    int waveStyle;     // 0 = 3-BAND (sections, V78), 1 = ICON (one colour per bar, V77)
+    int waveStyle;     // 0 = 3-BAND (sections, V78), 1 = ICON (one colour per bar, V77), 2 = DJAY (V80)
 };
 
 layout(binding = 1) uniform sampler2D waveformTexture;
@@ -106,14 +106,18 @@ void main(void) {
     float pr = max(pixelRatio, 1.0);
     // a bar is at least ~3 px: a power of two of points (stable while zooming in steps)
     float barUnits = exp2(ceil(log2(max(1.0, 3.0 / max(pxPerUnit, 1e-4)))));
+    if (waveStyle == 2) {
+        // DJAY (V80): no bars, a column per device pixel, as dense as djay's
+        barUnits = max(1.0, 1.0 / max(pxPerUnit * pr, 1e-4));
+    }
     float visual = firstVisualIndex + uv.x * units;
     float bar = floor(visual / barUnits);
     float barPx = barUnits * pxPerUnit;
     float inBar = (visual / barUnits - bar) * barPx;      // px from the bar's left edge
-    float gap = clamp(barPx * 0.35, 1.0, 2.0);
+    float gap = waveStyle == 2 ? 0.0 : clamp(barPx * 0.35, 1.0, 2.0);
     float body = barPx - gap;
     // the bar's coverage of this device pixel across (sharp, no shimmer while scrolling)
-    float across = clamp(min(inBar, body - inBar) * pr + 0.5, 0.0, 1.0);
+    float across = waveStyle == 2 ? 1.0 : clamp(min(inBar, body - inBar) * pr + 0.5, 0.0, 1.0);
     float first = bar * barUnits;
     if (across > 0.0 && first >= 0.0 && first * 2.0 <= float(waveformLength) - 2.0) {
         // the bar's window: its own points, at least ~145 ms (64 points) round its middle, so a
@@ -145,7 +149,22 @@ void main(void) {
         float dist = abs(uv.y - 0.5) * 2.0;
         float halfHeight = framebufferSize.y * 0.5;
         float px = 1.0 / (halfHeight * pr);                 // one device pixel, in lane units
-        if (waveStyle == 0) {
+        if (waveStyle == 2) {
+            // DJAY (V80, Marko 15.10.2026 with djay One Deck screenshots: "emulate exactly this
+            // style of waveform"): every column the MIX of its bands as djay draws it, bass red,
+            // mids green, highs blue added (bass + mids yellow / orange, mids + highs cyan,
+            // bass + highs magenta), brightest at full; mirrored, as tall as its loudest band
+            vec3 w = peakBands * vec3(1.0, 1.0, 0.6);
+            vec3 mixed = w.x * vec3(1.0, 0.16, 0.10) + w.y * vec3(0.22, 0.90, 0.22)
+                    + w.z * vec3(0.22, 0.45, 1.0);
+            float strongest = max(mixed.r, max(mixed.g, mixed.b));
+            float loud = max(peakBands.x, max(peakBands.y, peakBands.z));
+            vec3 colour = strongest > 1e-6 ? mixed / strongest : vec3(0.19);
+            float outer = min(1.0, clamp(loud, 0.0, 1.5) * heightGain);
+            outer = max(outer, loud > 0.02 ? px : 0.0);
+            float down = clamp((outer - dist) * halfHeight * pr + 0.5, 0.0, 1.0);
+            outputColor = vec4(colour * down, down);
+        } else if (waveStyle == 0) {
             // 3-BAND (V78, Marko 15.10.2026: "sections must be clearly seen through the waveform
             // shape and colors ... even when the vertical lines make mistake"; rekordbox's 3-band
             // view in the icon's colours): three nested layers per bar, BASS red at the back,

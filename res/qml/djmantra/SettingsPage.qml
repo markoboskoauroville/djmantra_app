@@ -33,7 +33,7 @@ Rectangle {
     property real stopTime: Number(Mixxx.DJMantra.setting("stop_time", "0"))
     property string laneStyle: Mixxx.DJMantra.setting("lane_style", "mirrored")
     property string laneHeight: Mixxx.DJMantra.setting("lane_height", "djay")
-    property string waveStyle: Mixxx.DJMantra.setting("wave_style", "3band")
+    property string waveStyle: Mixxx.DJMantra.setting("wave_style", "djay")
     property int cqFx: Number(Mixxx.DJMantra.setting("cq_fx", "1"))
     property int seenVersion: -1
     signal done()
@@ -182,13 +182,14 @@ Rectangle {
                 spacing: 6
 
                 Repeater {
-                    model: [["3band", qsTr("3-BAND (sections)")], ["icon", qsTr("ICON (one colour)")]]
+                    // V80: DJAY (the bands' colours mixed, djay's look) is the default
+                    model: [["djay", qsTr("DJAY")], ["3band", qsTr("3-BAND")], ["icon", qsTr("ICON")]]
 
                     delegate: DButton {
                         required property var modelData
 
                         objectName: "waveStyle_" + modelData[0]
-                        width: (column.width - 6) / 2
+                        width: (column.width - 12) / 3
                         height: 40
                         text: modelData[1]
                         fontSize: 13

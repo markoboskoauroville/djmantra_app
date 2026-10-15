@@ -25,6 +25,9 @@ QmlWaveformOverview::QmlWaveformOverview(QQuickItem* parent)
     connect(this, &QmlWaveformOverview::threeBandChanged, this, [this] {
         update();
     });
+    connect(this, &QmlWaveformOverview::djayMixChanged, this, [this] {
+        update();
+    });
 }
 
 QmlPlayerProxy* QmlWaveformOverview::getPlayer() const {
@@ -359,6 +362,34 @@ void QmlWaveformOverview::drawDjay(QPainter* pPainter,
     pPainter->setClipRect(boundingRect());
     pPainter->setRenderHint(QPainter::Antialiasing, false);
     pPainter->setPen(Qt::NoPen);
+    if (m_djayMix) {
+        // DJAY (V80, Marko 15.10.2026, djay One Deck screenshots): as the scrolling waveform's
+        // DJAY style, a column per pixel, no gaps, its colour the mix of the bands at its
+        // loudest moment (bass red + mids green + highs blue, brightest at full), mirrored and
+        // as tall as the loudest point
+        for (int x = 0; x < columns; ++x) {
+            const Column& c = cols[x];
+            const int i = c.loudest;
+            const double low = (pWaveform->getLow(2 * i) + pWaveform->getLow(2 * i + 1)) / 2.0;
+            const double mid = (pWaveform->getMid(2 * i) + pWaveform->getMid(2 * i + 1)) / 2.0;
+            const double high =
+                    (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0 * 0.6;
+            const double r = low * 1.0 + mid * 0.22 + high * 0.22;
+            const double g = low * 0.16 + mid * 0.90 + high * 0.45;
+            const double b = low * 0.10 + mid * 0.22 + high * 1.0;
+            const double strongest = std::max({r, g, b});
+            const QColor colour = strongest > 0
+                    ? QColor::fromRgbF(static_cast<float>(r / strongest),
+                              static_cast<float>(g / strongest),
+                              static_cast<float>(b / strongest))
+                    : QColor(48, 48, 48);
+            const double outer =
+                    std::max(0.5, std::round(std::min(1.0, c.peak * heightScale) * middle));
+            pPainter->fillRect(QRectF(x, std::round(middle - outer), 1.0, 2 * outer), colour);
+        }
+        pPainter->restore();
+        return;
+    }
     if (m_threeBand) {
         // 3-BAND (V78, Marko 15.10.2026: "sections must be clearly seen through the waveform
         // shape and colors"): as res/shaders/djaysignal_qml.frag, three nested layers per bar,

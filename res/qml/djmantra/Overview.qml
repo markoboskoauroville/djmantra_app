@@ -83,8 +83,9 @@ Rectangle {
         // djay Pro's overview, mirrored, its colours (src/waveform/djaycolor.h)
         renderer: Mixxx.WaveformOverview.Renderer.Djay
         normalize: true
-        // V78: 3-BAND (sections) unless Settings -> WAVEFORM says ICON
-        threeBand: Mixxx.DJMantra.setting("wave_style", "3band") !== "icon"
+        // Settings -> WAVEFORM: DJAY (V80, the default), 3-BAND (V78) or ICON (V77)
+        threeBand: Mixxx.DJMantra.setting("wave_style", "djay") === "3band"
+        djayMix: Mixxx.DJMantra.setting("wave_style", "djay") === "djay"
         colorLow: "#ff3b30"
         colorMid: "#4cd964"
         colorHigh: "#8fc1ff"

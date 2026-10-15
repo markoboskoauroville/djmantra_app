@@ -29,6 +29,9 @@ class QmlWaveformOverview : public QQuickPaintedItem {
     /// DJ Mantra V78: the djay renderer as 3-BAND (sections: bass, mids and highs as nested
     /// layers) or, false, ICON (one colour per bar, V77)
     Q_PROPERTY(bool threeBand MEMBER m_threeBand NOTIFY threeBandChanged)
+    /// DJ Mantra V80: DJAY, every column the mix of its bands' colours (djay's look); wins
+    /// over threeBand
+    Q_PROPERTY(bool djayMix MEMBER m_djayMix NOTIFY djayMixChanged)
     QML_NAMED_ELEMENT(WaveformOverview)
 
   public:
@@ -75,6 +78,7 @@ class QmlWaveformOverview : public QQuickPaintedItem {
     void colorLowChanged(const QColor& color);
     void normalizeChanged(bool normalize);
     void threeBandChanged(bool threeBand);
+    void djayMixChanged(bool djayMix);
 
   private:
     void setCurrentTrack(TrackPointer pTrack);
@@ -98,6 +102,7 @@ class QmlWaveformOverview : public QQuickPaintedItem {
     QColor m_colorLow;
     bool m_normalize = false;
     bool m_threeBand = true;
+    bool m_djayMix = false;
 };
 
 } // namespace qml
