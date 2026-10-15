@@ -363,3 +363,9 @@ the labels above and below, the outer knob's pointer and the ghost markers; no v
 ## 78. (V78) GHOSTS EASIER TO SEE (r42 part 72 note: "the ghost is faint and small, easy to miss on the phone"): the
 ghost pointer is wider and stronger (70 %), the rim marker bigger and filled with the knob's colour; the fader's ghost
 handle (FX depth pop-up) stronger too. Repeat part 72's test: the ghost is obvious at arm's length.
+## 79. (V79) FX PAD LIGHT (r42 V77 BUG: pad 1 switched FLANGER on, the pad stayed dark). The script now lights the pad at
+once on the press (the app's state takes over after it answers) and logs every FX-pad LED it sends. Test: SHIFT + FX,
+pad 1: the pad lights within a moment; pad 1 again: dark; pad 3: pad 3 lit, pad 1 dark. Logcat lines to copy into the
+report: `MixUltra: FX PADS LEDs deck 1 status 96 lit [60]` and `MixUltra: fx_active_1 = 1 (mode fxpads)`. If the log
+says `lit [60]` but the pad is dark, the controller does not take notes 60-67 in its SLICER mode: say so (photo of the
+pads) and I map the light to the notes it takes. Then the rest of 69 (hold, SHIFT + pad, deck 2), 71, 70.

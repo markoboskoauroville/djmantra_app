@@ -123,13 +123,18 @@ MixUltra.connectDeckLeds = function(deck) {
             MixUltra.refreshPads.bind(null, deck)));
     }
     // FX PADS: the app says which effect is on (Effects.qml)
-    var fxActive = engine.makeConnection("[DJMantra]", "fx_active_" + deck.number, function() {
+    var fxActive = engine.makeConnection("[DJMantra]", "fx_active_" + deck.number, function(value) {
+        print("MixUltra: fx_active_" + deck.number + " = " + value + " (mode " + deck.mode + ")");
+        // the app has answered: its value from now on
+        deck.fxLitUntil = 0;
         if (deck.mode === "fxpads") {
             MixUltra.refreshPads(deck);
         }
     });
     if (fxActive) {
         deck.connections.push(fxActive);
+    } else {
+        print("MixUltra: no [DJMantra] fx_active_" + deck.number + " control (FX pad lights from the script only)");
     }
 };
 
@@ -179,8 +184,12 @@ MixUltra.showBeat = function(deck, beat) {
 // With beat lights on, only the running light is shown so that the grid stays readable.
 MixUltra.padBaseValue = function(deck, pad) {
     if (deck.mode === "fxpads") {
-        // the pad of the deck's effect that is on (1..16, 9..16 are SHIFT + pad 1..8)
+        // the pad of the deck's effect that is on (1..16, 9..16 are SHIFT + pad 1..8): what the
+        // app says, else what this script expects after the last press (r42: the pad stayed dark)
         var active = engine.getValue("[DJMantra]", "fx_active_" + deck.number);
+        if (deck.fxLit !== undefined && deck.fxLitUntil > Date.now()) {
+            active = deck.fxLit;
+        }
         return active > 0 && (active - 1) % 8 === pad ? 0x7F : 0x00;
     }
     if (MixUltra.BEAT_LIGHTS) {
@@ -196,8 +205,18 @@ MixUltra.padBaseValue = function(deck, pad) {
 };
 
 MixUltra.refreshPads = function(deck) {
+    var lit = [];
     for (var pad = 0; pad < 8; pad++) {
-        midi.sendShortMsg(deck.padStatus, MixUltra.padNote(deck, pad), MixUltra.padBaseValue(deck, pad));
+        var value = MixUltra.padBaseValue(deck, pad);
+        midi.sendShortMsg(deck.padStatus, MixUltra.padNote(deck, pad), value);
+        if (value > 0) {
+            lit.push(MixUltra.padNote(deck, pad).toString(16));
+        }
+    }
+    if (deck.mode === "fxpads") {
+        // r42: the FX pad stayed dark; the log shows what was sent (notes 60-67 on 96 / 97)
+        print("MixUltra: FX PADS LEDs deck " + deck.number + " status " + deck.padStatus.toString(16)
+            + " lit [" + lit.join(",") + "]");
     }
     var beat = deck.litPad;
     deck.litPad = -1;
@@ -484,9 +503,18 @@ MixUltra.pad = function(channel, control, value, status, group) {
         var number = pad + 1 + (shifted ? 8 : 0);
         if (pressed) {
             deck.fxPress = {number: number, time: Date.now()};
+            // light it at once, as the app will (the same pad again: off); the app's
+            // fx_active_<deck> takes over after 2 s
+            var activeNow = engine.getValue("[DJMantra]", "fx_active_" + deck.number);
+            deck.fxLit = activeNow === number ? 0 : number;
+            deck.fxLitUntil = Date.now() + 2000;
+            MixUltra.refreshPads(deck);
             MixUltra.tellApp("fx_pad", deck.number * 100 + number);
         } else if (deck.fxPress && deck.fxPress.number === number) {
             if (Date.now() - deck.fxPress.time >= MixUltra.FX_HOLD_MS) {
+                deck.fxLit = 0;
+                deck.fxLitUntil = Date.now() + 2000;
+                MixUltra.refreshPads(deck);
                 MixUltra.tellApp("fx_pad_off", deck.number * 100 + number);
             }
             deck.fxPress = null;
