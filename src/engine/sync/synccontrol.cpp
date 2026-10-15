@@ -12,6 +12,7 @@
 #include "track/track.h"
 #include "util/assert.h"
 #include "util/logger.h"
+#include "util/math.h"
 
 const double SyncControl::kBpmUnity = 1.0;
 const double SyncControl::kBpmHalve = 0.5;
@@ -119,6 +120,20 @@ void SyncControl::setEngineControls(RateControl* pRateControl,
     m_pLocalBpm = new ControlProxy(getGroup(), "local_bpm", this);
 
     m_pRateRatio = new ControlProxy(getGroup(), "rate_ratio", this);
+    m_pRateRange = new ControlProxy(getGroup(), "rateRange", this);
+#ifdef __ANDROID_PORT__
+    constexpr bool kLimitByDefault = true;
+#else
+    constexpr bool kLimitByDefault = false;
+#endif
+    m_pLimitToFaderRange = std::make_unique<ControlObject>(
+            ConfigKey(getGroup(), QStringLiteral("sync_within_fader_range")));
+    m_pLimitToFaderRange->set(getConfig()->getValue(
+                                      ConfigKey(QStringLiteral("[DJMantra]"),
+                                              QStringLiteral("sync_within_fader_range")),
+                                      kLimitByDefault)
+                    ? 1.0
+                    : 0.0);
     m_pRateRatio->connectValueChanged(this, &SyncControl::slotRateChanged, Qt::DirectConnection);
 
     m_pSyncPhaseButton = new ControlProxy(getGroup(), "beatsync_phase", this);
@@ -265,8 +280,20 @@ void SyncControl::updateLeaderBpm(mixxx::Bpm bpm) {
 
     const auto localBpm = getLocalBpm();
     if (localBpm.isValid()) {
-        m_pRateRatio->set(bpm * m_leaderBpmAdjustFactor / localBpm);
+        m_pRateRatio->set(limitToFaderRange(bpm * m_leaderBpmAdjustFactor / localBpm));
     }
+}
+
+double SyncControl::limitToFaderRange(double rateRatio) const {
+    if (!m_pLimitToFaderRange || !m_pLimitToFaderRange->toBool() || !m_pRateRange) {
+        return rateRatio;
+    }
+    // rateRange: the fader's reach as a fraction (0.08 = +-8 %)
+    const double range = m_pRateRange->get();
+    if (range <= 0) {
+        return rateRatio;
+    }
+    return math_clamp(rateRatio, 1.0 - range, 1.0 + range);
 }
 
 void SyncControl::notifyLeaderParamSource() {
@@ -435,7 +462,7 @@ void SyncControl::slotControlBeatSyncTempo(double value) {
     }
 
     double multiplier = determineBpmMultiplier(fileBpm(), target->getBaseBpm());
-    m_pRateRatio->set(target->getBpm() * multiplier / localBpm);
+    m_pRateRatio->set(limitToFaderRange(target->getBpm() * multiplier / localBpm));
 }
 
 void SyncControl::slotControlBeatSync(double value) {
