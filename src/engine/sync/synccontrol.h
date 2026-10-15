@@ -130,6 +130,13 @@ class SyncControl : public EngineControl, public Syncable {
     // The amount we should multiply the leader BPM by to find a good sync match.
     // Sometimes this is 2 or 0.5.
     double m_leaderBpmAdjustFactor;
+    // DJ Mantra: sync keeps the tempo within the pitch fader's range
+    // ([DJMantra],sync_within_fader_range; on by default on Android), so a
+    // far-off or wrong BPM cannot race or crawl a deck (Marko, 15.10.2026)
+    // [ChannelN],sync_within_fader_range, default from the setting
+    double limitToFaderRange(double rateRatio) const;
+    std::unique_ptr<ControlObject> m_pLimitToFaderRange;
+    ControlProxy* m_pRateRange = nullptr;
     // It is handy to store the raw reported target beat distance in case the
     // multiplier changes and we need to recalculate the target distance.
     double m_unmultipliedTargetBeatDistance;

@@ -3118,3 +3118,36 @@ TEST_F(EngineSyncTest, BeatContextRounding) {
             ControlObject::get(ConfigKey(m_sGroup1, "playposition")),
             kMaxFloatingPointErrorHighPrecision);
 }
+
+// DJ Mantra (Marko, 15.10.2026): with sync_within_fader_range a follower
+// never leaves its pitch fader's range, however far the leader's tempo is
+TEST_F(EngineSyncTest, DJMantraSyncStaysWithinFaderRange) {
+    mixxx::BeatsPointer pBeats1 = mixxx::Beats::fromConstTempo(
+            m_pTrack1->getSampleRate(), mixxx::audio::kStartFramePos, mixxx::Bpm(120));
+    m_pTrack1->trySetBeats(pBeats1);
+    mixxx::BeatsPointer pBeats2 = mixxx::Beats::fromConstTempo(
+            m_pTrack2->getSampleRate(), mixxx::audio::kStartFramePos, mixxx::Bpm(100));
+    m_pTrack2->trySetBeats(pBeats2);
+    ControlObject::set(ConfigKey(m_sGroup1, "rateRange"), 0.08);
+    ControlObject::set(ConfigKey(m_sGroup2, "rateRange"), 0.08);
+    ControlObject::set(ConfigKey(m_sGroup2, "sync_within_fader_range"), 1.0);
+
+    ControlObject::set(ConfigKey(m_sGroup1, "play"), 1.0);
+    ControlObject::set(ConfigKey(m_sGroup2, "play"), 1.0);
+    // deck 1 first: it leads, deck 2 follows
+    ControlObject::set(ConfigKey(m_sGroup1, "sync_enabled"), 1.0);
+    ProcessBuffer();
+    ControlObject::set(ConfigKey(m_sGroup2, "sync_enabled"), 1.0);
+    ProcessBuffer();
+
+    // 100 -> 120 BPM would need +20 %: it stops at the fader's +8 %
+    EXPECT_NEAR(1.08, ControlObject::get(ConfigKey(m_sGroup2, "rate_ratio")), 1e-9);
+    EXPECT_NEAR(1.0, ControlObject::get(ConfigKey(m_sGroup1, "rate_ratio")), 1e-9);
+
+    // without the limit (Mixxx's way) the follower matches the leader
+    ControlObject::set(ConfigKey(m_sGroup2, "sync_within_fader_range"), 0.0);
+    ControlObject::set(ConfigKey(m_sGroup2, "sync_enabled"), 0.0);
+    ControlObject::set(ConfigKey(m_sGroup2, "sync_enabled"), 1.0);
+    ProcessBuffer();
+    EXPECT_NEAR(1.2, ControlObject::get(ConfigKey(m_sGroup2, "rate_ratio")), 1e-6);
+}
