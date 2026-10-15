@@ -8,7 +8,7 @@
 //   knobs      14-bit (MSB n, LSB n + 0x20), mapped in the XML
 //   jog        touch 08, top CC 0A, outer ring CC 09, 01 = +1 tick, 7F = -1 tick, ~240 ticks a turn
 //   modes      0F HOT CUE, 10 LOOP, 11 FX, 12 NEURAL MIX; with SHIFT 13 PITCH PLAY, 14 BOUNCE LOOP,
-//              15 SLICER, 16 SAMPLER (same deck channel). The controller switches the pad mode
+//              15 SLICER (DJ Mantra: FX PADS), 16 SAMPLER (same deck channel). The controller switches the pad mode
 //              and its LEDs itself.
 //   pads       note = mode base + pad (0-7), + 8 with SHIFT; bases 00 10 20 30 40 50 60 70
 //
@@ -33,15 +33,17 @@ MixUltra.JOG_SEEK_SCALE = 6;      // SHIFT + top: fast seek
 
 MixUltra.MODE_BASES = {
     hotcue: 0x00, loop: 0x10, fx: 0x20, neural: 0x30,
-    pitchplay: 0x40, bounce: 0x50, slicer: 0x60, sampler: 0x70,
+    pitchplay: 0x40, bounce: 0x50, fxpads: 0x60, sampler: 0x70,
 };
 MixUltra.MODE_BUTTONS = {
     0x0F: "hotcue", 0x10: "loop", 0x11: "fx", 0x12: "neural",
-    0x13: "pitchplay", 0x14: "bounce", 0x15: "slicer", 0x16: "sampler",
+    0x13: "pitchplay", 0x14: "bounce", 0x15: "fxpads", 0x16: "sampler",
 };
 MixUltra.LOOP_SIZES = [0.25, 0.5, 1, 2, 4, 8, 16, 32];
 MixUltra.ROLL_SIZES = [0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8];
 MixUltra.PITCH_STEPS = [-3, -2, -1, 0, 1, 2, 3, 4];
+// FX PADS: a pad held longer than this is on only while held (a tap stays on)
+MixUltra.FX_HOLD_MS = 500;
 
 MixUltra.decks = {};
 
@@ -55,6 +57,7 @@ MixUltra.Deck = function(number) {
     // After power-on the firmware is in HOT CUE mode
     this.mode = "hotcue";
     this.litPad = -1;
+    this.fxPress = null;   // FX PADS: the pad held down {number, time}
     this.connections = [];
 };
 
@@ -119,6 +122,15 @@ MixUltra.connectDeckLeds = function(deck) {
         deck.connections.push(engine.makeConnection(deck.group, "hotcue_" + i + "_status",
             MixUltra.refreshPads.bind(null, deck)));
     }
+    // FX PADS: the app says which effect is on (Effects.qml)
+    var fxActive = engine.makeConnection("[DJMantra]", "fx_active_" + deck.number, function() {
+        if (deck.mode === "fxpads") {
+            MixUltra.refreshPads(deck);
+        }
+    });
+    if (fxActive) {
+        deck.connections.push(fxActive);
+    }
 };
 
 MixUltra.refreshLeds = function() {
@@ -145,7 +157,8 @@ MixUltra.clearPads = function(deck) {
 };
 
 MixUltra.showBeat = function(deck, beat) {
-    if (!MixUltra.BEAT_LIGHTS) {
+    // FX PADS show the effect that is on instead
+    if (!MixUltra.BEAT_LIGHTS || deck.mode === "fxpads") {
         return;
     }
     var pad = beat >= 0 ? Math.floor(beat) % 8 : -1;
@@ -165,6 +178,11 @@ MixUltra.showBeat = function(deck, beat) {
 // The value of a pad without the beat light: mode state (e.g. a set hot cue) or off.
 // With beat lights on, only the running light is shown so that the grid stays readable.
 MixUltra.padBaseValue = function(deck, pad) {
+    if (deck.mode === "fxpads") {
+        // the pad of the deck's effect that is on (1..16, 9..16 are SHIFT + pad 1..8)
+        var active = engine.getValue("[DJMantra]", "fx_active_" + deck.number);
+        return active > 0 && (active - 1) % 8 === pad ? 0x7F : 0x00;
+    }
     if (MixUltra.BEAT_LIGHTS) {
         return 0x00;
     }
@@ -273,10 +291,11 @@ MixUltra.shiftPfl = function(channel, control, value, status, group) {
 
 // DJ Mantra (Marko, 12.10.2026; 14.10.2026): the pad mode buttons also choose the app's tabs at
 // the bottom, one to one in their order: HOT CUE = Songs, LOOP = Phrasing, FX = Mixer,
-// NEURAL MIX = AutoMix, SHIFT + NEURAL MIX (SAMPLER) = Keys (either deck's buttons). The
+// NEURAL MIX = AutoMix, SHIFT + NEURAL MIX (SAMPLER) = Keys (either deck's buttons);
+// V77: SHIFT + FX (the FX PADS) = Mixer too, where the deck's effect shows. The
 // controller still switches its own pad mode (it does so itself), so the pads are read in that
 // mode as before.
-MixUltra.PAGE_BUTTONS = {0x0F: 1, 0x10: 2, 0x11: 3, 0x12: 4, 0x16: 5};
+MixUltra.PAGE_BUTTONS = {0x0F: 1, 0x10: 2, 0x11: 3, 0x12: 4, 0x15: 3, 0x16: 5};
 
 // A pulse on one of the app's [DJMantra] controls (back to 0: the same value twice still counts)
 // r41: not a pulse any more (set and straight back to 0: the screen read the 0 and did
@@ -434,10 +453,15 @@ MixUltra.pad = function(channel, control, value, status, group) {
             }
         }
         break;
-    case 0x30: // NEURAL MIX: no stems in Mixxx 2.5: EQ kills low/mid/high, filter reset
+    case 0x30: // NEURAL MIX: no stems in Mixxx 2.5: EQ kills low/mid/high, filter reset;
+        // pads 5-8 jump to beat 5-8 of the phrase; SHIFT + pad 5: "1 is here" (V77: from the
+        // SLICER, which is the FX PADS now)
         if (pressed) {
             var eq = "[EqualizerRack1_" + g + "_Effect1]";
-            if (pad < 3) {
+            if (shifted && pad === 4) {
+                engine.setValue(g, "phrase_set_one", 1);
+                engine.setValue(g, "phrase_set_one", 0);
+            } else if (pad < 3) {
                 script.toggleControl(eq, "button_parameter" + (pad + 1));
             } else if (pad === 3) {
                 engine.setValue("[QuickEffectRack1_" + g + "]", "super1", 0.5);
@@ -454,15 +478,18 @@ MixUltra.pad = function(channel, control, value, status, group) {
     case 0x50: // BOUNCE LOOP: loop roll while held
         engine.setValue(g, "beatlooproll_" + MixUltra.ROLL_SIZES[pad] + "_activate", pressed ? 1 : 0);
         break;
-    case 0x60: // SLICER: jump to beat 1-8 of the phrase (the beat lights show where you are);
-        // SHIFT + pad 1: "1 is here" (the beat closest to the play position)
+    case 0x60: // FX PADS (SHIFT + FX; V77, Marko 15.10.2026): pad 1-8 = the app's effect 1-8 on
+        // this deck, SHIFT + pad 1-8 = effect 9-16. A tap switches it on (the same pad again:
+        // off, another pad: that effect instead); a pad held down is on only while held.
+        var number = pad + 1 + (shifted ? 8 : 0);
         if (pressed) {
-            if (shifted && pad === 0) {
-                engine.setValue(g, "phrase_set_one", 1);
-                engine.setValue(g, "phrase_set_one", 0);
-            } else {
-                MixUltra.jumpToBeat(deck, pad);
+            deck.fxPress = {number: number, time: Date.now()};
+            MixUltra.tellApp("fx_pad", deck.number * 100 + number);
+        } else if (deck.fxPress && deck.fxPress.number === number) {
+            if (Date.now() - deck.fxPress.time >= MixUltra.FX_HOLD_MS) {
+                MixUltra.tellApp("fx_pad_off", deck.number * 100 + number);
             }
+            deck.fxPress = null;
         }
         break;
     case 0x70: // SAMPLER: play sampler 1-8 from its start; SHIFT: stop

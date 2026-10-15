@@ -305,3 +305,13 @@ from Playlists (and from "add to playlist").
 the song list does NOT open by itself; 2 s later BROWSE turn / press work as before.
 Tester note (r41 BUG 2): with the navigation bar shown the app makes room for it (the rule: nothing under the bars), so
 the tab bar moves up ~15 px; read the positions again after the bars appear (a finger taps where it is drawn).
+## 69. (V77) FX PADS ON THE MIX ULTRA (Marko 15.10.2026: "each effect to the pad ... activated by Shift FX ... more than 8
+effects ... Shift Pad. Then we have 16 pads"). Each deck: SHIFT + FX (the controller's SLICER mode): the app goes to the
+Mixer tab (log `controller: page 3`). Pads 1-8 = FLANGER, UNDERWATER, COOLDOWN, ECHO OUT, DJM DELAY, DJM ECHO, DJM TRANS,
+DJM PAN on THAT deck: a tap switches it on (toast "DECK 1  DJM ECHO ON", the deck's FX button on screen shows the name
+lit, the pad lights, no running beat light in this mode, you hear it); the same pad again: off (pad dark); another pad
+switches to that effect. A pad HELD over half a second: the effect only while held, off on release. SHIFT + pad: effects
+9-16, none yet: toast "FX PAD 9: NO EFFECT". Deck 2 the same, on deck 2 only. Log lines `FX pad: deck N pad M ...`.
+Leave FX PADS (HOT CUE): pads as before, beat lights back.
+## 70. (V77) "1 IS HERE" MOVED: the SLICER was its home; now NEURAL MIX mode, SHIFT + pad 5 sets beat 1 of the phrase at
+the play position (pads 5-8 still jump to beats 5-8, pads 1-3 the kills).

@@ -89,7 +89,9 @@ std::vector<std::unique_ptr<ControlObject>> s_controllerControls;
 void QmlDJMantra::registerUserSettings(UserSettingsPointer pConfig) {
     s_controllerControls.clear();
     if (pConfig) {
-        for (const char* key : {"browse_move", "browse_press", "browse_back", "load", "page", "stop_deck"}) {
+        for (const char* key : {"browse_move", "browse_press", "browse_back", "load", "page", "stop_deck",
+                     // V77: the Mix Ultra's FX pads (Effects.qml)
+                     "fx_pad", "fx_pad_off", "fx_active_1", "fx_active_2"}) {
             s_controllerControls.push_back(std::make_unique<ControlObject>(
                     ConfigKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(key))));
         }

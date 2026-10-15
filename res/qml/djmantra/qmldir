@@ -24,6 +24,7 @@ MenuSheet 1.0 MenuSheet.qml
 BeatStatsPage 1.0 BeatStatsPage.qml
 DownloadQueuePage 1.0 DownloadQueuePage.qml
 MixerPage 1.0 MixerPage.qml
+singleton Effects 1.0 Effects.qml
 NavBar 1.0 NavBar.qml
 Overview 1.0 Overview.qml
 PhrasingPage 1.0 PhrasingPage.qml

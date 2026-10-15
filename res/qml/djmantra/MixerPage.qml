@@ -11,28 +11,8 @@ import QtQuick 2.12
 Item {
     id: root
 
-    // djay's four, then the classic Pioneer DJM beat effects (Marko 13.10.2026: "take some
-    // classic old Pioneer ... the most important ones"; the DJM-600's BEAT EFFECTS: DELAY
-    // repeats once, ECHO repeats fading, TRANS cuts the sound on the beat, PAN moves it left
-    // and right), on Mixxx's beat-synced effects with DJM-like settings (`params`, real
-    // units) and the DEPTH slider on `depth`
-    readonly property var effects: [
-        { name: "FLANGER", id: "org.mixxx.effects.flanger", depth: "parameter2" },
-        { name: "UNDERWATER", id: "org.djmantra.effects.underwater", depth: "parameter1" },
-        { name: "COOLDOWN", id: "org.djmantra.effects.cooldown", depth: "parameter1" },
-        { name: "ECHO OUT", id: "org.djmantra.effects.echoout", depth: "parameter1" },
-        // echo: parameter1 time (beats), 2 feedback, 3 ping pong, 4 send; button 1 quantize
-        { name: "DJM DELAY", id: "org.mixxx.effects.echo", depth: "parameter4",
-          params: { parameter1: 1, parameter2: 0, parameter3: 0, parameter4: 0.8, button_parameter1: 1 } },
-        { name: "DJM ECHO", id: "org.mixxx.effects.echo", depth: "parameter2",
-          params: { parameter1: 1, parameter2: 0.55, parameter3: 0, parameter4: 0.8, button_parameter1: 1 } },
-        // tremolo: parameter1 depth, 2 rate (per beat), 3 width, 4 waveform (low = square)
-        { name: "DJM TRANS", id: "org.mixxx.effects.tremolo", depth: "parameter1",
-          params: { parameter1: 1, parameter2: 2, parameter3: 0.5, parameter4: 0.005, button_parameter1: 1 } },
-        // autopan: parameter1 period (beats), 2 smoothing, 3 width
-        { name: "DJM PAN", id: "org.mixxx.effects.autopan", depth: "parameter3",
-          params: { parameter1: 2, parameter2: 0.5, parameter3: 1 } }
-    ]
+    // the effects (Effects.qml, shared with the Mix Ultra's FX pads)
+    readonly property var effects: Effects.list
     // both decks' EQ mode (EqualizerRack1_[ChannelN]_Effect1, button_parameter4)
     readonly property bool stems: stems1.value > 0
     property int chooserDeck: 0 // the deck whose FX chooser is open, 0 = none
@@ -51,34 +31,16 @@ Item {
     }
 
     function effectIndex(deck) {
-        const i = Number(Mixxx.DJMantra.setting("fx_choice_" + deck, "0"));
-        return i >= 0 && i < effects.length ? i : 0;
+        return Effects.index(deck);
     }
 
     function loadEffect(deck, index) {
-        const unit = "[EffectRack1_EffectUnit" + deck + "]";
-        Mixxx.DJMantra.setControl(unit, "group_[Channel1]_enable", deck === 1 ? 1 : 0);
-        Mixxx.DJMantra.setControl(unit, "group_[Channel2]_enable", deck === 2 ? 1 : 0);
-        Mixxx.DJMantra.setControl(unit, "mix", 1);
-        Mixxx.DJMantra.setControl(unit, "enabled", 1);
-        const slot = Mixxx.EffectsManager.getEffectSlot(deck, 1);
-        if (slot && slot.effectId !== effects[index].id) {
-            slot.effectId = effects[index].id;
-            Mixxx.DJMantra.log("FX: deck " + deck + " " + effects[index].name);
-        }
-        // the DJM effects' settings (also when the same Mixxx effect was there already)
-        const params = effects[index].params || {};
-        for (const key in params)
-            Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + deck + "_Effect1]", key, params[key]);
-        // Echo Out runs while chosen (it keeps the last beats, as djay's); its
-        // button_parameter1 is the ON that cuts the song into the echo
-        if (index === 3)
-            Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + deck + "_Effect1]", "enabled", 1);
+        Effects.load(deck, index);
     }
 
     // the control the FX button switches: Echo Out's "engaged", the others' "enabled"
     function fxKey(index) {
-        return index === 3 ? "button_parameter1" : "enabled";
+        return Effects.key(index);
     }
 
     Component.onCompleted: {
@@ -228,6 +190,13 @@ Item {
                         deck.choice = root.effectIndex(deck.number);
                     }
                 }
+                Connections {
+                    target: Effects
+                    function onRevisionChanged() {
+                        // an FX pad of the Mix Ultra chose an effect
+                        deck.choice = root.effectIndex(deck.number);
+                    }
+                }
 
                 Row {
                     anchors.top: parent.top
@@ -352,11 +321,9 @@ Item {
                     lit: root.chooserDeck > 0 && root.effectIndex(root.chooserDeck) === index
                     onClicked: {
                         const n = root.chooserDeck;
-                        Mixxx.DJMantra.setSetting("fx_choice_" + n, index);
-                        root.loadEffect(n, index);
-                        Toasts.show("DECK " + n + "  FX \u2192 " + modelData.name);
                         // choosing turns it on, as in djay
-                        Mixxx.DJMantra.setControl("[EffectRack1_EffectUnit" + n + "_Effect1]", root.fxKey(index), 1);
+                        Effects.choose(n, index, true);
+                        Toasts.show("DECK " + n + "  FX \u2192 " + modelData.name);
                         root.chooserDeck = 0;
                     }
                 }

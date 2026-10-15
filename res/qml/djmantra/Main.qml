@@ -110,6 +110,24 @@ Window {
                 t.stop();
         }
     }
+    // the Mix Ultra's FX pads (SHIFT + FX): deck * 100 + pad (1..16); a press switches that
+    // effect on (the same pad again: off), a held pad lets go of it on release (V77)
+    Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "fx_pad"
+        onValueChanged: if (value >= 100) {
+            const v = Math.round(value);
+            value = 0;
+            Effects.pad(Math.floor(v / 100), v % 100);
+        }
+    }
+    Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "fx_pad_off"
+        onValueChanged: if (value >= 100) {
+            const v = Math.round(value);
+            value = 0;
+            Effects.padReleased(Math.floor(v / 100), v % 100);
+        }
+    }
     Mixxx.ControlProxy {
         group: "[DJMantra]"; key: "browse_back"
         onValueChanged: if (value > 0) {
@@ -816,6 +834,9 @@ Window {
     Component.onCompleted: {
         // the decks' FILTER = the Pioneer DJM filter (also for the controller's filter knob)
         Mixxx.DJMantra.useDjmFilter();
+        // the decks' effects ready for the FX button and the Mix Ultra's FX pads
+        Effects.load(1, Effects.index(1));
+        Effects.load(2, Effects.index(2));
         // the room correction on the main output, as it was left (Menu -> ROOM EQ)
         Mixxx.DJMantra.useRoomEq();
         // every song normalized to a -1 dBFS peak, always (Marko 14.10.2026); no switch, no GAIN knob
