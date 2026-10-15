@@ -1,0 +1,611 @@
+--------- beginning of main
+10-15 05:55:09.940 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48210 frames/s of 48000 , 2 channels
+10-15 05:55:09.941 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 1 , xruns 0 , slowest callback 12.9915 ms, late 0
+10-15 05:55:14.956 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48200 frames/s of 48000 , 2 channels
+10-15 05:55:14.957 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 1 , xruns 0 , slowest callback 12.9567 ms, late 0
+10-15 05:55:19.962 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48249 frames/s of 48000 , 2 channels
+10-15 05:55:19.963 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 1 , xruns 0 , slowest callback 10.9061 ms, late 0
+10-15 05:55:24.981 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48163 frames/s of 48000 , 2 channels
+10-15 05:55:24.981 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.728466 , xruns 0 , slowest callback 12.9672 ms, late 0
+10-15 05:55:29.991 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48236 frames/s of 48000 , 2 channels
+10-15 05:55:29.992 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.738854 , xruns 0 , slowest callback 11.9401 ms, late 0
+10-15 05:55:35.005 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48212 frames/s of 48000 , 2 channels
+10-15 05:55:35.006 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.697222 , xruns 0 , slowest callback 10.0764 ms, late 0
+10-15 05:55:40.020 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48174 frames/s of 48000 , 2 channels
+10-15 05:55:40.022 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.713077 , xruns 0 , slowest callback 11.2725 ms, late 0
+10-15 05:55:45.032 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48247 frames/s of 48000 , 2 channels
+10-15 05:55:45.032 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.756825 , xruns 0 , slowest callback 11.6025 ms, late 0
+10-15 05:55:50.044 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48209 frames/s of 48000 , 2 channels
+10-15 05:55:50.044 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.666113 , xruns 0 , slowest callback 12.9065 ms, late 0
+10-15 05:55:55.062 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48181 frames/s of 48000 , 2 channels
+10-15 05:55:55.063 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.727804 , xruns 0 , slowest callback 12.8337 ms, late 0
+10-15 05:56:00.074 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48206 frames/s of 48000 , 2 channels
+10-15 05:56:00.075 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.874063 , xruns 0 , slowest callback 11.7658 ms, late 0
+10-15 05:56:05.086 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48208 frames/s of 48000 , 2 channels
+10-15 05:56:05.087 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.69319 , xruns 0 , slowest callback 10.8678 ms, late 0
+10-15 05:56:10.098 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48223 frames/s of 48000 , 2 channels
+10-15 05:56:10.099 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.758844 , xruns 0 , slowest callback 12.0874 ms, late 0
+10-15 05:56:15.112 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48219 frames/s of 48000 , 2 channels
+10-15 05:56:15.112 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.681394 , xruns 0 , slowest callback 12.997 ms, late 0
+10-15 05:56:20.124 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48208 frames/s of 48000 , 2 channels
+10-15 05:56:20.124 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.729893 , xruns 0 , slowest callback 11.3937 ms, late 0
+10-15 05:56:25.142 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48174 frames/s of 48000 , 2 channels
+10-15 05:56:25.143 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.825404 , xruns 0 , slowest callback 11.9019 ms, late 0
+10-15 05:56:30.154 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48204 frames/s of 48000 , 2 channels
+10-15 05:56:30.155 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.744097 , xruns 0 , slowest callback 11.2508 ms, late 0
+10-15 05:56:35.168 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48211 frames/s of 48000 , 2 channels
+10-15 05:56:35.169 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.763382 , xruns 0 , slowest callback 11.2184 ms, late 0
+10-15 05:56:40.180 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48206 frames/s of 48000 , 2 channels
+10-15 05:56:40.180 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.749788 , xruns 0 , slowest callback 12.302 ms, late 0
+10-15 05:56:45.194 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48193 frames/s of 48000 , 2 channels
+10-15 05:56:45.195 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.727825 , xruns 0 , slowest callback 12.3597 ms, late 0
+10-15 05:56:50.204 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48221 frames/s of 48000 , 2 channels
+10-15 05:56:50.204 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.809485 , xruns 0 , slowest callback 12.5396 ms, late 0
+10-15 05:56:55.223 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48164 frames/s of 48000 , 2 channels
+10-15 05:56:55.224 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.732746 , xruns 0 , slowest callback 11.8741 ms, late 0
+10-15 05:57:00.234 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48190 frames/s of 48000 , 2 channels
+10-15 05:57:00.235 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.69174 , xruns 0 , slowest callback 11.2221 ms, late 0
+10-15 05:57:05.244 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48223 frames/s of 48000 , 2 channels
+10-15 05:57:05.244 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.706957 , xruns 0 , slowest callback 13.8457 ms, late 0
+10-15 05:57:10.260 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48177 frames/s of 48000 , 2 channels
+10-15 05:57:10.261 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.749241 , xruns 0 , slowest callback 10.6141 ms, late 0
+10-15 05:57:15.274 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 05:57:15.275 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.759045 , xruns 0 , slowest callback 13.3221 ms, late 0
+10-15 05:57:20.284 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48208 frames/s of 48000 , 2 channels
+10-15 05:57:20.285 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.717173 , xruns 0 , slowest callback 11.8145 ms, late 0
+10-15 05:57:25.302 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48180 frames/s of 48000 , 2 channels
+10-15 05:57:25.303 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.723946 , xruns 0 , slowest callback 10.9336 ms, late 0
+10-15 05:57:30.312 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48265 frames/s of 48000 , 2 channels
+10-15 05:57:30.312 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.714335 , xruns 0 , slowest callback 10.8787 ms, late 0
+10-15 05:57:35.325 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 05:57:35.325 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.775311 , xruns 0 , slowest callback 11.229 ms, late 0
+10-15 05:57:40.342 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48191 frames/s of 48000 , 2 channels
+10-15 05:57:40.343 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.690052 , xruns 0 , slowest callback 12.5219 ms, late 0
+10-15 05:57:45.354 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 05:57:45.355 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0.198656 , xruns 0 , slowest callback 17.3131 ms, late 0
+10-15 05:57:50.370 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48180 frames/s of 48000 , 2 channels
+10-15 05:57:50.372 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output level: peak 0 , xruns 0 , slowest callback 12.3028 ms, late 0
+10-15 05:57:55.379 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48260 frames/s of 48000 , 2 channels
+10-15 05:58:00.393 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48217 frames/s of 48000 , 2 channels
+10-15 05:58:05.403 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48247 frames/s of 48000 , 2 channels
+10-15 05:58:10.420 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 05:58:15.438 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48197 frames/s of 48000 , 2 channels
+10-15 05:58:20.451 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48219 frames/s of 48000 , 2 channels
+10-15 05:58:25.464 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48182 frames/s of 48000 , 2 channels
+10-15 05:58:30.480 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48147 frames/s of 48000 , 2 channels
+10-15 05:58:35.492 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48187 frames/s of 48000 , 2 channels
+10-15 05:58:40.500 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48269 frames/s of 48000 , 2 channels
+10-15 05:58:45.520 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48153 frames/s of 48000 , 2 channels
+10-15 05:58:50.526 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 05:58:55.539 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48235 frames/s of 48000 , 2 channels
+10-15 05:59:00.560 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48146 frames/s of 48000 , 2 channels
+10-15 05:59:05.572 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48155 frames/s of 48000 , 2 channels
+10-15 05:59:10.586 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48206 frames/s of 48000 , 2 channels
+10-15 05:59:15.600 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48201 frames/s of 48000 , 2 channels
+10-15 05:59:20.612 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48196 frames/s of 48000 , 2 channels
+10-15 05:59:25.619 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48274 frames/s of 48000 , 2 channels
+10-15 05:59:30.633 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48212 frames/s of 48000 , 2 channels
+10-15 05:59:35.652 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48150 frames/s of 48000 , 2 channels
+10-15 05:59:40.663 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 05:59:45.680 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48150 frames/s of 48000 , 2 channels
+10-15 05:59:50.692 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48185 frames/s of 48000 , 2 channels
+10-15 05:59:55.707 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48152 frames/s of 48000 , 2 channels
+10-15 06:00:00.718 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48184 frames/s of 48000 , 2 channels
+10-15 06:00:05.729 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48214 frames/s of 48000 , 2 channels
+10-15 06:00:10.747 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48172 frames/s of 48000 , 2 channels
+10-15 06:00:15.755 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48238 frames/s of 48000 , 2 channels
+10-15 06:00:20.772 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48147 frames/s of 48000 , 2 channels
+10-15 06:00:25.783 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48235 frames/s of 48000 , 2 channels
+10-15 06:00:30.800 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48152 frames/s of 48000 , 2 channels
+10-15 06:00:35.812 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48193 frames/s of 48000 , 2 channels
+10-15 06:00:40.826 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48205 frames/s of 48000 , 2 channels
+10-15 06:00:45.840 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48205 frames/s of 48000 , 2 channels
+10-15 06:00:50.846 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48232 frames/s of 48000 , 2 channels
+10-15 06:00:55.860 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48204 frames/s of 48000 , 2 channels
+10-15 06:01:00.878 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48170 frames/s of 48000 , 2 channels
+10-15 06:01:05.890 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48167 frames/s of 48000 , 2 channels
+10-15 06:01:10.903 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48207 frames/s of 48000 , 2 channels
+10-15 06:01:15.917 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48234 frames/s of 48000 , 2 channels
+10-15 06:01:20.932 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48146 frames/s of 48000 , 2 channels
+10-15 06:01:25.946 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48208 frames/s of 48000 , 2 channels
+10-15 06:01:30.954 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48262 frames/s of 48000 , 2 channels
+10-15 06:01:35.966 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48266 frames/s of 48000 , 2 channels
+10-15 06:01:40.987 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48140 frames/s of 48000 , 2 channels
+10-15 06:01:45.990 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48302 frames/s of 48000 , 2 channels
+10-15 06:01:51.011 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48125 frames/s of 48000 , 2 channels
+10-15 06:01:56.025 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:02:01.039 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48189 frames/s of 48000 , 2 channels
+10-15 06:02:06.053 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48183 frames/s of 48000 , 2 channels
+10-15 06:02:11.066 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48206 frames/s of 48000 , 2 channels
+10-15 06:02:16.079 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48189 frames/s of 48000 , 2 channels
+10-15 06:02:21.085 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48206 frames/s of 48000 , 2 channels
+10-15 06:02:24.458 I/DJMantraMIDI(11345): in B1 03 7C
+10-15 06:02:24.461 I/DJMantraMIDI(11345): in B1 03 7C
+10-15 06:02:24.490 I/DJMantraMIDI(11345): in B1 03 7B
+10-15 06:02:24.490 I/DJMantraMIDI(11345): in B1 03 7B
+10-15 06:02:24.518 I/DJMantraMIDI(11345): in B1 03 78
+10-15 06:02:24.519 I/DJMantraMIDI(11345): in B1 03 78
+10-15 06:02:24.563 I/DJMantraMIDI(11345): in B1 03 76
+10-15 06:02:24.563 I/DJMantraMIDI(11345): in B1 03 76
+10-15 06:02:24.611 I/DJMantraMIDI(11345): in B1 03 73
+10-15 06:02:24.611 I/DJMantraMIDI(11345): in B1 03 73
+10-15 06:02:24.640 I/DJMantraMIDI(11345): in B1 03 6E
+10-15 06:02:24.640 I/DJMantraMIDI(11345): in B1 03 6E
+10-15 06:02:24.683 I/DJMantraMIDI(11345): in B1 03 6A
+10-15 06:02:24.683 I/DJMantraMIDI(11345): in B1 03 6A
+10-15 06:02:24.734 I/DJMantraMIDI(11345): in B1 03 64
+10-15 06:02:24.736 I/DJMantraMIDI(11345): in B1 03 64
+10-15 06:02:24.765 I/DJMantraMIDI(11345): in B1 03 5E
+10-15 06:02:24.765 I/DJMantraMIDI(11345): in B1 03 5E
+10-15 06:02:24.806 I/DJMantraMIDI(11345): in B1 03 58
+10-15 06:02:24.806 I/DJMantraMIDI(11345): in B1 03 58
+10-15 06:02:24.850 I/DJMantraMIDI(11345): in B1 03 52
+10-15 06:02:24.850 I/DJMantraMIDI(11345): in B1 03 52
+10-15 06:02:24.879 I/DJMantraMIDI(11345): in B1 03 4C
+10-15 06:02:24.879 I/DJMantraMIDI(11345): in B1 03 4C
+10-15 06:02:24.930 I/DJMantraMIDI(11345): in B1 03 45
+10-15 06:02:24.930 I/DJMantraMIDI(11345): in B1 03 45
+10-15 06:02:24.968 I/DJMantraMIDI(11345): in B1 03 40
+10-15 06:02:24.968 I/DJMantraMIDI(11345): in B1 03 40
+10-15 06:02:26.107 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48139 frames/s of 48000 , 2 channels
+10-15 06:02:31.116 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48217 frames/s of 48000 , 2 channels
+10-15 06:02:36.132 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48147 frames/s of 48000 , 2 channels
+10-15 06:02:41.147 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48200 frames/s of 48000 , 2 channels
+10-15 06:02:46.160 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:02:51.169 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48233 frames/s of 48000 , 2 channels
+10-15 06:02:56.187 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48183 frames/s of 48000 , 2 channels
+10-15 06:03:01.194 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48228 frames/s of 48000 , 2 channels
+10-15 06:03:06.212 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48151 frames/s of 48000 , 2 channels
+10-15 06:03:11.220 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48265 frames/s of 48000 , 2 channels
+10-15 06:03:16.234 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:03:21.252 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48146 frames/s of 48000 , 2 channels
+10-15 06:03:26.266 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48144 frames/s of 48000 , 2 channels
+10-15 06:03:31.274 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48258 frames/s of 48000 , 2 channels
+10-15 06:03:36.286 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48180 frames/s of 48000 , 2 channels
+10-15 06:03:41.299 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48213 frames/s of 48000 , 2 channels
+10-15 06:03:46.314 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:03:51.326 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48182 frames/s of 48000 , 2 channels
+10-15 06:03:56.340 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48213 frames/s of 48000 , 2 channels
+10-15 06:04:01.354 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48208 frames/s of 48000 , 2 channels
+10-15 06:04:06.368 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48185 frames/s of 48000 , 2 channels
+10-15 06:04:11.383 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48195 frames/s of 48000 , 2 channels
+10-15 06:04:16.390 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48239 frames/s of 48000 , 2 channels
+10-15 06:04:21.403 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48192 frames/s of 48000 , 2 channels
+10-15 06:04:26.416 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48223 frames/s of 48000 , 2 channels
+10-15 06:04:31.428 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48231 frames/s of 48000 , 2 channels
+10-15 06:04:36.446 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48148 frames/s of 48000 , 2 channels
+10-15 06:04:41.463 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48174 frames/s of 48000 , 2 channels
+10-15 06:04:46.480 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48127 frames/s of 48000 , 2 channels
+10-15 06:04:51.492 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48205 frames/s of 48000 , 2 channels
+10-15 06:04:56.506 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48199 frames/s of 48000 , 2 channels
+10-15 06:05:01.520 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48207 frames/s of 48000 , 2 channels
+10-15 06:05:06.532 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48187 frames/s of 48000 , 2 channels
+10-15 06:05:11.540 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48268 frames/s of 48000 , 2 channels
+10-15 06:05:16.560 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48146 frames/s of 48000 , 2 channels
+10-15 06:05:21.572 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48173 frames/s of 48000 , 2 channels
+10-15 06:05:26.586 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48196 frames/s of 48000 , 2 channels
+10-15 06:05:31.599 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48209 frames/s of 48000 , 2 channels
+10-15 06:05:36.612 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48190 frames/s of 48000 , 2 channels
+10-15 06:05:41.626 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48162 frames/s of 48000 , 2 channels
+10-15 06:05:46.640 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:05:51.646 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48259 frames/s of 48000 , 2 channels
+10-15 06:05:56.660 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48242 frames/s of 48000 , 2 channels
+10-15 06:06:01.677 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48180 frames/s of 48000 , 2 channels
+10-15 06:06:06.690 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48180 frames/s of 48000 , 2 channels
+10-15 06:06:11.706 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48147 frames/s of 48000 , 2 channels
+10-15 06:06:16.717 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48230 frames/s of 48000 , 2 channels
+10-15 06:06:21.729 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48205 frames/s of 48000 , 2 channels
+10-15 06:06:26.737 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48238 frames/s of 48000 , 2 channels
+10-15 06:06:31.760 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48111 frames/s of 48000 , 2 channels
+10-15 06:06:36.762 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48253 frames/s of 48000 , 2 channels
+10-15 06:06:41.786 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48110 frames/s of 48000 , 2 channels
+10-15 06:06:46.794 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48200 frames/s of 48000 , 2 channels
+10-15 06:06:51.805 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48215 frames/s of 48000 , 2 channels
+10-15 06:06:56.820 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48182 frames/s of 48000 , 2 channels
+10-15 06:07:01.834 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:07:06.852 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48198 frames/s of 48000 , 2 channels
+10-15 06:07:11.863 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48239 frames/s of 48000 , 2 channels
+10-15 06:07:16.880 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48167 frames/s of 48000 , 2 channels
+10-15 06:07:21.893 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48199 frames/s of 48000 , 2 channels
+10-15 06:07:26.907 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48204 frames/s of 48000 , 2 channels
+10-15 06:07:31.914 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48259 frames/s of 48000 , 2 channels
+10-15 06:07:36.931 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48157 frames/s of 48000 , 2 channels
+10-15 06:07:41.946 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48165 frames/s of 48000 , 2 channels
+10-15 06:07:46.960 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48207 frames/s of 48000 , 2 channels
+10-15 06:07:51.969 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48239 frames/s of 48000 , 2 channels
+10-15 06:07:56.985 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48160 frames/s of 48000 , 2 channels
+10-15 06:08:01.998 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48228 frames/s of 48000 , 2 channels
+10-15 06:08:07.012 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48175 frames/s of 48000 , 2 channels
+10-15 06:08:12.026 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48207 frames/s of 48000 , 2 channels
+10-15 06:08:17.034 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48206 frames/s of 48000 , 2 channels
+10-15 06:08:22.046 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48196 frames/s of 48000 , 2 channels
+10-15 06:08:27.060 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48264 frames/s of 48000 , 2 channels
+10-15 06:08:32.081 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48185 frames/s of 48000 , 2 channels
+10-15 06:08:37.092 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48170 frames/s of 48000 , 2 channels
+10-15 06:08:42.103 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48223 frames/s of 48000 , 2 channels
+10-15 06:08:47.120 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48147 frames/s of 48000 , 2 channels
+10-15 06:08:52.132 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:08:57.140 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48205 frames/s of 48000 , 2 channels
+10-15 06:09:02.156 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48185 frames/s of 48000 , 2 channels
+10-15 06:09:07.172 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48143 frames/s of 48000 , 2 channels
+10-15 06:09:12.186 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48186 frames/s of 48000 , 2 channels
+10-15 06:09:17.200 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48139 frames/s of 48000 , 2 channels
+10-15 06:09:22.211 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48162 frames/s of 48000 , 2 channels
+10-15 06:09:27.216 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48286 frames/s of 48000 , 2 channels
+10-15 06:09:32.233 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48180 frames/s of 48000 , 2 channels
+10-15 06:09:37.243 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48237 frames/s of 48000 , 2 channels
+10-15 06:09:42.256 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48204 frames/s of 48000 , 2 channels
+10-15 06:09:47.274 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48170 frames/s of 48000 , 2 channels
+10-15 06:09:52.282 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48239 frames/s of 48000 , 2 channels
+10-15 06:09:57.298 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48216 frames/s of 48000 , 2 channels
+10-15 06:10:02.314 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48190 frames/s of 48000 , 2 channels
+10-15 06:10:07.326 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48212 frames/s of 48000 , 2 channels
+10-15 06:10:12.341 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48195 frames/s of 48000 , 2 channels
+10-15 06:10:17.354 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48225 frames/s of 48000 , 2 channels
+10-15 06:10:22.370 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48226 frames/s of 48000 , 2 channels
+10-15 06:10:27.383 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48221 frames/s of 48000 , 2 channels
+10-15 06:10:32.392 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48222 frames/s of 48000 , 2 channels
+10-15 06:10:37.406 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48187 frames/s of 48000 , 2 channels
+10-15 06:10:42.420 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:10:47.438 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48177 frames/s of 48000 , 2 channels
+10-15 06:10:52.447 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48201 frames/s of 48000 , 2 channels
+10-15 06:10:57.464 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48159 frames/s of 48000 , 2 channels
+10-15 06:11:02.480 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48210 frames/s of 48000 , 2 channels
+10-15 06:11:07.492 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48193 frames/s of 48000 , 2 channels
+10-15 06:11:12.496 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48282 frames/s of 48000 , 2 channels
+10-15 06:11:17.517 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48142 frames/s of 48000 , 2 channels
+10-15 06:11:22.526 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:11:27.546 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48147 frames/s of 48000 , 2 channels
+10-15 06:11:32.560 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48199 frames/s of 48000 , 2 channels
+10-15 06:11:37.572 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:11:42.583 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48237 frames/s of 48000 , 2 channels
+10-15 06:11:47.594 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48205 frames/s of 48000 , 2 channels
+10-15 06:11:52.606 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:11:57.626 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48155 frames/s of 48000 , 2 channels
+10-15 06:12:02.637 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48180 frames/s of 48000 , 2 channels
+10-15 06:12:07.651 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48185 frames/s of 48000 , 2 channels
+10-15 06:12:12.667 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:12:17.678 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48196 frames/s of 48000 , 2 channels
+10-15 06:12:22.692 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48182 frames/s of 48000 , 2 channels
+10-15 06:12:26.926 I/DJMantraMIDI(11345): in B1 03 3F
+10-15 06:12:26.926 I/DJMantraMIDI(11345): in B1 03 3F
+10-15 06:12:26.964 I/DJMantraMIDI(11345): in B1 03 33
+10-15 06:12:26.964 I/DJMantraMIDI(11345): in B1 03 33
+10-15 06:12:27.007 I/DJMantraMIDI(11345): in B1 03 25
+10-15 06:12:27.008 I/DJMantraMIDI(11345): in B1 03 25
+10-15 06:12:27.054 I/DJMantraMIDI(11345): in B1 03 17
+10-15 06:12:27.055 I/DJMantraMIDI(11345): in B1 03 17
+10-15 06:12:27.083 I/DJMantraMIDI(11345): in B1 03 09
+10-15 06:12:27.083 I/DJMantraMIDI(11345): in B1 03 09
+10-15 06:12:27.128 I/DJMantraMIDI(11345): in B1 03 00
+10-15 06:12:27.128 I/DJMantraMIDI(11345): in B1 03 00
+10-15 06:12:27.706 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:12:32.714 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48259 frames/s of 48000 , 2 channels
+10-15 06:12:37.724 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48218 frames/s of 48000 , 2 channels
+10-15 06:12:42.746 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48134 frames/s of 48000 , 2 channels
+10-15 06:12:47.760 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48261 frames/s of 48000 , 2 channels
+10-15 06:12:52.769 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48238 frames/s of 48000 , 2 channels
+10-15 06:12:57.786 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48172 frames/s of 48000 , 2 channels
+10-15 06:13:02.794 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48262 frames/s of 48000 , 2 channels
+10-15 06:13:07.812 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48150 frames/s of 48000 , 2 channels
+10-15 06:13:12.825 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48234 frames/s of 48000 , 2 channels
+10-15 06:13:17.840 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48201 frames/s of 48000 , 2 channels
+10-15 06:13:22.846 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48256 frames/s of 48000 , 2 channels
+10-15 06:13:27.864 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48158 frames/s of 48000 , 2 channels
+10-15 06:13:32.872 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48219 frames/s of 48000 , 2 channels
+10-15 06:13:37.892 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48151 frames/s of 48000 , 2 channels
+10-15 06:13:42.904 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48173 frames/s of 48000 , 2 channels
+10-15 06:13:47.920 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48196 frames/s of 48000 , 2 channels
+10-15 06:13:52.926 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48263 frames/s of 48000 , 2 channels
+10-15 06:13:57.946 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48146 frames/s of 48000 , 2 channels
+10-15 06:14:02.960 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:14:07.973 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48201 frames/s of 48000 , 2 channels
+10-15 06:14:12.986 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48197 frames/s of 48000 , 2 channels
+10-15 06:14:17.999 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48212 frames/s of 48000 , 2 channels
+10-15 06:14:23.006 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48219 frames/s of 48000 , 2 channels
+10-15 06:14:28.026 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48153 frames/s of 48000 , 2 channels
+10-15 06:14:33.038 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48224 frames/s of 48000 , 2 channels
+10-15 06:14:38.052 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48194 frames/s of 48000 , 2 channels
+10-15 06:14:43.063 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48234 frames/s of 48000 , 2 channels
+10-15 06:14:48.080 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48174 frames/s of 48000 , 2 channels
+10-15 06:14:53.093 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48157 frames/s of 48000 , 2 channels
+10-15 06:14:58.106 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48207 frames/s of 48000 , 2 channels
+10-15 06:15:03.120 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48205 frames/s of 48000 , 2 channels
+10-15 06:15:08.128 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48224 frames/s of 48000 , 2 channels
+10-15 06:15:13.140 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48175 frames/s of 48000 , 2 channels
+10-15 06:15:18.154 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48206 frames/s of 48000 , 2 channels
+10-15 06:15:23.173 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48199 frames/s of 48000 , 2 channels
+10-15 06:15:28.180 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48265 frames/s of 48000 , 2 channels
+10-15 06:15:33.200 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48115 frames/s of 48000 , 2 channels
+10-15 06:15:38.200 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48258 frames/s of 48000 , 2 channels
+10-15 06:15:43.226 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48143 frames/s of 48000 , 2 channels
+10-15 06:15:48.232 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48253 frames/s of 48000 , 2 channels
+10-15 06:15:53.246 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48179 frames/s of 48000 , 2 channels
+10-15 06:15:58.260 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48205 frames/s of 48000 , 2 channels
+10-15 06:16:03.272 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48201 frames/s of 48000 , 2 channels
+10-15 06:16:08.286 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48191 frames/s of 48000 , 2 channels
+10-15 06:16:13.296 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48228 frames/s of 48000 , 2 channels
+10-15 06:16:18.320 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48115 frames/s of 48000 , 2 channels
+10-15 06:16:23.326 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:16:28.340 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:16:33.361 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48148 frames/s of 48000 , 2 channels
+10-15 06:16:38.364 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48285 frames/s of 48000 , 2 channels
+10-15 06:16:43.380 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48181 frames/s of 48000 , 2 channels
+10-15 06:16:48.395 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48255 frames/s of 48000 , 2 channels
+10-15 06:16:53.406 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48242 frames/s of 48000 , 2 channels
+10-15 06:16:58.427 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48199 frames/s of 48000 , 2 channels
+10-15 06:17:03.437 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48237 frames/s of 48000 , 2 channels
+10-15 06:17:08.452 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48156 frames/s of 48000 , 2 channels
+10-15 06:17:13.463 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48178 frames/s of 48000 , 2 channels
+10-15 06:17:18.474 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48225 frames/s of 48000 , 2 channels
+10-15 06:17:23.490 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48145 frames/s of 48000 , 2 channels
+10-15 06:17:28.500 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48211 frames/s of 48000 , 2 channels
+10-15 06:17:33.520 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48145 frames/s of 48000 , 2 channels
+10-15 06:17:38.532 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48175 frames/s of 48000 , 2 channels
+10-15 06:17:43.540 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48262 frames/s of 48000 , 2 channels
+10-15 06:17:48.555 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48256 frames/s of 48000 , 2 channels
+10-15 06:17:53.573 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48155 frames/s of 48000 , 2 channels
+10-15 06:17:58.586 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48184 frames/s of 48000 , 2 channels
+10-15 06:18:03.599 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48216 frames/s of 48000 , 2 channels
+10-15 06:18:08.612 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:18:13.620 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48238 frames/s of 48000 , 2 channels
+10-15 06:18:18.637 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48176 frames/s of 48000 , 2 channels
+10-15 06:18:23.650 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48136 frames/s of 48000 , 2 channels
+10-15 06:18:28.665 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48214 frames/s of 48000 , 2 channels
+10-15 06:18:29.878 I/DJMantraMIDI(11345): in B1 03 02
+10-15 06:18:29.878 I/DJMantraMIDI(11345): in B1 03 02
+10-15 06:18:29.919 I/DJMantraMIDI(11345): in B1 03 04
+10-15 06:18:29.919 I/DJMantraMIDI(11345): in B1 03 04
+10-15 06:18:29.958 I/DJMantraMIDI(11345): in B1 03 07
+10-15 06:18:29.959 I/DJMantraMIDI(11345): in B1 03 07
+10-15 06:18:30.003 I/DJMantraMIDI(11345): in B1 03 0A
+10-15 06:18:30.003 I/DJMantraMIDI(11345): in B1 03 0A
+10-15 06:18:30.032 I/DJMantraMIDI(11345): in B1 03 0D
+10-15 06:18:30.032 I/DJMantraMIDI(11345): in B1 03 0D
+10-15 06:18:30.076 I/DJMantraMIDI(11345): in B1 03 0F
+10-15 06:18:30.076 I/DJMantraMIDI(11345): in B1 03 0F
+10-15 06:18:30.124 I/DJMantraMIDI(11345): in B1 03 11
+10-15 06:18:30.124 I/DJMantraMIDI(11345): in B1 03 11
+10-15 06:18:30.155 I/DJMantraMIDI(11345): in B1 03 13
+10-15 06:18:30.155 I/DJMantraMIDI(11345): in B1 03 13
+10-15 06:18:30.197 I/DJMantraMIDI(11345): in B1 03 14
+10-15 06:18:30.197 I/DJMantraMIDI(11345): in B1 03 14
+10-15 06:18:30.241 I/DJMantraMIDI(11345): in B1 03 16
+10-15 06:18:30.241 I/DJMantraMIDI(11345): in B1 03 16
+10-15 06:18:30.271 I/DJMantraMIDI(11345): in B1 03 17
+10-15 06:18:30.272 I/DJMantraMIDI(11345): in B1 03 17
+10-15 06:18:30.317 I/DJMantraMIDI(11345): in B1 03 18
+10-15 06:18:30.317 I/DJMantraMIDI(11345): in B1 03 18
+10-15 06:18:30.363 I/DJMantraMIDI(11345): in B1 03 1A
+10-15 06:18:30.363 I/DJMantraMIDI(11345): in B1 03 1A
+10-15 06:18:30.437 I/DJMantraMIDI(11345): in B1 03 1B
+10-15 06:18:30.437 I/DJMantraMIDI(11345): in B1 03 1B
+10-15 06:18:30.482 I/DJMantraMIDI(11345): in B1 03 1C
+10-15 06:18:30.483 I/DJMantraMIDI(11345): in B1 03 1C
+10-15 06:18:30.513 I/DJMantraMIDI(11345): in B1 03 1D
+10-15 06:18:30.513 I/DJMantraMIDI(11345): in B1 03 1D
+10-15 06:18:30.558 I/DJMantraMIDI(11345): in B1 03 1E
+10-15 06:18:30.558 I/DJMantraMIDI(11345): in B1 03 1E
+10-15 06:18:30.666 I/DJMantraMIDI(11345): in B1 03 1F
+10-15 06:18:30.666 I/DJMantraMIDI(11345): in B1 03 1F
+10-15 06:18:30.710 I/DJMantraMIDI(11345): in B1 03 20
+10-15 06:18:30.710 I/DJMantraMIDI(11345): in B1 03 20
+10-15 06:18:30.738 I/DJMantraMIDI(11345): in B1 03 21
+10-15 06:18:30.738 I/DJMantraMIDI(11345): in B1 03 21
+10-15 06:18:30.782 I/DJMantraMIDI(11345): in B1 03 22
+10-15 06:18:30.782 I/DJMantraMIDI(11345): in B1 03 22
+10-15 06:18:30.832 I/DJMantraMIDI(11345): in B1 03 23
+10-15 06:18:30.832 I/DJMantraMIDI(11345): in B1 03 23
+10-15 06:18:30.906 I/DJMantraMIDI(11345): in B1 03 25
+10-15 06:18:30.906 I/DJMantraMIDI(11345): in B1 03 25
+10-15 06:18:30.950 I/DJMantraMIDI(11345): in B1 03 26
+10-15 06:18:30.951 I/DJMantraMIDI(11345): in B1 03 26
+10-15 06:18:30.994 I/DJMantraMIDI(11345): in B1 03 27
+10-15 06:18:30.994 I/DJMantraMIDI(11345): in B1 03 27
+10-15 06:18:31.023 I/DJMantraMIDI(11345): in B1 03 28
+10-15 06:18:31.023 I/DJMantraMIDI(11345): in B1 03 28
+10-15 06:18:31.082 I/DJMantraMIDI(11345): in B1 03 29
+10-15 06:18:31.082 I/DJMantraMIDI(11345): in B1 03 29
+10-15 06:18:31.113 I/DJMantraMIDI(11345): in B1 03 2A
+10-15 06:18:31.113 I/DJMantraMIDI(11345): in B1 03 2A
+10-15 06:18:31.143 I/DJMantraMIDI(11345): in B1 03 2C
+10-15 06:18:31.143 I/DJMantraMIDI(11345): in B1 03 2C
+10-15 06:18:31.188 I/DJMantraMIDI(11345): in B1 03 2D
+10-15 06:18:31.188 I/DJMantraMIDI(11345): in B1 03 2D
+10-15 06:18:31.233 I/DJMantraMIDI(11345): in B1 03 2E
+10-15 06:18:31.233 I/DJMantraMIDI(11345): in B1 03 2E
+10-15 06:18:31.262 I/DJMantraMIDI(11345): in B1 03 2F
+10-15 06:18:31.262 I/DJMantraMIDI(11345): in B1 03 2F
+10-15 06:18:31.306 I/DJMantraMIDI(11345): in B1 03 30
+10-15 06:18:31.307 I/DJMantraMIDI(11345): in B1 03 30
+10-15 06:18:31.368 I/DJMantraMIDI(11345): in B1 03 31
+10-15 06:18:31.368 I/DJMantraMIDI(11345): in B1 03 31
+10-15 06:18:31.397 I/DJMantraMIDI(11345): in B1 03 32
+10-15 06:18:31.397 I/DJMantraMIDI(11345): in B1 03 32
+10-15 06:18:31.444 I/DJMantraMIDI(11345): in B1 03 33
+10-15 06:18:31.444 I/DJMantraMIDI(11345): in B1 03 33
+10-15 06:18:31.487 I/DJMantraMIDI(11345): in B1 03 34
+10-15 06:18:31.487 I/DJMantraMIDI(11345): in B1 03 34
+10-15 06:18:31.548 I/DJMantraMIDI(11345): in B1 03 35
+10-15 06:18:31.548 I/DJMantraMIDI(11345): in B1 03 35
+10-15 06:18:31.592 I/DJMantraMIDI(11345): in B1 03 36
+10-15 06:18:31.592 I/DJMantraMIDI(11345): in B1 03 36
+10-15 06:18:31.637 I/DJMantraMIDI(11345): in B1 03 37
+10-15 06:18:31.637 I/DJMantraMIDI(11345): in B1 03 37
+10-15 06:18:31.728 I/DJMantraMIDI(11345): in B1 03 38
+10-15 06:18:31.728 I/DJMantraMIDI(11345): in B1 03 38
+10-15 06:18:31.773 I/DJMantraMIDI(11345): in B1 03 39
+10-15 06:18:31.773 I/DJMantraMIDI(11345): in B1 03 39
+10-15 06:18:31.804 I/DJMantraMIDI(11345): in B1 03 3A
+10-15 06:18:31.804 I/DJMantraMIDI(11345): in B1 03 3A
+10-15 06:18:31.847 I/DJMantraMIDI(11345): in B1 03 3B
+10-15 06:18:31.847 I/DJMantraMIDI(11345): in B1 03 3B
+10-15 06:18:31.893 I/DJMantraMIDI(11345): in B1 03 3C
+10-15 06:18:31.893 I/DJMantraMIDI(11345): in B1 03 3C
+10-15 06:18:31.923 I/DJMantraMIDI(11345): in B1 03 3D
+10-15 06:18:31.923 I/DJMantraMIDI(11345): in B1 03 3D
+10-15 06:18:31.965 I/DJMantraMIDI(11345): in B1 03 3E
+10-15 06:18:31.965 I/DJMantraMIDI(11345): in B1 03 3E
+10-15 06:18:32.013 I/DJMantraMIDI(11345): in B1 03 3F
+10-15 06:18:32.013 I/DJMantraMIDI(11345): in B1 03 3F
+10-15 06:18:32.041 I/DJMantraMIDI(11345): in B1 03 40
+10-15 06:18:32.041 I/DJMantraMIDI(11345): in B1 03 40
+10-15 06:18:32.543 I/DJMantraMIDI(11345): in B1 03 43
+10-15 06:18:32.544 I/DJMantraMIDI(11345): in B1 03 43
+10-15 06:18:32.584 I/DJMantraMIDI(11345): in B1 03 46
+10-15 06:18:32.584 I/DJMantraMIDI(11345): in B1 03 46
+10-15 06:18:32.613 I/DJMantraMIDI(11345): in B1 03 47
+10-15 06:18:32.613 I/DJMantraMIDI(11345): in B1 03 47
+10-15 06:18:32.659 I/DJMantraMIDI(11345): in B1 03 49
+10-15 06:18:32.659 I/DJMantraMIDI(11345): in B1 03 49
+10-15 06:18:32.701 I/DJMantraMIDI(11345): in B1 03 4A
+10-15 06:18:32.701 I/DJMantraMIDI(11345): in B1 03 4A
+10-15 06:18:32.738 I/DJMantraMIDI(11345): in B1 03 4C
+10-15 06:18:32.738 I/DJMantraMIDI(11345): in B1 03 4C
+10-15 06:18:32.778 I/DJMantraMIDI(11345): in B1 03 4D
+10-15 06:18:32.778 I/DJMantraMIDI(11345): in B1 03 4D
+10-15 06:18:32.822 I/DJMantraMIDI(11345): in B1 03 4E
+10-15 06:18:32.822 I/DJMantraMIDI(11345): in B1 03 4E
+10-15 06:18:32.870 I/DJMantraMIDI(11345): in B1 03 50
+10-15 06:18:32.870 I/DJMantraMIDI(11345): in B1 03 50
+10-15 06:18:32.898 I/DJMantraMIDI(11345): in B1 03 52
+10-15 06:18:32.898 I/DJMantraMIDI(11345): in B1 03 52
+10-15 06:18:32.941 I/DJMantraMIDI(11345): in B1 03 54
+10-15 06:18:32.942 I/DJMantraMIDI(11345): in B1 03 54
+10-15 06:18:32.971 I/DJMantraMIDI(11345): in B1 03 55
+10-15 06:18:32.971 I/DJMantraMIDI(11345): in B1 03 55
+10-15 06:18:33.016 I/DJMantraMIDI(11345): in B1 03 56
+10-15 06:18:33.016 I/DJMantraMIDI(11345): in B1 03 56
+10-15 06:18:33.063 I/DJMantraMIDI(11345): in B1 03 58
+10-15 06:18:33.064 I/DJMantraMIDI(11345): in B1 03 58
+10-15 06:18:33.110 I/DJMantraMIDI(11345): in B1 03 59
+10-15 06:18:33.111 I/DJMantraMIDI(11345): in B1 03 59
+10-15 06:18:33.137 I/DJMantraMIDI(11345): in B1 03 5B
+10-15 06:18:33.137 I/DJMantraMIDI(11345): in B1 03 5B
+10-15 06:18:33.182 I/DJMantraMIDI(11345): in B1 03 5C
+10-15 06:18:33.183 I/DJMantraMIDI(11345): in B1 03 5C
+10-15 06:18:33.228 I/DJMantraMIDI(11345): in B1 03 5D
+10-15 06:18:33.229 I/DJMantraMIDI(11345): in B1 03 5D
+10-15 06:18:33.258 I/DJMantraMIDI(11345): in B1 03 5F
+10-15 06:18:33.259 I/DJMantraMIDI(11345): in B1 03 5F
+10-15 06:18:33.303 I/DJMantraMIDI(11345): in B1 03 60
+10-15 06:18:33.303 I/DJMantraMIDI(11345): in B1 03 60
+10-15 06:18:33.349 I/DJMantraMIDI(11345): in B1 03 61
+10-15 06:18:33.349 I/DJMantraMIDI(11345): in B1 03 61
+10-15 06:18:33.378 I/DJMantraMIDI(11345): in B1 03 62
+10-15 06:18:33.378 I/DJMantraMIDI(11345): in B1 03 62
+10-15 06:18:33.422 I/DJMantraMIDI(11345): in B1 03 63
+10-15 06:18:33.422 I/DJMantraMIDI(11345): in B1 03 63
+10-15 06:18:33.467 I/DJMantraMIDI(11345): in B1 03 64
+10-15 06:18:33.467 I/DJMantraMIDI(11345): in B1 03 64
+10-15 06:18:33.498 I/DJMantraMIDI(11345): in B1 03 66
+10-15 06:18:33.498 I/DJMantraMIDI(11345): in B1 03 66
+10-15 06:18:33.542 I/DJMantraMIDI(11345): in B1 03 67
+10-15 06:18:33.542 I/DJMantraMIDI(11345): in B1 03 67
+10-15 06:18:33.590 I/DJMantraMIDI(11345): in B1 03 68
+10-15 06:18:33.590 I/DJMantraMIDI(11345): in B1 03 68
+10-15 06:18:33.618 I/DJMantraMIDI(11345): in B1 03 69
+10-15 06:18:33.618 I/DJMantraMIDI(11345): in B1 03 69
+10-15 06:18:33.673 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48262 frames/s of 48000 , 2 channels
+10-15 06:18:33.709 I/DJMantraMIDI(11345): in B1 03 6A
+10-15 06:18:33.709 I/DJMantraMIDI(11345): in B1 03 6A
+10-15 06:18:33.812 I/DJMantraMIDI(11345): in B1 03 6B
+10-15 06:18:33.812 I/DJMantraMIDI(11345): in B1 03 6B
+10-15 06:18:33.845 I/DJMantraMIDI(11345): in B1 03 6C
+10-15 06:18:33.845 I/DJMantraMIDI(11345): in B1 03 6C
+10-15 06:18:33.919 I/DJMantraMIDI(11345): in B1 03 6D
+10-15 06:18:33.919 I/DJMantraMIDI(11345): in B1 03 6D
+10-15 06:18:33.993 I/DJMantraMIDI(11345): in B1 03 6E
+10-15 06:18:33.993 I/DJMantraMIDI(11345): in B1 03 6E
+10-15 06:18:34.025 I/DJMantraMIDI(11345): in B1 03 6F
+10-15 06:18:34.025 I/DJMantraMIDI(11345): in B1 03 6F
+10-15 06:18:34.113 I/DJMantraMIDI(11345): in B1 03 70
+10-15 06:18:34.113 I/DJMantraMIDI(11345): in B1 03 70
+10-15 06:18:34.155 I/DJMantraMIDI(11345): in B1 03 71
+10-15 06:18:34.155 I/DJMantraMIDI(11345): in B1 03 71
+10-15 06:18:34.204 I/DJMantraMIDI(11345): in B1 03 72
+10-15 06:18:34.204 I/DJMantraMIDI(11345): in B1 03 72
+10-15 06:18:34.233 I/DJMantraMIDI(11345): in B1 03 73
+10-15 06:18:34.234 I/DJMantraMIDI(11345): in B1 03 73
+10-15 06:18:34.276 I/DJMantraMIDI(11345): in B1 03 74
+10-15 06:18:34.276 I/DJMantraMIDI(11345): in B1 03 74
+10-15 06:18:34.324 I/DJMantraMIDI(11345): in B1 03 75
+10-15 06:18:34.324 I/DJMantraMIDI(11345): in B1 03 75
+10-15 06:18:34.352 I/DJMantraMIDI(11345): in B1 03 77
+10-15 06:18:34.352 I/DJMantraMIDI(11345): in B1 03 77
+10-15 06:18:34.398 I/DJMantraMIDI(11345): in B1 03 78
+10-15 06:18:34.398 I/DJMantraMIDI(11345): in B1 03 78
+10-15 06:18:34.446 I/DJMantraMIDI(11345): in B1 03 79
+10-15 06:18:34.446 I/DJMantraMIDI(11345): in B1 03 79
+10-15 06:18:34.487 I/DJMantraMIDI(11345): in B1 03 7B
+10-15 06:18:34.487 I/DJMantraMIDI(11345): in B1 03 7B
+10-15 06:18:34.565 I/DJMantraMIDI(11345): in B1 03 7C
+10-15 06:18:34.565 I/DJMantraMIDI(11345): in B1 03 7C
+10-15 06:18:34.607 I/DJMantraMIDI(11345): in B1 03 7D
+10-15 06:18:34.607 I/DJMantraMIDI(11345): in B1 03 7D
+10-15 06:18:34.658 I/DJMantraMIDI(11345): in B1 03 7E
+10-15 06:18:34.658 I/DJMantraMIDI(11345): in B1 03 7E
+10-15 06:18:34.682 I/DJMantraMIDI(11345): in B1 03 7F
+10-15 06:18:34.682 I/DJMantraMIDI(11345): in B1 03 7F
+10-15 06:18:38.693 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48121 frames/s of 48000 , 2 channels
+10-15 06:18:43.707 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48176 frames/s of 48000 , 2 channels
+10-15 06:18:48.718 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48236 frames/s of 48000 , 2 channels
+10-15 06:18:53.726 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48204 frames/s of 48000 , 2 channels
+10-15 06:18:58.740 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48204 frames/s of 48000 , 2 channels
+10-15 06:19:03.760 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48141 frames/s of 48000 , 2 channels
+10-15 06:19:08.771 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48213 frames/s of 48000 , 2 channels
+10-15 06:19:13.783 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48194 frames/s of 48000 , 2 channels
+10-15 06:19:18.800 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48171 frames/s of 48000 , 2 channels
+10-15 06:19:23.809 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48232 frames/s of 48000 , 2 channels
+10-15 06:19:28.825 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48161 frames/s of 48000 , 2 channels
+10-15 06:19:33.840 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48117 frames/s of 48000 , 2 channels
+10-15 06:19:38.846 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48262 frames/s of 48000 , 2 channels
+10-15 06:19:43.856 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48238 frames/s of 48000 , 2 channels
+10-15 06:19:48.881 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48137 frames/s of 48000 , 2 channels
+10-15 06:19:53.884 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48236 frames/s of 48000 , 2 channels
+10-15 06:19:58.906 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48128 frames/s of 48000 , 2 channels
+10-15 06:20:03.920 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48195 frames/s of 48000 , 2 channels
+10-15 06:20:08.930 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:20:13.940 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48257 frames/s of 48000 , 2 channels
+10-15 06:20:18.951 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48273 frames/s of 48000 , 2 channels
+10-15 06:20:23.966 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48181 frames/s of 48000 , 2 channels
+10-15 06:20:28.980 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48214 frames/s of 48000 , 2 channels
+10-15 06:20:34.001 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48138 frames/s of 48000 , 2 channels
+10-15 06:20:39.008 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48242 frames/s of 48000 , 2 channels
+10-15 06:20:44.025 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48160 frames/s of 48000 , 2 channels
+10-15 06:20:49.041 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48202 frames/s of 48000 , 2 channels
+10-15 06:20:54.049 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48232 frames/s of 48000 , 2 channels
+10-15 06:20:59.067 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48134 frames/s of 48000 , 2 channels
+10-15 06:21:04.080 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48211 frames/s of 48000 , 2 channels
+10-15 06:21:09.087 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48262 frames/s of 48000 , 2 channels
+10-15 06:21:14.106 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48148 frames/s of 48000 , 2 channels
+10-15 06:21:19.121 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48103 frames/s of 48000 , 2 channels
+10-15 06:21:24.126 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48349 frames/s of 48000 , 2 channels
+10-15 06:21:29.147 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48187 frames/s of 48000 , 2 channels
+10-15 06:21:34.160 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:21:39.169 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48238 frames/s of 48000 , 2 channels
+10-15 06:21:44.187 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48142 frames/s of 48000 , 2 channels
+10-15 06:21:49.200 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48201 frames/s of 48000 , 2 channels
+10-15 06:21:54.206 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48261 frames/s of 48000 , 2 channels
+10-15 06:21:59.224 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48164 frames/s of 48000 , 2 channels
+10-15 06:22:04.240 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48163 frames/s of 48000 , 2 channels
+10-15 06:22:09.246 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48186 frames/s of 48000 , 2 channels
+10-15 06:22:14.265 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48157 frames/s of 48000 , 2 channels
+10-15 06:22:19.271 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48233 frames/s of 48000 , 2 channels
+10-15 06:22:24.291 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48154 frames/s of 48000 , 2 channels
+10-15 06:22:29.305 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48192 frames/s of 48000 , 2 channels
+10-15 06:22:34.314 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48180 frames/s of 48000 , 2 channels
+10-15 06:22:39.326 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48200 frames/s of 48000 , 2 channels
+10-15 06:22:44.340 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48177 frames/s of 48000 , 2 channels
+10-15 06:22:49.354 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48200 frames/s of 48000 , 2 channels
+10-15 06:22:54.366 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48209 frames/s of 48000 , 2 channels
+10-15 06:22:59.380 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48217 frames/s of 48000 , 2 channels
+10-15 06:23:04.400 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48152 frames/s of 48000 , 2 channels
+10-15 06:23:09.406 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48265 frames/s of 48000 , 2 channels
+10-15 06:23:14.420 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48203 frames/s of 48000 , 2 channels
+10-15 06:23:19.432 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48218 frames/s of 48000 , 2 channels
+10-15 06:23:24.447 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48197 frames/s of 48000 , 2 channels
+10-15 06:23:29.466 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48155 frames/s of 48000 , 2 channels
+10-15 06:23:34.475 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48252 frames/s of 48000 , 2 channels
+10-15 06:23:39.490 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48174 frames/s of 48000 , 2 channels
+10-15 06:23:44.503 I/DJMantra(11345): info [Engine] SoundDeviceOboe - Output rate: 48178 frames/s of 48000 , 2 channels

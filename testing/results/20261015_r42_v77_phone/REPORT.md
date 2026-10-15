@@ -9,6 +9,7 @@ Tester: Mac session claude-code-32. APK: android-latest `DJMantra-V77-794c399-ph
 | 68 | Bluetooth connect does not open the browser | PASS | V71 the same morning: `in 90 00 7F` → `controller: browse press` → opened Music/djmantra_app/Keys (00). V77: `Connected (bluetooth)`, toast, `controller link: bluetooth`, no browse press; the list stayed at the djmantra_app root (01). BT pill on. |
 | 65 | compact list | PASS (look) | One line per row, whole folder names, no "Folder" text, TITLE / ARTIST / LENGTH / BPM / KEY columns, small covers (02). |
 | 73 | waveform as sharp as the icon | PASS, two notes | See below. |
+| 72 | ghost on a pickup knob (deck 1 MID, Mix Ultra over Bluetooth) | PASS, one note | Screen MID at the top (0 dB); controller MID (B1 03) turned 7C→40, then 40→00: the screen MID did not move. Then 02→7F slowly (06:18:29.9–34.7): a half-transparent green pointer and rim dot followed the knob from the left over the top, the real white pointer stayed; at the top they met, the ghost went and the knob followed, no jump (08, frames of a screen recording). **Note:** the ghost is faint and small, easy to miss on the phone. |
 
 ## 73, the waveform
 
