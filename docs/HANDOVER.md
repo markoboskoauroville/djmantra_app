@@ -5,7 +5,26 @@ stops; the newest state wins over older notes. Last update: **2026-10-14 21:00 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
-## 14.10.2026 21:00 UTC (latest): V76 pushed (a246d79), the phone has V71, the tester stopped for the night
+## 15.10.2026 04:45 UTC (latest): V78 green and published (75cc4ee), the phone tester runs round 42
+
+- **Tester:** Mac session "Cloud session phone testing" (`session_01WRdDahARy1pzXzDqXTakA3`, claude-code-32),
+  real Pixel 7 over wireless adb 192.168.1.103:5555, Mix Ultra over Bluetooth, Marko's hands on the controller.
+  Reach it with the remote `send_message` tool (the SendMessage bridge is refused from this cloud session); it pushes
+  results to `testing/results/20261015_r42_v77_phone/` and messages back.
+- **V77** (794c399): Mix Ultra FX PADS (SHIFT + FX: pads 1-8 the 8 effects, SHIFT + pad 9-16, `Effects.qml`
+  singleton), SHIFT + FILTER = effect DEPTH with a pop-up, pickup GHOSTS (`Ghost.qml`, `[DJMantra] ghost_<deck>_<code>`
+  from the script's one `MixUltra.pickup`), FILTER with pickup, the icon-sharp waveform. Phone (r42): basics, 68, 65,
+  73, 72 PASS; notes fixed in V78.
+- **V78** (75cc4ee): waveform only the icon's colours + 2/3 lane height (74); concentric knobs without LED rings,
+  bigger (75); 3-BAND section waveform, default, Settings -> WAVEFORM 3-BAND / ICON (76); one colour per concentric
+  knob (77); stronger ghosts (78). Previews: `docs/ui-reference/waveform-*.png` (rendered in the cloud through the
+  real shader: xvfb-run + LIBGL_ALWAYS_SOFTWARE, QML ShaderEffect with a texture built from a test song).
+- **Next:** read the tester's V78 results for 74-78, then 69 / 71 / 70 (FX pads, depth, "1 is here"), then round 41's
+  open parts. `android-latest` was overwritten once by a build of `main` (1654e70, another session's old-base commit);
+  our branch's builds replace it again.
+- The cloud emulator (pixel7, API 34, no KVM) boots in ~20+ min; the real phone made it unnecessary today.
+
+## 14.10.2026 21:00 UTC: V76 pushed (a246d79), the phone has V71, the tester stopped for the night
 
 **State.** Branch ccr-eb7d1019-d3kubd, V76 = a246d79, **GREEN on Android and Linux, published 21:10 UTC as android-latest "DJ Mantra V76"** (earlier note: the routine "V76 CI check" re-checked,
 re-runs a flaky emulator launch test once, and messages the tester when green). The real Pixel 7 has **V71**. Tester:
