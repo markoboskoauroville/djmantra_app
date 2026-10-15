@@ -5,6 +5,38 @@ stops; the newest state wins over older notes. Last update: **2026-10-09 14:20 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## State on 2026-10-15 01:20 UTC (newest; wins over everything below)
+
+- Branch and `main` head: `657f953` plus this commit. Done since 10.10.2026:
+  - the "dj" logo tile (after Marko's model);
+  - One Deck shows only the overview;
+  - a tap on any waveform jumps the playhead (the overview on press; big waveforms on a tap
+    without movement, scratch only after 12 px);
+  - the Android waveform renderer follows its widget's size (Marko's "3 waveforms");
+  - One Deck deferred loads (the freeze on next) and its landscape layout;
+  - the bar insets.
+- EQ/filter versus Pioneer DJM:
+  - write-up in `docs/EQ_FILTER_VS_DJM.md`;
+  - engine curves from `src/test/djmantra_eqcurve_test.cpp` in `docs/eq-curves/`;
+  - phone sweep tool `tools/android/eq_sweep_test.py` (pink noise, BlackHole), **not run yet**;
+  - the proposals in the doc (EQ/ISO switch, +6 dB boost, filter centre lock and resonance,
+    Mixer settings) are **not built yet**.
+- **No local session is connected.** "Djapp local" (session_01HGBdB5gPBHRGZUks9DixYh) is
+  archived. Device tests need Marko to start Remote Control on the Mac again.
+- Round 11 for the phone, when a local session is back:
+  - One Deck portrait and landscape (only the overview);
+  - taps on the overview at 25/50/90 %;
+  - a tap on a big waveform while playing (the sound must not stop);
+  - next/prev freeze retest;
+  - logcat "Waveform: renderer size";
+  - the logo;
+  - `compare_audio.py` on real songs;
+  - `eq_sweep_test.py --mic <BlackHole>`.
+- **Marko's standing order (10.10.2026):** when all the tests are done and the session ends
+  without his input, have the local session first **shut down the phone** (`adb shell reboot
+  -p`), then **shut down the Mac** if possible. Confirm with the local session first that it
+  can.
+
 ## Where things are
 
 - Repo `markoboskoauroville/djmantra_app`, development branch `claude/admiring-feynman-hym3vp`

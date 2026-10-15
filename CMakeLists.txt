@@ -2314,6 +2314,7 @@ if(BUILD_TESTING)
     #src/test/effectchainslottest.cpp
     src/test/enginebufferscalelineartest.cpp
     src/test/enginebuffertest.cpp
+    src/test/djmantra_eqcurve_test.cpp
     src/test/enginefilterbiquadtest.cpp
     src/test/enginemixertest.cpp
     src/test/enginemicrophonetest.cpp
