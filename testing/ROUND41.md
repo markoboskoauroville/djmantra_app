@@ -338,3 +338,10 @@ new shader): docs/ui-reference/waveform-v76-vs-v77.png. Screenshot both decks pl
 YELLOW-GREEN bars any more (bass + mids now go to red-orange or green); red, red-orange, green, cyan, blue, violet,
 magenta only. Same songs as r42 06 / 07 for comparison. (2) Height: the loud bars reach about two thirds of each lane
 (was a quarter to a third); quiet parts lower. Settings -> LANE HEIGHT "tall" still makes it taller. Screenshot as 06.
+## 75. (V78) CONCENTRIC KNOBS WITHOUT LEDS, BIGGER (Marko 15.10.2026, on V77: "remove LEDs around knobs which are concentric
+because now they are too small. So LEDs go only around the filter, that's all. And the other is completely removed and
+the knobs are enlarged"). Mixer tab, both decks: HIGH/HARMONY, MID/VOCALS, LOW/DRUMS have NO dot rings (neither inner
+nor outer); the outer knob fills the space the rings used (the knob as wide as the FILTER's ring), the inner cap 60 % of
+it; each value shows by its pointer (white inner, coloured outer) and the numbers above / below. FILTER keeps its LED
+ring. Ghosts (part 72) on these knobs: a half-transparent pointer plus a small hollow circle on the knob's rim (inner
+cap's edge for the inner value, the outer knob's edge for the outer). Screenshot the mixer column, both modes.

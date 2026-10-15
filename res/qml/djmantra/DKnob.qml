@@ -47,7 +47,11 @@ Item {
     readonly property real ledSize: Math.max(2.5, dial.width * 0.055)
     readonly property real outerLedRadius: dial.width / 2 - ledSize / 2
     readonly property real innerLedRadius: outerLedRadius - ledSize * 1.55
-    readonly property real outerKnobSize: 2 * (innerLedRadius - ledSize / 2 - dial.width * 0.035)
+    // V78 (Marko 15.10.2026: "remove LEDs around knobs which are concentric because now they are
+    // too small. So LEDs go only around the filter ... the knobs are enlarged"): a concentric
+    // knob has no LED rings; its outer knob fills the dial, the pointers and the numbers show
+    // the values
+    readonly property real outerKnobSize: dial.width
     readonly property real innerKnobSize: outerKnobSize * 0.6
     readonly property real outerTurn: concentric ? Math.min(1, outerControl.parameter) : 0
     readonly property real outerDb: outerControl.value > 0.0005 ? 20 * Math.log(outerControl.value) / Math.LN10 : -999
@@ -132,7 +136,8 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         Repeater {
-            model: root.dots
+            // the LED ring: only on the plain knobs (FILTER), V78
+            model: root.concentric ? 0 : root.dots
 
             delegate: Rectangle {
                 required property int index
@@ -156,7 +161,7 @@ Item {
 
         Repeater {
             // the outer ring: the concentric second control
-            model: root.concentric ? root.dots : 0
+            model: 0 // V78: no LED rings on the concentric knobs
 
             delegate: Rectangle {
                 required property int index
@@ -265,13 +270,15 @@ Item {
         Repeater {
             // the GHOSTS on the LED rings: a half-transparent larger dot where the controller's
             // knob is (inner ring: the inner control, outermost ring: the outer control)
-            model: [[root.ghostTurn, root.concentric ? root.innerLedRadius : dial.width / 2 - Math.max(3, dial.width * 0.085) / 2, root.arcColor],
-                    [root.outerGhostTurn, root.outerLedRadius, root.outerColor]]
+            // V78: no rings on the concentric knobs: the markers sit on the knobs' rims (the inner
+            // cap's edge, the outer knob's edge)
+            model: [[root.ghostTurn, root.concentric ? root.innerKnobSize / 2 + 1 : dial.width / 2 - Math.max(3, dial.width * 0.085) / 2, root.arcColor],
+                    [root.outerGhostTurn, root.outerKnobSize / 2 - Math.max(4, dial.width * 0.06), root.outerColor]]
 
             delegate: Rectangle {
                 required property var modelData
                 readonly property real angle: (-135 + 270 * Math.max(0, modelData[0])) * Math.PI / 180
-                readonly property real size: (root.concentric ? root.ledSize : Math.max(3, dial.width * 0.085)) * 1.8
+                readonly property real size: Math.max(6, dial.width * (root.concentric ? 0.11 : 0.085 * 1.8))
 
                 visible: modelData[0] >= 0
                 z: 4
