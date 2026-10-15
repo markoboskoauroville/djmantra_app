@@ -356,3 +356,7 @@ core; the change is visible where the section line is, and would be without it. 
 bars, three layers): the song's structure readable at a glance. Settings -> WAVEFORM: 3-BAND (sections) / ICON (one
 colour, V77); the choice applies when the tab opens again (log `Settings: waveform ...`). Cloud preview, same section
 in V76 / V77 / V78 and the whole song: docs/ui-reference/waveform-sections-v76-v77-v78.png. Screenshot both styles.
+## 77. (V78) ONE COLOUR PER CONCENTRIC KNOB (Marko 15.10.2026: "Mid color is same as vocal color. High color is same as
+harmony color. Low color is same as drums color. Meaning the font must have the same color in the labels"). Mixer tab,
+both decks, EQ and NEURAL MIX mode: HIGH and HARMONY both blue, MID and VOCALS both green, LOW and DRUMS both red, in
+the labels above and below, the outer knob's pointer and the ghost markers; no violet left on these knobs.
