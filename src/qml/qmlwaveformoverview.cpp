@@ -22,6 +22,9 @@ QmlWaveformOverview::QmlWaveformOverview(QQuickItem* parent)
           m_colorHigh(0xFF0000),
           m_colorMid(0x00FF00),
           m_colorLow(0x0000FF) {
+    connect(this, &QmlWaveformOverview::threeBandChanged, this, [this] {
+        update();
+    });
 }
 
 QmlPlayerProxy* QmlWaveformOverview::getPlayer() const {
@@ -356,6 +359,49 @@ void QmlWaveformOverview::drawDjay(QPainter* pPainter,
     pPainter->setClipRect(boundingRect());
     pPainter->setRenderHint(QPainter::Antialiasing, false);
     pPainter->setPen(Qt::NoPen);
+    if (m_threeBand) {
+        // 3-BAND (V78, Marko 15.10.2026: "sections must be clearly seen through the waveform
+        // shape and colors"): as res/shaders/djaysignal_qml.frag, three nested layers per bar,
+        // bass red at the back, mids green, highs blue-violet in front, each band's height its
+        // level over the bar (half its RMS, half its peak) times its measured reach
+        const QColor kBass(237, 33, 43);
+        const QColor kMids(41, 219, 140);
+        const QColor kHighs(115, 122, 255);
+        constexpr double kReach[3] = {2.4, 2.6, 0.5};
+        // as the scrolling waveform's lane at heightGain 0.62, scaled to this lane
+        constexpr double kGain = 0.62;
+        for (int x0 = 0; x0 + 1 < columns; x0 += kPitch) {
+            const int from = std::clamp(static_cast<int>(x0 * perColumn), 0, points - 1);
+            const int to = std::clamp(static_cast<int>((x0 + kPitch) * perColumn), from + 1, points);
+            double peak[3] = {0, 0, 0};
+            double square[3] = {0, 0, 0};
+            // at most ~64 reads a bar
+            const int stride = std::max(1, (to - from) / 64);
+            int count = 0;
+            for (int i = from; i < to; i += stride) {
+                const double band[3] = {
+                        (pWaveform->getLow(2 * i) + pWaveform->getLow(2 * i + 1)) / 2.0,
+                        (pWaveform->getMid(2 * i) + pWaveform->getMid(2 * i + 1)) / 2.0,
+                        (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0};
+                for (int b = 0; b < 3; ++b) {
+                    peak[b] = std::max(peak[b], band[b]);
+                    square[b] += band[b] * band[b];
+                }
+                ++count;
+            }
+            const QColor colours[3] = {kBass, kMids, kHighs};
+            for (int b = 0; b < 3; ++b) {
+                const double level = 0.5 * (std::sqrt(square[b] / std::max(count, 1)) + peak[b]) *
+                        colourScale;
+                const double h = std::round(std::min(1.0, level * kReach[b] * kGain) * middle);
+                if (h >= 0.5) {
+                    pPainter->fillRect(QRectF(x0, std::round(middle - h), kBar, 2 * h), colours[b]);
+                }
+            }
+        }
+        pPainter->restore();
+        return;
+    }
     for (int x0 = 0; x0 + 1 < columns; x0 += kPitch) {
         // the loudest of the bar's columns
         int best = x0;

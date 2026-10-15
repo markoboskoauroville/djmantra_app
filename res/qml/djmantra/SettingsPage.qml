@@ -33,6 +33,7 @@ Rectangle {
     property real stopTime: Number(Mixxx.DJMantra.setting("stop_time", "0"))
     property string laneStyle: Mixxx.DJMantra.setting("lane_style", "mirrored")
     property string laneHeight: Mixxx.DJMantra.setting("lane_height", "djay")
+    property string waveStyle: Mixxx.DJMantra.setting("wave_style", "3band")
     property int cqFx: Number(Mixxx.DJMantra.setting("cq_fx", "1"))
     property int seenVersion: -1
     signal done()
@@ -169,6 +170,33 @@ Rectangle {
                         onClicked: {
                             root.laneStyle = modelData[0];
                             Mixxx.DJMantra.setSetting("lane_style", modelData[0]);
+                        }
+                    }
+                }
+            }
+
+            Row {
+                // V78 (Marko 15.10.2026: "sections must be clearly seen through the waveform shape
+                // and colors"): 3-BAND = bass red, mids green, highs blue as nested layers, so a
+                // section change shows; ICON = V77's one colour per bar. Applies when the tab opens again
+                spacing: 6
+
+                Repeater {
+                    model: [["3band", qsTr("3-BAND (sections)")], ["icon", qsTr("ICON (one colour)")]]
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "waveStyle_" + modelData[0]
+                        width: (column.width - 6) / 2
+                        height: 40
+                        text: modelData[1]
+                        fontSize: 13
+                        lit: root.waveStyle === modelData[0]
+                        onClicked: {
+                            root.waveStyle = modelData[0];
+                            Mixxx.DJMantra.setSetting("wave_style", modelData[0]);
+                            Mixxx.DJMantra.log("Settings: waveform " + modelData[0]);
                         }
                     }
                 }

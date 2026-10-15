@@ -24,6 +24,8 @@ ShaderEffect {
     property real heightGain: 1.0
     // sharp bar edges to the device pixel (V77)
     property real pixelRatio: Screen.devicePixelRatio
+    // V78: 0 = 3-BAND (sections), 1 = ICON (one colour per bar); Settings -> WAVEFORM
+    property int waveStyle: Mixxx.DJMantra.setting("wave_style", "3band") === "icon" ? 1 : 0
     property Image waveformTexture
     // Marko 13.10.2026: the real sound wave at deep zoom (qml/finewave.h); 0 = not built
     property int fineLength: root.deckPlayer.fineWaveLength

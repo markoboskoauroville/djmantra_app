@@ -345,3 +345,14 @@ nor outer); the outer knob fills the space the rings used (the knob as wide as t
 it; each value shows by its pointer (white inner, coloured outer) and the numbers above / below. FILTER keeps its LED
 ring. Ghosts (part 72) on these knobs: a half-transparent pointer plus a small hollow circle on the knob's rim (inner
 cap's edge for the inner value, the outer knob's edge for the outer). Screenshot the mixer column, both modes.
+## 76. (V78) SECTIONS SEEN IN THE WAVEFORM: 3-BAND (Marko 15.10.2026: "sections are not clearly seen in this new waveform
+... I need to see a change in music, so sections must be clearly seen through the waveform shape and colors ... even
+when the vertical lines make mistake"). New default WAVEFORM style 3-BAND (rekordbox's 3-band idea in the icon's
+colours): every bar is three nested solid layers, BASS red at the back (widest), MIDS green round the core, HIGHS
+blue-violet in the core; the colours never mix, so they do not change bar to bar, and each layer is smoothed over
+~145 ms so a section reads as one texture. Check on the same songs as r42 06 / 07 and on a dance track with a
+breakdown: a BREAKDOWN shows no red (green / blue only), a DROP wide red, vocals in = wider green, hats = the blue
+core; the change is visible where the section line is, and would be without it. The overview lanes the same (2 px
+bars, three layers): the song's structure readable at a glance. Settings -> WAVEFORM: 3-BAND (sections) / ICON (one
+colour, V77); the choice applies when the tab opens again (log `Settings: waveform ...`). Cloud preview, same section
+in V76 / V77 / V78 and the whole song: docs/ui-reference/waveform-sections-v76-v77-v78.png. Screenshot both styles.
