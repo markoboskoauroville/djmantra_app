@@ -40,4 +40,45 @@ inline QColor djayColor(double low, double mid, double high) {
             static_cast<float>(std::clamp(b, 0.0, 1.0)));
 }
 
+/// V77 (Marko 15.10.2026: the waveform as sharp as the launcher icon's): the icon's colours.
+/// Each band a pure hue (bass 2°, mids 150°, highs 240°), a bar's hue their energy-weighted mix
+/// on the colour circle (bass + highs = magenta), nearly full saturation; quiet bars darker,
+/// silence grey. Inputs as djayColor's (divided by the song's loudest band). The same as
+/// spectralColor in res/shaders/djaysignal_qml.frag.
+inline QColor spectralColor(double low, double mid, double high) {
+    constexpr double kTau = 6.283185307179586;
+    // the highs are stored compressed and every kick's click peaks in them: weighed down
+    const double wl = low * low;
+    const double wm = mid * mid;
+    const double wh = high * high * 0.45;
+    const double total = wl + wm + wh;
+    const double loudest = std::max({low, mid, high});
+    constexpr double kGrey = 0.19;
+    if (total < 1e-6) {
+        return QColor::fromRgbF(kGrey, kGrey, kGrey);
+    }
+    const auto dir = [](double degrees) {
+        return degrees * kTau / 360.0;
+    };
+    const double x = wl * std::cos(dir(2)) + wm * std::cos(dir(150)) + wh * std::cos(dir(240));
+    const double y = wl * std::sin(dir(2)) + wm * std::sin(dir(150)) + wh * std::sin(dir(240));
+    double hue = std::atan2(y, x) / kTau;
+    hue -= std::floor(hue);
+    const double lead = std::hypot(x, y) / total;
+    const double saturation = 0.78 + 0.22 * lead;
+    const double value = 0.62 + 0.38 * std::clamp(loudest, 0.0, 1.0);
+    const double voiced = std::clamp((loudest - 0.02) / 0.06, 0.0, 1.0);
+    // the hue's pure colour, paled by saturation, darkened by value, faded from grey
+    double rgb[3];
+    for (int i = 0; i < 3; ++i) {
+        const double k = std::fmod(hue * 6.0 + (i == 0 ? 0.0 : i == 1 ? 4.0 : 2.0), 6.0);
+        const double pure = std::clamp(std::abs(k - 3.0) - 1.0, 0.0, 1.0);
+        const double c = (1.0 + (pure - 1.0) * saturation) * value;
+        rgb[i] = kGrey + (c - kGrey) * voiced;
+    }
+    return QColor::fromRgbF(static_cast<float>(std::clamp(rgb[0], 0.0, 1.0)),
+            static_cast<float>(std::clamp(rgb[1], 0.0, 1.0)),
+            static_cast<float>(std::clamp(rgb[2], 0.0, 1.0)));
+}
+
 } // namespace djmantra

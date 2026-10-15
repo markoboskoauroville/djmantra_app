@@ -345,29 +345,33 @@ void QmlWaveformOverview::drawDjay(QPainter* pPainter,
         return std::max(1, *nth);
     };
     const double colourScale = 1.0 / at(bandPeaks, 99); // the colour's inputs, as fitted
-    const double heightScale = 0.75 / at(peaks, 97);    // djay: the loud parts reach 3/4
+    const double heightScale = 0.8 / at(peaks, 97);     // the loud parts reach 4/5
     const double middle = height() / 2;
+    // V77 (Marko 15.10.2026: as sharp as the launcher icon's waveform): solid bars, 2 px wide
+    // with a 1 px black gap, each ONE colour (djmantra::spectralColor) and as tall as the
+    // loudest point under it, mirrored; edges on whole pixels, no outline, no translucency
+    constexpr int kPitch = 3;
+    constexpr double kBar = 2.0;
     pPainter->save();
     pPainter->setClipRect(boundingRect());
     pPainter->setRenderHint(QPainter::Antialiasing, false);
-    QPen pen;
-    pen.setWidthF(1.0);
-    for (int x = 0; x < columns; ++x) {
-        const Column& c = cols[x];
+    pPainter->setPen(Qt::NoPen);
+    for (int x0 = 0; x0 + 1 < columns; x0 += kPitch) {
+        // the loudest of the bar's columns
+        int best = x0;
+        for (int x = x0 + 1; x < std::min(columns, x0 + kPitch); ++x) {
+            if (cols[x].peak > cols[best].peak) {
+                best = x;
+            }
+        }
+        const Column& c = cols[best];
         const int i = c.loudest;
-        const QColor colour = djmantra::djayColor(
+        const QColor colour = djmantra::spectralColor(
                 (pWaveform->getLow(2 * i) + pWaveform->getLow(2 * i + 1)) / 2.0 * colourScale,
                 (pWaveform->getMid(2 * i) + pWaveform->getMid(2 * i + 1)) / 2.0 * colourScale,
                 (pWaveform->getHigh(2 * i) + pWaveform->getHigh(2 * i + 1)) / 2.0 * colourScale);
-        const double outer = std::min(1.0, c.peak * heightScale) * middle;
-        // round 34: djay's body is thinner than its spikes
-        const double inner = std::min(1.0, c.mean * heightScale) * middle * 0.6;
-        pen.setColor(colour.darker(140));
-        pPainter->setPen(pen);
-        pPainter->drawLine(QPointF(x + 0.5, middle - outer), QPointF(x + 0.5, middle + outer));
-        pen.setColor(colour);
-        pPainter->setPen(pen);
-        pPainter->drawLine(QPointF(x + 0.5, middle - inner), QPointF(x + 0.5, middle + inner));
+        const double outer = std::max(0.5, std::round(std::min(1.0, c.peak * heightScale) * middle));
+        pPainter->fillRect(QRectF(x0, std::round(middle - outer), kBar, 2 * outer), colour);
     }
     pPainter->restore();
 }

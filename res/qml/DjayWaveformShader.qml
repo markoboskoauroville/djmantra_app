@@ -1,6 +1,7 @@
 // DJ Mantra: djay Pro's scrolling waveform (res/shaders/djaysignal_qml.frag)
 import Mixxx 1.0 as Mixxx
 import QtQuick 2.12
+import QtQuick.Window 2.12
 
 ShaderEffect {
     id: root
@@ -21,6 +22,8 @@ ShaderEffect {
     property real levelGain: 1.0
     // how far the loud parts reach (1 = the lane's edge)
     property real heightGain: 1.0
+    // sharp bar edges to the device pixel (V77)
+    property real pixelRatio: Screen.devicePixelRatio
     property Image waveformTexture
     // Marko 13.10.2026: the real sound wave at deep zoom (qml/finewave.h); 0 = not built
     property int fineLength: root.deckPlayer.fineWaveLength
@@ -92,6 +95,9 @@ ShaderEffect {
     waveformTexture: Image {
         visible: false
         layer.enabled: false
+        // each point exactly as stored (V77: smoothing blended neighbouring points)
+        smooth: false
+        mipmap: false
         source: root.deckPlayer.waveformTexture
     }
 }

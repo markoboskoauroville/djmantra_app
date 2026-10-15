@@ -327,3 +327,10 @@ with the controller's MID knob turned left; turn the controller knob a little: a
 marker at the knob's position, the real one stays; turn through the value: the ghost disappears and the knob follows.
 The same with SHIFT (the outer, NEURAL MIX ring: ghost on the outer ring) and after loading a new song (EQs reset). A
 ghost left alone fades after 3 s. Screenshot one ghost.
+## 73. (V77) THE WAVEFORM AS SHARP AS THE ICON (Marko 15.10.2026: "ours is muddy and blurry ... redesign our waveform to look
+like one in the icon itself"). Load a song on both decks, play. The scrolling waveform: separate SOLID bars with thin
+black gaps (no haze, no translucent fringe, no soft edges), each bar one pure colour (kicks / bass RED, vocals and mids
+GREEN / CYAN, hats BLUE / VIOLET, bass + hats MAGENTA), mirrored round the middle; the bars move with the song, no
+shimmer or flicker while scrolling, at every zoom (pinch in and out). Deep zoom: the thin real-wave line as before. The
+overview (the whole song) the same: 2 px bars, 1 px gaps, solid colours. The cloud preview (same song section, old vs
+new shader): docs/ui-reference/waveform-v76-vs-v77.png. Screenshot both decks playing next to the app icon.
