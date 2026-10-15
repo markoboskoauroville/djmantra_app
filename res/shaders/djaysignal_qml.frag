@@ -83,6 +83,11 @@ vec3 spectralColor(vec3 b) {
             + w.y * vec2(cos(TAU * 150.0 / 360.0), sin(TAU * 150.0 / 360.0))
             + w.z * vec2(cos(TAU * 240.0 / 360.0), sin(TAU * 240.0 / 360.0));
     float hue = fract(atan(v.y, v.x) / TAU + 1.0);
+    // only the icon's colours (r42 V77: bass + mids blended to amber / yellow-green): a hue
+    // between red-orange (14°) and green (135°) goes to the nearer of the two
+    if (hue > 14.0 / 360.0 && hue < 135.0 / 360.0) {
+        hue = hue < 74.5 / 360.0 ? 14.0 / 360.0 : 135.0 / 360.0;
+    }
     // one band leads: pure; an even mix: a little paler (still no grey)
     float lead = length(v) / total;
     vec3 c = mix(vec3(1.0), hueRgb(hue), 0.78 + 0.22 * lead);

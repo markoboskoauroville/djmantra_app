@@ -57,7 +57,9 @@ Item {
         // round 35 (djay vs the app at the same bars): djay draws each deck's wave
         // centred in its own lane, mirrored up and down; Settings -> LANE "half"
         // keeps round 18's big half wave (deck 1 up, deck 2 down from the middle)
-        heightGain: root.thin ? (root.mirrored ? 0.3 : 0.35) : (root.mirrored ? 0.8 : 0.9)
+        // r42 V77 (the icon's look; the tester: "the bars use only a quarter to a third of the
+        // lane"): the loud parts reach about two thirds of the lane by default
+        heightGain: root.thin ? (root.mirrored ? 0.62 : 0.66) : (root.mirrored ? 0.8 : 0.9)
         zoom: root.zoom
         showRoll: false
         width: root.width

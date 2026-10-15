@@ -334,3 +334,7 @@ GREEN / CYAN, hats BLUE / VIOLET, bass + hats MAGENTA), mirrored round the middl
 shimmer or flicker while scrolling, at every zoom (pinch in and out). Deep zoom: the thin real-wave line as before. The
 overview (the whole song) the same: 2 px bars, 1 px gaps, solid colours. The cloud preview (same song section, old vs
 new shader): docs/ui-reference/waveform-v76-vs-v77.png. Screenshot both decks playing next to the app icon.
+## 74. (V78) WAVEFORM: r42 notes 1 and 2 (tester, V77). (1) Only the icon's colours: no ORANGE-AMBER, YELLOW or
+YELLOW-GREEN bars any more (bass + mids now go to red-orange or green); red, red-orange, green, cyan, blue, violet,
+magenta only. Same songs as r42 06 / 07 for comparison. (2) Height: the loud bars reach about two thirds of each lane
+(was a quarter to a third); quiet parts lower. Settings -> LANE HEIGHT "tall" still makes it taller. Screenshot as 06.

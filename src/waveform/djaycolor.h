@@ -64,6 +64,11 @@ inline QColor spectralColor(double low, double mid, double high) {
     const double y = wl * std::sin(dir(2)) + wm * std::sin(dir(150)) + wh * std::sin(dir(240));
     double hue = std::atan2(y, x) / kTau;
     hue -= std::floor(hue);
+    // only the icon's colours (r42: amber / yellow-green between bass and mids): a hue between
+    // red-orange (14°) and green (135°) goes to the nearer of the two
+    if (hue > 14.0 / 360.0 && hue < 135.0 / 360.0) {
+        hue = hue < 74.5 / 360.0 ? 14.0 / 360.0 : 135.0 / 360.0;
+    }
     const double lead = std::hypot(x, y) / total;
     const double saturation = 0.78 + 0.22 * lead;
     const double value = 0.62 + 0.38 * std::clamp(loudest, 0.0, 1.0);
