@@ -19,7 +19,11 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
   bigger (75); 3-BAND section waveform, default, Settings -> WAVEFORM 3-BAND / ICON (76); one colour per concentric
   knob (77); stronger ghosts (78). Previews: `docs/ui-reference/waveform-*.png` (rendered in the cloud through the
   real shader: xvfb-run + LIBGL_ALWAYS_SOFTWARE, QML ShaderEffect with a texture built from a test song).
-- **Next:** read the tester's V78 results for 74-78, then 69 / 71 / 70 (FX pads, depth, "1 is here"), then round 41's
+- **06:55 UTC+2:** Marko shut the Mac down; the phone stays on V77. r42 on V77: 72 PASS, 69 PARTIAL (FX pad works,
+  its LED stays dark). **V79** (cfc2f30): the script lights the FX pad at once and logs every FX-pad LED (part 79).
+  Next tester session: install the newest android-latest (V79), then parts 79, 76, 75+77, 78, 74, the rest of 69,
+  71, 70, then round 41's open parts.
+- **Next:** read the tester's V79 results for 74-79, then 69 / 71 / 70 (FX pads, depth, "1 is here"), then round 41's
   open parts. `android-latest` was overwritten once by a build of `main` (1654e70, another session's old-base commit);
   our branch's builds replace it again.
 - The cloud emulator (pixel7, API 34, no KVM) boots in ~20+ min; the real phone made it unnecessary today.
