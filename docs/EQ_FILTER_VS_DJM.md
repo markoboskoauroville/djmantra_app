@@ -48,6 +48,20 @@ Where it differs from a DJM:
 2. **There is no EQ mode.** DJ Mantra always behaves like ISOLATOR. A DJM in EQ mode never goes below −26 dB, so a "cut" still lets some of the band through. That is what most DJs are used to when they mix basslines.
 3. **Different crossovers.** At 250 Hz and 2.5 kHz the bands are wider than a DJM's LOW and HI. Cutting the LOW also thins the low mids.
 
+## The phone's EQ (V-line: DJ Mantra EQ / Neural Mix, `stemeq.h`)
+
+On Android the deck EQ is DJ Mantra's own, not Mixxx's biquad EQ. It uses FFT bands with crossovers at 246 Hz and 2.5 kHz. Its curves are in `docs/eq-curves/phone_eq_curves.csv` (test `DJMantraEqCurveTest.PhoneEq`, Neural Mix off). Measured in dB:
+
+| Knob | 0 % | 10 % | 20 % | 50 % | 75 % | 100 % |
+|---|---|---|---|---|---|---|
+| LOW at 50 Hz | −81 | −19.4 | −12.1 | 0 | +6.0 | +12.1 |
+| MID at 1 kHz | −105 | −19.4 | −12.1 | 0 | +6.0 | +12.0 |
+| HIGH at 10 kHz | −164 | −19.4 | −12.1 | 0 | +6.0 | +12.0 |
+
+- **Flat bands with steep edges.** Each band is flat inside and cut steeply at its edges; the next octave over is untouched. That is a sharper isolator than any DJM.
+- **Fully down is a full kill, as in a DJM's ISOLATOR mode.** A DJM in EQ mode stops at −26 dB.
+- **Boost is +12 dB, against the DJM's +6 dB.** The same proposals below apply.
+
 ## Filter (the FILTER knob, quick effect)
 
 | | DJ Mantra now (Mixxx Filter) | Pioneer Sound Color FX FILTER (900NXS2, A9) / V10 filter |

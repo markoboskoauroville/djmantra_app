@@ -14,6 +14,10 @@ constexpr double kLowMidFreqHz = 600.0;
 
 constexpr double kMidHighFreqHz = 4000.0;
 
+// DJ Mantra: djay's colours (WaveformFactory::djayBands())
+constexpr double kDjayLowMidFreqHz = 200.0;
+constexpr double kDjayMidHighFreqHz = 2500.0;
+
 } // namespace
 
 AnalyzerWaveform::AnalyzerWaveform(
@@ -153,9 +157,12 @@ void AnalyzerWaveform::createFilters(mixxx::audio::SampleRate sampleRate) {
     // m_filter[Low] = new EngineFilterButterworth8Low(sampleRate, kLowMidFreqHz);
     // m_filter[Mid] = new EngineFilterButterworth8Band(sampleRate, kLowMidFreqHz, kMidHighFreqHz);
     // m_filter[High] = new EngineFilterButterworth8High(sampleRate, kMidHighFreqHz);
-    m_filter[Low] = new EngineFilterBessel4Low(sampleRate, kLowMidFreqHz);
-    m_filter[Mid] = new EngineFilterBessel4Band(sampleRate, kLowMidFreqHz, kMidHighFreqHz);
-    m_filter[High] = new EngineFilterBessel4High(sampleRate, kMidHighFreqHz);
+    const bool djay = WaveformFactory::djayBands();
+    const double lowMid = djay ? kDjayLowMidFreqHz : kLowMidFreqHz;
+    const double midHigh = djay ? kDjayMidHighFreqHz : kMidHighFreqHz;
+    m_filter[Low] = new EngineFilterBessel4Low(sampleRate, lowMid);
+    m_filter[Mid] = new EngineFilterBessel4Band(sampleRate, lowMid, midHigh);
+    m_filter[High] = new EngineFilterBessel4High(sampleRate, midHigh);
     // settle filters for silence in preroll to avoids ramping (Issue #7776)
     for (int i = 0; i < FilterCount; ++i) {
         m_filter[i]->assumeSettled();

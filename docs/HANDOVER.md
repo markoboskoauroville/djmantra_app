@@ -5,6 +5,33 @@ stops; the newest state wins over older notes. Last update: **2026-10-14 21:00 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## 15.10.2026 ~12:30 UTC (latest): V80 = DJAY waveform (default), sync within the fader range, EQ curves
+
+By the cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6). Until today it had built on `main`, an old
+line; Marko chose to bring its work onto this branch.
+- **DJAY waveform** (Marko 15.10.2026 with djay One Deck screenshots: "emulate exactly this style"; reference
+  `docs/ui-reference/djay-one-deck-waveform.png`, render `docs/ui-reference/waveform-v80-djay.png`):
+  - Settings -> WAVEFORM: DJAY (new, default) / 3-BAND / ICON.
+  - DJAY = a column per device pixel, the bands' colours MIXED (bass red + mids green + highs blue);
+    `djaysignal_qml.frag` waveStyle 2, `QmlWaveformOverview::djayMix`.
+  - The waveform analysis uses djay-like bands on Android: bass < 200 Hz, mids to 2.5 kHz
+    (`WaveformFactory::djayBands()`, version "Waveform-5.0-djay", so songs are re-analysed once). This also
+    feeds 3-BAND / ICON: check their reach on the phone.
+- **Sync within the pitch fader's range** (Marko: extreme speed-ups in auto mix):
+  - SyncControl clamps the rate it sets to rateRange.
+  - `[ChannelN],sync_within_fader_range`, setting `[DJMantra] sync_within_fader_range`, on on Android.
+  - Test: `EngineSyncTest.DJMantraSyncStaysWithinFaderRange`.
+- **EQ / filter against Pioneer DJM:**
+  - `docs/EQ_FILTER_VS_DJM.md`, `docs/eq-curves/` (incl. the phone's StemEQ).
+  - Test: `DJMantraEqCurveTest`.
+  - Phone sweep tool: `tools/android/eq_sweep_test.py`. It was written for the old widget skin, so its knob
+    lookup needs the QML widget map.
+- **Local checks:** full mixxx-test 940 PASS, desktop build, QML rendered with `DJMANTRA_QUICK=1
+  DJMANTRA_DJAY_BANDS=1 LIBGL_ALWAYS_SOFTWARE=1 mixxx --qml` in Xvfb.
+- **Phone:** untested. No tester session is connected (the Mac was off).
+- **Marko's order (10.10.2026):** when all tests are done and he has not written, have the tester shut down the
+  phone (`adb shell reboot -p`), then the Mac if possible.
+
 ## 15.10.2026 04:45 UTC (latest): V78 green and published (75cc4ee), the phone tester runs round 42
 
 - **Tester:** Mac session "Cloud session phone testing" (`session_01WRdDahARy1pzXzDqXTakA3`, claude-code-32),
