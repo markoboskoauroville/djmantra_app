@@ -1,0 +1,128 @@
+--------- beginning of main
+10-15 06:23:57.327 I/DJMantra(11345): info [Main] Quick: map menuButton 39 21 95 95
+10-15 06:23:57.328 I/DJMantra(11345): info [Main] Quick: map controllerLink 110 11 45 37
+10-15 06:23:57.329 I/DJMantra(11345): info [Main] Quick: map keyBadge 155 24 310 89
+10-15 06:23:57.330 I/DJMantra(11345): info [Main] Quick: map clock 652 37 217 63
+10-15 06:23:57.330 I/DJMantra(11345): info [Main] Quick: map battery 896 37 13 63
+10-15 06:23:57.331 I/DJMantra(11345): info [Main] Quick: map usage 925 37 115 63
+10-15 06:23:57.331 I/DJMantra(11345): info [Main] Quick: map deck1 29 126 492 147
+10-15 06:23:57.332 I/DJMantra(11345): info [Main] Quick: map deck2 558 126 492 147
+10-15 06:23:57.333 I/DJMantra(11345): info [Main] Quick: map sync1 29 289 112 116
+10-15 06:23:57.334 I/DJMantra(11345): info [Main] Quick: map cue1 151 289 103 116
+10-15 06:23:57.334 I/DJMantra(11345): info [Main] Quick: map play1 264 289 149 116
+10-15 06:23:57.335 I/DJMantra(11345): info [Main] Quick: map next1 424 289 103 116
+10-15 06:23:57.336 I/DJMantra(11345): info [Main] Quick: map sync2 938 289 112 116
+10-15 06:23:57.337 I/DJMantra(11345): info [Main] Quick: map cue2 825 289 103 116
+10-15 06:23:57.338 I/DJMantra(11345): info [Main] Quick: map play2 666 289 149 116
+10-15 06:23:57.339 I/DJMantra(11345): info [Main] Quick: map next2 553 289 103 116
+10-15 06:23:57.340 I/DJMantra(11345): info [Main] Quick: map autoMix 29 420 215 100
+10-15 06:23:57.340 I/DJMantra(11345): info [Main] Quick: map autoEq 255 420 117 100
+10-15 06:23:57.341 I/DJMantra(11345): info [Main] Quick: map tempoBlend 383 420 215 100
+10-15 06:23:57.342 I/DJMantra(11345): info [Main] Quick: map autoPhase 609 420 215 100
+10-15 06:23:57.342 I/DJMantra(11345): info [Main] Quick: map phraseBeats 835 420 215 100
+10-15 06:23:57.343 I/DJMantra(11345): info [Main] Quick: map matrix 29 536 1021 221
+10-15 06:23:57.344 I/DJMantra(11345): info [Main] Quick: map overview1 29 772 1021 68
+10-15 06:23:57.345 I/DJMantra(11345): info [Main] Quick: map overview2 29 856 1021 68
+10-15 06:23:57.346 I/DJMantra(11345): info [Main] Quick: map page 13 940 1053 1171
+10-15 06:23:57.347 I/DJMantra(11345): info [Main] Quick: map playlist 13 940 1053 1171
+10-15 06:23:57.348 I/DJMantra(11345): info [Main] Quick: map libraryFull 903 945 126 105
+10-15 06:23:57.349 I/DJMantra(11345): info [Main] Quick: map libraryView 772 945 116 105
+10-15 06:23:57.350 I/DJMantra(11345): info [Main] Quick: map playlistStats 532 948 213 45
+10-15 06:23:57.350 I/DJMantra(11345): info [Main] Quick: map playlistAnalysed 622 1000 124 45
+10-15 06:23:57.351 I/DJMantra(11345): info [Main] Quick: map songFilter 118 1087 575 58
+10-15 06:23:57.352 I/DJMantra(11345): info [Main] Quick: map findOnPhone 735 1066 310 100
+10-15 06:23:57.352 I/DJMantra(11345): info [Main] Quick: map sort_title 13 1176 337 84
+10-15 06:23:57.352 I/DJMantra(11345): info [Main] Quick: map sort_artist 350 1176 253 84
+10-15 06:23:57.353 I/DJMantra(11345): info [Main] Quick: map sort_duration 603 1176 168 84
+10-15 06:23:57.354 I/DJMantra(11345): info [Main] Quick: map sort_bpm 771 1176 147 84
+10-15 06:23:57.354 I/DJMantra(11345): info [Main] Quick: map sort_key 918 1176 147 84
+10-15 06:23:57.373 I/DJMantra(11345): info [Main] Quick: map crossfader 29 2126 1021 105
+10-15 06:23:57.374 I/DJMantra(11345): info [Main] Quick: map tab0 13 2247 211 142
+10-15 06:23:57.375 I/DJMantra(11345): info [Main] Quick: map tab1 224 2247 211 142
+10-15 06:23:57.376 I/DJMantra(11345): info [Main] Quick: map tab2 434 2247 211 142
+10-15 06:23:57.377 I/DJMantra(11345): info [Main] Quick: map tab3 645 2247 211 142
+10-15 06:23:57.378 I/DJMantra(11345): info [Main] Quick: map tab4 855 2247 211 142
+10-15 06:23:58.046 I/DJMantra(11345): info [Main] Quick: free deck [Channel1] (playing false false )
+10-15 06:23:58.046 I/DJMantra(11345): info [Main] Quick: load [Channel1] /storage/emulated/0/Music/djmantra_app/Library/Gambara Ganesha Mantra (Sanskrit Devotional Choir).mp3
+10-15 06:23:58.080 I/DJMantra(11345): info [CachingReaderWorker 1] SoundSourceMp3 - Recoverable MP3 header decoding error: lost synchronization 480
+10-15 06:23:58.080 I/DJMantra(11345): info [CachingReaderWorker 1] SoundSourceMp3 - MP3 frame header | layer: 3 mode: 2 #channels: 2 #samples: 36 bitrate: 160000 samplerate: 48000 flags: "0x0048"
+10-15 06:23:58.086 I/DJMantra(11345): info [Main] Quick: looking up the genre of "[Channel1]" "mantreshvar" - "Gambara Ganesha Mantra (Sanskrit Devotional Choir)"
+10-15 06:23:58.086 I/DJMantra(11345): info [Main] New song on [Channel1] : EQ, Neural Mix and FILTER reset
+10-15 06:23:58.090 I/DJMantra(11345): info [AnalyzerThread 0 #1] SoundSourceMp3 - Recoverable MP3 header decoding error: lost synchronization 480
+10-15 06:23:58.090 I/DJMantra(11345): info [AnalyzerThread 0 #1] SoundSourceMp3 - MP3 frame header | layer: 3 mode: 2 #channels: 2 #samples: 36 bitrate: 160000 samplerate: 48000 flags: "0x0048"
+10-15 06:23:58.803 I/DJMantra(11345): info [Main] Sections: [Channel1] 1 changes, at 12.7 s
+10-15 06:23:58.804 I/DJMantra(11345): info [Main] Sections options: [Channel1]	energy changes	level 3	strength 0.70
+10-15 06:23:59.928 I/DJMantra(11345): GenreLookup: no recording for mantreshvar - Gambara Ganesha Mantra, artist's genre: none
+10-15 06:24:00.969 I/DJMantra(11345): info [0xb40000762b3eb2d0] SoundSourceMp3 - Recoverable MP3 header decoding error: lost synchronization 480
+10-15 06:24:00.969 I/DJMantra(11345): info [0xb40000762b3eb2d0] SoundSourceMp3 - MP3 frame header | layer: 3 mode: 2 #channels: 2 #samples: 36 bitrate: 160000 samplerate: 48000 flags: "0x0048"
+10-15 06:24:01.240 I/DJMantra(11345): info [0xb40000762b3eb2d0] Fine wave: 244704 points, 24 frames each, for "/storage/emulated/0/Music/djmantra_app/Library/Gambara Ganesha Mantra (Sanskrit Devotional Choir).mp3"
+10-15 06:24:01.261 I/DJMantra(11345): info [Main] Quick: played in this set: /storage/emulated/0/Music/djmantra_app/Library/Gambara Ganesha Mantra (Sanskrit Devotional Choir).mp3
+10-15 06:24:01.262 I/DJMantra(11345): info [Main] Quick: button [Channel1],play 1
+10-15 06:24:01.464 I/DJMantra(11345): GenreLookup: Deezer https://api.deezer.com/search?limit=10&q=artist%3A%22mantreshvar%22+track%3A%22Gambara+Ganesha+Mantra%22 -> 0 tracks
+10-15 06:24:01.669 I/DJMantra(11345): GenreLookup: Deezer https://api.deezer.com/search?limit=10&q=mantreshvar+Gambara+Ganesha+Mantra -> 0 tracks
+10-15 06:24:01.669 I/DJMantra(11345): GenreLookup: Deezer has no track for mantreshvar - Gambara Ganesha Mantra
+10-15 06:24:04.092 I/DJMantra(11345): info [Main] Quick: map menuButton 39 21 95 95
+10-15 06:24:04.092 I/DJMantra(11345): info [Main] Quick: map controllerLink 110 11 45 37
+10-15 06:24:04.093 I/DJMantra(11345): info [Main] Quick: map keyBadge 155 24 310 89
+10-15 06:24:04.093 I/DJMantra(11345): info [Main] Quick: map clock 652 37 217 63
+10-15 06:24:04.093 I/DJMantra(11345): info [Main] Quick: map battery 896 37 13 63
+10-15 06:24:04.094 I/DJMantra(11345): info [Main] Quick: map usage 925 37 115 63
+10-15 06:24:04.094 I/DJMantra(11345): info [Main] Quick: map deck1 29 126 492 147
+10-15 06:24:04.094 I/DJMantra(11345): info [Main] Quick: map deck2 558 126 492 147
+10-15 06:24:04.095 I/DJMantra(11345): info [Main] Quick: map sync1 29 289 112 116
+10-15 06:24:04.095 I/DJMantra(11345): info [Main] Quick: map cue1 151 289 103 116
+10-15 06:24:04.096 I/DJMantra(11345): info [Main] Quick: map play1 264 289 149 116
+10-15 06:24:04.096 I/DJMantra(11345): info [Main] Quick: map next1 424 289 103 116
+10-15 06:24:04.097 I/DJMantra(11345): info [Main] Quick: map sync2 938 289 112 116
+10-15 06:24:04.098 I/DJMantra(11345): info [Main] Quick: map cue2 825 289 103 116
+10-15 06:24:04.098 I/DJMantra(11345): info [Main] Quick: map play2 666 289 149 116
+10-15 06:24:04.099 I/DJMantra(11345): info [Main] Quick: map next2 553 289 103 116
+10-15 06:24:04.099 I/DJMantra(11345): info [Main] Quick: map autoMix 29 420 215 100
+10-15 06:24:04.100 I/DJMantra(11345): info [Main] Quick: map autoEq 255 420 117 100
+10-15 06:24:04.100 I/DJMantra(11345): info [Main] Quick: map tempoBlend 383 420 215 100
+10-15 06:24:04.101 I/DJMantra(11345): info [Main] Quick: map autoPhase 609 420 215 100
+10-15 06:24:04.102 I/DJMantra(11345): info [Main] Quick: map phraseBeats 835 420 215 100
+10-15 06:24:04.102 I/DJMantra(11345): info [Main] Quick: map matrix 29 536 1021 221
+10-15 06:24:04.102 I/DJMantra(11345): info [Main] Quick: map overview1 29 772 1021 68
+10-15 06:24:04.103 I/DJMantra(11345): info [Main] Quick: map overview2 29 856 1021 68
+10-15 06:24:04.104 I/DJMantra(11345): info [Main] Quick: map page 13 940 1053 1171
+10-15 06:24:04.126 I/DJMantra(11345): info [Main] Quick: map eqMode 344 956 394 95
+10-15 06:24:04.127 I/DJMantra(11345): info [Main] Quick: map knob_[EqualizerRack1_[Channel1]_Effect1],parameter3 29 1066 221 182
+10-15 06:24:04.128 I/DJMantra(11345): info [Main] Quick: map knob_[EqualizerRack1_[Channel1]_Effect1],parameter2 29 1253 221 182
+10-15 06:24:04.128 I/DJMantra(11345): info [Main] Quick: map knob_[EqualizerRack1_[Channel1]_Effect1],parameter1 29 1441 221 182
+10-15 06:24:04.129 I/DJMantra(11345): info [Main] Quick: map filter1 29 1629 221 182
+10-15 06:24:04.130 I/DJMantra(11345): info [Main] Quick: map fx1 29 1817 221 137
+10-15 06:24:04.130 I/DJMantra(11345): info [Main] Quick: map fader_[Channel1],rate 265 1066 198 1029
+10-15 06:24:04.131 I/DJMantra(11345): info [Main] Quick: map tempoRange_[Channel1] 265 2037 198 58
+10-15 06:24:04.131 I/DJMantra(11345): info [Main] Quick: map knob_[EqualizerRack1_[Channel2]_Effect1],parameter3 830 1066 221 182
+10-15 06:24:04.132 I/DJMantra(11345): info [Main] Quick: map knob_[EqualizerRack1_[Channel2]_Effect1],parameter2 830 1253 221 182
+10-15 06:24:04.132 I/DJMantra(11345): info [Main] Quick: map knob_[EqualizerRack1_[Channel2]_Effect1],parameter1 830 1441 221 182
+10-15 06:24:04.133 I/DJMantra(11345): info [Main] Quick: map filter2 830 1629 221 182
+10-15 06:24:04.134 I/DJMantra(11345): info [Main] Quick: map fx2 830 1817 221 137
+10-15 06:24:04.134 I/DJMantra(11345): info [Main] Quick: map fader_[Channel2],rate 616 1066 198 1029
+10-15 06:24:04.135 I/DJMantra(11345): info [Main] Quick: map tempoRange_[Channel2] 616 2037 198 58
+10-15 06:24:04.138 I/DJMantra(11345): info [Main] Quick: map crossfader 29 2126 1021 105
+10-15 06:24:04.138 I/DJMantra(11345): info [Main] Quick: map tab0 13 2247 211 142
+10-15 06:24:04.139 I/DJMantra(11345): info [Main] Quick: map tab1 224 2247 211 142
+10-15 06:24:04.139 I/DJMantra(11345): info [Main] Quick: map tab2 434 2247 211 142
+10-15 06:24:04.140 I/DJMantra(11345): info [Main] Quick: map tab3 645 2247 211 142
+10-15 06:24:04.141 I/DJMantra(11345): info [Main] Quick: map tab4 855 2247 211 142
+10-15 06:40:22.309 I/DJMantraMIDI(11345): in 91 04 7F
+10-15 06:40:22.309 I/DJMantraMIDI(11345): in 91 04 7F
+10-15 06:40:23.068 I/DJMantraMIDI(11345): in 91 15 7F
+10-15 06:40:23.070 I/DJMantraMIDI(11345): in 91 15 7F
+10-15 06:40:23.074 I/DJMantra(11345): info [Main] Quick: controller: page 3
+10-15 06:40:23.077 I/DJMantra(11345): info [Main] Quick: controller: page 3
+10-15 06:40:23.381 I/DJMantraMIDI(11345): in 91 15 00
+10-15 06:40:23.381 I/DJMantraMIDI(11345): in 91 15 00
+10-15 06:40:23.466 I/DJMantraMIDI(11345): in 91 04 00
+10-15 06:40:23.467 I/DJMantraMIDI(11345): in 91 04 00
+10-15 06:40:47.716 I/DJMantraMIDI(11345): in 96 60 7F
+10-15 06:40:47.717 I/DJMantraMIDI(11345): in 96 60 7F
+10-15 06:40:47.737 W/DJMantra(11345): warning [Main] ControlDoublePrivate::getControl returning NULL for ( "[DJMantra]" , "fx_choice_1" )
+10-15 06:40:47.738 I/DJMantra(11345): info [Main] Settings: fx_choice_1 = 0
+10-15 06:40:47.747 I/DJMantra(11345): info [Main] Quick: FX: deck 1 FLANGER
+10-15 06:40:47.763 I/DJMantra(11345): info [Main] Quick: toast: DECK 1  FLANGER ON
+10-15 06:40:47.764 I/DJMantra(11345): info [Main] Quick: FX pad: deck 1 pad 1 FLANGER on
+10-15 06:40:47.869 I/DJMantraMIDI(11345): in 96 60 00
+10-15 06:40:47.869 I/DJMantraMIDI(11345): in 96 60 00
