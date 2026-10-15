@@ -91,9 +91,20 @@ void QmlDJMantra::registerUserSettings(UserSettingsPointer pConfig) {
     if (pConfig) {
         for (const char* key : {"browse_move", "browse_press", "browse_back", "load", "page", "stop_deck",
                      // V77: the Mix Ultra's FX pads (Effects.qml)
-                     "fx_pad", "fx_pad_off", "fx_active_1", "fx_active_2"}) {
+                     "fx_pad", "fx_pad_off", "fx_active_1", "fx_active_2",
+                     // V77: SHIFT + FILTER = the effect's depth (pop-up), and the pickup ghosts
+                     "fx_edit", "fx_depth_1", "fx_depth_2"}) {
             s_controllerControls.push_back(std::make_unique<ControlObject>(
                     ConfigKey(QStringLiteral("[DJMantra]"), QString::fromLatin1(key))));
+        }
+        // ghost_<deck>_<code>: a controller knob's position + 1 while it has not picked up its
+        // value (0: none); codes 1..6 EQ parameter1..6, 7 FILTER, 8 the effect's DEPTH
+        for (int deck = 1; deck <= 2; ++deck) {
+            for (int code = 1; code <= 8; ++code) {
+                s_controllerControls.push_back(std::make_unique<ControlObject>(
+                        ConfigKey(QStringLiteral("[DJMantra]"),
+                                QStringLiteral("ghost_%1_%2").arg(deck).arg(code))));
+            }
         }
         // V8: the analysis options of Settings, read by the engine (sections) and
         // the analyzer (beats), remembered in the user settings

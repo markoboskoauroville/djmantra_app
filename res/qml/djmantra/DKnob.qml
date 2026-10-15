@@ -33,6 +33,14 @@ Item {
     property string outerLabel: ""
     property color outerColor: Style.line
     readonly property bool concentric: outerKey !== ""
+    // the controller's ghosts (Ghost.qml, V77): where the Mix Ultra's knob is while it has not
+    // picked up this value, half transparent; gone when it has ("they are all one")
+    property string ghostName: ""
+    property string outerGhostName: ""
+    readonly property real ghostTurn: innerGhost.position >= 0 ? Math.min(1, innerGhost.position / span) : -1
+    readonly property real outerGhostTurn: outerGhost.position
+    property Ghost innerGhost: Ghost { name: root.ghostName }
+    property Ghost outerGhost: Ghost { name: root.concentric ? root.outerGhostName : "" }
     // V73 (Marko 14.10.2026: "two concentric pots ... outside again we have two concentric lights
     // which align to each other"): from the centre out the inner cap, the outer knob ring round
     // it, then the inner control's LED ring and, outermost, the outer control's, dot for dot
@@ -196,6 +204,23 @@ Item {
                     angle: -135 + 270 * root.outerTurn
                 }
             }
+
+            Rectangle {
+                // the outer knob's GHOST: the controller's knob, not picked up yet
+                visible: root.outerGhostTurn >= 0
+                width: 4
+                height: (root.outerKnobSize - root.innerKnobSize) / 2 - 3
+                radius: 2
+                color: root.outerColor
+                opacity: 0.45
+                x: outerKnob.width / 2 - width / 2
+                y: 2
+                transform: Rotation {
+                    origin.x: 2
+                    origin.y: outerKnob.height / 2 - 2
+                    angle: -135 + 270 * Math.max(0, root.outerGhostTurn)
+                }
+            }
         }
 
         Rectangle {
@@ -220,6 +245,45 @@ Item {
                 y: 3
                 transformOrigin: Item.Bottom
                 rotation: -135 + 270 * root.turn
+            }
+
+            Rectangle {
+                // the GHOST pointer: the controller's knob, not picked up yet (half transparent)
+                visible: root.ghostTurn >= 0
+                width: 4
+                height: body.height / 2 - 3
+                radius: 2
+                color: root.arcColor
+                opacity: 0.5
+                x: body.width / 2 - width / 2
+                y: 3
+                transformOrigin: Item.Bottom
+                rotation: -135 + 270 * Math.max(0, root.ghostTurn)
+            }
+        }
+
+        Repeater {
+            // the GHOSTS on the LED rings: a half-transparent larger dot where the controller's
+            // knob is (inner ring: the inner control, outermost ring: the outer control)
+            model: [[root.ghostTurn, root.concentric ? root.innerLedRadius : dial.width / 2 - Math.max(3, dial.width * 0.085) / 2, root.arcColor],
+                    [root.outerGhostTurn, root.outerLedRadius, root.outerColor]]
+
+            delegate: Rectangle {
+                required property var modelData
+                readonly property real angle: (-135 + 270 * Math.max(0, modelData[0])) * Math.PI / 180
+                readonly property real size: (root.concentric ? root.ledSize : Math.max(3, dial.width * 0.085)) * 1.8
+
+                visible: modelData[0] >= 0
+                z: 4
+                width: size
+                height: size
+                radius: size / 2
+                x: dial.width / 2 + modelData[1] * Math.sin(angle) - size / 2
+                y: dial.height / 2 - modelData[1] * Math.cos(angle) - size / 2
+                color: "transparent"
+                border.color: modelData[2]
+                border.width: 1.5
+                opacity: 0.7
             }
         }
     }

@@ -315,3 +315,15 @@ switches to that effect. A pad HELD over half a second: the effect only while he
 Leave FX PADS (HOT CUE): pads as before, beat lights back.
 ## 70. (V77) "1 IS HERE" MOVED: the SLICER was its home; now NEURAL MIX mode, SHIFT + pad 5 sets beat 1 of the phrase at
 the play position (pads 5-8 still jump to beats 5-8, pads 1-3 the kills).
+## 71. (V77) SHIFT + FILTER = THE EFFECT'S DEPTH, WITH A POP-UP (Marko 15.10.2026). Switch an effect on (FX pad or the FX
+button), hold SHIFT on that deck and turn its FILTER knob: a pop-up under the toast shows "DECK 1  DJM ECHO  ON • DEPTH"
+and the DEPTH fader; it goes 2.5 s after the knob stops (log `FX depth pop-up: deck 1`). The depth does NOT jump to the
+knob: a half-transparent GHOST handle shows where the knob is, the real handle stays until the knob reaches it (or
+passes it), then they are one and move together (you hear the depth change only from then). Echo Out: left half 1
+beat, right half 2 beats. Release SHIFT and turn FILTER: the filter does not jump either (its knob was moved for the
+depth): ghost on the FILTER knob until it picks up. Deck 2 the same.
+## 72. (V77) GHOSTS ON EVERY PICKUP KNOB (Mixer tab, controller connected): reset a deck's MID on the screen (long press)
+with the controller's MID knob turned left; turn the controller knob a little: a half-transparent pointer and ring
+marker at the knob's position, the real one stays; turn through the value: the ghost disappears and the knob follows.
+The same with SHIFT (the outer, NEURAL MIX ring: ghost on the outer ring) and after loading a new song (EQs reset). A
+ghost left alone fades after 3 s. Screenshot one ghost.

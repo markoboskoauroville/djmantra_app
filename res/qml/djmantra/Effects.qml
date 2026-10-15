@@ -52,10 +52,54 @@ QtObject {
     property Mixxx.ControlProxy active1: Mixxx.ControlProxy { group: "[DJMantra]"; key: "fx_active_1" }
     property Mixxx.ControlProxy active2: Mixxx.ControlProxy { group: "[DJMantra]"; key: "fx_active_2" }
 
+    // SHIFT + FILTER on the Mix Ultra (V77): [DJMantra] fx_depth_<deck> mirrors the DEPTH of the
+    // deck's effect (normalized, as the Mixer's DEPTH slider), both ways; Echo Out: 1 beat = 0.25, 2 beats = 0.75 (the knob's left / right half)
+    property Mixxx.ControlProxy depth1: Mixxx.ControlProxy {
+        group: "[EffectRack1_EffectUnit1_Effect1]"
+        key: fx.list[fx.choice1].depth
+        onParameterChanged: fx.mirrorDepth(1)
+    }
+    property Mixxx.ControlProxy depth2: Mixxx.ControlProxy {
+        group: "[EffectRack1_EffectUnit2_Effect1]"
+        key: fx.list[fx.choice2].depth
+        onParameterChanged: fx.mirrorDepth(2)
+    }
+    property Mixxx.ControlProxy knobDepth1: Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "fx_depth_1"
+        onValueChanged: fx.setDepth(1, value)
+    }
+    property Mixxx.ControlProxy knobDepth2: Mixxx.ControlProxy {
+        group: "[DJMantra]"; key: "fx_depth_2"
+        onValueChanged: fx.setDepth(2, value)
+    }
+
+    function mirrorDepth(deck) {
+        const d = deck === 2 ? depth2 : depth1;
+        const k = deck === 2 ? knobDepth2 : knobDepth1;
+        const v = (deck === 2 ? choice2 : choice1) === echoOut ? (d.value >= 1.5 ? 0.75 : 0.25) : d.parameter;
+        if (Math.abs(k.value - v) > 0.0005)
+            k.value = v;
+    }
+
+    function setDepth(deck, v) {
+        const d = deck === 2 ? depth2 : depth1;
+        if ((deck === 2 ? choice2 : choice1) === echoOut) {
+            const beats = v >= 0.5 ? 2 : 1;
+            if (Math.round(d.value) !== beats)
+                d.value = beats;
+        } else if (Math.abs(d.parameter - v) > 0.0005) {
+            d.parameter = v;
+        }
+    }
+
     onOn1Changed: active1.value = on1 ? choice1 + 1 : 0
     onOn2Changed: active2.value = on2 ? choice2 + 1 : 0
     onChoice1Changed: active1.value = on1 ? choice1 + 1 : 0
     onChoice2Changed: active2.value = on2 ? choice2 + 1 : 0
+    Component.onCompleted: {
+        mirrorDepth(1);
+        mirrorDepth(2);
+    }
 
     function group(deck) {
         return "[EffectRack1_EffectUnit" + deck + "_Effect1]";

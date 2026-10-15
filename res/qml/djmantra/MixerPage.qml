@@ -104,6 +104,10 @@ Item {
                 readonly property string eq: "[EqualizerRack1_" + modelData + "_Effect1]"
                 readonly property int number: index + 1
                 readonly property string fxGroup: "[EffectRack1_EffectUnit" + number + "_Effect1]"
+                // the Mix Ultra's pickup ghost of an EQ key (Ghost.qml): ghost_<deck>_<1..6>
+                function ghostOf(k) {
+                    return "ghost_" + number + "_" + k.replace("parameter", "");
+                }
                 property int choice: root.effectIndex(number)
                 // knobs and two buttons share the column's height
                 // Marko 13.10.2026: the FILTER knob is gone, the rest grows (4 knobs, 2 buttons)
@@ -124,9 +128,9 @@ Item {
                     anchors.right: deck.index === 1 ? parent.right : undefined
                     spacing: 2
 
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter6" : "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; outerKey: root.stems ? "parameter3" : "parameter6"; outerLabel: root.stems ? "HIGH" : "HARMONY"; outerColor: root.stems ? Style.water : Style.neural; arcColor: root.stems ? Style.neural : Style.water; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter5" : "parameter2"; label: root.stems ? "VOCALS" : "MID"; outerKey: root.stems ? "parameter2" : "parameter5"; outerLabel: root.stems ? "MID" : "VOCALS"; outerColor: root.stems ? Style.earth : Style.neural; arcColor: root.stems ? Style.neural : Style.earth; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
-                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter4" : "parameter1"; label: root.stems ? "DRUMS" : "LOW"; outerKey: root.stems ? "parameter1" : "parameter4"; outerLabel: root.stems ? "LOW" : "DRUMS"; outerColor: root.stems ? Style.fire : Style.neural; arcColor: root.stems ? Style.neural : Style.fire; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  " }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter6" : "parameter3"; label: root.stems ? "HARMONY" : "HIGH"; outerKey: root.stems ? "parameter3" : "parameter6"; outerLabel: root.stems ? "HIGH" : "HARMONY"; outerColor: root.stems ? Style.water : Style.neural; arcColor: root.stems ? Style.neural : Style.water; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  "; ghostName: deck.ghostOf(key); outerGhostName: deck.ghostOf(outerKey) }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter5" : "parameter2"; label: root.stems ? "VOCALS" : "MID"; outerKey: root.stems ? "parameter2" : "parameter5"; outerLabel: root.stems ? "MID" : "VOCALS"; outerColor: root.stems ? Style.earth : Style.neural; arcColor: root.stems ? Style.neural : Style.earth; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  "; ghostName: deck.ghostOf(key); outerGhostName: deck.ghostOf(outerKey) }
+                    DKnob { width: knobs.width; height: deck.knobHeight; group: deck.eq; key: root.stems ? "parameter4" : "parameter1"; label: root.stems ? "DRUMS" : "LOW"; outerKey: root.stems ? "parameter1" : "parameter4"; outerLabel: root.stems ? "LOW" : "DRUMS"; outerColor: root.stems ? Style.fire : Style.neural; arcColor: root.stems ? Style.neural : Style.fire; defaultParameter: 1; dbMode: "cut"; toastPrefix: "DECK " + deck.number + "  "; ghostName: deck.ghostOf(key); outerGhostName: deck.ghostOf(outerKey) }
                     DKnob {
                         // FILTER at the bottom, as on the Mix Ultra (Marko 14.10.2026: no GAIN knob, every
                         // song is normalized to -1 dBFS and the faders set the volume): the Pioneer DJM filter,
@@ -141,6 +145,7 @@ Item {
                         defaultParameter: 0.5
                         toastPrefix: "DECK " + deck.number + "  "
                         resetText: qsTr("OFF")
+                        ghostName: "ghost_" + deck.number + "_7"
                     }
                     DButton {
                         // tap = on / off, hold = choose the effect

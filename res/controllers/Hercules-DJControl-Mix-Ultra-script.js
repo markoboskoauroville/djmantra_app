@@ -531,45 +531,89 @@ MixUltra.jumpToBeat = function(deck, pad) {
 // need to pick it up"): a knob that has just changed target (SHIFT, the mode, or the value was
 // moved on the screen / reset by a new song) leaves the value alone until the knob reaches it
 // (within 2 %) or turns across it; from then on it follows the knob.
-MixUltra.eqMsb = {};
-MixUltra.eqKnob = {};   // per physical knob: {hw: last position, key: last target}
-MixUltra.eqSet = {};    // per target: the value this script last set (else: not picked up)
-MixUltra.eq = function(channel, control, value, status, group) {
-    var band = (control & 0x1F) - 1; // 1 low, 2 mid, 3 high
-    var shifted = (status & 0x0F) >= 4;
-    var stems = engine.getValue(group, "button_parameter4") > 0;
-    var key = "parameter" + (stems !== shifted ? band + 3 : band);
-    var knobId = group + band;
-    var hw;
+MixUltra.knobMsb = {};
+MixUltra.knobState = {}; // per physical knob: {hw: last position, target: last target}
+MixUltra.knobSet = {};   // per target: the value this script last set (else: not picked up)
+
+// 14-bit position of a knob (MSB `n`, LSB `n + 0x20`), 0..1
+MixUltra.knobPosition = function(knobId, control, value) {
     if (control < 0x20) {
-        MixUltra.eqMsb[knobId] = value;
-        hw = value / 127;
-    } else {
-        hw = ((MixUltra.eqMsb[knobId] || 0) * 128 + value) / 16383;
+        MixUltra.knobMsb[knobId] = value;
+        return value / 127;
     }
-    var knob = MixUltra.eqKnob[knobId] || (MixUltra.eqKnob[knobId] = {hw: undefined, key: ""});
-    var target = group + key;
-    var current = engine.getParameter(group, key);
-    var set = MixUltra.eqSet[target];
+    return ((MixUltra.knobMsb[knobId] || 0) * 128 + value) / 16383;
+};
+
+// The pickup for one physical knob turned to `hw` (0..1) on `target` (any id) whose value is
+// `current`: true when the knob has the value (then the caller sets it), false while it has not
+// picked it up yet. GHOST (V77, Marko 15.10.2026: "like in Ableton Live like a ghost fader until
+// it picks up the real fader ... half transparent one shows the current position of the knob"):
+// the app shows [DJMantra] `ghost` = the knob's position + 1 while it has not picked up, 0 once
+// it has ("they are all one").
+MixUltra.pickup = function(knobId, target, current, hw, ghost) {
+    var knob = MixUltra.knobState[knobId] || (MixUltra.knobState[knobId] = {hw: undefined, target: ""});
+    var set = MixUltra.knobSet[target];
     // picked up: this knob set it last and nothing else moved it since
-    var picked = knob.key === key && set !== undefined && Math.abs(current - set) < 0.01;
+    var picked = knob.target === target && set !== undefined && Math.abs(current - set) < 0.01;
     if (!picked) {
         var near = Math.abs(hw - current) < 0.02;
+        // the knob passed over the value since its last message (whatever it set then)
         var crossed = knob.hw !== undefined && (knob.hw - current) * (hw - current) <= 0;
         picked = near || crossed;
     }
     knob.hw = hw;
-    if (!picked) {
-        // not this knob's value yet: the other set keeps its own until the knob gets there
-        if (knob.key !== key) {
-            knob.key = key;
+    knob.target = target;
+    MixUltra.knobSet[target] = picked ? hw : undefined;
+    if (ghost) {
+        engine.setValue("[DJMantra]", ghost, picked ? 0 : hw + 1);
+    }
+    return picked;
+};
+
+// The app's ghost codes per deck: ghost_<deck>_<code>, 1..6 = the EQ's parameter1..6,
+// 7 = FILTER, 8 = the deck's effect DEPTH (SHIFT + FILTER)
+MixUltra.ghostName = function(deckNumber, code) {
+    return "ghost_" + deckNumber + "_" + code;
+};
+
+MixUltra.eq = function(channel, control, value, status, group) {
+    var band = (control & 0x1F) - 1; // 1 low, 2 mid, 3 high
+    var shifted = (status & 0x0F) >= 4;
+    var stems = engine.getValue(group, "button_parameter4") > 0;
+    var number = stems !== shifted ? band + 3 : band;
+    var key = "parameter" + number;
+    var deckNumber = group.indexOf("Channel2") >= 0 ? 2 : 1;
+    var hw = MixUltra.knobPosition(group + band, control, value);
+    if (MixUltra.pickup(group + band, group + key, engine.getParameter(group, key), hw,
+        MixUltra.ghostName(deckNumber, number))) {
+        engine.setParameter(group, key, hw);
+    }
+};
+
+// FILTER (V77): with pickup like the EQs (the same knob also sets the effect's depth with
+// SHIFT, so it must not jump back); SHIFT + FILTER (Marko 15.10.2026: "when effect is
+// triggered, I can change its parameter by pressing Shift, turning the filter button ... I need
+// to see visually pop up with the effect fader"): the depth of the deck's effect, through the
+// app ([DJMantra] fx_depth_<deck> mirrors the effect's DEPTH, fx_edit shows the pop-up)
+MixUltra.filter = function(channel, control, value, status, group) {
+    var deck = MixUltra.deckOf(status);
+    var shifted = (status & 0x0F) >= 4 || deck.shift;
+    var knobId = "filter" + deck.number;
+    var hw = MixUltra.knobPosition(knobId, control, value);
+    if (shifted) {
+        var depthKey = "fx_depth_" + deck.number;
+        MixUltra.tellApp("fx_edit", deck.number);
+        if (MixUltra.pickup(knobId, depthKey, engine.getValue("[DJMantra]", depthKey), hw,
+            MixUltra.ghostName(deck.number, 8))) {
+            engine.setValue("[DJMantra]", depthKey, hw);
         }
-        MixUltra.eqSet[target] = undefined;
         return;
     }
-    knob.key = key;
-    engine.setParameter(group, key, hw);
-    MixUltra.eqSet[target] = hw;
+    var quick = "[QuickEffectRack1_" + deck.group + "]";
+    if (MixUltra.pickup(knobId, quick + "super1", engine.getParameter(quick, "super1"), hw,
+        MixUltra.ghostName(deck.number, 7))) {
+        engine.setParameter(quick, "super1", hw);
+    }
 };
 
 // Called by DJ Mantra on Android after every (re)connect over USB or Bluetooth:

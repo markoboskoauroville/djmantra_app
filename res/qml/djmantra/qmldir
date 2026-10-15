@@ -11,6 +11,7 @@ CloseButton 1.0 CloseButton.qml
 Chevron 1.0 Chevron.qml
 RoomEqPage 1.0 RoomEqPage.qml
 TurntableStop 1.0 TurntableStop.qml
+Ghost 1.0 Ghost.qml
 DFader 1.0 DFader.qml
 DKnob 1.0 DKnob.qml
 DeckControls 1.0 DeckControls.qml

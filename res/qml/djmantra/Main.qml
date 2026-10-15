@@ -783,6 +783,84 @@ Window {
     onLandscapeChanged: mapTimer.restart()
 
     Rectangle {
+        // SHIFT + FILTER on the Mix Ultra (V77, Marko 15.10.2026: "when effect is triggered, I can
+        // change its parameter by pressing Shift, turning the filter button. At that point, I need
+        // to see visually pop up with the effect fader"): the deck's effect and its DEPTH fader,
+        // with the knob's ghost until it picks the depth up; gone 2.5 s after the knob stops
+        id: fxEdit
+
+        property int deck: 1
+        readonly property int choice: deck === 2 ? Effects.choice2 : Effects.choice1
+
+        objectName: "fxEdit"
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: Math.round(parent.height * 0.12) + 56
+        z: 999
+        width: Math.min(parent.width - 32, 420)
+        height: fxEditColumn.height + 20
+        radius: Style.radius
+        color: "#EE0B1026"
+        border.color: Style.accent
+        border.width: 1
+        opacity: 0
+        visible: opacity > 0
+
+        Behavior on opacity { NumberAnimation { duration: 180 } }
+
+        Column {
+            id: fxEditColumn
+
+            anchors.centerIn: parent
+            width: parent.width - 24
+            spacing: 6
+
+            Text {
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+                text: "DECK " + fxEdit.deck + "  " + Effects.list[fxEdit.choice].name
+                      + (Effects.isOn(fxEdit.deck) ? "  ON" : "  OFF")
+                      + "  \u2022  " + (fxEdit.choice === Effects.echoOut ? qsTr("ECHO 1 / 2 BEATS") : qsTr("DEPTH"))
+                color: Effects.isOn(fxEdit.deck) ? Style.accent : Style.subText
+                font.pixelSize: 15
+                font.bold: true
+            }
+
+            DFader {
+                objectName: "fxEditDepth"
+                width: parent.width
+                height: 40
+                vertical: false
+                group: Effects.group(fxEdit.deck)
+                key: Effects.list[fxEdit.choice].depth
+                barColor: Style.accent
+                label: "DECK " + fxEdit.deck + "  DEPTH"
+                resetText: "50 %"
+                ghostName: "ghost_" + fxEdit.deck + "_8"
+            }
+        }
+
+        Timer {
+            id: fxEditTimer
+
+            interval: 2500
+            onTriggered: fxEdit.opacity = 0
+        }
+
+        Mixxx.ControlProxy {
+            group: "[DJMantra]"; key: "fx_edit"
+            onValueChanged: if (value >= 1) {
+                const d = Math.round(value);
+                value = 0;
+                if (fxEdit.opacity === 0)
+                    Mixxx.DJMantra.log("FX depth pop-up: deck " + d);
+                fxEdit.deck = d;
+                fxEdit.opacity = 1;
+                fxEditTimer.restart();
+            }
+        }
+    }
+
+    Rectangle {
         // the toast (Toasts.show): what a long press / double tap did, above the finger
         id: toast
 

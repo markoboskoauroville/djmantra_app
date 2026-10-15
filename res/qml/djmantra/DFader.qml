@@ -17,6 +17,10 @@ Item {
     property string label: "CROSSFADER"
     property real defaultParameter: vertical ? 1 : 0.5
     property string resetText: qsTr("middle")
+    // the controller's ghost (Ghost.qml, V77): a half-transparent handle where the Mix Ultra's
+    // knob is while it has not picked up this value
+    property string ghostName: ""
+    property Ghost ghost: Ghost { name: root.ghostName }
 
     // Marko 14.10.2026: "always ramping is the rule ... no snapping anywhere": a reset glides
     // there, easing in and out
@@ -57,6 +61,28 @@ Item {
         height: root.vertical ? root.height - 8 : 4
         radius: 2
         color: Style.line
+    }
+
+    Rectangle {
+        // the GHOST handle: the controller's knob, not picked up yet
+        visible: root.ghost.position >= 0
+        width: handle.width
+        height: handle.height
+        radius: 5
+        color: "transparent"
+        border.color: root.barColor
+        border.width: 2
+        opacity: 0.5
+        x: root.vertical ? handle.x : Math.max(0, root.ghost.position) * (root.width - width)
+        y: root.vertical ? (1 - Math.max(0, root.ghost.position)) * (root.height - height) : handle.y
+
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: 3
+            radius: 3
+            color: root.barColor
+            opacity: 0.35
+        }
     }
 
     Rectangle {
