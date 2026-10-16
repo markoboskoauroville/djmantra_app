@@ -265,6 +265,7 @@ public final class BeatStatsActivity extends Activity {
     private double mHeader = 0;    // CSS px of a header stuck to the top
     private int mScreens = 0;
     private String mCaptureTitle = "";
+    private boolean mCaptureCut = false; // stopped at the size limit before the page's end
 
     private void capturePage() {
         if (mCapturing) {
@@ -274,6 +275,7 @@ public final class BeatStatsActivity extends Activity {
         mStrips.clear();
         mCovered = 0;
         mScreens = 0;
+        mCaptureCut = false;
         status("Capturing the page ...");
         mWeb.evaluateJavascript("(function(){window.__djm=null;var d=" + SCROLL_JS + "();"
                 + "if(d.el)d.el.scrollTop=0;else window.scrollTo(0,0);return JSON.stringify({top:d.top,title:document.title});})()",
@@ -311,9 +313,12 @@ public final class BeatStatsActivity extends Activity {
         Rect rect = new Rect(where[0], where[1], where[0] + mWeb.getWidth(), where[1] + mWeb.getHeight());
         PixelCopy.request(getWindow(), rect, shot, result -> {
             if (result != PixelCopy.SUCCESS) {
-                shot.recycle();
-                failCapture("screen copy " + result);
-                return;
+                // V83 (cloud emulator: "screen copy 3", no frame on the screen): the browser
+                // drawn into the bitmap itself (what is in view, at its scroll position)
+                Log.w(TAG, "capture: screen copy " + result + ", drawing the browser instead");
+                Canvas canvas = new Canvas(shot);
+                canvas.translate(-mWeb.getScrollX(), -mWeb.getScrollY());
+                mWeb.draw(canvas);
             }
             // view px per CSS px; the new part runs from what is covered (below the stuck header)
             double ratio = mWeb.getHeight() / Math.max(1.0, vh);
@@ -334,6 +339,7 @@ public final class BeatStatsActivity extends Activity {
             }
             status("Capturing the page: screen " + mScreens + " (" + (int) Math.min(100, 100 * mCovered / Math.max(1, h)) + " %)");
             boolean end = mCovered >= h - 2 || mScreens >= MAX_SCREENS || height >= 3 * MAX_HEIGHT;
+            mCaptureCut = end && mCovered < h - 2;
             if (end) {
                 joinCapture();
                 return;
@@ -401,7 +407,8 @@ public final class BeatStatsActivity extends Activity {
                 Log.i(TAG, "capture: " + file + " " + page.getWidth() + "x" + page.getHeight() + ", "
                         + strips.size() + " screens");
                 status("Saved " + page.getWidth() + "x" + page.getHeight() + " JPEG (" + strips.size()
-                        + " screens): BeatStats/captures/" + file.getName());
+                        + " screens" + (mCaptureCut ? ", the page was longer: cut at the size limit" : "")
+                        + "): BeatStats/captures/" + file.getName());
                 page.recycle();
             } catch (Throwable e) {
                 Log.w(TAG, "capture join: " + e);
