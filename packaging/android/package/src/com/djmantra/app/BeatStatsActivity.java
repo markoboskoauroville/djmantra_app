@@ -75,10 +75,14 @@ public final class BeatStatsActivity extends Activity {
         root.setOrientation(LinearLayout.VERTICAL);
         root.setBackgroundColor(Color.parseColor("#0B1026"));
 
+        // V83 (Marko 16.10.2026, screenshot: the buttons in the middle of a half-screen band,
+        // the site squeezed to the bottom): the status text shared the buttons' row, got almost
+        // no width and wrapped one letter a line, so the row grew tall. Now the buttons share one
+        // row equally, the status is its own line under them (two lines at most).
         LinearLayout bar = new LinearLayout(this);
         bar.setOrientation(LinearLayout.HORIZONTAL);
         bar.setGravity(Gravity.CENTER_VERTICAL);
-        bar.setPadding(12, 12, 12, 12);
+        bar.setPadding(8, 8, 8, 4);
         Button back = new Button(this);
         back.setText("BACK");
         back.setOnClickListener(v -> onBackPressed());
@@ -86,21 +90,32 @@ public final class BeatStatsActivity extends Activity {
         read.setText("READ CHART");
         read.setOnClickListener(v -> readChart());
         Button capture = new Button(this);
-        capture.setText("CAPTURE PAGE");
+        capture.setText("CAPTURE");
         capture.setOnClickListener(v -> capturePage());
         Button close = new Button(this);
         close.setText("CLOSE");
         close.setOnClickListener(v -> finish());
+        for (Button b : new Button[] {back, read, capture, close}) {
+            b.setAllCaps(true);
+            b.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 13);
+            b.setSingleLine(true);
+            b.setPadding(4, 0, 4, 0);
+            b.setMinWidth(0);
+            b.setMinimumWidth(0);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            lp.setMargins(4, 0, 4, 0);
+            bar.addView(b, lp);
+        }
+        root.addView(bar, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         mStatus = new TextView(this);
         mStatus.setTextColor(Color.parseColor("#EEF0FF"));
-        mStatus.setPadding(16, 0, 16, 0);
+        mStatus.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 13);
+        mStatus.setPadding(16, 2, 16, 8);
+        mStatus.setMaxLines(2);
+        mStatus.setEllipsize(android.text.TextUtils.TruncateAt.END);
         mStatus.setText("Open a chart, then READ CHART");
-        bar.addView(back);
-        bar.addView(read);
-        bar.addView(capture);
-        bar.addView(close);
-        bar.addView(mStatus, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        root.addView(bar, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        root.addView(mStatus, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
         mWeb = new WebView(this);

@@ -395,3 +395,8 @@ on a TRACKS chart: the status counts "ISRC 1/100" ... or, when Beatport refuses 
 ... (about 2-3 s a song); at the end "100 songs, N ISRCs" with N close to 100. Logcat `DJMantraBeatStats`: `Beatport
 <id> ISRC <code> (browser)`. Each song's ISRC is its own (the page's `track-details` entry), e.g. Don't This
 GBKQU2441725, Back To The Roots GBEWA2202591. Then SPOT / TIDAL / YT M open the exact song.
+## 83. (V83) BEATSTATS BROWSER LAYOUT (Marko 16.10.2026, screenshot on V82: BACK / READ CHART / CAPTURE PAGE / CLOSE in the
+middle of a half-screen empty band, the site squeezed into the bottom 40 %). Cause: the status text shared the buttons'
+row, got almost no width and wrapped a letter a line, so the row grew. Now: one row of four equal buttons (BACK, READ
+CHART, CAPTURE, CLOSE) at the top, the status under it (two lines at most), the site fills the rest of the screen.
+Check: on open, after READ CHART (a long status), after CAPTURE; portrait and landscape.
