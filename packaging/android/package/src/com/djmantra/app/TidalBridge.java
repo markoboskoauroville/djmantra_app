@@ -237,7 +237,7 @@ public final class TidalBridge {
                     id = data != null && data.length() > 0 ? data.getJSONObject(0).getString("id") : null;
                 }
                 if (id == null) {
-                    // V85: the search's best MATCH, not its first result (tested 16.10.2026: the first
+                    // V86: the search's best MATCH, not its first result (tested 16.10.2026: the first
                     // result gave The Bangles for DSF's "Not Like You", karaoke for "Baby Got Back")
                     JSONObject doc = get(context, "/searchResults?filter%5Bquery%5D="
                             + enc(s.optString("artist") + " " + s.optString("title"))
@@ -297,7 +297,7 @@ public final class TidalBridge {
         }
     }
 
-    // --- the best search match (V85) -------------------------------------------------------------
+    // --- the best search match (V86) -------------------------------------------------------------
     private static final String[] NOT_THE_SONG = {"karaoke", "made famous", "tribute", "cover", "instrumental",
             "originally performed", "in the style of"};
 
@@ -500,7 +500,7 @@ public final class TidalBridge {
         return send(context, "GET", path, null);
     }
 
-    // V85 (tested 16.10.2026 with Marko's account): TIDAL answers 429 after ~7 quick requests; a
+    // V86 (tested 16.10.2026 with Marko's account): TIDAL answers 429 after ~7 quick requests; a
     // playlist send then failed ("TIDAL 429") or, with a song looked up by search instead of its
     // ISRC, took another version of it (a double on the next sync). A 429 waits as TIDAL says
     // (Retry-After) or 1, 2, 4 ... s, up to 6 tries. Blocking: off the UI thread, as every call here.

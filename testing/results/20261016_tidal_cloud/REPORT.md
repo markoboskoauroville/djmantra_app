@@ -12,7 +12,7 @@ the same requests as `TidalBridge.java` (same endpoints, same order).
 - **OK**: all of Marko's playlists listed with their counts (Nu Disco Chart (generated) 108, ECSTATIC DEMO 26, the
   morning / evening sets, the world sets ...).
 
-## Making playlists (`pushPlaylist()`): two bugs found and fixed in V85
+## Making playlists (`pushPlaylist()`): two bugs found and fixed in V86
 1. **Rate limit**: TIDAL answers **429** after ~7 quick requests. The app took that as an error: a whole push failed
    ("TIDAL 429"), and in the ISRC lookup a 429 meant "not found" -> the song was searched instead -> another version
    -> a double on the next sync (seen: re-sending the same 10 songs added 1). **Fix**: a 429 waits (Retry-After or 1,

@@ -437,3 +437,9 @@ Compare each with what the page shows (scroll it): no missing or extra rows, art
 duplicates. Then BEATSTATS view: all 6 charts listed, newest first, one each (charts.json). + ALL on chart 2 -> TIDAL:
 "N ADDED"; pull TIDAL.txt. Put every `page_*.html` and charts.json into the results folder (the cloud will test the
 reader on those pages offline).
+## 87. (V86) TIDAL PLAYLISTS: NO 429 FAILURES, THE RIGHT SONGS (tested from the cloud with Marko's token, 16.10.2026:
+testing/results/20261016_tidal_cloud/REPORT.md). Logged in to TIDAL: SYNC ALL / send a playlist of 30+ songs: no "TIDAL
+429" error (logcat `TIDAL 429: waiting ...` and it carries on). A playlist with songs without ISRCs (e.g. a folder of
+your own files): on TIDAL each is the right artist and title (no covers, karaoke, other artists); songs TIDAL lacks are
+left out (logcat `not on TIDAL: ...`). Send the same playlist again: nothing added twice. On TIDAL, delete the two
+"DJ Mantra TEST - ..." playlists made by the cloud test when done.
