@@ -382,3 +382,10 @@ chart (a genre, Top 100): 100 songs with titles, artists, ISRCs.
 "Saved WxH JPEG (N screens): BeatStats/captures/<title>_<time>.jpg". Pull the JPEG: the whole page top to bottom in one
 image, no gaps, no repeated header between screens, no doubled rows; a 100-song chart fits unscaled (up to 40000 px tall,
 longer pages are scaled down to that). Try it on a chart and on the home page.
+## 81. (V82) BEATSTATS + ALL (Marko 16.10.2026, on V81's chart list: "There are many songs and to add one by one for me.
+Plus, put plus as a column and when I press ... it is going to write all these songs from the list to one text file").
+BEATSTATS view, a chart read: above the list "100 SONGS" and + ALL at the right, over the + column. + ALL -> "ADD ALL
+100 SONGS TO DOWNLOAD QUEUE" -> SPOTIFY / TIDAL / YOUTUBE MUSIC: toast "100 ADDED TO TIDAL (0 ALREADY IN)"; the file
+Music/djmantra_app/Download_Queue/TIDAL.txt has every song of the chart, in chart order, one line each
+`Artist | Title | link` (the exact TIDAL track when its ISRC was found). Again: "0 ADDED ... (100 ALREADY IN)", no
+doubles. The single + per song works as before. Pull the queue file into the results.

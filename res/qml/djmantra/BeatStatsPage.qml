@@ -5,7 +5,10 @@ import QtQuick 2.12
 // BEATSTATS (Marko 14.10.2026): the charts read from beatstats.com (OPEN BEATSTATS: the site in a
 // browser inside the app; there READ CHART stores the chart). Flip between the charts read; per
 // song three search links, SPOTIFY / TIDAL / YT MUSIC (music.youtube.com, no videos), and + to
-// put it in a download queue (djmantra_app/Download_Queue/<service>.txt).
+// put it in a download queue (djmantra_app/Download_Queue/<service>.txt). V82 (Marko 16.10.2026: "There are
+// many songs and to add one by one for me ... put plus as a column and when I press ... it is going to write all these
+// songs from the list to one text file"): + ALL at the head of the + column puts every song of the chart in one
+// queue's text file at once.
 Rectangle {
     id: root
 
@@ -15,6 +18,8 @@ Rectangle {
     property int current: 0
     readonly property var chart: charts.length > 0 ? charts[Math.min(current, charts.length - 1)] : null
     property var queueSong: null
+    // + ALL: the whole chart into one queue
+    property bool queueAll: false
 
     function reload() {
         charts = Mixxx.DJMantra.beatStatsCharts();
@@ -123,6 +128,34 @@ Rectangle {
             color: Style.subText
             font.pixelSize: 13
         }
+
+        Item {
+            // the list's head: the songs, and + ALL over the + column
+            visible: root.chart !== null
+            width: parent.width
+            height: visible ? 40 : 0
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.chart ? root.chart.entries.length + qsTr(" SONGS") : ""
+                color: Style.subText
+                font.pixelSize: 13
+                font.bold: true
+            }
+
+            DButton {
+                objectName: "beatstatsAddAll"
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                width: 96
+                height: 40
+                mode: ""
+                text: qsTr("+ ALL")
+                fontSize: 14
+                lit: true
+                onClicked: root.queueAll = true
+            }
+        }
     }
 
     ListView {
@@ -229,12 +262,15 @@ Rectangle {
     Rectangle {
         // + : into which download queue
         anchors.fill: parent
-        visible: root.queueSong !== null
+        visible: root.queueSong !== null || root.queueAll
         color: "#b0000000"
 
         MouseArea {
             anchors.fill: parent
-            onClicked: root.queueSong = null
+            onClicked: {
+                root.queueSong = null;
+                root.queueAll = false;
+            }
         }
 
         Column {
@@ -244,7 +280,10 @@ Rectangle {
 
             Text {
                 width: parent.width
-                text: qsTr("ADD TO DOWNLOAD QUEUE")
+                text: root.queueAll && root.chart
+                      ? qsTr("ADD ALL %1 SONGS TO DOWNLOAD QUEUE").arg(root.chart.entries.length)
+                      : qsTr("ADD TO DOWNLOAD QUEUE")
+                wrapMode: Text.WordWrap
                 color: Style.accent
                 font.pixelSize: 16
                 font.bold: true
@@ -260,6 +299,23 @@ Rectangle {
                     height: 48
                     text: modelData.toUpperCase()
                     onClicked: {
+                        if (root.queueAll) {
+                            // the whole chart, in its order, into this queue's one text file
+                            let added = 0;
+                            const songs = root.chart ? root.chart.entries : [];
+                            for (const s of songs) {
+                                if (Mixxx.DJMantra.addToDownloadQueue(modelData, s.artist, s.title,
+                                        s.isrc || "", s.tidal || ""))
+                                    ++added;
+                            }
+                            Toasts.show(qsTr("%1 ADDED TO %2 (%3 ALREADY IN)").arg(added)
+                                    .arg(modelData.toUpperCase()).arg(songs.length - added));
+                            Mixxx.DJMantra.log("BeatStats: + ALL " + (root.chart ? root.chart.chart_title : "")
+                                    + " -> " + Mixxx.DJMantra.downloadQueueFile(modelData) + ": " + added
+                                    + " added, " + (songs.length - added) + " already in");
+                            root.queueAll = false;
+                            return;
+                        }
                         const added = Mixxx.DJMantra.addToDownloadQueue(modelData,
                                 root.queueSong.artist, root.queueSong.title,
                                 root.queueSong.isrc || "", root.queueSong.tidal || "");
@@ -273,7 +329,10 @@ Rectangle {
                 width: parent.width
                 height: 48
                 text: qsTr("CANCEL")
-                onClicked: root.queueSong = null
+                onClicked: {
+                    root.queueSong = null;
+                    root.queueAll = false;
+                }
             }
         }
     }
