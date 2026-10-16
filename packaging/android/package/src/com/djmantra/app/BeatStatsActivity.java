@@ -208,7 +208,7 @@ public final class BeatStatsActivity extends Activity {
                     return;
                 }
                 chart.put("read", System.currentTimeMillis());
-                store(chart);
+                SavedFiles.announce(BeatStatsActivity.this, store(chart).getAbsolutePath());
                 Log.i(TAG, "Chart " + chart.optString("chart_title") + ": " + count + " songs");
                 mStatus.setText(chart.optString("chart_title") + ": " + count + " songs read ("
                         + chart.optString("how") + "), finding ISRCs ...");
@@ -233,6 +233,7 @@ public final class BeatStatsActivity extends Activity {
                             out.write(html.getBytes(StandardCharsets.UTF_8));
                         }
                         Log.i(TAG, "page saved: " + name + " (" + html.length() + " chars)");
+                        SavedFiles.announce(BeatStatsActivity.this, new File(dir, name).getAbsolutePath());
                     } catch (Exception e) {
                         Log.w(TAG, "save page: " + e);
                     }
@@ -409,7 +410,8 @@ public final class BeatStatsActivity extends Activity {
                         + strips.size() + " screens");
                 status("Saved " + page.getWidth() + "x" + page.getHeight() + " JPEG (" + strips.size()
                         + " screens" + (mCaptureCut ? ", the page was longer: cut at the size limit" : "")
-                        + "): BeatStats/captures/" + file.getName());
+                        + "): " + file.getName() + " in " + SavedFiles.friendlyFolder(file));
+                SavedFiles.announce(BeatStatsActivity.this, file.getAbsolutePath());
                 page.recycle();
             } catch (Throwable e) {
                 Log.w(TAG, "capture join: " + e);
@@ -463,7 +465,7 @@ public final class BeatStatsActivity extends Activity {
                     song.put("tidal", TidalBridge.trackByIsrc(app, code));
                     status(chart.optString("chart_title") + ": ISRC " + codes + "/" + entries.length());
                 }
-                store(chart);
+                SavedFiles.announce(BeatStatsActivity.this, store(chart).getAbsolutePath());
                 status(chart.optString("chart_title") + ": " + entries.length() + " songs, " + codes + " ISRCs");
             } catch (Exception e) {
                 Log.w(TAG, "codes: " + e);
@@ -574,7 +576,7 @@ public final class BeatStatsActivity extends Activity {
             final JSONObject chart = mCodesChart;
             mMain.postDelayed(() -> new Thread(() -> {
                 try {
-                    store(chart);
+                    SavedFiles.announce(BeatStatsActivity.this, store(chart).getAbsolutePath());
                 } catch (Exception e) {
                     Log.w(TAG, "store: " + e);
                 }
@@ -658,7 +660,7 @@ public final class BeatStatsActivity extends Activity {
     }
 
     /** charts.json: newest first, one chart per title. */
-    private static synchronized void store(JSONObject chart) throws Exception {
+    private static synchronized File store(JSONObject chart) throws Exception {
         File dir = new File(DIR);
         dir.mkdirs();
         File file = new File(dir, "charts.json");
@@ -678,6 +680,7 @@ public final class BeatStatsActivity extends Activity {
         try (FileOutputStream out = new FileOutputStream(file)) {
             out.write(charts.toString().getBytes(StandardCharsets.UTF_8));
         }
+        return file;
     }
 
     private void status(String text) {

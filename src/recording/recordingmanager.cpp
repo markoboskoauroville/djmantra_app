@@ -13,6 +13,7 @@
 #include "errordialoghandler.h"
 #include "moc_recordingmanager.cpp"
 #include "recording/defs_recording.h"
+#include "util/savedfiles.h"
 
 #define MIN_DISK_FREE 1024 * 1024 * 1024ll // one gibibyte
 
@@ -170,6 +171,10 @@ void RecordingManager::splitContinueRecording()
 
 void RecordingManager::stopRecording() {
     qDebug() << "Recording stopped";
+#ifdef __ANDROID_PORT__
+    // DJ Mantra: say where the recording is (Marko 16.10.2026)
+    djmantra::announceSaved(m_recordingLocation);
+#endif
     m_pCoRecStatus->set(RECORD_OFF);
     m_recordingFile = "";
     m_recordingLocation = "";

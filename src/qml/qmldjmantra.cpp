@@ -60,6 +60,7 @@ extern const QString kOboeHostApi;
 #include "qml/gputime.h"
 #include "qml/qmllibraryproxy.h"
 #include "moc_qmldjmantra.cpp"
+#include "util/savedfiles.h"
 #include "sources/soundsourceproxy.h"
 #include "track/keyutils.h"
 #include "track/trackref.h"
@@ -902,7 +903,9 @@ void writePlaylists(const QJsonArray& playlists) {
     QSaveFile file(playlistsFile());
     if (file.open(QIODevice::WriteOnly)) {
         file.write(QJsonDocument(playlists).toJson(QJsonDocument::Compact));
-        file.commit();
+        if (file.commit()) {
+            djmantra::announceSaved(playlistsFile());
+        }
     }
 }
 
@@ -1002,7 +1005,9 @@ void writeQueue(const QString& service, const QStringList& lines) {
         for (const QString& line : lines) {
             file.write(line.toUtf8() + '\n');
         }
-        file.commit();
+        if (file.commit()) {
+            djmantra::announceSaved(queueFile(service));
+        }
     }
 }
 
@@ -1278,7 +1283,9 @@ void writeSunoLinks(const QJsonArray& links) {
     QSaveFile file(sunoDir() + QStringLiteral("/links.json"));
     if (file.open(QIODevice::WriteOnly)) {
         file.write(QJsonDocument(links).toJson());
-        file.commit();
+        if (file.commit()) {
+            djmantra::announceSaved(sunoDir() + QStringLiteral("/links.json"));
+        }
     }
 }
 
@@ -1364,6 +1371,7 @@ int QmlDJMantra::sunoAdd(const QString& name, const QString& text) {
                 }
                 const QString path = answer.section(QChar('|'), 0, 0);
                 const QString title = answer.section(QChar('|'), 1);
+                djmantra::announceSaved(path);
                 guard->addToPlaylist(playlist, path);
                 QJsonArray links = readSunoLinks();
                 for (int i = 0; i < links.size(); ++i) {
@@ -1442,8 +1450,11 @@ int QmlDJMantra::sunoScan() {
             QString path = info.absoluteFilePath();
             if (info.absolutePath() != sunoDir()) {
                 const QString copy = sunoDir() + QChar('/') + info.fileName();
-                if (QFile::exists(copy) || QFile::copy(path, copy)) {
+                if (QFile::exists(copy)) {
                     path = copy;
+                } else if (QFile::copy(path, copy)) {
+                    path = copy;
+                    djmantra::announceSaved(copy);
                 }
             }
             link[QStringLiteral("file")] = path;
@@ -2112,7 +2123,9 @@ QString QmlDJMantra::roomSave(const QString& json) {
     QSaveFile file(path);
     if (file.open(QIODevice::WriteOnly)) {
         file.write(QJsonDocument(room).toJson(QJsonDocument::Indented));
-        file.commit();
+        if (file.commit()) {
+            djmantra::announceSaved(path);
+        }
     }
     return path;
 }

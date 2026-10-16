@@ -162,7 +162,9 @@ public final class SunoActivity extends Activity {
 
     private void saved(File file) {
         Log.i(TAG, "saved " + file + " (" + file.length() + " bytes)");
-        status("Saved: " + file.getName() + " (" + file.length() / 1024 + " KB). DONE to go back.");
+        status("Saved: " + file.getName() + " (" + file.length() / 1024 + " KB) in "
+                + SavedFiles.friendlyFolder(file) + ". DONE to go back.");
+        SavedFiles.announce(this, file.getAbsolutePath());
     }
 
     private void status(String text) {
