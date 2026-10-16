@@ -482,7 +482,7 @@ Rectangle {
                     visible: keyFiles.count === 0
                     width: column.width - 12
                     wrapMode: Text.WordWrap
-                    text: qsTr("No key files: put the TIDAL key file (.txt / .json) in Music/djmantra_app/Keys or Download")
+                    text: qsTr("No key files: put the TIDAL key file (.txt / .json) in Documents/DJ Mantra/Keys, Documents or Download")
                     color: Style.subText
                     font.pixelSize: 13
                 }

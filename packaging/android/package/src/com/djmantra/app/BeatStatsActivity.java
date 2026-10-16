@@ -43,7 +43,7 @@ import java.util.Locale;
  * passed by hand once, the cookie stays), the categories flipped there as on the site. READ CHART
  * reads the chart's rows from the page itself (exact text, no AI, no OCR: Marko 14.10.2026):
  * {chart_title, entries: [{rank, title, artist, beatport (the Beatport track ID)}]}, stored in
- * djmantra_app/BeatStats/charts.json (newest first, one per chart title) for the app's chart view.
+ * Documents/DJ Mantra/BeatStats/charts.json (newest first, one per chart title) for the app's chart view.
  * V81 (Marko 16.10.2026: READ CHART "right now doesn't find anything. We need to find out why"):
  * besides the chart rows, any track links on the page are read; a page with none is saved as
  * BeatStats/pages/page_<time>.html with what was on it, to see why. CAPTURE PAGE (Marko: "screen
@@ -53,7 +53,8 @@ import java.util.Locale;
 public final class BeatStatsActivity extends Activity {
     private static final String TAG = "DJMantraBeatStats";
     private static final String HOME = "https://www.beatstats.com/";
-    private static final String DIR = "/sdcard/Music/djmantra_app/BeatStats";
+    // V84: the app's documents in Documents/DJ Mantra (QmlDJMantra djmantraDocs; Marko 16.10.2026)
+    private static final String DIR = "/sdcard/Documents/DJ Mantra/BeatStats";
 
     private WebView mWeb;
     private TextView mStatus;

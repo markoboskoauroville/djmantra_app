@@ -64,7 +64,7 @@ Rectangle {
         current = Math.max(0, Math.min(list.length - 1, Number(Mixxx.DJMantra.setting("room_current", "0"))));
     }
 
-    // every change is saved at once: the room's own file, Music/djmantra_app/Room_Corrections/<name>.json
+    // every change is saved at once: the room's own file, Documents/DJ Mantra/Room_Corrections/<name>.json
     function saveRooms() {
         if (room)
             lastSaved = Mixxx.DJMantra.roomSave(JSON.stringify(room));
@@ -453,7 +453,7 @@ Rectangle {
 
             DButton {
                 // SAVE (Marko 14.10.2026): every change is saved by itself; this one saves and
-                // says where (Music/djmantra_app/Room_Corrections/<room>.json)
+                // says where (Documents/DJ Mantra/Room_Corrections/<room>.json)
                 objectName: "roomSave"
                 width: 84
                 height: 40
@@ -1164,7 +1164,7 @@ Rectangle {
                     + "<b>ROOMS</b><br>"
                     + "Every venue can have its own room: ROOM at the top chooses, adds, renames or deletes one. "
                     + "A room keeps its places, target, strength and correction, saved by itself as a file of its own: "
-                    + "Music/djmantra_app/Room_Corrections/&lt;room&gt;.json (SAVE also saves and shows the file). Choosing a "
+                    + "Documents/DJ Mantra/Room_Corrections/&lt;room&gt;.json (SAVE also saves and shows the file). Choosing a "
                     + "room brings its correction back.<br><br>"
                     + "<b>BY HAND</b><br>"
                     + "Drag any band up or down on the graph; double tap it for 0 dB. FLAT clears the correction.")

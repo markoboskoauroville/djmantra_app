@@ -400,3 +400,11 @@ middle of a half-screen empty band, the site squeezed into the bottom 40 %). Cau
 row, got almost no width and wrapped a letter a line, so the row grew. Now: one row of four equal buttons (BACK, READ
 CHART, CAPTURE, CLOSE) at the top, the status under it (two lines at most), the site fills the rest of the screen.
 Check: on open, after READ CHART (a long status), after CAPTURE; portrait and landscape.
+## 84. (V84) DOCUMENTS IN Documents/DJ Mantra (Marko 16.10.2026: "all documents, especially charts which are captured by
+jpegs or text, end up in documents, dj mantra folder"). Start V84 once: logcat `Documents: N files .../Music/djmantra_app/
+BeatStats -> /sdcard/Documents/DJ Mantra/BeatStats` (and Download_Queue, Room_Corrections); the old folders are gone from
+Music/djmantra_app (songs, Playlists, Suno, Recordings, Keys stay there). Then: BEATSTATS shows the charts read before
+(charts.json moved); READ CHART / CAPTURE / a page with no songs write to Documents/DJ Mantra/BeatStats (charts.json,
+captures/*.jpg, pages/*.html); + / + ALL write Documents/DJ Mantra/Download_Queue/<service>.txt and the QUEUES page lists
+them; ROOM CORRECTION finds the saved rooms and SAVE writes Documents/DJ Mantra/Room_Corrections/<room>.json; Settings ->
+TIDAL key files also found in Documents/DJ Mantra/Keys. In the phone's Files app: Documents -> DJ Mantra.

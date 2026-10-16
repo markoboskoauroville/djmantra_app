@@ -162,7 +162,7 @@ class QmlDJMantra : public QObject {
     // the live microphone analyzer under the curve (61 columns, 1/6 octave, dB)
     Q_INVOKABLE void roomEqLive(bool on, int inputId = 0);
     Q_INVOKABLE QString roomEqLiveColumns() const;
-    // the rooms (Marko 14.10.2026): one JSON file per room in djmantra_app/Room_Corrections
+    // the rooms (Marko 14.10.2026): one JSON file per room in Documents/DJ Mantra/Room_Corrections
     // (<name>.json: its places' measurements, target, strength and correction); all as an array
     Q_INVOKABLE QString roomsLoad() const;
     // writes one room (its "name" names the file); returns the file's path
@@ -183,11 +183,11 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE int sunoScan();
     // BEATSTATS (Marko 14.10.2026): beatstats.com in a WebView (BeatStatsActivity), READ CHART
     // there reads the chart's rows from the page (no AI) with each song's ISRC and stores them in
-    // djmantra_app/BeatStats/charts.json, read here
+    // Documents/DJ Mantra/BeatStats/charts.json, read here
     Q_INVOKABLE void openBeatStats();
     Q_INVOKABLE QVariantList beatStatsCharts() const;
     // DOWNLOAD QUEUES (Marko 14.10.2026): one text file per service in
-    // djmantra_app/Download_Queue/ (Spotify.txt, TIDAL.txt, YouTube_Music.txt), a line per song:
+    // Documents/DJ Mantra/Download_Queue/ (Spotify.txt, TIDAL.txt, YouTube_Music.txt), a line per song:
     // "artist | title | link" (the exact recording by ISRC when known, else a search link)
     Q_INVOKABLE QString searchLink(const QString& service,
             const QString& artist,

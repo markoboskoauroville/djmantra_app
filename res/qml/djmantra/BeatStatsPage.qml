@@ -5,7 +5,7 @@ import QtQuick 2.12
 // BEATSTATS (Marko 14.10.2026): the charts read from beatstats.com (OPEN BEATSTATS: the site in a
 // browser inside the app; there READ CHART stores the chart). Flip between the charts read; per
 // song three search links, SPOTIFY / TIDAL / YT MUSIC (music.youtube.com, no videos), and + to
-// put it in a download queue (djmantra_app/Download_Queue/<service>.txt). V82 (Marko 16.10.2026: "There are
+// put it in a download queue (Documents/DJ Mantra/Download_Queue/<service>.txt). V82 (Marko 16.10.2026: "There are
 // many songs and to add one by one for me ... put plus as a column and when I press ... it is going to write all these
 // songs from the list to one text file"): + ALL at the head of the + column puts every song of the chart in one
 // queue's text file at once.

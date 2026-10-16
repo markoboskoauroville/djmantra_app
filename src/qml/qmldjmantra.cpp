@@ -1,5 +1,6 @@
 #include "qml/qmldjmantra.h"
 
+#include <algorithm>
 #include <QDir>
 #include <QDirIterator>
 #include <QFileInfo>
@@ -79,6 +80,68 @@ djmantra::camelot::Code codeOf(double keyValue) {
 
 } // namespace
 
+// V84 (Marko 16.10.2026: "all documents, especially charts which are captured by jpegs or text, end
+// up in documents, dj mantra folder"): the app's documents (BeatStats charts / captures / pages, the
+// download queues, the room corrections) live in Documents/DJ Mantra/<sub>; the music stays in Music
+// (songs, playlists, Suno, recordings). BeatStatsActivity.java writes to the same place.
+static QString djmantraDocs(const QString& sub) {
+#if defined(Q_OS_ANDROID)
+    const QString root = QStringLiteral("/sdcard/Documents/DJ Mantra");
+#else
+    const QString root = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) +
+            QStringLiteral("/DJ Mantra");
+#endif
+    return sub.isEmpty() ? root : root + QChar('/') + sub;
+}
+
+namespace {
+
+// Once: what V83 and before wrote to Music/djmantra_app/<sub> moves to Documents/DJ Mantra/<sub>
+// (same storage: a rename; a file already there is kept and the old one left in place)
+void moveDocumentsOnce() {
+#if defined(Q_OS_ANDROID)
+    const QString oldRoot = QStringLiteral("/sdcard/Music/djmantra_app");
+#else
+    const QString oldRoot = QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
+            QStringLiteral("/djmantra_app");
+#endif
+    for (const QString& sub : {QStringLiteral("BeatStats"),
+                 QStringLiteral("Download_Queue"),
+                 QStringLiteral("Room_Corrections")}) {
+        const QString from = oldRoot + QChar('/') + sub;
+        if (!QDir(from).exists()) {
+            continue;
+        }
+        const QString to = djmantraDocs(sub);
+        int moved = 0;
+        QDirIterator it(from, QDir::Files | QDir::Hidden, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            const QString file = it.next();
+            const QString target = to + file.mid(from.size());
+            QDir().mkpath(QFileInfo(target).absolutePath());
+            if (!QFileInfo::exists(target) && QFile::rename(file, target)) {
+                ++moved;
+            }
+        }
+        // the old folder goes when it is empty (deepest folders first)
+        QDirIterator dirs(from, QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+        QStringList folders;
+        while (dirs.hasNext()) {
+            folders << dirs.next();
+        }
+        std::sort(folders.begin(), folders.end(), [](const QString& a, const QString& b) {
+            return a.size() > b.size();
+        });
+        for (const QString& folder : std::as_const(folders)) {
+            QDir().rmdir(folder);
+        }
+        QDir().rmdir(from);
+        qInfo().noquote() << "Documents:" << moved << "files" << from << "->" << to;
+    }
+}
+
+} // namespace
+
 namespace {
 // The controller's bridge to the Qt Quick interface (Marko, 12.10.2026: the
 // Mix Ultra's BROWSE opens the song list, its pad mode buttons choose the tabs)
@@ -134,6 +197,7 @@ QmlDJMantra::QmlDJMantra(UserSettingsPointer pConfig, QObject* pParent)
         : QObject(pParent),
           m_pConfig(std::move(pConfig)) {
     hideBars();
+    moveDocumentsOnce();
     // the CQ mixer: back to the address it had; the delay's tempo follows the decks
     m_pCq = new djmantra::CqLink(this);
     connect(m_pCq, &djmantra::CqLink::statusChanged, this, &QmlDJMantra::cqChanged);
@@ -911,12 +975,7 @@ void importM3uPlaylists() {
 namespace {
 
 QString queueFile(const QString& service) {
-#if defined(Q_OS_ANDROID)
-    const QString dir = QStringLiteral("/sdcard/Music/djmantra_app/Download_Queue");
-#else
-    const QString dir = QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
-            QStringLiteral("/djmantra_app/Download_Queue");
-#endif
+    const QString dir = djmantraDocs(QStringLiteral("Download_Queue"));
     QDir().mkpath(dir);
     QString name = service;
     name.replace(QChar(' '), QChar('_'));
@@ -1030,12 +1089,7 @@ void QmlDJMantra::openBeatStats() {
 }
 
 QVariantList QmlDJMantra::beatStatsCharts() const {
-#if defined(Q_OS_ANDROID)
-    QFile file(QStringLiteral("/sdcard/Music/djmantra_app/BeatStats/charts.json"));
-#else
-    QFile file(QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
-            QStringLiteral("/djmantra_app/BeatStats/charts.json"));
-#endif
+    QFile file(djmantraDocs(QStringLiteral("BeatStats/charts.json")));
     if (!file.open(QIODevice::ReadOnly)) {
         return QVariantList();
     }
@@ -1453,11 +1507,13 @@ void QmlDJMantra::tidalSyncAll() {
 QVariantList QmlDJMantra::tidalKeyFiles() const {
     QVariantList files;
 #if defined(Q_OS_ANDROID)
-    const QStringList dirs = {QStringLiteral("/sdcard/Music/djmantra_app/Keys"),
+    const QStringList dirs = {djmantraDocs(QStringLiteral("Keys")),
+            QStringLiteral("/sdcard/Music/djmantra_app/Keys"),
             QStringLiteral("/sdcard/Download"),
             QStringLiteral("/sdcard/Documents")};
 #else
-    const QStringList dirs = {QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
+    const QStringList dirs = {djmantraDocs(QStringLiteral("Keys")),
+            QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
                     QStringLiteral("/djmantra_app/Keys"),
             QStandardPaths::writableLocation(QStandardPaths::DownloadLocation)};
 #endif
@@ -1925,12 +1981,7 @@ QVariantList QmlDJMantra::roomBands() const {
 }
 
 static QString roomDir() {
-#if defined(Q_OS_ANDROID)
-    return QStringLiteral("/sdcard/Music/djmantra_app/Room_Corrections");
-#else
-    return QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
-            QStringLiteral("/djmantra_app/Room_Corrections");
-#endif
+    return djmantraDocs(QStringLiteral("Room_Corrections"));
 }
 
 QString QmlDJMantra::roomEqSignal(const QString& kind, double seconds) {

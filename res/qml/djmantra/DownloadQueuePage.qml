@@ -4,7 +4,7 @@ import QtQuick 2.12
 
 // DOWNLOAD QUEUES (Marko 14.10.2026: "download queue is actually just a playlist ... for Spotify,
 // Tidal, or YouTube Music ... export the text file with the lists of all the links"): one
-// text file per service in djmantra_app/Download_Queue, a line per song "artist | title |
+// text file per service in Documents/DJ Mantra/Download_Queue, a line per song "artist | title |
 // link". Songs come in from the BEATSTATS charts (+ QUEUE); here: read, open, remove.
 Rectangle {
     id: root
