@@ -15,6 +15,23 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
 - Next tester session: install V81, part 80 (READ CHART on Marko's page, CAPTURE PAGE), then 79, 76, 75+77, 78, 74,
   the rest of 69, 71, 70. The tester session of 15.10 is archived; beatstats.com is blocked from the cloud session.
 
+## 16.10.2026 ~21:30 UTC (latest): V85 = every saved file says where it is; BeatStats multi-playlist test written
+
+By "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), on top of the other cloud session's V84 (1b9148b).
+- **V85:** `SavedFiles.java` + `djmantra::announceSaved` (src/util/savedfiles.*) show a long toast
+  "Saved <name> / in Internal storage/<folder>" and log `Saved file: <path>`. They are called for:
+  - BeatStats charts / pages / captures;
+  - download queues;
+  - playlists;
+  - Suno songs / links;
+  - rooms;
+  - recordings.
+- **Tester parts:** testing/ROUND41.md parts 85 (the toasts) and 86 (BeatStats READ CHART on 6 different playlists).
+- **BeatStats from the cloud is impossible:** Cloudflare's human check, and this session's proxy also refuses
+  beatstats.com, beatport.com and web.archive.org. Part 86 asks the tester to bring back the pages
+  (page_*.html, charts.json) so the reader can be tested on them offline.
+- **No tester session connected.**
+
 ## 15.10.2026 ~12:30 UTC (latest): V80 = DJAY waveform (default), sync within the fader range, EQ curves
 
 By the cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6). Until today it had built on `main`, an old

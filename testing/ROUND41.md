@@ -408,3 +408,32 @@ Music/djmantra_app (songs, Playlists, Suno, Recordings, Keys stay there). Then: 
 captures/*.jpg, pages/*.html); + / + ALL write Documents/DJ Mantra/Download_Queue/<service>.txt and the QUEUES page lists
 them; ROOM CORRECTION finds the saved rooms and SAVE writes Documents/DJ Mantra/Room_Corrections/<room>.json; Settings ->
 TIDAL key files also found in Documents/DJ Mantra/Keys. In the phone's Files app: Documents -> DJ Mantra.
+## 85. (V85) EVERY SAVED FILE SAYS WHERE IT IS (Marko 16.10.2026: "any file type is saved, for example, playlist from
+beatstats or jpeg from beatstats or any other files, please post where the file is, the location and name"). Each save
+shows a long toast "Saved <name>" / "in Internal storage/<folder>" and logs `Saved file: <full path>` (logcat
+`DJMantra`). Check each, pull the file it names and confirm it is there:
+- BEATSTATS: READ CHART -> `charts.json` in Internal storage/Documents/DJ Mantra/BeatStats; CAPTURE -> `<title>_<time>.jpg`
+  in .../BeatStats/captures (the status line names the folder too); a page with no songs -> `page_<time>.html` in
+  .../BeatStats/pages.
+- + / + ALL -> `TIDAL.txt` (Spotify.txt, YouTube_Music.txt) in .../Documents/DJ Mantra/Download_Queue.
+- a playlist change -> `playlists.json`; Suno GET / a found Suno file -> the song in Music/djmantra_app/Suno.
+- ROOM CORRECTION SAVE -> `<room>.json` in .../Documents/DJ Mantra/Room_Corrections.
+- REC on, then off -> the recording's file in Music/djmantra_app/Recordings.
+The same file saved again within 30 s gives no second toast (the log line comes every time).
+## 86. (V85) BEATSTATS SCRAPING ACROSS SEVERAL PLAYLISTS (Marko 16.10.2026: "please go through multiple playlists from
+beatstats and test, its scrapping"; the cloud cannot: Cloudflare's human check and the session's network both block
+beatstats.com there, so this is the phone's part). Pass Cloudflare by hand once if asked. Then READ CHART on each of
+these, one after the other, and for each write one row: chart title, page URL, songs read (the status line), how
+read ("chart rows" / "track links"), the first 3 and the last song (title / artist as shown on the page), ISRC
+count at the end, seconds taken, any `DJMantraBeatStats` warning:
+1. TRACKS -> Organic House / Downtempo (the r41 chart, 100 expected)
+2. TRACKS -> Melodic House & Techno
+3. TRACKS -> Afro House
+4. TRACKS -> Deep House
+5. the BeatStats home page's top list
+6. any non-TRACKS page (a label, artist or release page): it must say how many songs it found, or save the page
+   (`page_<time>.html`, part 85's toast) when it finds none.
+Compare each with what the page shows (scroll it): no missing or extra rows, artists and titles not swapped, no
+duplicates. Then BEATSTATS view: all 6 charts listed, newest first, one each (charts.json). + ALL on chart 2 -> TIDAL:
+"N ADDED"; pull TIDAL.txt. Put every `page_*.html` and charts.json into the results folder (the cloud will test the
+reader on those pages offline).
