@@ -408,8 +408,11 @@ public final class BeatStatsActivity extends Activity {
     }
 
     /**
-     * Off the UI thread: each song's ISRC (from Beatport) and, when logged in to TIDAL, its exact
-     * TIDAL track ID (by ISRC), stored with the chart as they come.
+     * Each song's ISRC (from Beatport) and, when logged in to TIDAL, its exact TIDAL track ID (by
+     * ISRC), stored with the chart as they come. V83 (tested 16.10.2026 from the cloud: Beatport
+     * answers a plain request with Cloudflare's 403, a browser engine with the page): first by plain
+     * HTTPS (fast); when Beatport refuses it, the rest through a hidden browser of the app, which
+     * loads the page as any browser does (Cloudflare's own check runs in it; nothing is bypassed).
      */
     private void findCodes(JSONObject chart) {
         final Context app = getApplicationContext();
@@ -419,7 +422,16 @@ public final class BeatStatsActivity extends Activity {
                 int codes = 0;
                 for (int i = 0; i < entries.length(); ++i) {
                     JSONObject song = entries.getJSONObject(i);
-                    String code = isrc(song.optString("beatport"));
+                    String id = song.optString("beatport");
+                    String code = isrc(id);
+                    if (code.isEmpty() && sLastCode == 403) {
+                        // Beatport wants a browser: the rest in the hidden one
+                        Log.i(TAG, "Beatport refuses plain requests (403): the browser from song " + (i + 1));
+                        final int from = i;
+                        final int found = codes;
+                        mMain.post(() -> browserCodes(chart, from, found));
+                        return;
+                    }
                     if (code.isEmpty()) {
                         continue;
                     }
@@ -437,9 +449,125 @@ public final class BeatStatsActivity extends Activity {
         }).start();
     }
 
+    // --- the ISRCs through a hidden browser (main thread; one Beatport page at a time) ----------
+    private WebView mBeatport;
+    private JSONObject mCodesChart;
+    private int mCodesIndex;
+    private int mCodesFound;
+    private int mCodesTries;
+    private final Runnable mCodesTimeout = () -> nextBrowserCode(false);
+
+    private static final String NEXT_DATA_JS = "(function(){var n=document.getElementById('__NEXT_DATA__');"
+            + "return JSON.stringify({title:document.title,data:n?n.textContent:''});})()";
+
+    private void browserCodes(JSONObject chart, int from, int found) {
+        if (mBeatport == null) {
+            mBeatport = new WebView(this);
+            mBeatport.getSettings().setJavaScriptEnabled(true);
+            mBeatport.getSettings().setDomStorageEnabled(true);
+            CookieManager.getInstance().setAcceptThirdPartyCookies(mBeatport, true);
+            mBeatport.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    readBrowserCode();
+                }
+            });
+            // attached (a browser off the window may not run its scripts), 1 px, out of sight
+            ((ViewGroup) mWeb.getParent()).addView(mBeatport, new LinearLayout.LayoutParams(1, 1));
+        }
+        mCodesChart = chart;
+        mCodesIndex = from;
+        mCodesFound = found;
+        loadBrowserCode();
+    }
+
+    private void loadBrowserCode() {
+        try {
+            JSONArray entries = mCodesChart.getJSONArray("entries");
+            while (mCodesIndex < entries.length() && entries.getJSONObject(mCodesIndex).optString("beatport").isEmpty()) {
+                ++mCodesIndex;
+            }
+            if (mCodesIndex >= entries.length()) {
+                finishBrowserCodes();
+                return;
+            }
+            mCodesTries = 0;
+            String id = entries.getJSONObject(mCodesIndex).optString("beatport");
+            status(mCodesChart.optString("chart_title") + ": ISRC (browser) " + (mCodesIndex + 1) + "/" + entries.length());
+            mMain.removeCallbacks(mCodesTimeout);
+            mMain.postDelayed(mCodesTimeout, 30000);
+            mBeatport.loadUrl("https://www.beatport.com/track/x/" + id);
+        } catch (Exception e) {
+            Log.w(TAG, "browser codes: " + e);
+            finishBrowserCodes();
+        }
+    }
+
+    // the page is there (or Cloudflare's check, which reloads it by itself when passed)
+    private void readBrowserCode() {
+        mBeatport.evaluateJavascript(NEXT_DATA_JS, value -> {
+            try {
+                JSONObject page = new JSONObject(new JSONArray("[" + value + "]").getString(0));
+                JSONArray entries = mCodesChart.getJSONArray("entries");
+                JSONObject song = entries.getJSONObject(mCodesIndex);
+                String code = isrcFromPage(page.optString("data"), song.optString("beatport"));
+                if (code.isEmpty()) {
+                    // still the check ("Just a moment..."): wait for its reload, up to the timeout
+                    Log.i(TAG, "Beatport " + song.optString("beatport") + " in the browser: " + page.optString("title"));
+                    return;
+                }
+                song.put("isrc", code);
+                ++mCodesFound;
+                Log.i(TAG, "Beatport " + song.optString("beatport") + " ISRC " + code + " (browser)");
+                final Context app = getApplicationContext();
+                new Thread(() -> {
+                    try {
+                        song.put("tidal", TidalBridge.trackByIsrc(app, code));
+                    } catch (Exception e) {
+                        Log.w(TAG, "tidal: " + e);
+                    }
+                }).start();
+                nextBrowserCode(true);
+            } catch (Exception e) {
+                Log.w(TAG, "browser page: " + e);
+            }
+        });
+    }
+
+    private void nextBrowserCode(boolean found) {
+        mMain.removeCallbacks(mCodesTimeout);
+        if (!found) {
+            Log.w(TAG, "Beatport: no ISRC in the browser for song " + (mCodesIndex + 1));
+        }
+        ++mCodesIndex;
+        loadBrowserCode();
+    }
+
+    private void finishBrowserCodes() {
+        mMain.removeCallbacks(mCodesTimeout);
+        try {
+            int total = mCodesChart.getJSONArray("entries").length();
+            // the TIDAL lookups of the last songs may still be running: store a moment later
+            final JSONObject chart = mCodesChart;
+            mMain.postDelayed(() -> new Thread(() -> {
+                try {
+                    store(chart);
+                } catch (Exception e) {
+                    Log.w(TAG, "store: " + e);
+                }
+            }).start(), 3000);
+            status(mCodesChart.optString("chart_title") + ": " + total + " songs, " + mCodesFound + " ISRCs");
+        } catch (Exception e) {
+            Log.w(TAG, "finish codes: " + e);
+        }
+    }
+
+    // the HTTP status of the last plain Beatport request (403: Cloudflare wants a browser)
+    private static volatile int sLastCode = 0;
+
     /**
      * The ISRC of Beatport track `id` (the exact recording's code, Marko 14.10.2026): from the
-     * track page's embedded data ("isrc":"..."), "" if not found. Blocking: off the UI thread.
+     * track page's embedded data, "" if not found. Blocking: off the UI thread.
      */
     public static String isrc(String id) {
         if (id == null || id.isEmpty()) {
@@ -452,6 +580,7 @@ public final class BeatStatsActivity extends Activity {
             c.setConnectTimeout(15000);
             c.setReadTimeout(20000);
             int code = c.getResponseCode();
+            sLastCode = code;
             if (code >= 400) {
                 Log.w(TAG, "Beatport " + id + ": HTTP " + code);
                 return "";
@@ -463,15 +592,46 @@ public final class BeatStatsActivity extends Activity {
             while ((n = in.read(buffer)) > 0) {
                 bytes.write(buffer, 0, n);
             }
-            java.util.regex.Matcher m = java.util.regex.Pattern.compile("\"isrc\"\\s*:\\s*\"([A-Z0-9]{12})\"")
-                    .matcher(bytes.toString("UTF-8"));
-            String isrc = m.find() ? m.group(1) : "";
+            String html = bytes.toString("UTF-8");
+            java.util.regex.Matcher next = java.util.regex.Pattern
+                    .compile("<script id=\"__NEXT_DATA__\"[^>]*>(.*?)</script>", java.util.regex.Pattern.DOTALL)
+                    .matcher(html);
+            String isrc = isrcFromPage(next.find() ? next.group(1) : html, id);
             Log.i(TAG, "Beatport " + id + " ISRC " + isrc);
             return isrc;
         } catch (Exception e) {
             Log.w(TAG, "isrc " + id + ": " + e);
             return "";
         }
+    }
+
+    /**
+     * The track's own ISRC from a Beatport page's data (its __NEXT_DATA__ JSON): the query
+     * "track-details-<id>" (V83; the page also holds ~200 recommended tracks with their ISRCs), else
+     * the first ISRC in it (the track details come first on every page seen).
+     */
+    static String isrcFromPage(String data, String id) {
+        if (data == null || data.isEmpty()) {
+            return "";
+        }
+        try {
+            JSONArray queries = new JSONObject(data).getJSONObject("props").getJSONObject("pageProps")
+                    .getJSONObject("dehydratedState").getJSONArray("queries");
+            for (int i = 0; i < queries.length(); ++i) {
+                JSONObject q = queries.getJSONObject(i);
+                JSONArray key = q.optJSONArray("queryKey");
+                if (key != null && ("track-details-" + id).equals(key.optString(0))) {
+                    String isrc = q.getJSONObject("state").getJSONObject("data").optString("isrc");
+                    if (isrc.matches("[A-Z0-9]{12}")) {
+                        return isrc;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // not the JSON (an older page, a check page): the first ISRC below
+        }
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("\"isrc\"\\s*:\\s*\"([A-Z0-9]{12})\"").matcher(data);
+        return m.find() ? m.group(1) : "";
     }
 
     /** charts.json: newest first, one chart per title. */

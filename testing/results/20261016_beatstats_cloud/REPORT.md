@@ -13,3 +13,17 @@ Marko: "Please test the beatstats.com scraping and getting songs list in your lo
 
 Next (phone, part 80): READ CHART on the page Marko used, the status line, the saved page if 0; a TRACKS chart:
 100 songs and how many ISRCs; CAPTURE PAGE.
+
+## Second pass (Marko: "Bitstats and Bitport are both enabled in the environment. Please do the necessary testings.")
+
+| check | result |
+|---|---|
+| beatstats.com, plain HTTPS / headless Chromium / a real (headed) Chromium waiting 60 s | **403, "Just a moment..." every time**: Cloudflare's human check stays; it needs a person to tick it (on the phone, once). Not bypassed. |
+| Beatport track page, plain HTTPS (what `isrc()` did) | **403** (Cloudflare) |
+| Beatport track page in a real browser engine | **200**, the page with its data (`__NEXT_DATA__`) |
+| the page's ISRCs | ~200 per page: the track's own (query `track-details-<id>`) and ~200 recommended tracks'. V81 took the first ISRC on the page; on both pages seen it is the track's own (the details come first), but by order only. **V82 takes the `track-details-<id>` query's ISRC** (Java `isrcFromPage`, run on both real pages: GBKQU2441725 for 18983652, ITFGO2500100 for 22357262). |
+| the first 10 songs of the saved ORGANIC HOUSE chart through a browser engine | **10/10 ISRCs**, 1.6-3.2 s a song (`beatport_isrc_browser_10songs.json`): Don't This GBKQU2441725, Self R3B00T DEW872506061, American Dream GBEWA2404191, Back To The Roots GBEWA2202591, Giv Me Luv QM4TW2642021, Who Loves The Sun DEBL61219974, Paradigm GBPQS2600081, Ash & Ember QMFMF2594497, Not Like You ITBVO2500050, It Feels So Good ITSV22200171 |
+
+**V82 change:** when Beatport answers the plain request with 403, the rest of the chart's ISRCs come through a hidden
+browser of the app (a 1 px WebView: it loads each Beatport page as a browser does and reads `__NEXT_DATA__`; 30 s a
+song at most). A 100-song chart: about 4 minutes. Not tested: the TIDAL step (needs Marko's TIDAL login).

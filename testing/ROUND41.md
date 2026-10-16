@@ -389,3 +389,9 @@ BEATSTATS view, a chart read: above the list "100 SONGS" and + ALL at the right,
 Music/djmantra_app/Download_Queue/TIDAL.txt has every song of the chart, in chart order, one line each
 `Artist | Title | link` (the exact TIDAL track when its ISRC was found). Again: "0 ADDED ... (100 ALREADY IN)", no
 doubles. The single + per song works as before. Pull the queue file into the results.
+## 82. (V82) BEATSTATS ISRCs THROUGH THE APP'S BROWSER (tested from the cloud 16.10.2026: Beatport refuses a plain
+request with Cloudflare's 403, a browser engine gets the page; testing/results/20261016_beatstats_cloud/). READ CHART
+on a TRACKS chart: the status counts "ISRC 1/100" ... or, when Beatport refuses the fast way, "ISRC (browser) 1/100"
+... (about 2-3 s a song); at the end "100 songs, N ISRCs" with N close to 100. Logcat `DJMantraBeatStats`: `Beatport
+<id> ISRC <code> (browser)`. Each song's ISRC is its own (the page's `track-details` entry), e.g. Don't This
+GBKQU2441725, Back To The Roots GBEWA2202591. Then SPOT / TIDAL / YT M open the exact song.
