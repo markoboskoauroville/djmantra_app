@@ -488,6 +488,72 @@ Rectangle {
                 }
             }
 
+            // V87 (Marko 16.10.2026: "with title refresh token, which is going to pick in settings with
+            // file picker"): log in to TIDAL with a refresh token from a file (a "TIDAL_REFRESH_TOKEN=..."
+            // line, a JSON with "refresh_token", or the token alone): no browser login needed. The token
+            // is kept like a browser login's and never shown or logged.
+            Text {
+                id: tokenTitle
+
+                property string status: Mixxx.DJMantra.tidalLoggedIn() ? qsTr("logged in") : qsTr("not logged in")
+
+                text: qsTr("TIDAL LOGIN WITH A REFRESH TOKEN FILE: ") + status
+                width: column.width - 12
+                wrapMode: Text.WordWrap
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+
+                Connections {
+                    target: Mixxx.DJMantra
+                    function onTidalResult(action, result) {
+                        if (action !== "login" && action !== "logout")
+                            return;
+                        tokenTitle.status = Mixxx.DJMantra.tidalLoggedIn() && result === ""
+                                ? qsTr("logged in") : (result !== "" ? result : qsTr("not logged in"));
+                        if (action === "login")
+                            Toasts.show(result === "" ? qsTr("TIDAL: LOGGED IN") : qsTr("TIDAL: ") + result);
+                    }
+                }
+            }
+
+            Flow {
+                width: column.width - 12
+                spacing: 6
+
+                Repeater {
+                    id: tokenFiles
+
+                    model: Mixxx.DJMantra.tidalKeyFiles()
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "tidalToken_" + modelData.name
+                        width: Math.min(column.width - 12, Math.max(160, tokenLabel.implicitWidth + 24))
+                        height: 42
+                        mode: ""
+                        text: qsTr("LOGIN: ") + modelData.name
+                        fontSize: 12
+                        onClicked: {
+                            if (Mixxx.DJMantra.tidalUseTokenFile(modelData.path)) {
+                                tokenTitle.status = qsTr("checking the token ...");
+                            } else {
+                                Toasts.show(qsTr("NO REFRESH TOKEN IN ") + modelData.name);
+                            }
+                        }
+
+                        Text {
+                            id: tokenLabel
+
+                            visible: false
+                            text: parent.text
+                            font.pixelSize: 12
+                        }
+                    }
+                }
+            }
+
             // RECORDING (Marko 14.10.2026): the mix recorded lossless (FLAC, or WAV) into
             // djmantra_app/Recordings as "<name> - <date> <time>" (Menu -> RECORD MIX)
             Text {

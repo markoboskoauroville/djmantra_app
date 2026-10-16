@@ -1183,6 +1183,48 @@ void QmlDJMantra::tidalPlaylists() {
 #endif
 }
 
+#if defined(Q_OS_ANDROID)
+// a TIDAL playlist's tracks ([{artist, title}] JSON) into the app's playlist `name`: the songs on the
+// phone (matched by file name, under Music) go in it, the others into the TIDAL download queue.
+// Returns {on the phone, queued}. On the UI thread.
+QPair<int, int> QmlDJMantra::importTidalTracks(const QString& name, const QString& json) {
+    // the phone's songs by their file names, under Music
+    QHash<QString, QString> files;
+    QDirIterator it(QStringLiteral("/sdcard/Music"), QDir::Files | QDir::Readable,
+            QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        const QString path = it.next();
+        if (SoundSourceProxy::isFileNameSupported(path)) {
+            files.insert(matchKey(it.fileInfo().completeBaseName()), path);
+        }
+    }
+    int matched = 0;
+    int queued = 0;
+    const QJsonArray tracks = QJsonDocument::fromJson(json.toUtf8()).array();
+    for (const auto& value : tracks) {
+        const QJsonObject track = value.toObject();
+        const QString artist = track.value(QStringLiteral("artist")).toString();
+        const QString title = track.value(QStringLiteral("title")).toString();
+        const QString firstArtist = matchKey(artist.section(QChar(','), 0, 0));
+        const QString titleKey = matchKey(title);
+        QString found;
+        for (auto i = files.constBegin(); i != files.constEnd() && found.isEmpty(); ++i) {
+            if (i.key().contains(titleKey) && i.key().contains(firstArtist)) {
+                found = i.value();
+            }
+        }
+        if (!found.isEmpty()) {
+            addToPlaylist(name, found);
+            ++matched;
+        } else {
+            addToDownloadQueue(QStringLiteral("TIDAL"), artist, title);
+            ++queued;
+        }
+    }
+    return {matched, queued};
+}
+#endif
+
 void QmlDJMantra::tidalImport(const QString& id, const QString& name) {
 #if defined(Q_OS_ANDROID)
     QPointer<QmlDJMantra> guard(this);
@@ -1193,39 +1235,7 @@ void QmlDJMantra::tidalImport(const QString& id, const QString& name) {
             if (!guard) {
                 return;
             }
-            // the phone's songs by their file names, under Music
-            QHash<QString, QString> files;
-            QDirIterator it(QStringLiteral("/sdcard/Music"), QDir::Files | QDir::Readable,
-                    QDirIterator::Subdirectories);
-            while (it.hasNext()) {
-                const QString path = it.next();
-                if (SoundSourceProxy::isFileNameSupported(path)) {
-                    files.insert(matchKey(it.fileInfo().completeBaseName()), path);
-                }
-            }
-            int matched = 0;
-            int queued = 0;
-            const QJsonArray tracks = QJsonDocument::fromJson(json.toUtf8()).array();
-            for (const auto& value : tracks) {
-                const QJsonObject track = value.toObject();
-                const QString artist = track.value(QStringLiteral("artist")).toString();
-                const QString title = track.value(QStringLiteral("title")).toString();
-                const QString firstArtist = matchKey(artist.section(QChar(','), 0, 0));
-                const QString titleKey = matchKey(title);
-                QString found;
-                for (auto i = files.constBegin(); i != files.constEnd() && found.isEmpty(); ++i) {
-                    if (i.key().contains(titleKey) && i.key().contains(firstArtist)) {
-                        found = i.value();
-                    }
-                }
-                if (!found.isEmpty()) {
-                    guard->addToPlaylist(name, found);
-                    ++matched;
-                } else {
-                    guard->addToDownloadQueue(QStringLiteral("TIDAL"), artist, title);
-                    ++queued;
-                }
-            }
+            const auto [matched, queued] = guard->importTidalTracks(name, json);
             qInfo().noquote() << "TIDAL import" << name << ":" << matched << "on the phone," << queued << "queued";
             emit guard->tidalResult(QStringLiteral("import"),
                     QStringLiteral("%1|%2|%3").arg(name).arg(matched).arg(queued));
@@ -1235,6 +1245,78 @@ void QmlDJMantra::tidalImport(const QString& id, const QString& name) {
     Q_UNUSED(id);
     Q_UNUSED(name);
 #endif
+}
+
+// V87 (Marko 16.10.2026: "go through beatstats, scrap few of the playlists, and play them through the
+// dj app ... the whole round"): a BeatStats chart's songs ([{artist, title, isrc}] JSON) into the TIDAL
+// playlist `name` (made, or topped up without doubles), then that playlist into the app (the songs on
+// the phone into the app's playlist `name`, ready for the decks; the rest into the TIDAL queue).
+// Answers tidalResult("chart", "<name>|<found>/<total>|<on the phone>|<queued>").
+void QmlDJMantra::tidalChart(const QString& name, const QString& songsJson) {
+#if defined(Q_OS_ANDROID)
+    QPointer<QmlDJMantra> guard(this);
+    std::thread([guard, name, songsJson]() {
+        const QString out = callTidal("pushChart",
+                "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+                {name, songsJson});
+        QMetaObject::invokeMethod(qApp, [guard, name, out]() {
+            if (!guard) {
+                return;
+            }
+            const QJsonObject result = QJsonDocument::fromJson(out.toUtf8()).object();
+            const QString pushed = result.value(QStringLiteral("result")).toString();
+            const QString tracks = QString::fromUtf8(QJsonDocument(
+                    result.value(QStringLiteral("tracks")).toArray()).toJson(QJsonDocument::Compact));
+            const auto [matched, queued] = guard->importTidalTracks(name, tracks);
+            qInfo().noquote() << "TIDAL chart" << name << ": on TIDAL" << pushed << "," << matched
+                              << "on the phone," << queued << "queued";
+            emit guard->tidalResult(QStringLiteral("chart"),
+                    QStringLiteral("%1|%2|%3|%4").arg(name, pushed).arg(matched).arg(queued));
+        }, Qt::QueuedConnection);
+    }).detach();
+#else
+    Q_UNUSED(name);
+    Q_UNUSED(songsJson);
+#endif
+}
+
+// V87 (Marko 16.10.2026: "with title refresh token, which is going to pick in settings with file
+// picker"): a file holding a TIDAL refresh token ("TIDAL_REFRESH_TOKEN=..." or the token alone) logs in
+// with it; false when the file has none. The token is never logged; tidalResult("login", "" or why not).
+bool QmlDJMantra::tidalUseTokenFile(const QString& path) {
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly) || file.size() > 65536) {
+        return false;
+    }
+    const QString text = QString::fromUtf8(file.readAll());
+    static const QRegularExpression named(QStringLiteral(
+            "refresh[ _-]?token\\W{0,4}([A-Za-z0-9._~+/=-]{20,})"), QRegularExpression::CaseInsensitiveOption);
+    static const QRegularExpression bare(QStringLiteral("([A-Za-z0-9._~+/=-]{100,})"));
+    QString token;
+    const auto m = named.match(text);
+    if (m.hasMatch()) {
+        token = m.captured(1);
+    } else {
+        auto it = bare.globalMatch(text);
+        while (it.hasNext()) {
+            const QString found = it.next().captured(1);
+            if (found.size() > token.size()) {
+                token = found;
+            }
+        }
+    }
+    if (token.isEmpty()) {
+        qInfo() << "TIDAL: no refresh token in that file";
+        return false;
+    }
+    qInfo() << "TIDAL: logging in with the refresh token from a file";
+#if defined(Q_OS_ANDROID)
+    runTidal(this, QStringLiteral("login"), [token]() {
+        return callTidal("useRefreshToken", "(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;",
+                {token});
+    });
+#endif
+    return true;
 }
 
 void QmlDJMantra::tidalPush(const QString& name) {

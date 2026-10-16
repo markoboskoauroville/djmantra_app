@@ -221,6 +221,7 @@ public final class TidalBridge {
      * when there is one, else by "artist title" (the first track). Returns "found/total" or an error.
      */
     public static String pushPlaylist(Context context, String name, String songsJson) {
+        sLastPlaylistId = null;
         try {
             if (!scopes(context).contains("playlists.write")) {
                 return "TIDAL did not allow writing playlists (playlists.write): log in again after it is enabled";
@@ -239,10 +240,7 @@ public final class TidalBridge {
                 if (id == null) {
                     // V86: the search's best MATCH, not its first result (tested 16.10.2026: the first
                     // result gave The Bangles for DSF's "Not Like You", karaoke for "Baby Got Back")
-                    JSONObject doc = get(context, "/searchResults?filter%5Bquery%5D="
-                            + enc(s.optString("artist") + " " + s.optString("title"))
-                            + "&include=tracks,tracks.artists&countryCode=" + country);
-                    id = bestTrack(doc, s.optString("artist"), s.optString("title"));
+                    id = findTrack(context, s.optString("artist"), s.optString("title"), country);
                     if (id == null) {
                         Log.i(TAG, "not on TIDAL: " + s.optString("artist") + " - " + s.optString("title"));
                     }
@@ -272,12 +270,15 @@ public final class TidalBridge {
                 already = found.length() - fresh.length();
                 found = fresh;
                 if (fresh.length() == 0) {
+                    sLastPlaylistId = playlistId;
                     return already + "/" + songs.length();
                 }
             } else {
                 JSONObject body = new JSONObject().put("data", new JSONObject().put("type", "playlists")
                         .put("attributes", new JSONObject().put("name", name)
-                                .put("description", "From DJ Mantra")));
+                                .put("description", "From DJ Mantra")
+                                // as the Playlist Generator's: not public, reachable by its link
+                                .put("accessType", "UNLISTED")));
                 JSONObject created = send(context, "POST", "/playlists?countryCode=" + country, body);
                 playlistId = created.getJSONObject("data").getString("id");
             }
@@ -289,6 +290,7 @@ public final class TidalBridge {
                 send(context, "POST", "/playlists/" + playlistId + "/relationships/items?countryCode=" + country,
                         new JSONObject().put("data", batch));
             }
+            sLastPlaylistId = playlistId;
             Log.i(TAG, "pushed " + name + ": " + found.length() + "/" + songs.length());
             return (already + found.length()) + "/" + songs.length();
         } catch (Exception e) {
@@ -297,107 +299,208 @@ public final class TidalBridge {
         }
     }
 
-    // --- the best search match (V86) -------------------------------------------------------------
-    private static final String[] NOT_THE_SONG = {"karaoke", "made famous", "tribute", "cover", "instrumental",
-            "originally performed", "in the style of"};
+    // --- finding a song on TIDAL without its ISRC (V87) ------------------------------------------
+    // Ported from the Playlist Generator (markoboskoauroville/generated_playlists, tools/tidal_playlist.py,
+    // tested on 144 songs, 16.10.2026). Marko's rule there: "the song matters, not the exact version":
+    // the named remix if TIDAL has it, else the original, else another version of the same song; never
+    // another song by the same artist or the same title by someone else.
+    private static final java.util.regex.Pattern VARIANT = java.util.regex.Pattern.compile(
+            "\\b(remix|mix|mixed|live|edit|version|acoustic|instrumental|dub|karaoke|cover|rework|re-work|reprise"
+                    + "|recut|demo|vip)\\b", java.util.regex.Pattern.CASE_INSENSITIVE);
+    // never the song (kept out, not only ranked lower)
+    private static final String[] NOT_THE_SONG = {"karaoke", "made famous", "tribute", "originally performed",
+            "in the style of"};
+    private static volatile String sLastPlaylistId;
 
-    // lower case, no accents, "&" = "and", words of letters and digits
+    private static String ascii(String s) {
+        return java.text.Normalizer.normalize(s == null ? "" : s, java.text.Normalizer.Form.NFKD)
+                .replaceAll("[^\\p{ASCII}]", "").toLowerCase(java.util.Locale.ROOT);
+    }
+
+    // words of a title / name without "(...)", "[...]", "feat. ..."
     static String norm(String s) {
-        String t = java.text.Normalizer.normalize(s == null ? "" : s, java.text.Normalizer.Form.NFKD)
-                .replaceAll("\\p{M}", "").toLowerCase(java.util.Locale.ROOT).replace("&", " and ");
+        String t = ascii(s).replaceAll("\\(.*?\\)|\\[.*?\\]|feat\\..*|ft\\..*", " ");
         return t.replaceAll("[^a-z0-9]+", " ").trim().replaceAll(" +", " ");
     }
 
-    // the title without its version: "(...)", "[...]" or " - ..."
-    static String baseTitle(String title) {
-        return norm((title == null ? "" : title).split("\\s[\\(\\[]|\\s-\\s")[0]);
-    }
-
-    private static java.util.Set<String> words(String s) {
-        java.util.Set<String> set = new java.util.HashSet<>(java.util.Arrays.asList(norm(s).split(" ")));
+    private static java.util.Set<String> set(String normed) {
+        java.util.Set<String> set = new java.util.HashSet<>(java.util.Arrays.asList(normed.split(" ")));
         set.remove("");
         return set;
     }
 
-    /**
-     * Of a search's tracks (with their artists included), the one that is the song: the same title
-     * (without its version), one of the wanted artists on it, no karaoke / cover / tribute unless
-     * asked; the wanted version's words count most. null when none is the song (better nothing than
-     * another song in the playlist).
-     */
-    static String bestTrack(JSONObject doc, String artist, String title) throws Exception {
-        JSONArray included = doc.optJSONArray("included");
-        if (included == null) {
-            return null;
+    // all the words, versions included
+    private static java.util.Set<String> words(String s) {
+        return set(ascii(s).replaceAll("[^a-z0-9]+", " ").trim());
+    }
+
+    private static double overlap(java.util.Set<String> a, java.util.Set<String> b) {
+        java.util.Set<String> both = new java.util.HashSet<>(a);
+        both.retainAll(b);
+        java.util.Set<String> any = new java.util.HashSet<>(a);
+        any.addAll(b);
+        return (double) both.size() / Math.max(any.size(), 1);
+    }
+
+    static double sim(String a, String b) {
+        return overlap(set(norm(a)), set(norm(b)));
+    }
+
+    private static boolean hasVersion(String title) {
+        return title.contains("(") || title.contains("[");
+    }
+
+    static double score(String artist, String title, String name, String version, java.util.List<String> artists) {
+        String got = name + " " + (version == null ? "" : version);
+        double bestArtist = 0;
+        for (String a : artists) {
+            bestArtist = Math.max(bestArtist, sim(artist, a));
         }
-        java.util.Map<String, String> artists = new java.util.HashMap<>();
-        for (int i = 0; i < included.length(); ++i) {
-            JSONObject r = included.getJSONObject(i);
-            if ("artists".equals(r.optString("type"))) {
-                artists.put(r.getString("id"), norm(r.optJSONObject("attributes").optString("name")));
+        double s = 0.6 * sim(title, name) + 0.4 * bestArtist;
+        if (hasVersion(title)) { // a named remix / version: its words count too
+            s += 0.1 * overlap(words(title), words(got));
+        }
+        if (((version != null && !version.isEmpty()) || hasVersion(name)) && !hasVersion(title)) {
+            s -= 0.02; // a version nobody asked for: the plain one wins a tie
+        }
+        if (VARIANT.matcher(got).find() && !VARIANT.matcher(title).find()) {
+            s -= 0.05; // the original over remixes / live takes nobody asked for
+        }
+        if (got.toLowerCase(java.util.Locale.ROOT).matches(".*\\bmixed\\b.*")
+                && !title.toLowerCase(java.util.Locale.ROOT).matches(".*\\bmixed\\b.*")) {
+            s -= 0.05; // a cut from a continuous DJ mix
+        }
+        return s;
+    }
+
+    // the searches, from exact to loose (the looser ones find the original when the remix is missing)
+    static java.util.List<String> queries(String artist, String title) {
+        String bare = norm(title);
+        String first = artist.split(",")[0].split("&")[0].trim();
+        String squashed = title.replaceAll("\\(.*?\\)|\\[.*?\\]", " ").replaceAll("[^\\w\\s]", "");
+        String plain = title.replaceAll("[()\\[\\]]", " ");
+        java.util.List<String> out = new java.util.ArrayList<>();
+        for (String q : new String[] {artist + " " + plain, artist + " " + bare, first + " " + bare,
+                first + " " + squashed, bare}) {
+            q = q.trim().replaceAll("\\s+", " ");
+            boolean seen = false;
+            for (String o : out) {
+                seen |= o.equalsIgnoreCase(q);
+            }
+            if (!q.isEmpty() && !seen) {
+                out.add(q);
             }
         }
-        java.util.List<String> wanted = new java.util.ArrayList<>();
-        for (String a : (artist == null ? "" : artist).split("(?i),|&| feat\\.? | ft\\.? | and | x ")) {
-            if (!norm(a).isEmpty()) {
-                wanted.add(norm(a));
-            }
-        }
-        String wantBase = baseTitle(title);
-        java.util.Set<String> wantExtra = words(title);
-        wantExtra.removeAll(words(wantBase));
-        String wantNorm = norm(title);
+        return out;
+    }
+
+    /** The TIDAL track that is the song, or null (under 60 %: better nothing than another song). */
+    static String findTrack(Context context, String artist, String title, String country) throws Exception {
+        double good = hasVersion(title) ? 1.1 : 1.0; // a perfect match stops the search early
         String best = null;
-        double bestScore = -1e9;
-        int index = 0;
-        for (int i = 0; i < included.length(); ++i) {
-            JSONObject t = included.getJSONObject(i);
-            if (!"tracks".equals(t.optString("type"))) {
+        double bestScore = 0;
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (String q : queries(artist, title)) {
+            JSONObject doc = get(context, "/searchResults?filter%5Bquery%5D=" + enc(q)
+                    + "&include=tracks,tracks.artists&countryCode=" + country);
+            JSONArray included = doc.optJSONArray("included");
+            if (included == null) {
                 continue;
             }
-            JSONObject a = t.optJSONObject("attributes");
-            String full = a.optString("title") + (a.isNull("version") || a.optString("version").isEmpty()
-                    ? "" : " (" + a.optString("version") + ")");
-            double order = index++ * 0.01;
-            if (!baseTitle(full).equals(wantBase)) {
-                continue;
-            }
-            JSONObject rel = t.optJSONObject("relationships");
-            JSONArray ar = rel != null && rel.optJSONObject("artists") != null
-                    ? rel.optJSONObject("artists").optJSONArray("data") : null;
-            boolean artistOk = false;
-            for (int k = 0; ar != null && k < ar.length() && !artistOk; ++k) {
-                String name = artists.getOrDefault(ar.getJSONObject(k).getString("id"), "");
-                for (String w : wanted) {
-                    if (!name.isEmpty() && (w.equals(name) || (" " + name + " ").contains(" " + w + " ")
-                            || (" " + w + " ").contains(" " + name + " "))) {
-                        artistOk = true;
-                    }
+            java.util.Map<String, String> names = new java.util.HashMap<>();
+            for (int i = 0; i < included.length(); ++i) {
+                JSONObject r = included.getJSONObject(i);
+                if ("artists".equals(r.optString("type"))) {
+                    names.put(r.getString("id"), r.optJSONObject("attributes").optString("name"));
                 }
             }
-            if (!artistOk) {
-                continue;
+            for (int i = 0; i < included.length(); ++i) {
+                JSONObject t = included.getJSONObject(i);
+                if (!"tracks".equals(t.optString("type")) || !seen.add(t.getString("id"))) {
+                    continue;
+                }
+                JSONObject a = t.optJSONObject("attributes");
+                String name = a.optString("title");
+                String version = a.isNull("version") ? "" : a.optString("version");
+                java.util.List<String> artists = new java.util.ArrayList<>();
+                JSONObject rel = t.optJSONObject("relationships");
+                JSONArray ar = rel != null && rel.optJSONObject("artists") != null
+                        ? rel.optJSONObject("artists").optJSONArray("data") : null;
+                for (int k = 0; ar != null && k < ar.length(); ++k) {
+                    artists.add(names.getOrDefault(ar.getJSONObject(k).getString("id"), ""));
+                }
+                double bestArtist = 0;
+                for (String n : artists) {
+                    bestArtist = Math.max(bestArtist, sim(artist, n));
+                }
+                if (sim(title, name) < 0.5 || bestArtist < 0.3) {
+                    continue; // another song by the same artist, or the same title by someone else
+                }
+                String all = ascii(name + " " + version);
+                boolean notTheSong = false;
+                for (String bad : NOT_THE_SONG) {
+                    notTheSong |= all.contains(bad) && !ascii(title).contains(bad);
+                }
+                if (notTheSong) {
+                    continue;
+                }
+                double sc = score(artist, title, name, version, artists);
+                if (sc > bestScore) {
+                    bestScore = sc;
+                    best = t.getString("id");
+                }
             }
-            boolean bad = false;
-            for (String b : NOT_THE_SONG) {
-                bad |= norm(full).contains(b) && !wantNorm.contains(b);
-            }
-            if (bad) {
-                continue;
-            }
-            java.util.Set<String> extra = words(full);
-            extra.removeAll(words(baseTitle(full)));
-            java.util.Set<String> hit = new java.util.HashSet<>(extra);
-            hit.retainAll(wantExtra);
-            java.util.Set<String> miss = new java.util.HashSet<>(extra);
-            miss.removeAll(wantExtra);
-            double score = 10 * hit.size() - miss.size() - order;
-            if (score > bestScore) {
-                bestScore = score;
-                best = t.getString("id");
+            if (bestScore >= good - 1e-9) {
+                break;
             }
         }
-        return best;
+        return bestScore >= 0.6 ? best : null;
+    }
+
+    /**
+     * BeatStats -> TIDAL -> the app (V87, Marko 16.10.2026: "go through beatstats, scrap few of the
+     * playlists, and play them through the dj app"): the songs into TIDAL playlist `name` (made or
+     * topped up), then that playlist's tracks for the app's import. JSON {result, id, tracks}.
+     */
+    public static String pushChart(Context context, String name, String songsJson) {
+        try {
+            String result = pushPlaylist(context, name, songsJson);
+            String id = sLastPlaylistId;
+            JSONObject out = new JSONObject().put("result", result).put("id", id == null ? "" : id);
+            out.put("tracks", new JSONArray(id == null ? "[]" : playlistTracks(context, id)));
+            return out.toString();
+        } catch (Exception e) {
+            Log.w(TAG, "pushChart: " + e);
+            return "{\"result\":\"error: " + String.valueOf(e.getMessage()).replace("\"", "'") + "\",\"tracks\":[]}";
+        }
+    }
+
+    /**
+     * Logs in with a TIDAL refresh token (V87, Marko 16.10.2026: from a file picked in Settings): kept
+     * like the one a browser login gives. "" when TIDAL took it, else why not. The token is never logged.
+     */
+    public static String useRefreshToken(Context context, String token) {
+        try {
+            token = token == null ? "" : token.trim();
+            if (token.length() < 20) {
+                return "no refresh token in that file";
+            }
+            JSONObject t = postForm(context, "grant_type=refresh_token&client_id=" + enc(clientId(context))
+                    + "&refresh_token=" + enc(token));
+            if (t == null) {
+                return "TIDAL did not take this token (another app's, or logged out since)";
+            }
+            SharedPreferences.Editor e = prefs(context).edit().remove("country");
+            if (t.optString("refresh_token").isEmpty()) {
+                e.putString("refresh", token);
+            }
+            e.apply();
+            Log.i(TAG, "logged in with a refresh token, scopes: " + t.optString("scope"));
+            return "";
+        } catch (Exception e) {
+            Log.w(TAG, "refresh token: " + e);
+            return "error: " + e.getMessage();
+        }
     }
 
     // the track IDs a TIDAL playlist holds

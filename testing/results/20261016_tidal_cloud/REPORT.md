@@ -45,3 +45,22 @@ Read back as the app imports a playlist (`playlistTracks()`): the songs in order
   so which of the two it is could not be read.
 - Not built: playing 30-second previews in a deck, or getting full streams any other way (no unofficial APIs, no
   stream downloading; CLAUDE.md).
+
+## The whole round, BeatStats -> TIDAL (V86 additions, tested 16.10.2026 evening)
+
+Matching now ported from the Playlist Generator (`markoboskoauroville/generated_playlists`, tools/tidal_playlist.py):
+a search ladder from exact to loose, the same song in another version when the named one is missing ("the song
+matters, not the exact version"), never another song. The app's Java `findTrack`, run against live TIDAL, on 12 songs:
+all right (Jakatta -> "American Dream (PROFF Interpretation)", Chic -> "Le Freak (Dimitri From Paris Remix)",
+Justice "D.A.N.C.E.", Tensnake "Coma Cat", Sgt Slick's own "Gimme! Gimme! Gimme!", the Lizzo PDM remix ...).
+
+Two real BeatStats charts through the round (the same requests as `TidalBridge.pushChart`), on Marko's TIDAL (UNLISTED):
+
+| chart | songs | found | exact version | other version of the song | not on TIDAL | TIDAL |
+|---|---|---|---|---|---|---|
+| BeatStats - ORGANIC HOUSE Top tracks (the saved chart page) | 100 | 100 (all by search: Beatport refused the cloud after its first pages) | 93 | 7 | 0 | https://tidal.com/playlist/b091d272-b039-42a6-a825-02576a7d452d (99 tracks: the chart has "Who Loves The Sun" and its DSF Remix, TIDAL only the first) |
+| BeatStats - TRANCE (RAW / DEEP / HYPNOTIC) (the June screen capture's songs) | 96 | 89 | - | - | 7 (one is an OCR error, "Not Tonight Panels") | https://tidal.com/playlist/ace5e62c-8da9-4547-a278-fc8361b16051 |
+
+Beatport: 10/10 ISRCs through a browser engine this morning; tonight, after 100 quick requests from the datacenter
+address, Beatport stopped answering the cloud at all. The search fallback alone found 100/100 there, so the round does
+not depend on the ISRCs.

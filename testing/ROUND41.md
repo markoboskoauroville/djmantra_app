@@ -443,3 +443,15 @@ testing/results/20261016_tidal_cloud/REPORT.md). Logged in to TIDAL: SYNC ALL / 
 your own files): on TIDAL each is the right artist and title (no covers, karaoke, other artists); songs TIDAL lacks are
 left out (logcat `not on TIDAL: ...`). Send the same playlist again: nothing added twice. On TIDAL, delete the two
 "DJ Mantra TEST - ..." playlists made by the cloud test when done.
+## 88. (V86) THE WHOLE ROUND: BEATSTATS -> TIDAL PLAYLIST -> THE APP (Marko 16.10.2026: "go through beatstats, scrap few
+of the playlists, and play them through the dj app ... with title refresh token, which is going to pick in settings with
+file picker"). (a) Put a text file with the TIDAL refresh token (a `TIDAL_REFRESH_TOKEN=...` line, or the token alone)
+in Documents/DJ Mantra/Keys (or Download / Documents). Settings -> "TIDAL LOGIN WITH A REFRESH TOKEN FILE": tap "LOGIN:
+<file>": "checking the token ...", then toast "TIDAL: LOGGED IN", the line says "logged in" (no browser). A file without
+a token: toast "NO REFRESH TOKEN IN ...". (b) BEATSTATS: READ CHART on 3 charts. For each, in the BeatStats view: TIDAL
+PLAYLIST -> the line under the buttons "TIDAL: 9x/100 ON TIDAL, N IN THE APP PLAYLIST "BeatStats - <chart>", M TO THE
+TIDAL QUEUE" (a 100-song chart takes a few minutes). On TIDAL: the playlist "BeatStats - <chart>" (unlisted), songs in
+chart order, each the right song (a missing remix replaced by another version of the same song, never another song).
+TIDAL PLAYLIST again: nothing added twice. (c) Songs: Playlists -> "BeatStats - <chart>" holds the chart's songs that
+are on the phone: load and play them on the decks. The others are in QUEUES -> TIDAL. TIDAL gives this app only
+30-second previews (testing/results/20261016_tidal_cloud/), so songs not on the phone cannot play from TIDAL in the app.

@@ -144,6 +144,10 @@ class QmlDJMantra : public QObject {
     // Client ID (only that is read; the secret is never read into the app)
     Q_INVOKABLE QVariantList tidalKeyFiles() const;
     Q_INVOKABLE QString tidalUseKeyFile(const QString& path);
+    // V87: login with a TIDAL refresh token from a file (Settings); answers tidalResult("login", ...)
+    Q_INVOKABLE bool tidalUseTokenFile(const QString& path);
+    // V87: a BeatStats chart -> TIDAL playlist -> the app's playlist; tidalResult("chart", ...)
+    Q_INVOKABLE void tidalChart(const QString& name, const QString& songsJson);
     Q_INVOKABLE QString tidalClientId() const;
     // ROOM CORRECTION (Marko 14.10.2026, as IK Multimedia ARC): 31 third-octave bands (dB) on the
     // main output only (the speakers, not the recording): DJ Mantra Room EQ in
@@ -289,6 +293,9 @@ class QmlDJMantra : public QObject {
     bool eventFilter(QObject* pObject, QEvent* pEvent) override;
 
   private:
+#if defined(Q_OS_ANDROID)
+    QPair<int, int> importTidalTracks(const QString& name, const QString& json);
+#endif
     void cqFollowTempo();
     double onAirBpm() const;
     void scheduleAnalysis(const QList<AnalyzerScheduledTrack>& tracks);

@@ -20,6 +20,24 @@ Rectangle {
     property var queueSong: null
     // + ALL: the whole chart into one queue
     property bool queueAll: false
+    // V87: the chart's round through TIDAL is running
+    property bool tidalBusy: false
+    property string tidalLast: ""
+
+    Connections {
+        target: Mixxx.DJMantra
+        function onTidalResult(action, result) {
+            if (action !== "chart")
+                return;
+            root.tidalBusy = false;
+            // "<name>|<found>/<total> or error|<on the phone>|<queued>"
+            const p = result.split("|");
+            root.tidalLast = p[1] && p[1].indexOf("error") === 0
+                    ? qsTr("TIDAL: ") + p[1]
+                    : qsTr("TIDAL: %1 ON TIDAL, %2 IN THE APP PLAYLIST \"%3\", %4 TO THE TIDAL QUEUE").arg(p[1]).arg(p[2]).arg(p[0]).arg(p[3]);
+            Toasts.show(root.tidalLast);
+        }
+    }
 
     function reload() {
         charts = Mixxx.DJMantra.beatStatsCharts();
@@ -144,6 +162,39 @@ Rectangle {
             }
 
             DButton {
+                // V87 (Marko 16.10.2026: "go through beatstats, scrap few of the playlists, and play them
+                // through the dj app"): the chart -> a TIDAL playlist "BeatStats - <chart>" (exact songs by
+                // ISRC, else the Playlist Generator's search) -> the app's playlist of the same name with
+                // the songs on the phone (ready for the decks); the rest into the TIDAL download queue
+                objectName: "beatstatsTidal"
+                anchors.right: addAll.left
+                anchors.rightMargin: 6
+                anchors.verticalCenter: parent.verticalCenter
+                width: 150
+                height: 40
+                mode: ""
+                text: root.tidalBusy ? qsTr("TIDAL ...") : qsTr("TIDAL PLAYLIST")
+                fontSize: 13
+                lit: !root.tidalBusy
+                onClicked: {
+                    if (root.tidalBusy || !root.chart)
+                        return;
+                    if (!Mixxx.DJMantra.tidalLoggedIn()) {
+                        Toasts.show(qsTr("LOG IN TO TIDAL FIRST (SETTINGS)"));
+                        return;
+                    }
+                    root.tidalBusy = true;
+                    const name = "BeatStats - " + root.chart.chart_title;
+                    const songs = root.chart.entries.map(s => ({artist: s.artist || "", title: s.title || "", isrc: s.isrc || ""}));
+                    Toasts.show(qsTr("TIDAL: MAKING ") + name);
+                    Mixxx.DJMantra.log("BeatStats: TIDAL playlist " + name + " (" + songs.length + " songs)");
+                    Mixxx.DJMantra.tidalChart(name, JSON.stringify(songs));
+                }
+            }
+
+            DButton {
+                id: addAll
+
                 objectName: "beatstatsAddAll"
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
@@ -155,6 +206,16 @@ Rectangle {
                 lit: true
                 onClicked: root.queueAll = true
             }
+        }
+
+        Text {
+            // V87: the last TIDAL round of this view
+            visible: root.tidalLast !== "" || root.tidalBusy
+            width: parent.width
+            wrapMode: Text.WordWrap
+            text: root.tidalBusy ? qsTr("TIDAL: finding the songs, making the playlist, matching the phone's songs ...") : root.tidalLast
+            color: Style.accent
+            font.pixelSize: 12
         }
     }
 
