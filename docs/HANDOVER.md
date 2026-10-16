@@ -5,6 +5,16 @@ stops; the newest state wins over older notes. Last update: **2026-10-14 21:00 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## 16.10.2026: V81 green and published (e46cc80): BeatStats READ CHART fallback + CAPTURE PAGE
+
+- READ CHART found nothing on the phone (Marko). It knew only the TRACKS chart list (article.rank-row--track,
+  checked on testing/results/beatstats/*.html). V81 also reads every track link on other pages and saves a page
+  with no songs to Music/djmantra_app/BeatStats/pages/ (+ logcat `DJMantraBeatStats Read ...`): pull it to see why.
+- CAPTURE PAGE: page down + PixelCopy + join into one JPEG in BeatStats/captures/ (sticky header cut, inner scroll
+  box handled, up to 40000 px). Logic checked in Chromium on the saved page; never run in the app yet.
+- Next tester session: install V81, part 80 (READ CHART on Marko's page, CAPTURE PAGE), then 79, 76, 75+77, 78, 74,
+  the rest of 69, 71, 70. The tester session of 15.10 is archived; beatstats.com is blocked from the cloud session.
+
 ## 15.10.2026 ~12:30 UTC (latest): V80 = DJAY waveform (default), sync within the fader range, EQ curves
 
 By the cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6). Until today it had built on `main`, an old
