@@ -237,14 +237,14 @@ public final class TidalBridge {
                     id = data != null && data.length() > 0 ? data.getJSONObject(0).getString("id") : null;
                 }
                 if (id == null) {
+                    // V85: the search's best MATCH, not its first result (tested 16.10.2026: the first
+                    // result gave The Bangles for DSF's "Not Like You", karaoke for "Baby Got Back")
                     JSONObject doc = get(context, "/searchResults?filter%5Bquery%5D="
                             + enc(s.optString("artist") + " " + s.optString("title"))
-                            + "&include=tracks&countryCode=" + country);
-                    JSONArray included = doc.optJSONArray("included");
-                    for (int k = 0; included != null && k < included.length() && id == null; ++k) {
-                        if ("tracks".equals(included.getJSONObject(k).optString("type"))) {
-                            id = included.getJSONObject(k).getString("id");
-                        }
+                            + "&include=tracks,tracks.artists&countryCode=" + country);
+                    id = bestTrack(doc, s.optString("artist"), s.optString("title"));
+                    if (id == null) {
+                        Log.i(TAG, "not on TIDAL: " + s.optString("artist") + " - " + s.optString("title"));
                     }
                 }
                 if (id != null) {
@@ -295,6 +295,109 @@ public final class TidalBridge {
             Log.w(TAG, "push: " + e);
             return "error: " + e.getMessage();
         }
+    }
+
+    // --- the best search match (V85) -------------------------------------------------------------
+    private static final String[] NOT_THE_SONG = {"karaoke", "made famous", "tribute", "cover", "instrumental",
+            "originally performed", "in the style of"};
+
+    // lower case, no accents, "&" = "and", words of letters and digits
+    static String norm(String s) {
+        String t = java.text.Normalizer.normalize(s == null ? "" : s, java.text.Normalizer.Form.NFKD)
+                .replaceAll("\\p{M}", "").toLowerCase(java.util.Locale.ROOT).replace("&", " and ");
+        return t.replaceAll("[^a-z0-9]+", " ").trim().replaceAll(" +", " ");
+    }
+
+    // the title without its version: "(...)", "[...]" or " - ..."
+    static String baseTitle(String title) {
+        return norm((title == null ? "" : title).split("\\s[\\(\\[]|\\s-\\s")[0]);
+    }
+
+    private static java.util.Set<String> words(String s) {
+        java.util.Set<String> set = new java.util.HashSet<>(java.util.Arrays.asList(norm(s).split(" ")));
+        set.remove("");
+        return set;
+    }
+
+    /**
+     * Of a search's tracks (with their artists included), the one that is the song: the same title
+     * (without its version), one of the wanted artists on it, no karaoke / cover / tribute unless
+     * asked; the wanted version's words count most. null when none is the song (better nothing than
+     * another song in the playlist).
+     */
+    static String bestTrack(JSONObject doc, String artist, String title) throws Exception {
+        JSONArray included = doc.optJSONArray("included");
+        if (included == null) {
+            return null;
+        }
+        java.util.Map<String, String> artists = new java.util.HashMap<>();
+        for (int i = 0; i < included.length(); ++i) {
+            JSONObject r = included.getJSONObject(i);
+            if ("artists".equals(r.optString("type"))) {
+                artists.put(r.getString("id"), norm(r.optJSONObject("attributes").optString("name")));
+            }
+        }
+        java.util.List<String> wanted = new java.util.ArrayList<>();
+        for (String a : (artist == null ? "" : artist).split("(?i),|&| feat\\.? | ft\\.? | and | x ")) {
+            if (!norm(a).isEmpty()) {
+                wanted.add(norm(a));
+            }
+        }
+        String wantBase = baseTitle(title);
+        java.util.Set<String> wantExtra = words(title);
+        wantExtra.removeAll(words(wantBase));
+        String wantNorm = norm(title);
+        String best = null;
+        double bestScore = -1e9;
+        int index = 0;
+        for (int i = 0; i < included.length(); ++i) {
+            JSONObject t = included.getJSONObject(i);
+            if (!"tracks".equals(t.optString("type"))) {
+                continue;
+            }
+            JSONObject a = t.optJSONObject("attributes");
+            String full = a.optString("title") + (a.isNull("version") || a.optString("version").isEmpty()
+                    ? "" : " (" + a.optString("version") + ")");
+            double order = index++ * 0.01;
+            if (!baseTitle(full).equals(wantBase)) {
+                continue;
+            }
+            JSONObject rel = t.optJSONObject("relationships");
+            JSONArray ar = rel != null && rel.optJSONObject("artists") != null
+                    ? rel.optJSONObject("artists").optJSONArray("data") : null;
+            boolean artistOk = false;
+            for (int k = 0; ar != null && k < ar.length() && !artistOk; ++k) {
+                String name = artists.getOrDefault(ar.getJSONObject(k).getString("id"), "");
+                for (String w : wanted) {
+                    if (!name.isEmpty() && (w.equals(name) || (" " + name + " ").contains(" " + w + " ")
+                            || (" " + w + " ").contains(" " + name + " "))) {
+                        artistOk = true;
+                    }
+                }
+            }
+            if (!artistOk) {
+                continue;
+            }
+            boolean bad = false;
+            for (String b : NOT_THE_SONG) {
+                bad |= norm(full).contains(b) && !wantNorm.contains(b);
+            }
+            if (bad) {
+                continue;
+            }
+            java.util.Set<String> extra = words(full);
+            extra.removeAll(words(baseTitle(full)));
+            java.util.Set<String> hit = new java.util.HashSet<>(extra);
+            hit.retainAll(wantExtra);
+            java.util.Set<String> miss = new java.util.HashSet<>(extra);
+            miss.removeAll(wantExtra);
+            double score = 10 * hit.size() - miss.size() - order;
+            if (score > bestScore) {
+                bestScore = score;
+                best = t.getString("id");
+            }
+        }
+        return best;
     }
 
     // the track IDs a TIDAL playlist holds
@@ -397,7 +500,34 @@ public final class TidalBridge {
         return send(context, "GET", path, null);
     }
 
+    // V85 (tested 16.10.2026 with Marko's account): TIDAL answers 429 after ~7 quick requests; a
+    // playlist send then failed ("TIDAL 429") or, with a song looked up by search instead of its
+    // ISRC, took another version of it (a double on the next sync). A 429 waits as TIDAL says
+    // (Retry-After) or 1, 2, 4 ... s, up to 6 tries. Blocking: off the UI thread, as every call here.
     private static JSONObject send(Context context, String method, String path, JSONObject body) throws Exception {
+        for (int attempt = 0;; ++attempt) {
+            try {
+                return sendOnce(context, method, path, body);
+            } catch (RateLimited e) {
+                if (attempt >= 5) {
+                    throw new Exception("TIDAL 429 (too many requests) on " + path.split("\\?")[0]);
+                }
+                long wait = e.seconds > 0 ? Math.min(30, e.seconds) * 1000L : (1000L << attempt);
+                Log.i(TAG, "TIDAL 429: waiting " + wait + " ms (" + method + " " + path.split("\\?")[0] + ")");
+                Thread.sleep(wait);
+            }
+        }
+    }
+
+    private static final class RateLimited extends Exception {
+        final long seconds;
+
+        RateLimited(long seconds) {
+            this.seconds = seconds;
+        }
+    }
+
+    private static JSONObject sendOnce(Context context, String method, String path, JSONObject body) throws Exception {
         HttpURLConnection c = (HttpURLConnection) new URL(API + path).openConnection();
         c.setRequestMethod(method);
         c.setRequestProperty("Authorization", "Bearer " + accessToken(context));
@@ -412,6 +542,16 @@ public final class TidalBridge {
             }
         }
         int code = c.getResponseCode();
+        if (code == 429) {
+            long seconds = 0;
+            try {
+                seconds = Long.parseLong(String.valueOf(c.getHeaderField("Retry-After")).trim());
+            } catch (NumberFormatException e) {
+                // no number: the doubling wait
+            }
+            read(c.getErrorStream());
+            throw new RateLimited(seconds);
+        }
         String text = read(code < 400 ? c.getInputStream() : c.getErrorStream());
         if (code >= 400) {
             Log.w(TAG, method + " " + path + " " + code + ": " + text);
