@@ -369,3 +369,16 @@ pad 1: the pad lights within a moment; pad 1 again: dark; pad 3: pad 3 lit, pad 
 report: `MixUltra: FX PADS LEDs deck 1 status 96 lit [60]` and `MixUltra: fx_active_1 = 1 (mode fxpads)`. If the log
 says `lit [60]` but the pad is dark, the controller does not take notes 60-67 in its SLICER mode: say so (photo of the
 pads) and I map the light to the notes it takes. Then the rest of 69 (hold, SHIFT + pad, deck 2), 71, 70.
+## 80. (V81) BEATSTATS: WHY READ CHART FOUND NOTHING, AND CAPTURE PAGE (Marko 16.10.2026: "beside reading the tracks, which
+right now doesn't find anything. We need to find out why ... screen capture, page down, screen capture, page down until
+come to the end of the page and then connect everything in one JPEG file ... from top to the bottom").
+(a) READ CHART on the page Marko used (note its URL). The reader knows BeatStats' chart list (article.rank-row--track,
+100 rows on a TRACKS chart, checked against a saved chart page) and now also reads every track link on any other page.
+The status line says how many songs and how ("chart rows" / "track links"). With none: "No songs on this page (N chart
+rows, N track links, N rows). Saved: pages/page_<time>.html": pull Music/djmantra_app/BeatStats/pages/ and the logcat
+lines `DJMantraBeatStats` (`Read <url>: 0 (...), page {...}`) into the results, so the cause is exact. Then a TRACKS
+chart (a genre, Top 100): 100 songs with titles, artists, ISRCs.
+(b) CAPTURE PAGE (new button): the page scrolls to the top and down screen by screen to the end ("screen N, x %"), then
+"Saved WxH JPEG (N screens): BeatStats/captures/<title>_<time>.jpg". Pull the JPEG: the whole page top to bottom in one
+image, no gaps, no repeated header between screens, no doubled rows; a 100-song chart fits unscaled (up to 40000 px tall,
+longer pages are scaled down to that). Try it on a chart and on the home page.
