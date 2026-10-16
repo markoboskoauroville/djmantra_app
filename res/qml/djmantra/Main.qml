@@ -692,8 +692,9 @@ Window {
             anchors.left: parent.left
             anchors.right: parent.right
             active: window.overlay === "menu" || window.overlay === "settings" || window.overlay === "queues"
-                    || window.overlay === "beatstats" || window.overlay === "roomeq"
+                    || window.overlay === "beatstats" || window.overlay === "roomeq" || window.overlay === "manual"
             sourceComponent: window.overlay === "settings" ? settingsComponent
+                           : window.overlay === "manual" ? manualComponent
                            : window.overlay === "roomeq" ? roomEqComponent
                            : window.overlay === "queues" ? queuesComponent
                            : window.overlay === "beatstats" ? beatStatsComponent : menuComponent
@@ -713,10 +714,19 @@ Window {
             onQueues: window.overlay = "queues"
             onBeatStats: window.overlay = "beatstats"
             onRoomEq: window.overlay = "roomeq"
+            onManual: window.overlay = "manual"
             onWheel: {
                 window.page = 4;
                 window.overlay = "";
             }
+            onDone: window.overlay = ""
+        }
+    }
+
+    Component {
+        id: manualComponent
+
+        ManualPage {
             onDone: window.overlay = ""
         }
     }

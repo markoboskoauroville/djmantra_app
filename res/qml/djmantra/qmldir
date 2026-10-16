@@ -10,6 +10,7 @@ DButton 1.0 DButton.qml
 CloseButton 1.0 CloseButton.qml
 Chevron 1.0 Chevron.qml
 RoomEqPage 1.0 RoomEqPage.qml
+ManualPage 1.0 ManualPage.qml
 TurntableStop 1.0 TurntableStop.qml
 Ghost 1.0 Ghost.qml
 DFader 1.0 DFader.qml

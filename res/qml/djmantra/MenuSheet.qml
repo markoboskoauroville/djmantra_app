@@ -12,6 +12,7 @@ Rectangle {
     signal queues()
     signal beatStats()
     signal roomEq()
+    signal manual()
     signal done()
 
     color: "#8c000000"
@@ -96,6 +97,14 @@ Rectangle {
                 height: 52
                 text: qsTr("ROOM CORRECTION")
                 onClicked: root.roomEq()
+            }
+            DButton {
+                // V86: the manual, with EXPORT MD / PDF (Marko 16.10.2026)
+                objectName: "menuManual"
+                width: parent.width
+                height: 52
+                text: qsTr("MANUAL")
+                onClicked: root.manual()
             }
             Row {
                 // the controller's link, one or the other (Marko 14.10.2026: in the menu too,

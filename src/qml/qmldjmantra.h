@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QSet>
+#include <QUrl>
 #include <QVariantList>
 #include <QVariantMap>
 
@@ -198,6 +199,13 @@ class QmlDJMantra : public QObject {
             const QString& title,
             const QString& isrc = QString(),
             const QString& tidalId = QString()) const;
+    // V86: around many addToDownloadQueue calls (+ ALL): true quiets the "Saved" message, false
+    // (the last) says once which queue files were written
+    Q_INVOKABLE void queueBatch(bool start);
+    // V86: the manual (res/qml/djmantra/manual): read a text file; export "md" / "pdf" to
+    // Documents/DJ Mantra/Manual, returns the file written
+    Q_INVOKABLE QString readTextFile(const QUrl& url) const;
+    Q_INVOKABLE QString exportManual(const QString& format, const QUrl& folder);
     Q_INVOKABLE bool addToDownloadQueue(const QString& service,
             const QString& artist,
             const QString& title,

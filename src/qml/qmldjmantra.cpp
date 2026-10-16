@@ -18,6 +18,14 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSaveFile>
+#include <QSet>
+#include <QFont>
+#include <QImage>
+#include <QPageSize>
+#include <QPainter>
+#include <QPdfWriter>
+#include <QAbstractTextDocumentLayout>
+#include <QTextDocument>
 #include <QUrl>
 #include <thread>
 #include <functional>
@@ -999,6 +1007,11 @@ QStringList queueLines(const QString& service) {
     return lines;
 }
 
+// V86: + ALL and a TIDAL import add many songs at once: one "Saved" message at the end, not one
+// per song (s_queueBatch > 0: quiet; the services written meanwhile are announced by queueBatch)
+int s_queueBatch = 0;
+QSet<QString> s_queueBatchServices;
+
 void writeQueue(const QString& service, const QStringList& lines) {
     QSaveFile file(queueFile(service));
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -1006,7 +1019,11 @@ void writeQueue(const QString& service, const QStringList& lines) {
             file.write(line.toUtf8() + '\n');
         }
         if (file.commit()) {
-            djmantra::announceSaved(queueFile(service));
+            if (s_queueBatch > 0) {
+                s_queueBatchServices.insert(service);
+            } else {
+                djmantra::announceSaved(queueFile(service));
+            }
         }
     }
 }
@@ -1037,6 +1054,106 @@ QString QmlDJMantra::searchLink(const QString& service,
         return QStringLiteral("https://music.youtube.com/search?q=") + query;
     }
     return QStringLiteral("https://www.youtube.com/results?search_query=") + query;
+}
+
+// V86 (Marko 16.10.2026: "create manual for this app ... see it with MD reader ... inside the app and
+// also in the app there will be export of that MD or PDF ... so user can print the manual"): the manual
+// is res/qml/djmantra/manual/MANUAL.md with its images (ManualPage.qml reads it, these export it)
+QString QmlDJMantra::readTextFile(const QUrl& url) const {
+    QFile file(url.isLocalFile() ? url.toLocalFile() : url.toString());
+    if (!file.open(QIODevice::ReadOnly) || file.size() > 4 * 1024 * 1024) {
+        return QString();
+    }
+    return QString::fromUtf8(file.readAll());
+}
+
+// "md": MANUAL.md and images/ copied to Documents/DJ Mantra/Manual (as "DJ Mantra Manual.md");
+// "pdf": the same laid out on A4 pages, the screenshots small, the wide pictures the text's width.
+// Returns the file written, "" on failure.
+QString QmlDJMantra::exportManual(const QString& format, const QUrl& folder) {
+    const QString source = folder.isLocalFile() ? folder.toLocalFile() : folder.toString();
+    const QString text = readTextFile(QUrl::fromLocalFile(source + QStringLiteral("/MANUAL.md")));
+    if (text.isEmpty()) {
+        qWarning() << "Manual: nothing at" << source;
+        return QString();
+    }
+    const QString out = djmantraDocs(QStringLiteral("Manual"));
+    QDir().mkpath(out + QStringLiteral("/images"));
+    if (format == QStringLiteral("md")) {
+        const QString path = out + QStringLiteral("/DJ Mantra Manual.md");
+        QFile::remove(path);
+        if (!QFile::copy(source + QStringLiteral("/MANUAL.md"), path)) {
+            return QString();
+        }
+        const auto images = QDir(source + QStringLiteral("/images")).entryInfoList(QDir::Files);
+        for (const QFileInfo& image : images) {
+            const QString target = out + QStringLiteral("/images/") + image.fileName();
+            QFile::remove(target);
+            QFile::copy(image.absoluteFilePath(), target);
+        }
+        djmantra::announceSaved(path);
+        return path;
+    }
+    const QString path = out + QStringLiteral("/DJ Mantra Manual.pdf");
+    QPdfWriter writer(path);
+    writer.setPageSize(QPageSize(QPageSize::A4));
+    writer.setResolution(96);
+    writer.setPageMargins(QMarginsF(15, 15, 15, 15), QPageLayout::Millimeter);
+    writer.setTitle(QStringLiteral("DJ Mantra Manual"));
+    writer.setCreator(QStringLiteral("DJ Mantra ") + version());
+    QTextDocument doc;
+    const QUrl base = QUrl::fromLocalFile(source + QChar('/'));
+    doc.setBaseUrl(base);
+    doc.documentLayout()->setPaintDevice(&writer);
+    QFont font = doc.defaultFont();
+    font.setPointSizeF(10);
+    doc.setDefaultFont(font);
+    // The pictures at their size on paper (96 px an inch): phone screens 6 cm wide, wide pictures the text's
+    // width. Given as resources before the Markdown is read; changing the image formats afterwards, or
+    // QTextDocument::print(), leaves blank pages or pages without the pictures (tested 16.10.2026).
+    static const QRegularExpression imageLink(QStringLiteral("!\\[[^\\]]*\\]\\(([^)\\s]+)\\)"));
+    for (auto match = imageLink.globalMatch(text); match.hasNext();) {
+        const QString name = match.next().captured(1);
+        const QImage picture(source + QChar('/') + name);
+        if (!picture.isNull()) {
+            const QImage scaled = picture.scaledToWidth(
+                    picture.width() > picture.height() ? 640 : 230, Qt::SmoothTransformation);
+            doc.addResource(QTextDocument::ImageResource, QUrl(name), scaled);
+            doc.addResource(QTextDocument::ImageResource, base.resolved(QUrl(name)), scaled);
+        }
+    }
+    doc.setMarkdown(text);
+    const QRectF page = writer.pageLayout().paintRectPixels(96);
+    doc.setPageSize(page.size());
+    QPainter painter(&writer);
+    for (int i = 0; i < doc.pageCount(); ++i) {
+        if (i > 0) {
+            writer.newPage();
+        }
+        painter.save();
+        painter.translate(0, -i * page.height());
+        doc.drawContents(&painter, QRectF(0, i * page.height(), page.width(), page.height()));
+        painter.restore();
+    }
+    painter.end();
+    if (!QFileInfo::exists(path)) {
+        return QString();
+    }
+    djmantra::announceSaved(path);
+    return path;
+}
+
+void QmlDJMantra::queueBatch(bool start) {
+    if (start) {
+        ++s_queueBatch;
+        return;
+    }
+    if (s_queueBatch > 0 && --s_queueBatch == 0) {
+        for (const QString& service : std::as_const(s_queueBatchServices)) {
+            djmantra::announceSaved(queueFile(service));
+        }
+        s_queueBatchServices.clear();
+    }
 }
 
 bool QmlDJMantra::addToDownloadQueue(const QString& service,
@@ -1188,6 +1305,7 @@ void QmlDJMantra::tidalPlaylists() {
 // phone (matched by file name, under Music) go in it, the others into the TIDAL download queue.
 // Returns {on the phone, queued}. On the UI thread.
 QPair<int, int> QmlDJMantra::importTidalTracks(const QString& name, const QString& json) {
+    queueBatch(true);
     // the phone's songs by their file names, under Music
     QHash<QString, QString> files;
     QDirIterator it(QStringLiteral("/sdcard/Music"), QDir::Files | QDir::Readable,
@@ -1221,6 +1339,7 @@ QPair<int, int> QmlDJMantra::importTidalTracks(const QString& name, const QStrin
             ++queued;
         }
     }
+    queueBatch(false);
     return {matched, queued};
 }
 #endif

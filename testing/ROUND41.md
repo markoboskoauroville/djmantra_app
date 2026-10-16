@@ -455,3 +455,10 @@ chart order, each the right song (a missing remix replaced by another version of
 TIDAL PLAYLIST again: nothing added twice. (c) Songs: Playlists -> "BeatStats - <chart>" holds the chart's songs that
 are on the phone: load and play them on the decks. The others are in QUEUES -> TIDAL. TIDAL gives this app only
 30-second previews (testing/results/20261016_tidal_cloud/), so songs not on the phone cannot play from TIDAL in the app.
+## 89. (V86) THE MANUAL: READ IN THE APP, EXPORT MD AND PDF (Marko 16.10.2026: "create manual for this app explaining
+technology behind it and how to use it with screenshot ... MD reader ... export of that MD or PDF, both available in the
+app itself. So user can print the manual"). Menu -> MANUAL: "DJ Mantra — Manual" opens over the app; scroll the whole
+manual (Part 1 using, Part 2 technology): headings, lists and tables readable, the screenshots shown (phone screens
+narrow, wide pictures the full width), each with its caption. EXPORT MD: toast with Documents/DJ Mantra/Manual/"DJ Mantra
+Manual.md" and an images folder beside it (open it in any Markdown reader: pictures shown). EXPORT PDF: toast with
+"DJ Mantra Manual.pdf" (about 22 A4 pages, 26 pictures): open it, print preview works. X closes the manual.

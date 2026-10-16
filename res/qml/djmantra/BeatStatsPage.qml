@@ -364,11 +364,13 @@ Rectangle {
                             // the whole chart, in its order, into this queue's one text file
                             let added = 0;
                             const songs = root.chart ? root.chart.entries : [];
+                            Mixxx.DJMantra.queueBatch(true);
                             for (const s of songs) {
                                 if (Mixxx.DJMantra.addToDownloadQueue(modelData, s.artist, s.title,
                                         s.isrc || "", s.tidal || ""))
                                     ++added;
                             }
+                            Mixxx.DJMantra.queueBatch(false);
                             Toasts.show(qsTr("%1 ADDED TO %2 (%3 ALREADY IN)").arg(added)
                                     .arg(modelData.toUpperCase()).arg(songs.length - added));
                             Mixxx.DJMantra.log("BeatStats: + ALL " + (root.chart ? root.chart.chart_title : "")
