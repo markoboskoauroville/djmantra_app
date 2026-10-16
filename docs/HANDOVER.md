@@ -5,6 +5,21 @@ stops; the newest state wins over older notes. Last update: **2026-10-14 21:00 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## 16.10.2026 21:40 UTC: V86 (d22165d): BeatStats -> TIDAL -> app playlist; TIDAL login with a refresh-token file
+
+- Marko: "go through beatstats, scrap few of the playlists, and play them through the dj app"; the token picked in
+  Settings from a file. Built: Settings "LOGIN: <file>" (TidalBridge.useRefreshToken), BeatStats "TIDAL PLAYLIST"
+  (pushChart -> QmlDJMantra::tidalChart -> importTidalTracks: the phone's songs into the app playlist "BeatStats -
+  <chart>", the rest into the TIDAL queue). Matching ported from the Playlist Generator session
+  (markoboskoauroville/generated_playlists, branch claude/generate-playlist-mpncvw). All of it, and the rules, in the
+  Mantra Manifest: modules/tidal-playlists.md. Tests: testing/results/20261016_tidal_cloud/REPORT.md; phone: part 88.
+- **TIDAL plays only 30-second previews for this app** (trackManifests: FULL_REQUIRES_SUBSCRIPTION). Songs not on the
+  phone cannot play from TIDAL in the app; Marko was asked whether his subscription is active / to consider TIDAL's DJ
+  partnership.
+- The cloud environment has TIDAL_REFRESH_TOKEN (works, not rotated). On Marko's TIDAL now (UNLISTED, from the tests):
+  "DJ Mantra TEST - Organic House Top 10", "DJ Mantra TEST - Disco classics" (to delete), "BeatStats - ORGANIC HOUSE
+  Top tracks" (99), "BeatStats - TRANCE (RAW / DEEP / HYPNOTIC)" (89).
+
 ## 16.10.2026: V81 green and published (e46cc80): BeatStats READ CHART fallback + CAPTURE PAGE
 
 - READ CHART found nothing on the phone (Marko). It knew only the TRACKS chart list (article.rank-row--track,
