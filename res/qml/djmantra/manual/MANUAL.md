@@ -21,7 +21,7 @@ This manual has two parts: **how to use the app**, then **the technology behind 
 
 The top half is always the same, whatever tab is open:
 
-- **Top bar**: the menu (☰), the two decks' keys and whether they match (e.g. *11B > 12B, +1 energy up*), the clock, the CPU / GPU load and the battery. Long press on the clock starts or stops recording (the clock turns red).
+- **Top bar**: the menu (the button with three lines, top left), the two decks' keys and whether they match (e.g. *11B > 12B, +1 energy up*), the clock, the CPU / GPU load and the battery. Long press on the clock starts or stops recording (the clock turns red).
 - **Deck headers**: cover, title, artist and key of each deck. Tap a cover to load the highlighted song into that deck.
 - **Transport**: SYNC, CUE, PLAY / PAUSE and NEXT for each deck.
 - **Modes**: AUTOMIX, EQ, TEMPO BLEND, AUTO PHASE and the beats selector (8 / 16 / 32).

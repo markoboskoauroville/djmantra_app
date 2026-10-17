@@ -143,8 +143,11 @@ Rectangle {
                     spacing: 4
 
                     Image {
-                        // a phone screen at most 60 % of the width, wide pictures the full width
-                        width: implicitWidth > implicitHeight ? list.width : Math.min(list.width * 0.6, implicitWidth)
+                        // a phone screen at most 60 % of the width, wide pictures the full width; from the
+                        // file's size, not implicitWidth (that follows width: a binding loop, V86 on the phone)
+                        readonly property bool wide: sourceSize.width > sourceSize.height
+                        width: wide ? list.width : Math.min(list.width * 0.6, sourceSize.width)
+                        height: sourceSize.width > 0 ? width * sourceSize.height / sourceSize.width : 0
                         anchors.horizontalCenter: parent.horizontalCenter
                         fillMode: Image.PreserveAspectFit
                         source: modelData.source
