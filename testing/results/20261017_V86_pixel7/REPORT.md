@@ -15,3 +15,11 @@ Tester: the local session on the Pixel 7 itself (Termux / proot, adb over wirele
 | 6 documents | PASS | BeatStats, Room_Corrections, Manual under Documents/DJ Mantra; none left in Music/djmantra_app. Download_Queue appears on first use; Keys is read from both places |
 | 7 BeatStats | PASS | buttons in one row, status line under them, page fills the rest; the status bar shows above it (~120 px) |
 | 8 logs | PASS | no FATAL / SIGSEGV / QML errors |
+
+## V87 (e04e9b6) and V88 (8517f56)
+
+- V87: waveform styles DJAY / 3-BAND / ICON differ and follow Settings at once; LANE HALF / MIRRORED too; THIN vs TALL
+  differ little by design (0.62 / 0.8 of the lane). Manual: no ☰ box, room picture tight, binding loops 0. 2 min play,
+  no crash.
+- V88: Download Queues picture with 4 songs and no empty area; the footer says V88 in the reader and in the exported
+  MD; EXPORT PDF 1.76 MB; binding loops 0; 30 s play, no crash. **All PASS.**
