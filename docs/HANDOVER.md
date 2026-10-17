@@ -5,6 +5,16 @@ stops; the newest state wins over older notes. Last update: **2026-10-17 12:20 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## 17.10.2026 evening: V89 (AUTOMIX fix) green on the phone; V90 one-button TIDAL login built, test tomorrow
+
+- V89: AUTOMIX starts a stopped incoming deck (it faded the room to silence); tested PASS on the Pixel 7. Sound
+  output OK (peak 0.70-0.81, 0 xruns). Mic capture from Termux:API is unreliable in the background (not the app).
+- V90 (Marko via the tester): Settings has ONE button LOGIN TO TIDAL -> TIDAL login in Firefox (else Chrome, else
+  the default browser; TidalBridge.BROWSERS + <queries>), the localhost:8765 listener takes the code, the app comes
+  back to the front, "logged in as <name>" (/users/me), LOG OUT. Key-file / token-file rows removed from Settings.
+- **Next: testing/ROUND42.md on the Pixel 7** (Marko starts a new local session; the old tester's notes are on the
+  phone in Download/HANDOVER-2026-10-17.md). Step 3 needs Marko to log in to TIDAL once.
+
 ## 17.10.2026 12:20 UTC: V88 (manual), tested on the Pixel 7 by a local session ON the phone
 
 - **The device tester is now a Claude Code session running on the Pixel 7 itself** (Termux / proot, Remote Control,
