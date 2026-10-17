@@ -23,3 +23,12 @@ Tester: the local session on the Pixel 7 itself (Termux / proot, adb over wirele
   no crash.
 - V88: Download Queues picture with 4 songs and no empty area; the footer says V88 in the reader and in the exported
   MD; EXPORT PDF 1.76 MB; binding loops 0; 30 s play, no crash. **All PASS.**
+
+## 3-song AUTOMIX (V88) and V89 (1e22a0f)
+
+- V88: AUTOMIX from a centred crossfader to a STOPPED deck faded the room to silence (auto-play arms only at an
+  end). With the incoming deck playing, the blend was fine (EQ swap, tempo blend, output 0.58-0.74).
+- V89: AUTOMIX starts the stopped incoming deck on the beat ("automix: deck 2 started"), output never 0 (peak
+  0.59-0.69); back to deck A fine; no song on the other deck -> toast "AUTOMIX: NO SONG ON DECK 2", no fade.
+  **All PASS.** By design: the key pill shows the pitched key during TEMPO BLEND (no keylock); the off-air deck
+  keeps playing.
