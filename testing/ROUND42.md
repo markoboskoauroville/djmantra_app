@@ -4,7 +4,7 @@ Tester: a local Claude Code session on the Pixel 7 (Termux / proot, adb over wir
 paired 17.10.2026, rescan the connect port with ONE python process, see docs/HANDOVER.md). Screenshots to
 Download/djm_v90/. Report each part as soon as it is done (PASS / FAIL, what you saw, logcat lines).
 
-0. Install DJMantra-V90-<sha>-phone-arm64.apk from the release "android-latest"; versionName V90; starts; crash grep
+0. Install https://github.com/markoboskoauroville/djmantra_app/releases/download/android-latest/DJMantra-V90-9d65517-phone-arm64.apk; versionName V90; starts; crash grep
    (`FATAL|AndroidRuntime|SIGSEGV|qml.*error|TypeError|ReferenceError`) empty.
 1. Settings: the TIDAL block is ONE line "TIDAL: not logged in" (or "logged in as ...") and ONE button LOGIN TO TIDAL
    (or LOG OUT OF TIDAL). No key-file or token-file rows.
