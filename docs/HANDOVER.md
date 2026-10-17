@@ -1,9 +1,25 @@
 # DJ Mantra handover
 
 Read this first in any new session (any account). It is kept current by every session before it
-stops; the newest state wins over older notes. Last update: **2026-10-14 21:00 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
+stops; the newest state wins over older notes. Last update: **2026-10-17 12:20 UTC** (see the newest section below); earlier: 2026-10-09 14:20 UTC, by the
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
+
+## 17.10.2026 12:20 UTC: V88 (manual), tested on the Pixel 7 by a local session ON the phone
+
+- **The device tester is now a Claude Code session running on the Pixel 7 itself** (Termux / proot, Remote Control,
+  session_011QQK76mML1TMQDNNJ97vDC "localhost-rustling-garden", from 17.10.2026). adb over wireless debugging to
+  127.0.0.1, **paired once on 17.10.2026** (the connect port changes when wireless debugging is toggled: scan
+  30000-49999 with one python process, see mantra_manifest modules/termux-proot-working.md). It answers with
+  SendMessage; send it work with send_message. It keeps screenshots in Download/djm_v8x/ and does not push to git
+  (no approval for that): I write the reports (testing/results/20261017_V86_pixel7/). Termux:API has no microphone
+  permission, so sound is checked only as "AAudio stream started".
+- V86: the manual (Menu -> MANUAL; res/qml/djmantra/manual/MANUAL.md + images; EXPORT MD / PDF to Documents/DJ
+  Mantra/Manual; PDF painted page by page, see QmlDJMantra::exportManual). Round V86: all PASS but the waveform style
+  (read once) -> V87 settingChanged signal. V87 round: PASS; V88 polishes the manual (queues picture, {VERSION} footer).
+- Next: round V88 (manual footer + queues picture), then Marko asked to hand the same phone-testing setup to the Maha
+  Commute chat ("Night Commute app dashboard update", session_01PbwfznpxWPAchfChwnNWeC), one after the other.
+- Open: THIN vs TALL differ little by design (0.62 vs 0.8 of the lane); ask Marko if TALL should be bigger.
 
 ## 16.10.2026 21:40 UTC: V86 (d22165d): BeatStats -> TIDAL -> app playlist; TIDAL login with a refresh-token file
 
