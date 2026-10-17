@@ -685,6 +685,7 @@ void QmlDJMantra::setSetting(const QString& name, const QVariant& value) {
             value.typeId() == QMetaType::Bool ? QString(value.toBool() ? "1" : "0")
                                               : value.toString());
     m_pConfig->save();
+    emit settingChanged(name, m_pConfig->getValueString(key));
     // an option the engine reads (sections, beats): it follows at once
     if (ControlObject* pControl = ControlObject::getControl(key, ControlFlag::AllowMissingOrInvalid)) {
         pControl->set(value.toDouble());

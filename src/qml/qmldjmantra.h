@@ -293,6 +293,8 @@ class QmlDJMantra : public QObject {
     /// One more song analysed (the list reads its BPM / key again)
     void analysisChanged();
     void cqChanged();
+    /// A [DJMantra] setting was changed (Settings): the views that draw with it follow at once
+    void settingChanged(const QString& name, const QString& value);
     void tidalResult(const QString& action, const QString& result);
     void roomEqResult(const QString& action, const QString& result);
     void sunoResult(const QString& action, const QString& result);

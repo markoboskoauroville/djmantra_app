@@ -66,4 +66,15 @@ Item {
         height: root.mirrored ? root.height : root.height * 2
         y: root.mirrored || root.upper ? 0 : -root.height
     }
+
+    Connections {
+        // V87: LANE and LANE HEIGHT follow Settings at once
+        target: Mixxx.DJMantra
+        function onSettingChanged(name, value) {
+            if (name === "lane_style")
+                root.mirrored = value !== "half";
+            else if (name === "lane_height")
+                root.thin = value !== "tall";
+        }
+    }
 }

@@ -26,7 +26,8 @@ ShaderEffect {
     property real pixelRatio: Screen.devicePixelRatio
     // V78: 0 = 3-BAND (sections), 1 = ICON (one colour per bar); V80: 2 = DJAY (the bands'
     // colours mixed, as djay draws them; the default); Settings -> WAVEFORM
-    readonly property string waveStyleName: Mixxx.DJMantra.setting("wave_style", "djay")
+    // V87: follows Settings at once (V86 read it only when the waveform was made: tester 17.10.2026)
+    property string waveStyleName: Mixxx.DJMantra.setting("wave_style", "djay")
     property int waveStyle: waveStyleName === "icon" ? 1 : (waveStyleName === "3band" ? 0 : 2)
     property Image waveformTexture
     // Marko 13.10.2026: the real sound wave at deep zoom (qml/finewave.h); 0 = not built
@@ -103,5 +104,13 @@ ShaderEffect {
         smooth: false
         mipmap: false
         source: root.deckPlayer.waveformTexture
+    }
+
+    Connections {
+        target: Mixxx.DJMantra
+        function onSettingChanged(name, value) {
+            if (name === "wave_style")
+                root.waveStyleName = value;
+        }
     }
 }
