@@ -1,0 +1,17 @@
+# Round V86 on the Pixel 7 (17.10.2026)
+
+Tester: the local session on the Pixel 7 itself (Termux / proot, adb over wireless debugging, paired once on
+17.10.2026 as 127.0.0.1). Screenshots and logcat stay on the phone in Download/djm_v86/ (not pushed).
+
+| step | result | notes |
+|---|---|---|
+| 0 install | PASS | V86, versionCode 91 |
+| 1 start | PASS | main screen, no crash or QML error |
+| 2 play | PASS | a song loads on deck A, PLAY, time counts; AAudio stream started. Sound not heard: Termux:API has no microphone permission |
+| 3 mixer knobs | PASS | concentric, no LED rings, HIGH blue / MID green / LOW red, FILTER ring |
+| 3b volume fader | PASS | long press TEMPO -> VOLUME, drags, VU lights while playing |
+| 4 waveform style | FAIL -> fixed in V87 | the style was read only when the waveform was made (also LANE, LANE HEIGHT); now `settingChanged` |
+| 5 manual | PASS -> polished in V87 | 21 sections, pictures, lists, tables; EXPORT MD (+14 images), EXPORT PDF 1.7 MB, 26 pages. Fixed: binding loop on the pictures' width, empty area under the room picture, the ☰ glyph missing from the font; an unused picture removed |
+| 6 documents | PASS | BeatStats, Room_Corrections, Manual under Documents/DJ Mantra; none left in Music/djmantra_app. Download_Queue appears on first use; Keys is read from both places |
+| 7 BeatStats | PASS | buttons in one row, status line under them, page fills the rest; the status bar shows above it (~120 px) |
+| 8 logs | PASS | no FATAL / SIGSEGV / QML errors |
