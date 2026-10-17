@@ -133,7 +133,7 @@ The most used:
   2. the chart's songs that are **on your phone** go into the app playlist of the same name, ready for the decks;
   3. the others go into the **TIDAL download queue**.
 
-**TIDAL login.** Settings → **LOGIN TO TIDAL**: TIDAL's login opens in Firefox (else Chrome, else the default browser); log in there and the app comes back by itself, showing *logged in as <your name>*. You stay logged in: the app renews the login by itself. LOG OUT ends it.
+**TIDAL login.** Settings → **LOGIN TO TIDAL**: TIDAL's login opens in Firefox (else Chrome, else the default browser); log in there and the app comes back by itself, showing *logged in as* and your name. You stay logged in: the app renews the login by itself. LOG OUT ends it.
 
 **TIDAL plays 30-second previews in other apps.** TIDAL gives DJ Mantra only previews, so songs play in the decks from your phone's files. Full TIDAL streaming in a DJ app needs TIDAL's DJ partnership.
 
