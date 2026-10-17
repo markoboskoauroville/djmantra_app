@@ -38,6 +38,8 @@ Rectangle {
     property string from: "[Channel1]"
     property real startBpm: 0
     property real progress: 0 // 0: all outgoing, 1: all incoming
+    // the deck an AUTOMIX fade takes off air (for the log; "from" turns to the new deck at the end)
+    property string fadeOut: ""
 
     implicitHeight: 40
     radius: Style.radius
@@ -135,7 +137,7 @@ Rectangle {
             const was = from;
             rest();
             if (was !== from)
-                Mixxx.DJMantra.log("automix: " + from + " is the outgoing deck");
+                Mixxx.DJMantra.log("automix: " + from + " is on air (the next outgoing deck)");
         }
         const p = from === "[Channel1]" ? (x + 1) / 2 : (1 - x) / 2;
         progress = Math.max(0, Math.min(1, p));
@@ -210,6 +212,22 @@ Rectangle {
         const t = fadeTime();
         fadeFrom = fader.value;
         fadeTo = fader.value <= 0 ? 1 : -1;
+        // V89 (Pixel 7 test 17.10.2026: AUTOMIX from a centred fader to a stopped deck faded the
+        // room to silence, as auto-play arms only at an end): AUTOMIX starts the incoming deck
+        // itself, on the beat of the playing one; with no song there it does not fade at all
+        const in2 = fadeTo > 0;
+        if ((in2 ? loaded2 : loaded1).value <= 0) {
+            Toasts.show(qsTr("AUTOMIX: NO SONG ON DECK ") + (in2 ? 2 : 1));
+            Mixxx.DJMantra.log("automix: no song on deck " + (in2 ? 2 : 1) + ", not fading");
+            return;
+        }
+        if ((in2 ? play2 : play1).value <= 0) {
+            (in2 ? quantize2 : quantize1).value = 1;
+            (in2 ? play2 : play1).value = 1;
+            Mixxx.DJMantra.log("automix: deck " + (in2 ? 2 : 1) + " started");
+        }
+        armed = false;
+        fadeOut = from;
         fadeMs = Math.max(200, t.ms * Math.abs(fadeTo - fadeFrom) / 2);
         fadeStart = Date.now();
         fading = true;
@@ -230,7 +248,7 @@ Rectangle {
             fader.value = root.fadeFrom + (root.fadeTo - root.fadeFrom) * e;
             if (u >= 1) {
                 root.fading = false;
-                Mixxx.DJMantra.log("automix: done, " + root.from + " out");
+                Mixxx.DJMantra.log("automix: done, " + root.fadeOut + " out");
             }
         }
     }

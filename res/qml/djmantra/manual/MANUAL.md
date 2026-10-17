@@ -72,7 +72,7 @@ Every change made with a finger shows a short message (a *toast*) above the cont
 
 ![AutoMix: the list with the AUTOMIX menu](images/automix.jpg)
 
-AutoMix plays the current folder or playlist by itself, song after song. Open the **AUTOMIX** menu to set it and START or STOP; PREVIOUS SONG / NEXT SONG choose what comes next. The **AUTOMIX** button above the matrix is a single action: it glides the crossfader to the other deck over the time set in Settings (in beats or seconds), while **EQ** and **TEMPO BLEND**, when lit, follow the crossfader:
+AutoMix plays the current folder or playlist by itself, song after song. Open the **AUTOMIX** menu to set it and START or STOP; PREVIOUS SONG / NEXT SONG choose what comes next. The **AUTOMIX** button above the matrix is a single action: it starts the other deck if it is stopped (on the beat) and glides the crossfader to it over the time set in Settings (in beats or seconds; with no song there it does nothing), while **EQ** and **TEMPO BLEND**, when lit, follow the crossfader:
 
 - **EQ** swaps the bass first, then the highs, then the mids.
 - **TEMPO BLEND** glides the tempo from the outgoing song's to the incoming song's.
