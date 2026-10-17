@@ -1073,7 +1073,8 @@ QString QmlDJMantra::readTextFile(const QUrl& url) const {
 // Returns the file written, "" on failure.
 QString QmlDJMantra::exportManual(const QString& format, const QUrl& folder) {
     const QString source = folder.isLocalFile() ? folder.toLocalFile() : folder.toString();
-    const QString text = readTextFile(QUrl::fromLocalFile(source + QStringLiteral("/MANUAL.md")));
+    const QString text = readTextFile(QUrl::fromLocalFile(source + QStringLiteral("/MANUAL.md")))
+                                 .replace(QStringLiteral("{VERSION}"), version());
     if (text.isEmpty()) {
         qWarning() << "Manual: nothing at" << source;
         return QString();
@@ -1082,8 +1083,8 @@ QString QmlDJMantra::exportManual(const QString& format, const QUrl& folder) {
     QDir().mkpath(out + QStringLiteral("/images"));
     if (format == QStringLiteral("md")) {
         const QString path = out + QStringLiteral("/DJ Mantra Manual.md");
-        QFile::remove(path);
-        if (!QFile::copy(source + QStringLiteral("/MANUAL.md"), path)) {
+        QSaveFile file(path);
+        if (!file.open(QIODevice::WriteOnly) || file.write(text.toUtf8()) < 0 || !file.commit()) {
             return QString();
         }
         const auto images = QDir(source + QStringLiteral("/images")).entryInfoList(QDir::Files);

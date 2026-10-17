@@ -14,7 +14,8 @@ Rectangle {
     signal done()
 
     readonly property url folder: Qt.resolvedUrl("manual/")
-    readonly property string text: Mixxx.DJMantra.readTextFile(Qt.resolvedUrl("manual/MANUAL.md"))
+    // {VERSION} in the text is the running app's version
+    readonly property string text: Mixxx.DJMantra.readTextFile(Qt.resolvedUrl("manual/MANUAL.md")).replace("{VERSION}", Mixxx.DJMantra.version)
     readonly property var blocks: {
         const out = [];
         const image = /^!\[([^\]]*)\]\(([^)\s]+)\)\s*$/;

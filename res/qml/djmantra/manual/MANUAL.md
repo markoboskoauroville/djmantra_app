@@ -247,4 +247,4 @@ The Mix Ultra speaks MIDI over USB or Bluetooth LE. Its mapping is a script: the
 - beatstats.com and Beatport protect themselves with Cloudflare: the first visit needs a person to pass the check.
 - Neural Mix separates drums, vocals and harmonies by signal processing, not by a neural network: the separation is approximate.
 
-*DJ Mantra — built on Mixxx (GPL). This manual describes version V86.*
+*DJ Mantra — built on Mixxx (GPL). This manual describes version {VERSION}.*
