@@ -129,6 +129,8 @@ class QmlDJMantra : public QObject {
     // TIDAL playlists both ways (Marko 14.10.2026), official API v2 (TidalBridge.java): each
     // call runs in the background and answers with tidalResult(action, result)
     Q_INVOKABLE bool tidalLoggedIn() const;
+    /// The TIDAL account's name ("" when not known)
+    Q_INVOKABLE QString tidalUserName() const;
     Q_INVOKABLE void tidalLogin();
     Q_INVOKABLE void tidalLogout();
     Q_INVOKABLE void tidalPlaylists();

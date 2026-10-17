@@ -1263,6 +1263,17 @@ bool QmlDJMantra::tidalLoggedIn() const {
 #endif
 }
 
+QString QmlDJMantra::tidalUserName() const {
+#if defined(Q_OS_ANDROID)
+    return QJniObject::callStaticObjectMethod("com/djmantra/app/TidalBridge", "userName",
+            "(Landroid/content/Context;)Ljava/lang/String;",
+            QNativeInterface::QAndroidApplication::context().object())
+            .toString();
+#else
+    return QString();
+#endif
+}
+
 void QmlDJMantra::tidalLogout() {
 #if defined(Q_OS_ANDROID)
     QJniObject::callStaticMethod<void>("com/djmantra/app/TidalBridge", "logout",

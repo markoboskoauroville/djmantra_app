@@ -427,77 +427,18 @@ Rectangle {
                 }
             }
 
-            // TIDAL (Marko 14.10.2026: "we need to have file picker for tidal data"): the key file
-            // with the app's TIDAL Client ID, picked from djmantra_app/Keys, Download or Documents
-            // (only the Client ID is read; the secret is never needed nor read)
+            // TIDAL, V90 (Marko 17.10.2026: "To log in, I just need one button which says login. And when
+            // I'm logged in, I stay logged in"): LOGIN TO TIDAL opens TIDAL's login in Firefox (else Chrome,
+            // else the default browser); the app keeps the login and renews it by itself. Logged in: the
+            // account's name and LOG OUT. (The key and token files of V83 / V86 are no longer needed.)
             Text {
-                text: qsTr("TIDAL: Client ID ") + tidalId.shown
-                color: Style.accent
-                font.pixelSize: 14
-                font.bold: true
+                id: tidalTitle
 
-                QtObject {
-                    id: tidalId
+                property bool on: Mixxx.DJMantra.tidalLoggedIn()
+                property string name: Mixxx.DJMantra.tidalUserName()
+                property string note: ""
 
-                    property string value: Mixxx.DJMantra.tidalClientId()
-                    readonly property string shown: value.length > 6 ? value.substring(0, 4) + "..." + value.substring(value.length - 2) : value
-                }
-            }
-
-            Flow {
-                width: column.width - 12
-                spacing: 6
-
-                Repeater {
-                    id: keyFiles
-
-                    model: Mixxx.DJMantra.tidalKeyFiles()
-
-                    delegate: DButton {
-                        required property var modelData
-
-                        objectName: "tidalKey_" + modelData.name
-                        width: Math.min(column.width - 12, Math.max(140, keyLabel.implicitWidth + 24))
-                        height: 42
-                        mode: ""
-                        text: modelData.name
-                        fontSize: 12
-                        onClicked: {
-                            const id = Mixxx.DJMantra.tidalUseKeyFile(modelData.path);
-                            tidalId.value = Mixxx.DJMantra.tidalClientId();
-                            Toasts.show(id !== "" ? qsTr("TIDAL KEY FILE LOADED: LOG IN AGAIN") : qsTr("NO TIDAL CLIENT ID IN ") + modelData.name);
-                        }
-
-                        Text {
-                            id: keyLabel
-
-                            visible: false
-                            text: parent.text
-                            font.pixelSize: 12
-                        }
-                    }
-                }
-
-                Text {
-                    visible: keyFiles.count === 0
-                    width: column.width - 12
-                    wrapMode: Text.WordWrap
-                    text: qsTr("No key files: put the TIDAL key file (.txt / .json) in Documents/DJ Mantra/Keys, Documents or Download")
-                    color: Style.subText
-                    font.pixelSize: 13
-                }
-            }
-
-            // V87 (Marko 16.10.2026: "with title refresh token, which is going to pick in settings with
-            // file picker"): log in to TIDAL with a refresh token from a file (a "TIDAL_REFRESH_TOKEN=..."
-            // line, a JSON with "refresh_token", or the token alone): no browser login needed. The token
-            // is kept like a browser login's and never shown or logged.
-            Text {
-                id: tokenTitle
-
-                property string status: Mixxx.DJMantra.tidalLoggedIn() ? qsTr("logged in") : qsTr("not logged in")
-
-                text: qsTr("TIDAL LOGIN WITH A REFRESH TOKEN FILE: ") + status
+                text: qsTr("TIDAL: ") + (note !== "" ? note : on ? (name !== "" ? qsTr("logged in as ") + name : qsTr("logged in")) : qsTr("not logged in"))
                 width: column.width - 12
                 wrapMode: Text.WordWrap
                 color: Style.accent
@@ -509,47 +450,29 @@ Rectangle {
                     function onTidalResult(action, result) {
                         if (action !== "login" && action !== "logout")
                             return;
-                        tokenTitle.status = Mixxx.DJMantra.tidalLoggedIn() && result === ""
-                                ? qsTr("logged in") : (result !== "" ? result : qsTr("not logged in"));
+                        tidalTitle.on = Mixxx.DJMantra.tidalLoggedIn();
+                        tidalTitle.name = Mixxx.DJMantra.tidalUserName();
+                        tidalTitle.note = result;
                         if (action === "login")
                             Toasts.show(result === "" ? qsTr("TIDAL: LOGGED IN") : qsTr("TIDAL: ") + result);
                     }
                 }
             }
 
-            Flow {
+            DButton {
+                objectName: "tidalLogin"
                 width: column.width - 12
-                spacing: 6
-
-                Repeater {
-                    id: tokenFiles
-
-                    model: Mixxx.DJMantra.tidalKeyFiles()
-
-                    delegate: DButton {
-                        required property var modelData
-
-                        objectName: "tidalToken_" + modelData.name
-                        width: Math.min(column.width - 12, Math.max(160, tokenLabel.implicitWidth + 24))
-                        height: 42
-                        mode: ""
-                        text: qsTr("LOGIN: ") + modelData.name
-                        fontSize: 12
-                        onClicked: {
-                            if (Mixxx.DJMantra.tidalUseTokenFile(modelData.path)) {
-                                tokenTitle.status = qsTr("checking the token ...");
-                            } else {
-                                Toasts.show(qsTr("NO REFRESH TOKEN IN ") + modelData.name);
-                            }
-                        }
-
-                        Text {
-                            id: tokenLabel
-
-                            visible: false
-                            text: parent.text
-                            font.pixelSize: 12
-                        }
+                height: 44
+                mode: ""
+                lit: !tidalTitle.on
+                text: tidalTitle.on ? qsTr("LOG OUT OF TIDAL") : qsTr("LOGIN TO TIDAL")
+                fontSize: 13
+                onClicked: {
+                    if (tidalTitle.on) {
+                        Mixxx.DJMantra.tidalLogout();
+                    } else {
+                        tidalTitle.note = qsTr("log in in the browser, then come back ...");
+                        Mixxx.DJMantra.tidalLogin();
                     }
                 }
             }

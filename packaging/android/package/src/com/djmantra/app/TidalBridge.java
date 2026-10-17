@@ -68,6 +68,55 @@ public final class TidalBridge {
 
     // --- login ------------------------------------------------------------------
 
+    // V90 (Marko 17.10.2026: "just use Firefox as default browser for logging in ... If there is no
+    // Firefox, then Chrome is good enough"): the login opens in the first of these that is installed,
+    // else in the default browser (the packages are listed under <queries> in the manifest)
+    private static final String[] BROWSERS = {"org.mozilla.firefox", "org.mozilla.firefox_beta",
+            "org.mozilla.fenix", "org.mozilla.focus", "com.android.chrome", "com.chrome.beta"};
+
+    private static String browser(Context context, Intent view) {
+        for (String pkg : BROWSERS) {
+            Intent probe = new Intent(view).setPackage(pkg);
+            if (probe.resolveActivity(context.getPackageManager()) != null) {
+                return pkg;
+            }
+        }
+        return null;
+    }
+
+    // DJ Mantra back in front after the browser login
+    private static void backToApp(Context context) {
+        try {
+            Intent app = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+            if (app != null) {
+                app.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                context.startActivity(app);
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "back to the app: " + e);
+        }
+    }
+
+    // the account's name for Settings ("logged in as ..."): TIDAL's user name, else the e-mail
+    private static void rememberName(Context context) {
+        try {
+            JSONObject a = get(context, "/users/me").getJSONObject("data").getJSONObject("attributes");
+            String name = a.optString("username", "");
+            if (name.isEmpty()) {
+                name = a.optString("email", "");
+            }
+            prefs(context).edit().putString("name", name)
+                    .putString("country", a.optString("country", "US")).apply();
+        } catch (Exception e) {
+            Log.w(TAG, "user name: " + e);
+        }
+    }
+
+    /** "" when not known (logged in before V90: asked again on the next login or token use). */
+    public static String userName(Context context) {
+        return prefs(context).getString("name", "");
+    }
+
     /** Opens TIDAL's login in the browser and waits (up to 5 min) for the redirect. "" = ok. */
     public static String login(Context context) {
         try {
@@ -87,6 +136,11 @@ public final class TidalBridge {
                 server.setSoTimeout(300000);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                String browser = browser(context, intent);
+                if (browser != null) {
+                    intent.setPackage(browser);
+                }
+                Log.i(TAG, "login in " + (browser != null ? browser : "the default browser"));
                 context.startActivity(intent);
                 while (true) {
                     try (Socket socket = server.accept()) {
@@ -110,6 +164,8 @@ public final class TidalBridge {
                             return "the token exchange failed";
                         }
                         Log.i(TAG, "logged in, scopes: " + token.optString("scope"));
+                        rememberName(context);
+                        backToApp(context);
                         return "";
                     }
                 }
@@ -496,6 +552,7 @@ public final class TidalBridge {
             }
             e.apply();
             Log.i(TAG, "logged in with a refresh token, scopes: " + t.optString("scope"));
+            rememberName(context);
             return "";
         } catch (Exception e) {
             Log.w(TAG, "refresh token: " + e);
