@@ -5,6 +5,20 @@ stops; the newest state wins over older notes. Last update: **2026-10-17 12:20 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## 18.10.2026 evening: V92 Pioneer USB export (9bb6222)
+
+- Marko: "add pioneer export so i can export my playlists to usb stick compatible with pioneer players".
+- Settings -> PIONEER USB (CDJ / XDJ): target (a writable /storage/<id> stick, else Documents/DJ Mantra/Pioneer USB),
+  playlists (none chosen = all), EXPORT. QmlDJMantra::pioneerTargets / pioneerExport / pioneerResult signal.
+- src/library/djmantra/pioneerusb.{h,cpp}: plain C++ port of rbxport's export.pdb + ANLZ writers. Verified
+  byte-identical to rbxport (oracle programs: /home/user/ext/rbxport/crates/rbl-pdb/examples/oracle.rs and
+  rbl-anlz/examples/oracle.rs, not committed; rbxport builds with cargo here), hash = rekordbox's on reference
+  paths, src/test/pioneerusb_test.cpp reads the stick back with Mixxx's Kaitai parsers (desktop CI).
+- Not written: exportLibrary.db (OneLibrary, SQLCipher, CDJ-3000X / rekordbox 7 only), artwork, hot cues, history.
+- Next: V92 CI, then testing/ROUND44.md to the tester; on the real phone check that All files access really lets
+  the app write to a USB stick (/storage/<id>); if not, a SAF tree (StorageBridge.treePickerIntent) is needed.
+- ROUND43 (V91) in the cloud emulator: see the line below once done.
+
 ## 18.10.2026: V91 rbxport's beat grid (ported) + section names from djmantra.pages.dev
 
 - Marko: "Get its beat grid and also get its detection of the song section ... section names are there to be copied".

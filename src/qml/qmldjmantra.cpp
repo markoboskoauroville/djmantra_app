@@ -1990,9 +1990,13 @@ djmantra::pioneer::Track pioneerTrack(const TrackPointer& pTrack, TrackCollectio
             pTrack->getId(), AnalysisDao::TYPE_WAVEFORM);
     if (!analyses.isEmpty()) {
         std::unique_ptr<Waveform> pWaveform(WaveformFactory::loadWaveformFromAnalysis(analyses.first()));
-        if (pWaveform && pWaveform->getVisualSampleRate() > 0) {
+        // visual frames a second: the audio's rate over the frames per visual frame
+        const double visualRate = pWaveform && pWaveform->getAudioVisualRatio() > 0
+                ? out.sampleRate / pWaveform->getAudioVisualRatio()
+                : 0.0;
+        if (visualRate > 0) {
             const int frames = pWaveform->getDataSize() / 2;
-            const double perColumn = pWaveform->getVisualSampleRate() / 150.0;
+            const double perColumn = visualRate / 150.0;
             const int columns = static_cast<int>(frames / perColumn);
             out.waveform.reserve(columns);
             for (int c = 0; c < columns; ++c) {
