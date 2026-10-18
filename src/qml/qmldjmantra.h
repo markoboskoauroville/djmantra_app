@@ -276,6 +276,8 @@ class QmlDJMantra : public QObject {
     /// The detected section starts of the deck's track, fractions 0..1 of the
     /// track (empty until the detection ran; section_count tells when)
     Q_INVOKABLE QVariantList sections(const QString& group) const;
+    /// V91: the names of those sections (INTRO, BREAKDOWN, BUILD-UP, DROP, MAIN, OUTRO), or empty
+    Q_INVOKABLE QStringList sectionNames(const QString& group) const;
     /// Writes a line to the app's log (the phone tests read it)
     Q_INVOKABLE void log(const QString& text) const;
     // Sets any control (effect unit routing from FxBar.qml); false if it does not exist.

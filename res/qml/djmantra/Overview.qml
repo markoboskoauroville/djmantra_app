@@ -23,6 +23,8 @@ Rectangle {
     property string group
     property color deckColor: Style.deck1
     property var sections: []
+    // V91: their names (rbxport + the page's names), "" where unnamed
+    property var sectionNames: []
     // the play position, 10 times a second (round 20: CPU ~75 % of a core:
     // the overviews' play line moved with every engine update, ~47 a second,
     // so the whole window was drawn again and again)
@@ -54,8 +56,14 @@ Rectangle {
     Mixxx.ControlProxy {
         group: root.group
         key: "section_count"
-        onValueChanged: root.sections = Mixxx.DJMantra.sections(root.group)
-        Component.onCompleted: root.sections = Mixxx.DJMantra.sections(root.group)
+        onValueChanged: {
+            root.sections = Mixxx.DJMantra.sections(root.group);
+            root.sectionNames = Mixxx.DJMantra.sectionNames(root.group);
+        }
+        Component.onCompleted: {
+            root.sections = Mixxx.DJMantra.sections(root.group);
+            root.sectionNames = Mixxx.DJMantra.sectionNames(root.group);
+        }
     }
 
     Repeater {
@@ -105,6 +113,28 @@ Rectangle {
             height: root.height
             color: upcoming ? Style.accent : "#ffffff"
             z: 2
+        }
+    }
+
+    Repeater {
+        // V91: each section's name at its start, where there is room for it
+        model: loaded.value > 0 ? root.sectionNames.length : 0
+
+        Text {
+            required property int index
+            readonly property real start: root.sections[index] || 0
+            readonly property real end: index + 1 < root.sections.length ? root.sections[index + 1] : 1
+
+            visible: (end - start) * root.width > implicitWidth + 6
+            x: start * root.width + 3
+            y: 1
+            z: 4
+            text: root.sectionNames[index]
+            color: index === root.next ? Style.accent : "#e6ffffff"
+            font.pixelSize: 9
+            font.bold: true
+            style: Text.Outline
+            styleColor: "#cc000000"
         }
     }
 

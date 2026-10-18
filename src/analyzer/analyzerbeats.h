@@ -42,6 +42,7 @@ class AnalyzerBeats : public Analyzer {
     /// DJ Mantra: the grid moved by half a beat when the off-beat lines up
     /// with the kick better than the grid does
     int beatGridMode() const;
+    int beatEngine() const;
     bool beatOnKick() const;
     mixxx::BeatsPointer onTheBeat(const mixxx::BeatsPointer& pBeats,
             const mixxx::AnalyzerQueenMaryBeats& plugin,

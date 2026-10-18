@@ -121,7 +121,7 @@ djmantra::SectionOptions PhraseControl::sectionOptions() const {
     djmantra::SectionOptions options;
     if (m_pSectionAlgorithm) {
         const int algorithm = static_cast<int>(m_pSectionAlgorithm->get());
-        if (algorithm >= 0 && algorithm <= 3) {
+        if (algorithm >= 0 && algorithm <= 4) {
             options.algorithm = static_cast<djmantra::SectionAlgorithm>(algorithm);
         }
     }
@@ -137,6 +137,7 @@ djmantra::SectionOptions PhraseControl::sectionOptions() const {
 void PhraseControl::trackLoaded(TrackPointer pNewTrack) {
     std::atomic_store(&m_pSections, std::shared_ptr<const QList<mixxx::audio::FramePos>>());
     djmantra::publishSections(getGroup(), {});
+    djmantra::publishSectionNames(getGroup(), {});
     m_pSectionCount->forceSet(-1);
     // The detection reads the waveform on the main thread
     QMetaObject::invokeMethod(
@@ -205,14 +206,42 @@ void PhraseControl::slotDetectSections() {
     }
     const auto end = mixxx::audio::FramePos::fromEngineSamplePos(m_pTrackSamples->get());
     const djmantra::SectionOptions options = sectionOptions();
+    // V91: the sections rbxport found and named while it analysed the song (when it did)
+    if (options.algorithm == djmantra::SectionAlgorithm::kRbxport) {
+        const auto named = djmantra::loadNamedSections(pTrack->getLocation());
+        if (!named.isEmpty() && pTrack->getSampleRate() > 0) {
+            m_detectTries = 1000;
+            QList<mixxx::audio::FramePos> positions;
+            QList<double> fractions;
+            QStringList names;
+            QStringList log;
+            for (const auto& section : named) {
+                const mixxx::audio::FramePos position(section.secs * pTrack->getSampleRate());
+                positions.append(position);
+                fractions.append(end.value() > 0 ? position.value() / end.value() : 0.0);
+                names.append(section.name);
+                log << QStringLiteral("%1 %2 (%3 bars)").arg(section.secs, 0, 'f', 1).arg(section.name).arg(section.bars);
+            }
+            std::atomic_store(&m_pSections,
+                    std::make_shared<const QList<mixxx::audio::FramePos>>(positions));
+            djmantra::publishSections(getGroup(), fractions);
+            djmantra::publishSectionNames(getGroup(), names);
+            m_pSectionCount->forceSet(positions.size());
+            qInfo().noquote() << "Sections:" << getGroup() << positions.size()
+                              << "named (rbxport):" << log.join(QStringLiteral(", "));
+            return;
+        }
+    }
     QList<double> strengths;
+    QStringList names;
     const auto sections = djmantra::detectSections(*pWaveform,
             pBeats,
             anchor(),
             static_cast<int>(m_pBeatsPerBar->get()),
             end,
             options,
-            &strengths);
+            &strengths,
+            &names);
     if (sections.isEmpty() && pWaveform->getCompletion() < pWaveform->getDataSize()) {
         retry(); // not analysed yet
         return;
@@ -225,13 +254,14 @@ void PhraseControl::slotDetectSections() {
         fractions.append(end.value() > 0 ? position.value() / end.value() : 0.0);
     }
     djmantra::publishSections(getGroup(), fractions);
+    djmantra::publishSectionNames(getGroup(), names);
     m_pSectionCount->forceSet(sections.size());
     QStringList at;
     for (const auto& position : sections) {
         at << QString::number(position.value() / pTrack->getSampleRate(), 'f', 1);
     }
     qInfo().noquote() << "Sections:" << getGroup() << sections.size() << "changes, at"
-                      << at.join(QStringLiteral(" s, ")) << "s";
+                      << at.join(QStringLiteral(" s, ")) << "s" << names.join(QStringLiteral(" "));
     // V8, verbose: the options and each change's strength (the energy change, log)
     QStringList strong;
     for (double strength : strengths) {

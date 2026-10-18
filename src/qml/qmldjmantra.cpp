@@ -181,7 +181,10 @@ void QmlDJMantra::registerUserSettings(UserSettingsPointer pConfig) {
         // V8: the analysis options of Settings, read by the engine (sections) and
         // the analyzer (beats), remembered in the user settings
         for (const auto& [key, fallback] : std::initializer_list<std::pair<const char*, double>>{
+                     // V91: 4 = rbxport's phrase starts (an option: the default finds sections better,
+                     // F1 0.45 against 0.39 on 82 of Marko's songs, tools/analysis/rbx_compare.py)
                      {"section_algorithm", 0},
+                     {"beat_engine", 1},
                      {"section_sensitivity", 3},
                      {"beat_grid_mode", 0},
                      {"beat_on_kick", 1},
@@ -699,6 +702,10 @@ bool QmlDJMantra::barsVisible() const {
 #else
     return false;
 #endif
+}
+
+QStringList QmlDJMantra::sectionNames(const QString& group) const {
+    return djmantra::publishedSectionNames(group);
 }
 
 QVariantList QmlDJMantra::sections(const QString& group) const {

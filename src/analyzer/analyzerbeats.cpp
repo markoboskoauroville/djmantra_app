@@ -9,8 +9,10 @@
 #include "analyzer/analyzertrack.h"
 #include "analyzer/constants.h"
 #include "analyzer/plugins/analyzerqueenmarybeats.h"
+#include "analyzer/plugins/analyzerrbxbeats.h"
 #include "analyzer/plugins/analyzersoundtouchbeats.h"
 #include "library/rekordbox/rekordboxconstants.h"
+#include "engine/controls/sectiondetector.h"
 #include "track/beatfactory.h"
 #include "track/track.h"
 
@@ -18,8 +20,15 @@
 QList<mixxx::AnalyzerPluginInfo> AnalyzerBeats::availablePlugins() {
     QList<mixxx::AnalyzerPluginInfo> plugins;
     // First one below is the default
+#ifdef __ANDROID_PORT__
+    // V91: rbxport's grid is DJ Mantra's default (Settings -> BEATS: RBXPORT GRID)
+    plugins.append(mixxx::AnalyzerRbxBeats::pluginInfo());
+#endif
     plugins.append(mixxx::AnalyzerQueenMaryBeats::pluginInfo());
     plugins.append(mixxx::AnalyzerSoundTouchBeats::pluginInfo());
+#ifndef __ANDROID_PORT__
+    plugins.append(mixxx::AnalyzerRbxBeats::pluginInfo());
+#endif
     return plugins;
 }
 
@@ -80,6 +89,15 @@ bool AnalyzerBeats::initialize(const AnalyzerTrack& track,
         }
     }
 
+#ifdef __ANDROID_PORT__
+    m_pluginId = beatEngine() == 1 ? mixxx::AnalyzerRbxBeats::pluginInfo().id()
+                                   : mixxx::AnalyzerQueenMaryBeats::pluginInfo().id();
+#endif
+    // a DJ mix of hours is not kept whole in memory: the QM tracker reads it as it streams
+    if (m_pluginId == mixxx::AnalyzerRbxBeats::pluginInfo().id() &&
+            frameLength > static_cast<SINT>(sampleRate.value()) * 2 * mixxx::AnalyzerRbxBeats::kMaxSeconds) {
+        m_pluginId = mixxx::AnalyzerQueenMaryBeats::pluginInfo().id();
+    }
     qDebug() << "AnalyzerBeats preference settings:"
              << "\nPlugin:" << m_pluginId
              << "\nFixed tempo assumption:" << m_bPreferencesFixedTempo
@@ -103,7 +121,9 @@ bool AnalyzerBeats::initialize(const AnalyzerTrack& track,
 
     DEBUG_ASSERT(!m_pPlugin);
     if (bShouldAnalyze) {
-        if (m_pluginId == mixxx::AnalyzerQueenMaryBeats::pluginInfo().id()) {
+        if (m_pluginId == mixxx::AnalyzerRbxBeats::pluginInfo().id()) {
+            m_pPlugin = std::make_unique<mixxx::AnalyzerRbxBeats>();
+        } else if (m_pluginId == mixxx::AnalyzerQueenMaryBeats::pluginInfo().id()) {
             m_pPlugin = std::make_unique<mixxx::AnalyzerQueenMaryBeats>();
         } else if (m_pluginId == mixxx::AnalyzerSoundTouchBeats::pluginInfo().id()) {
             m_pPlugin = std::make_unique<mixxx::AnalyzerSoundTouchBeats>();
@@ -139,6 +159,10 @@ bool AnalyzerBeats::shouldAnalyze(TrackPointer pTrack) const {
     if (pluginID.isEmpty()) {
         pluginID = defaultPlugin().id();
     }
+#ifdef __ANDROID_PORT__
+    pluginID = beatEngine() == 1 ? mixxx::AnalyzerRbxBeats::pluginInfo().id()
+                                 : mixxx::AnalyzerQueenMaryBeats::pluginInfo().id();
+#endif
 
     // If the track already has a Beats object then we need to decide whether to
     // analyze this track or not.
@@ -165,7 +189,10 @@ bool AnalyzerBeats::shouldAnalyze(TrackPointer pTrack) const {
     // a grid made before the 14.10.2026 rules (a drifting song's average tempo): again
     // (only our own analysis' grids: not imported, typed or tapped ones)
     if (pBeats->getSubVersion().contains(QStringLiteral("vamp_plugin_id")) &&
-            !pBeats->getSubVersion().contains(QStringLiteral("djm=2"))) {
+            (!pBeats->getSubVersion().contains(QStringLiteral("djm=2")) ||
+                    !pBeats->getSubVersion().contains(pluginID) ||
+                    (pluginID == mixxx::AnalyzerRbxBeats::pluginInfo().id() &&
+                            !djmantra::hasNamedSections(pTrack->getLocation())))) {
         qInfo().noquote() << QStringLiteral("Beats: %1\tan older grid: again")
                                      .arg(QFileInfo(pTrack->getLocation()).fileName());
         return true;
@@ -242,6 +269,33 @@ void AnalyzerBeats::storeResults(TrackPointer pTrack) {
     }
 
     mixxx::BeatsPointer pBeats;
+    if (const auto* pRbx = dynamic_cast<const mixxx::AnalyzerRbxBeats*>(m_pPlugin.get())) {
+        // V91: rbxport's grid: one tempo, anchored on the first downbeat; its named sections kept
+        const auto first = pRbx->firstDownbeat();
+        pBeats = mixxx::Beats::fromConstTempo(m_sampleRate,
+                first.isValid() ? first.toNearestFrameBoundary() : mixxx::audio::kStartFramePos,
+                pRbx->getBpm(),
+                BeatFactory::getPreferredSubVersion(
+                        getExtraVersionInfo(m_pluginId, m_bPreferencesFastAnalysis)));
+        const auto& result = pRbx->result();
+        QList<djmantra::NamedSection> sections;
+        QStringList log;
+        for (const auto& section : result.sections) {
+            sections.append({section.secs, QString::fromStdString(section.name), section.bars});
+            log << QStringLiteral("%1 %2").arg(section.secs, 0, 'f', 1).arg(QString::fromStdString(section.name));
+        }
+        djmantra::saveNamedSections(pTrack->getLocation(), sections);
+        qInfo().noquote() << QStringLiteral("Beats: %1\trbxport %2 BPM (confidence %3), downbeat %4 s%5, %6 phrases; %7")
+                                     .arg(QFileInfo(pTrack->getLocation()).fileName())
+                                     .arg(result.bpm, 0, 'f', 2)
+                                     .arg(result.confidence, 0, 'f', 2)
+                                     .arg(first.isValid() ? first.value() / m_sampleRate.toDouble() : 0.0, 0, 'f', 3)
+                                     .arg(result.halfBeatMoved ? QStringLiteral(" (moved half a beat)") : QString())
+                                     .arg(result.phraseStarts.size())
+                                     .arg(log.join(QStringLiteral(", ")));
+        pTrack->trySetBeats(pBeats);
+        return;
+    }
     if (m_pPlugin->supportsBeatTracking()) {
         QVector<mixxx::audio::FramePos> beats = m_pPlugin->getBeats();
         QHash<QString, QString> extraVersionInfo = getExtraVersionInfo(
@@ -301,6 +355,14 @@ int AnalyzerBeats::beatGridMode() const {
                                                    QStringLiteral("beat_grid_mode")),
                                kDefault)
                      : kDefault;
+}
+
+int AnalyzerBeats::beatEngine() const {
+    // V91: 1 = rbxport's grid (the default), 0 = the QM tracker
+    return m_pConfig ? m_pConfig->getValue(ConfigKey(QStringLiteral("[DJMantra]"),
+                                                   QStringLiteral("beat_engine")),
+                               1)
+                     : 1;
 }
 
 bool AnalyzerBeats::beatOnKick() const {

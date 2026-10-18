@@ -1,11 +1,21 @@
 #include "engine/controls/sectiondetector.h"
 
+#include <QCryptographicHash>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QHash>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QMutex>
+#include <QSaveFile>
+#include <QStandardPaths>
 #include <algorithm>
 #include <array>
 #include <cmath>
 
+#include "analyzer/sectionnames.h"
 #include "engine/controls/phrasecontrol.h"
 
 namespace djmantra {
@@ -475,6 +485,8 @@ QString sectionAlgorithmName(SectionAlgorithm algorithm) {
         return QStringLiteral("energy only");
     case SectionAlgorithm::kClassic:
         return QStringLiteral("classic 8-bar");
+    case SectionAlgorithm::kRbxport:
+        return QStringLiteral("rbxport, named");
     }
     return QString();
 }
@@ -691,7 +703,8 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         int beatsPerBar,
         mixxx::audio::FramePos trackEnd,
         const SectionOptions& options,
-        QList<double>* strengths) {
+        QList<double>* strengths,
+        QStringList* names) {
     Q_UNUSED(one); // v2 finds the downbeat and the phrase "1" itself
     QList<mixxx::audio::FramePos> result;
     const int size = waveform.getDataSize();
@@ -721,11 +734,62 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         }
         beat = next;
     }
+    SectionOptions v3 = options;
+    if (v3.algorithm == SectionAlgorithm::kRbxport) {
+        v3.algorithm = SectionAlgorithm::kEnergy; // no named sections for this song: the default before
+    }
     const QList<int> found = options.algorithm == SectionAlgorithm::kClassic
             ? sectionBeatsV2(points, beats, beatsPerBar)
-            : sectionBeatsV3(points, beats, beatsPerBar, options, strengths);
+            : sectionBeatsV3(points, beats, beatsPerBar, v3, strengths);
+    if (!names || found.isEmpty()) {
+        for (int index : found) {
+            result.append(beatFrames[index]);
+        }
+        return result;
+    }
+    // V91: the names of Marko's page (src/analyzer/sectionnames.h), from the waveform: per bar of
+    // the sections' downbeats the level, the low band at the beats (the kick) and the highs, in dB
+    const size_t phase = static_cast<size_t>(found.first()) % beatsPerBar;
+    std::vector<djmantra::sections::Bar> bars;
+    std::vector<size_t> barBeat;
+    const auto db = [](double v) { return 20.0 * std::log10(v + 1.0); };
+    const auto lowAt = [&](double point) {
+        double best = 0;
+        const long centre = std::lround(point);
+        for (long k = centre - 2; k <= centre + 2; ++k) {
+            if (k >= 0 && k < static_cast<long>(points.size())) {
+                best = std::max(best, points[k][0]);
+            }
+        }
+        return best;
+    };
+    for (size_t b = phase; b + beatsPerBar < beats.size(); b += beatsPerBar) {
+        const size_t from = static_cast<size_t>(std::max(0.0, beats[b]));
+        const size_t to = std::min(points.size(), static_cast<size_t>(beats[b + beatsPerBar]));
+        double sum = 0, high = 0, kick = 0;
+        for (size_t k = from; k < to; ++k) {
+            sum += (points[k][0] + points[k][1] + points[k][2]) / 3.0;
+            high += points[k][2];
+        }
+        const double count = static_cast<double>(std::max<size_t>(1, to - from));
+        for (int k = 0; k < beatsPerBar; ++k) {
+            kick += lowAt(beats[b + k]);
+        }
+        bars.push_back({db(sum / count), db(kick / beatsPerBar), db(high / count)});
+        barBeat.push_back(b);
+    }
+    std::vector<size_t> startBars;
     for (int index : found) {
-        result.append(beatFrames[index]);
+        if (index >= static_cast<int>(phase)) {
+            startBars.push_back((static_cast<size_t>(index) - phase) / beatsPerBar);
+        }
+    }
+    for (const auto& [bar, name] : djmantra::sections::name(bars, startBars)) {
+        if (bar < barBeat.size()) {
+            // the first part starts with the song
+            result.append(bar == 0 ? mixxx::audio::kStartFramePos : beatFrames[barBeat[bar]]);
+            names->append(QString::fromStdString(name));
+        }
     }
     return result;
 }
@@ -745,6 +809,66 @@ void publishSections(const QString& group, const QList<double>& fractions) {
 QList<double> publishedSections(const QString& group) {
     const QMutexLocker locker(&s_sectionsMutex);
     return s_sections.value(group);
+}
+
+namespace {
+
+QHash<QString, QStringList> s_sectionNames;
+
+QString namedSectionsFile(const QString& trackLocation) {
+    const QString hash = QString::fromLatin1(
+            QCryptographicHash::hash(trackLocation.toUtf8(), QCryptographicHash::Md5).toHex());
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
+            QStringLiteral("/sections/") + hash + QStringLiteral(".json");
+}
+
+} // namespace
+
+void saveNamedSections(const QString& trackLocation, const QList<NamedSection>& sections) {
+    const QString path = namedSectionsFile(trackLocation);
+    QDir().mkpath(QFileInfo(path).absolutePath());
+    QJsonArray list;
+    for (const auto& section : sections) {
+        list.append(QJsonArray{section.secs, section.name, section.bars});
+    }
+    QSaveFile file(path);
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(QJsonDocument(QJsonObject{{QStringLiteral("location"), trackLocation},
+                                         {QStringLiteral("sections"), list}})
+                           .toJson(QJsonDocument::Compact));
+        file.commit();
+    }
+}
+
+QList<NamedSection> loadNamedSections(const QString& trackLocation) {
+    QList<NamedSection> sections;
+    QFile file(namedSectionsFile(trackLocation));
+    if (!file.open(QIODevice::ReadOnly)) {
+        return sections;
+    }
+    const QJsonObject object = QJsonDocument::fromJson(file.readAll()).object();
+    if (object.value(QStringLiteral("location")).toString() != trackLocation) {
+        return sections;
+    }
+    for (const auto& item : object.value(QStringLiteral("sections")).toArray()) {
+        const QJsonArray entry = item.toArray();
+        sections.append({entry.at(0).toDouble(), entry.at(1).toString(), entry.at(2).toInt()});
+    }
+    return sections;
+}
+
+bool hasNamedSections(const QString& trackLocation) {
+    return QFileInfo::exists(namedSectionsFile(trackLocation));
+}
+
+void publishSectionNames(const QString& group, const QStringList& names) {
+    const QMutexLocker locker(&s_sectionsMutex);
+    s_sectionNames.insert(group, names);
+}
+
+QStringList publishedSectionNames(const QString& group) {
+    const QMutexLocker locker(&s_sectionsMutex);
+    return s_sectionNames.value(group);
 }
 
 } // namespace djmantra

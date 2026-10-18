@@ -26,6 +26,7 @@ Rectangle {
     }
     property string status: ""
     property int sectionAlgorithm: Number(Mixxx.DJMantra.setting("section_algorithm", "0"))
+    property bool rbxGrid: Mixxx.DJMantra.setting("beat_engine", "1") !== "0"
     property int sectionSensitivity: Number(Mixxx.DJMantra.setting("section_sensitivity", "3"))
     property int beatGridMode: Number(Mixxx.DJMantra.setting("beat_grid_mode", "0"))
     property bool beatOnKick: Mixxx.DJMantra.setting("beat_on_kick", "1") !== "0"
@@ -664,6 +665,8 @@ Rectangle {
             }
 
             Repeater {
+                // V91 (Marko 18.10.2026): every choice is named as on djmantra.pages.dev (INTRO,
+                // BREAKDOWN, BUILD-UP, DROP, MAIN, OUTRO); rbxport's phrase starts are a choice
                 model: [{value: 0, label: qsTr("ENERGY CHANGES (default)"),
                          about: qsTr("Phrases learned from rekordbox, kept only where the energy changes a lot (kick in / out, breakdown, drop). About 8 per song.")},
                         {value: 1, label: qsTr("PHRASES"),
@@ -671,7 +674,9 @@ Rectangle {
                         {value: 2, label: qsTr("ENERGY ONLY"),
                          about: qsTr("No learned model: every 4 bars is a candidate, kept where the energy changes a lot.")},
                         {value: 3, label: qsTr("CLASSIC 8-BAR"),
-                         about: qsTr("The first detector: kick and band changes on an 8-bar grid. Sensitivity does not change it.")}]
+                         about: qsTr("The first detector: kick and band changes on an 8-bar grid. Sensitivity does not change it.")},
+                        {value: 4, label: qsTr("RBXPORT PHRASES"),
+                         about: qsTr("rbxport's phrase starts, found while the song is analysed with the RBXPORT grid (about 12 per song).")}]
 
                 delegate: DButton {
                     required property var modelData
@@ -749,6 +754,22 @@ Rectangle {
                         root.beatGridMode = modelData.value;
                         Mixxx.DJMantra.setSetting("beat_grid_mode", modelData.value);
                     }
+                }
+            }
+
+            DButton {
+                // V91 (Marko 18.10.2026: "Get its beat grid"): rbxport's analysis, ported
+                objectName: "rbxGrid"
+                width: parent.width
+                height: 58
+                text: qsTr("RBXPORT GRID (default)") + "\n"
+                        + qsTr("rbxport's beat grid: every beat on the kick's attack, beat 1 and the phrases from the music. Off: the Queen Mary tracker.")
+                fontSize: 12
+                wrap: true
+                lit: root.rbxGrid
+                onClicked: {
+                    root.rbxGrid = !root.rbxGrid;
+                    Mixxx.DJMantra.setSetting("beat_engine", root.rbxGrid ? 1 : 0);
                 }
             }
 

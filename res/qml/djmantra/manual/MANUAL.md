@@ -201,9 +201,9 @@ DJ Mantra is built on **Mixxx 2.5**, the open-source DJ software (GPL), ported t
 
 Each song is analysed once, in the background, and the results are kept in the library:
 
-- **Beats and BPM**: a beat grid; the first beat of the grid is placed on the kick.
+- **Beats and BPM**: rbxport's beat grid (from rbxport by Chris Le, an open-source rekordbox replacement, ported into the app): one tempo per song, every beat placed on the attack of the kick drum to the millisecond, beat 1 found where the music changes on the bar line. On 83 test songs it matches rekordbox's grid on 90 % of them (the earlier tracker 67 %). Settings → RBXPORT GRID switches back to the older Queen Mary tracker.
 - **Key**: shown in Camelot notation (8A, 11B ...) for harmonic mixing.
-- **Sections**: where the arrangement changes (bass in or out, vocals in or out, a new pattern), found from changes in the sound along the beat grid and aligned to the 8-bar phrase grid. The app counts down to the next change; it does not name the sections. Settings has options for how sensitive the detection is.
+- **Sections**: where the arrangement changes (bass in or out, vocals in or out, a new pattern), found along the beat grid, and **named as on djmantra.pages.dev**: INTRO, BREAKDOWN (the beat stops: the kick 9 dB under its usual level for 4 bars or more), BUILD-UP (the highs rising into the return), DROP (the beat comes back), MAIN and OUTRO; AMBIENT for a song without a beat. The names show on the overview lanes. Settings chooses how sections are found (the default, or rbxport's phrase starts, which matched rekordbox's phrases less well on the test songs) and how many.
 - **Loudness**: every song is normalised so its peak sits at **−1 dBFS** (quiet songs raised, loud ones lowered, within ×¼ … ×8), so songs play equally loud and the faders set the volume. There is no GAIN knob.
 
 ## 16. The waveforms

@@ -2,6 +2,7 @@
 
 #include <QList>
 #include <QString>
+#include <QStringList>
 #include <array>
 #include <vector>
 
@@ -63,6 +64,10 @@ enum class SectionAlgorithm {
     kPhrases = 1,
     kEnergyOnly = 2,
     kClassic = 3,
+    /// V91: rbxport's phrase starts, found during the beat analysis (src/analyzer/rbxanalysis.cpp);
+    /// without them (an older analysis) kEnergy. Every algorithm's sections carry the names of
+    /// Marko's page (src/analyzer/sectionnames.h)
+    kRbxport = 4,
 };
 
 struct SectionOptions {
@@ -87,12 +92,28 @@ QList<mixxx::audio::FramePos> detectSections(const Waveform& waveform,
         int beatsPerBar,
         mixxx::audio::FramePos trackEnd,
         const SectionOptions& options = SectionOptions(),
-        QList<double>* strengths = nullptr);
+        QList<double>* strengths = nullptr,
+        QStringList* names = nullptr);
 
 /// The detected section starts of each deck's track, as fractions of the
 /// track (0..1), for the interface's overview (round 18: "sections need to
 /// be clearly seen"). Written by PhraseControl, read by the Qt Quick UI.
 void publishSections(const QString& group, const QList<double>& fractions);
 QList<double> publishedSections(const QString& group);
+
+/// V91: the sections the rbxport analysis named while it analysed the song (src/analyzer/
+/// rbxanalysis.cpp: rbxport's phrase starts, named INTRO / BREAKDOWN / BUILD-UP / DROP / MAIN /
+/// OUTRO as on Marko's page), kept per song in the app's data folder (sections/<md5>.json)
+struct NamedSection {
+    double secs = 0;
+    QString name;
+    int bars = 0;
+};
+void saveNamedSections(const QString& trackLocation, const QList<NamedSection>& sections);
+QList<NamedSection> loadNamedSections(const QString& trackLocation);
+bool hasNamedSections(const QString& trackLocation);
+/// Each deck's section names, in the order of publishSections() (empty when unnamed)
+void publishSectionNames(const QString& group, const QStringList& names);
+QStringList publishedSectionNames(const QString& group);
 
 } // namespace djmantra

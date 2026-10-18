@@ -5,6 +5,20 @@ stops; the newest state wins over older notes. Last update: **2026-10-17 12:20 U
 cloud session "DJ APP cloud" (session_01DARPn46WRaCjZEMv9xJGE6), which stopped here because the
 account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UTC).
 
+## 18.10.2026: V91 rbxport's beat grid (ported) + section names from djmantra.pages.dev
+
+- Marko: "Get its beat grid and also get its detection of the song section ... section names are there to be copied".
+  rbxport (github.com/chrisle/rbxport, GPL-2.0+) cloned to /home/user/ext/rbxport (not in the repo). Ported to C++:
+  `src/analyzer/rbxanalysis.{h,cpp}` (onset, attack, tempo fit, whole BPM, downbeat, phrase starts; not its
+  tempo-change segments or key), plugin `src/analyzer/plugins/analyzerrbxbeats.*` (id djmantra-rbxport:1, the Android
+  default; Settings -> RBXPORT GRID, [DJMantra] beat_engine 1/0). Songs over 40 min use QM (memory).
+- Names: `src/analyzer/sectionnames.*` (INTRO / BREAKDOWN / BUILD-UP / DROP / MAIN / OUTRO / AMBIENT, the website's
+  rules), applied to every section finder (sectiondetector.cpp detectSections(..., names)); rbxport's own sections
+  saved per song in AppData/sections/<md5>.json (section_algorithm 4). Overview.qml draws the names.
+- Measured (testing/results/20261018_rbxport/REPORT.md, tools/analysis/rbx_*.py): grid on rekordbox's 90 % of songs
+  (QM 67 %), BPM 99 %, beat 1 69 %; sections: the app's v3 finder beats rbxport's (F1 0.45 vs 0.39), so v3 stays the
+  default. Unit tests src/test/rbxanalysis_test.cpp. Next: testing/ROUND43.md on the Pixel 7.
+
 ## 17.10.2026 evening: V89 (AUTOMIX fix) green on the phone; V90 one-button TIDAL login built, test tomorrow
 
 - V89: AUTOMIX starts a stopped incoming deck (it faded the room to silence); tested PASS on the Pixel 7. Sound
