@@ -17,7 +17,12 @@ account's **7-day usage limit was at "warning"** (resets Thu 2026-10-15 01:00 UT
 - Not written: exportLibrary.db (OneLibrary, SQLCipher, CDJ-3000X / rekordbox 7 only), artwork, hot cues, history.
 - Next: V92 CI, then testing/ROUND44.md to the tester; on the real phone check that All files access really lets
   the app write to a USB stick (/storage/<id>); if not, a SAF tree (StorageBridge.treePickerIntent) is needed.
-- ROUND43 (V91) in the cloud emulator: see the line below once done.
+- V92 green (e2237f3): Linux 947/947 tests incl. the 4 PioneerUsbTest; release android-latest = V92.
+- Cloud emulator (AVD "cloud", -accel off, 18.10 evening): V91 and V92 install and run without a crash; V92 shows
+  V92, imports M3U playlists, Settings shows the PIONEER USB section (folder target, FIND USB, the playlist). Not
+  reached: the analysis (40+ min for one song without a result) and the EXPORT tap (the UI stops redrawing while
+  the analyzer runs; swipes are ignored). So ROUND43 / ROUND44 need the real phone (tester session was disconnected).
+  Tip: `adb install` then wait for the install to end before `am start` ("package is currently frozen").
 
 ## 18.10.2026: V91 rbxport's beat grid (ported) + section names from djmantra.pages.dev
 
