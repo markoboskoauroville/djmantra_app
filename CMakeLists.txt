@@ -764,6 +764,7 @@ add_library(mixxx-lib STATIC EXCLUDE_FROM_ALL
   src/analyzer/plugins/analyzerrbxbeats.cpp
   src/analyzer/rbxanalysis.cpp
   src/analyzer/sectionnames.cpp
+  src/library/djmantra/pioneerusb.cpp
   src/analyzer/plugins/analyzerqueenmarykey.cpp
   src/analyzer/plugins/analyzersoundtouchbeats.cpp
   src/analyzer/plugins/buffering_utils.cpp
@@ -1920,7 +1921,7 @@ endif()
 # DJ Mantra's own version (the engine stays Mixxx ${CMAKE_PROJECT_VERSION}):
 # V1, V2, V3 ... (Marko, 12.10.2026): one up for every build that goes to the
 # phone. Android's version code must only grow, and 0.5.0 had 5: code = 5 + N.
-set(DJMANTRA_VERSION_NUMBER 91)
+set(DJMANTRA_VERSION_NUMBER 92)
 set(DJMANTRA_VERSION "V${DJMANTRA_VERSION_NUMBER}")
 math(EXPR DJMANTRA_VERSION_CODE "5 + ${DJMANTRA_VERSION_NUMBER}")
 target_compile_definitions(mixxx-lib PUBLIC DJMANTRA_VERSION="${DJMANTRA_VERSION}")
@@ -2393,6 +2394,7 @@ if(BUILD_TESTING)
     src/test/externalcontent_test.cpp
     src/test/phrasecontrol_test.cpp
     src/test/rbxanalysis_test.cpp
+    src/test/pioneerusb_test.cpp
     src/test/stemeq_test.cpp
     src/test/djayfx_test.cpp
     src/test/camelot_test.cpp
@@ -2437,6 +2439,8 @@ if(BUILD_TESTING)
   target_precompile_headers(mixxx-test REUSE_FROM mixxx-lib)
   set_target_properties(mixxx-test PROPERTIES AUTOMOC ON)
   target_link_libraries(mixxx-test PRIVATE mixxx-lib mixxx-gitinfostore GTest::gtest GTest::gmock)
+  # V92: the Pioneer USB export is read back with Mixxx's rekordbox parsers
+  target_link_libraries(mixxx-test PRIVATE rekordbox_metadata Kaitai)
 
   if(BUILD_BENCH)
     add_compile_definitions(USE_BENCH)

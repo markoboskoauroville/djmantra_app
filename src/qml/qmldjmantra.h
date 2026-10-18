@@ -223,6 +223,16 @@ class QmlDJMantra : public QObject {
     Q_INVOKABLE bool addToPlaylist(const QString& name, const QString& path);
     Q_INVOKABLE bool removeFromPlaylist(const QString& name, const QString& path);
     Q_INVOKABLE double playlistLength(const QString& name) const;
+    // PIONEER USB (V92, Marko 18.10.2026: "add pioneer export so i can export my playlists to usb
+    // stick compatible with pioneer players"): a rekordbox Device Library (export.pdb, the
+    // analysis files, the audio in Contents) that CDJ / XDJ players read, see
+    // library/djmantra/pioneerusb.h. pioneerTargets(): where it can go, [{path, label, usb}]: each
+    // USB stick / SD card the app may write to, then Documents/DJ Mantra/Pioneer USB (to copy
+    // onto a stick by hand). pioneerExport(): the playlists (all if `playlists` is empty) to
+    // `target`, in the background; pioneerResult("progress", "3/20 Title"), then ("done", text)
+    // or ("error", text). False if an export runs already or there is nothing to export.
+    Q_INVOKABLE QVariantList pioneerTargets() const;
+    Q_INVOKABLE bool pioneerExport(const QStringList& playlists, const QString& target);
     // the phone's battery in % (-1: unknown, e.g. on the desktop)
     Q_INVOKABLE int batteryPercent() const;
     // AUTO GAIN (Settings, on by default): every song's peak to -1 dBFS (the ReplayGain stage)
@@ -302,6 +312,7 @@ class QmlDJMantra : public QObject {
     void tidalResult(const QString& action, const QString& result);
     void roomEqResult(const QString& action, const QString& result);
     void sunoResult(const QString& action, const QString& result);
+    void pioneerResult(const QString& action, const QString& result);
 
   protected:
     bool eventFilter(QObject* pObject, QEvent* pEvent) override;
@@ -331,6 +342,7 @@ class QmlDJMantra : public QObject {
     bool m_gpuProbed = false;
     djmantra::CqLink* m_pCq = nullptr;
     bool m_cqDelayOn = false;
+    bool m_pioneerRunning = false;
     double m_cqTappedBpm = 0;
     double m_cqPendingBpm = 0;
     int m_cqStableTicks = 0;

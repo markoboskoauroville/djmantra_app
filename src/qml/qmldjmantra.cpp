@@ -47,7 +47,10 @@
 #include "control/controlproxy.h"
 #include "controllers/midi/androidmidicontroller.h"
 #include "engine/controls/sectiondetector.h"
+#include "library/dao/analysisdao.h"
+#include "library/djmantra/pioneerusb.h"
 #include "library/library.h"
+#include "library/trackcollection.h"
 #include "library/trackcollectionmanager.h"
 #include "mixer/playerinfo.h"
 #include "soundio/soundmanager.h"
@@ -74,6 +77,7 @@ extern const QString kOboeHostApi;
 #include "track/trackref.h"
 #include "track/track.h"
 #include "waveform/waveform.h"
+#include "waveform/waveformfactory.h"
 #include "util/duration.h"
 #include "widget/djmantra/camelot.h"
 #include "widget/djmantra/wdeckcounter.h"
@@ -1914,6 +1918,187 @@ double QmlDJMantra::playlistLength(const QString& name) const {
         total += songInfo(song.toString()).value(QStringLiteral("duration")).toDouble();
     }
     return total;
+}
+
+QVariantList QmlDJMantra::pioneerTargets() const {
+    QVariantList targets;
+#if defined(Q_OS_ANDROID)
+    // a USB stick or SD card is mounted as /storage/<id>; All files access lets the app write there
+    const QFileInfoList volumes = QDir(QStringLiteral("/storage"))
+                                          .entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (const QFileInfo& volume : volumes) {
+        if (volume.fileName() == QStringLiteral("emulated") || volume.fileName() == QStringLiteral("self")) {
+            continue;
+        }
+        const QString probe = volume.absoluteFilePath() + QStringLiteral("/.djmantra_write_test");
+        QFile file(probe);
+        if (!file.open(QIODevice::WriteOnly)) {
+            continue;
+        }
+        file.close();
+        file.remove();
+        QVariantMap entry;
+        entry[QStringLiteral("path")] = volume.absoluteFilePath();
+        entry[QStringLiteral("label")] = QStringLiteral("USB ") + volume.fileName();
+        entry[QStringLiteral("usb")] = true;
+        targets << entry;
+    }
+#endif
+    QVariantMap folder;
+    folder[QStringLiteral("path")] = djmantraDocs(QStringLiteral("Pioneer USB"));
+    folder[QStringLiteral("label")] = QStringLiteral("Documents/DJ Mantra/Pioneer USB");
+    folder[QStringLiteral("usb")] = false;
+    targets << folder;
+    return targets;
+}
+
+namespace {
+
+// What the stick needs of one song: its tags, every beat (numbered in the bar from the grid's
+// anchor, the downbeat DJ Mantra's analysis sets) and the waveform at 150 columns a second
+djmantra::pioneer::Track pioneerTrack(const TrackPointer& pTrack, TrackCollection* pCollection) {
+    djmantra::pioneer::Track out;
+    out.sourcePath = pTrack->getLocation().toStdString();
+    out.title = pTrack->getTitle().isEmpty() ? QFileInfo(pTrack->getLocation()).completeBaseName().toStdString()
+                                             : pTrack->getTitle().toStdString();
+    out.artist = pTrack->getArtist().toStdString();
+    out.album = pTrack->getAlbum().toStdString();
+    out.genre = pTrack->getGenre().toStdString();
+    out.comment = pTrack->getComment().toStdString();
+    const auto code = djmantra::camelot::fromKey(pTrack->getKey());
+    out.key = code.isValid() ? djmantra::camelot::text(code).toStdString() : std::string();
+    out.bpm = pTrack->getBpm() > 0 ? pTrack->getBpm() : 0.0;
+    out.durationSec = static_cast<int>(std::lround(pTrack->getDuration()));
+    const auto sampleRate = pTrack->getSampleRate();
+    out.sampleRate = sampleRate.isValid() ? static_cast<int>(sampleRate.value()) : 44100;
+    out.bitrateKbps = std::max(0, pTrack->getBitrate());
+    out.year = pTrack->getYear().left(4).toInt();
+    out.rating = pTrack->getRating();
+    const auto pBeats = pTrack->getBeats();
+    if (pBeats && sampleRate.isValid()) {
+        const double rate = sampleRate.toDouble();
+        const double end = pTrack->getDuration() * rate;
+        const auto anchor = pBeats->cfirstmarker();
+        for (auto it = pBeats->iteratorFrom(mixxx::audio::kStartFramePos);
+                it != pBeats->cend() && (*it).value() <= end;
+                ++it) {
+            const int index = static_cast<int>(it - anchor);
+            out.beats.emplace_back((*it).value() / rate, ((index % 4) + 4) % 4 + 1);
+        }
+    }
+    const auto analyses = pCollection->getAnalysisDAO().getAnalysesForTrackByType(
+            pTrack->getId(), AnalysisDao::TYPE_WAVEFORM);
+    if (!analyses.isEmpty()) {
+        std::unique_ptr<Waveform> pWaveform(WaveformFactory::loadWaveformFromAnalysis(analyses.first()));
+        if (pWaveform && pWaveform->getVisualSampleRate() > 0) {
+            const int frames = pWaveform->getDataSize() / 2;
+            const double perColumn = pWaveform->getVisualSampleRate() / 150.0;
+            const int columns = static_cast<int>(frames / perColumn);
+            out.waveform.reserve(columns);
+            for (int c = 0; c < columns; ++c) {
+                djmantra::pioneer::Column column;
+                const int from = static_cast<int>(c * perColumn);
+                const int to = std::min(frames, std::max(from + 1, static_cast<int>((c + 1) * perColumn)));
+                for (int f = from; f < to; ++f) {
+                    for (int side = 0; side < 2; ++side) {
+                        const int i = 2 * f + side;
+                        column.low = std::max(column.low, pWaveform->getLow(i));
+                        column.mid = std::max(column.mid, pWaveform->getMid(i));
+                        column.high = std::max(column.high, pWaveform->getHigh(i));
+                        column.peak = std::max(column.peak, pWaveform->getAll(i));
+                    }
+                }
+                out.waveform.push_back(column);
+            }
+        }
+    }
+    return out;
+}
+
+} // namespace
+
+bool QmlDJMantra::pioneerExport(const QStringList& playlists, const QString& target) {
+    const auto pLibrary = QmlLibraryProxy::library();
+    if (m_pioneerRunning || !pLibrary || target.isEmpty()) {
+        return false;
+    }
+    // the songs and their analysis are read here (the library lives on this thread); the copying
+    // and writing run in the background
+    djmantra::pioneer::Export library;
+    library.date = QDate::currentDate().toString(Qt::ISODate).toStdString();
+    QHash<QString, size_t> index;
+    for (const auto& value : readPlaylists()) {
+        const QJsonObject playlist = value.toObject();
+        const QString name = playlist.value(QStringLiteral("name")).toString();
+        if (!playlists.isEmpty() && !playlists.contains(name)) {
+            continue;
+        }
+        djmantra::pioneer::Playlist out;
+        out.name = name.toStdString();
+        for (const auto& song : playlist.value(QStringLiteral("songs")).toArray()) {
+            const QString path = song.toString();
+            if (!QFileInfo::exists(path)) {
+                continue;
+            }
+            auto it = index.find(path);
+            if (it == index.end()) {
+                const TrackPointer pTrack = pLibrary->trackCollectionManager()->getOrAddTrack(
+                        TrackRef::fromFilePath(path));
+                if (!pTrack) {
+                    continue;
+                }
+                library.tracks.push_back(pioneerTrack(
+                        pTrack, pLibrary->trackCollectionManager()->internalCollection()));
+                it = index.insert(path, library.tracks.size() - 1);
+            }
+            out.tracks.push_back(it.value());
+        }
+        if (!out.tracks.empty()) {
+            library.playlists.push_back(std::move(out));
+        }
+    }
+    if (library.tracks.empty()) {
+        emit pioneerResult(QStringLiteral("error"), tr("No songs in the playlists to export"));
+        return false;
+    }
+    m_pioneerRunning = true;
+    qInfo().noquote() << "Pioneer USB:" << library.tracks.size() << "songs," << library.playlists.size()
+                      << "playlists to" << target;
+    QPointer<QmlDJMantra> guard(this);
+    std::thread([guard, library = std::move(library), target]() {
+        const auto result = djmantra::pioneer::write(target.toStdString(),
+                library,
+                [guard](int done, int total, const std::string& title) {
+                    const QString text = QStringLiteral("%1/%2 %3").arg(done).arg(total).arg(
+                            QString::fromStdString(title));
+                    QMetaObject::invokeMethod(qApp, [guard, text]() {
+                        if (guard) {
+                            emit guard->pioneerResult(QStringLiteral("progress"), text);
+                        }
+                    });
+                    return true;
+                });
+        QMetaObject::invokeMethod(qApp, [guard, result, target]() {
+            if (!guard) {
+                return;
+            }
+            guard->m_pioneerRunning = false;
+            if (!result.ok) {
+                qWarning().noquote() << "Pioneer USB: failed," << QString::fromStdString(result.error);
+                emit guard->pioneerResult(QStringLiteral("error"), QString::fromStdString(result.error));
+                return;
+            }
+            djmantra::announceSaved(target + QStringLiteral("/PIONEER/rekordbox/export.pdb"));
+            const QString text = QStringLiteral("%1 songs, %2 playlists, %3 MB -> %4")
+                                         .arg(result.tracks)
+                                         .arg(result.playlists)
+                                         .arg(result.bytes / 1000000)
+                                         .arg(target);
+            qInfo().noquote() << "Pioneer USB: done," << text;
+            emit guard->pioneerResult(QStringLiteral("done"), text);
+        });
+    }).detach();
+    return true;
 }
 
 // a folder with at least one song in it or in any folder inside it (Marko 14.10.2026: "I want

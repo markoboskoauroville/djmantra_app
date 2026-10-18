@@ -478,6 +478,137 @@ Rectangle {
                 }
             }
 
+            // PIONEER USB, V92 (Marko 18.10.2026: "add pioneer export so i can export my playlists to usb
+            // stick compatible with pioneer players"): the playlists as a rekordbox Device Library that
+            // CDJ / XDJ players read (songs, beat grids, waveforms, playlists). Where: a USB stick in
+            // the phone, else Documents/DJ Mantra/Pioneer USB to copy onto a stick by hand.
+            Text {
+                id: pioneerTitle
+
+                property var targets: Mixxx.DJMantra.pioneerTargets()
+                property string target: targets.length > 0 ? targets[0].path : ""
+                property var playlists: []
+                property var chosen: ({}) // name -> true; none chosen: all
+                property bool busy: false
+                property string note: ""
+
+                function refresh() {
+                    targets = Mixxx.DJMantra.pioneerTargets();
+                    if (!targets.some(t => t.path === target))
+                        target = targets.length > 0 ? targets[0].path : "";
+                    playlists = Mixxx.DJMantra.playlistRoots().map(p => p.name);
+                }
+
+                Component.onCompleted: refresh()
+                text: qsTr("PIONEER USB (CDJ / XDJ)") + (note !== "" ? ": " + note : "")
+                width: column.width - 12
+                wrapMode: Text.WordWrap
+                color: Style.accent
+                font.pixelSize: 14
+                font.bold: true
+
+                Connections {
+                    target: Mixxx.DJMantra
+                    function onPioneerResult(action, result) {
+                        pioneerTitle.note = result;
+                        if (action !== "progress") {
+                            pioneerTitle.busy = false;
+                            Toasts.show((action === "done" ? qsTr("PIONEER USB READY: ") : qsTr("PIONEER USB: ")) + result);
+                        }
+                    }
+                }
+            }
+
+            Flow {
+                width: column.width - 12
+                spacing: 6
+
+                Repeater {
+                    model: pioneerTitle.targets
+
+                    delegate: DButton {
+                        required property var modelData
+
+                        objectName: "pioneerTarget_" + (modelData.usb ? "usb" : "folder")
+                        width: (column.width - 18) / 2
+                        height: 42
+                        mode: ""
+                        text: modelData.label
+                        wrap: true
+                        fontSize: 11
+                        lit: pioneerTitle.target === modelData.path
+                        onClicked: pioneerTitle.target = modelData.path
+                    }
+                }
+
+                DButton {
+                    objectName: "pioneerRefresh"
+                    width: 90
+                    height: 42
+                    mode: ""
+                    text: qsTr("FIND USB")
+                    fontSize: 11
+                    onClicked: pioneerTitle.refresh()
+                }
+            }
+
+            Flow {
+                width: column.width - 12
+                spacing: 6
+
+                DButton {
+                    objectName: "pioneerAll"
+                    width: 120
+                    height: 38
+                    mode: ""
+                    text: qsTr("ALL PLAYLISTS")
+                    fontSize: 11
+                    lit: Object.keys(pioneerTitle.chosen).length === 0
+                    onClicked: pioneerTitle.chosen = ({})
+                }
+
+                Repeater {
+                    model: pioneerTitle.playlists
+
+                    delegate: DButton {
+                        required property string modelData
+
+                        height: 38
+                        width: Math.min(column.width - 12, Math.max(90, modelData.length * 8 + 24))
+                        mode: ""
+                        text: modelData
+                        fontSize: 11
+                        lit: pioneerTitle.chosen[modelData] === true
+                        onClicked: {
+                            const next = Object.assign({}, pioneerTitle.chosen);
+                            if (next[modelData])
+                                delete next[modelData];
+                            else
+                                next[modelData] = true;
+                            pioneerTitle.chosen = next;
+                        }
+                    }
+                }
+            }
+
+            DButton {
+                objectName: "pioneerExport"
+                width: column.width - 12
+                height: 44
+                mode: ""
+                lit: !pioneerTitle.busy
+                text: pioneerTitle.busy ? qsTr("EXPORTING ...") : qsTr("EXPORT TO PIONEER USB")
+                fontSize: 13
+                onClicked: {
+                    if (pioneerTitle.busy || pioneerTitle.target === "")
+                        return;
+                    pioneerTitle.note = qsTr("reading the songs ...");
+                    pioneerTitle.busy = Mixxx.DJMantra.pioneerExport(Object.keys(pioneerTitle.chosen), pioneerTitle.target);
+                    if (!pioneerTitle.busy && pioneerTitle.note === qsTr("reading the songs ..."))
+                        pioneerTitle.note = qsTr("an export runs already");
+                }
+            }
+
             // RECORDING (Marko 14.10.2026): the mix recorded lossless (FLAC, or WAV) into
             // djmantra_app/Recordings as "<name> - <date> <time>" (Menu -> RECORD MIX)
             Text {

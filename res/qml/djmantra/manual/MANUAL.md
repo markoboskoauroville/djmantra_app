@@ -111,6 +111,7 @@ The most used:
 - **TEMPO RANGE** ±6 / ±10 / ±16 % / WIDE, like a Pioneer CDJ.
 - **CONTROLLER CONNECTION**, **AUTO-PLAY WHEN MOVING CROSSFADER**.
 - **TIDAL**: **LOGIN TO TIDAL**, or the account you are logged in with and LOG OUT (section 10).
+- **PIONEER USB (CDJ / XDJ)**: your playlists onto a USB stick that Pioneer DJ players read, as if rekordbox had exported them. Plug the stick into the phone (USB-C), tap **FIND USB**, choose the stick, choose the playlists (none chosen: **ALL PLAYLISTS**) and tap **EXPORT TO PIONEER USB**. The songs are copied with their beat grid and waveforms. Without a stick in the phone, the export goes to *Documents/DJ Mantra/Pioneer USB*: copy both folders in it (*PIONEER* and *Contents*) to the top of a FAT32 stick (FAT32 every player reads; exFAT only newer ones such as the CDJ-3000).
 - **RECORDING**: format and file name.
 - **CQ MIXER**: the delay of a connected CQ mixer in time with the music.
 
@@ -186,6 +187,7 @@ In every pad mode the pads light the current beat of the 8-beat phrase (the FX p
 | Rooms | *Documents/DJ Mantra/Room_Corrections* |
 | Key and token files | *Documents/DJ Mantra/Keys* (or Download, Documents) |
 | This manual, exported | *Documents/DJ Mantra/Manual* |
+| Pioneer USB export (no stick in the phone) | *Documents/DJ Mantra/Pioneer USB* |
 
 Every time the app saves a file, a message says its name and folder.
 
@@ -241,7 +243,11 @@ The Mix Ultra speaks MIDI over USB or Bluetooth LE. Its mapping is a script: the
 - **BeatStats**: read from the page in the app's own browser (no OCR, no AI): the exact rows, then each song's ISRC from its Beatport page.
 - The same matching is used by the *Playlist Generator* that makes TIDAL playlists from reference songs; both are described in the Mantra Manifest (*modules/tidal-playlists.md*).
 
+- **Pioneer USB**: a rekordbox *Device Library*, as CDJ-2000NXS2, CDJ-3000, XDJ-RX / XZ / AZ and other Pioneer DJ players read it: *PIONEER/rekordbox/export.pdb* (the songs, artists, albums, genres, keys, colours and playlists) and, for every song, *PIONEER/USBANLZ/…/ANLZ0000.DAT / .EXT / .2EX* (the beat grid, numbered from the downbeat DJ Mantra found, and the waveforms in the players' colour and blue styles), with the audio in *Contents/artist/album/*. The writer is ported from **rbxport** (Chris Le, GPL-2.0-or-later), whose formats were measured against rekordbox's own exports; DJ Mantra's files are byte-identical to rbxport's for the same songs, and Mixxx's rekordbox reader reads them back.
+
 ## 21. Limits
+
+- Pioneer USB: no hot cues, artwork or history yet, and no *exportLibrary.db* (the newer OneLibrary file of rekordbox 7); players read the Device Library without them.
 
 - TIDAL gives this app **30-second previews** only; full songs play from the phone's files.
 - beatstats.com and Beatport protect themselves with Cloudflare: the first visit needs a person to pass the check.
