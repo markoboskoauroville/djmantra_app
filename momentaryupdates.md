@@ -85,3 +85,9 @@
 
 **Status:** done 22.10.2026 (REGISTERED = True in site/build.py, deployed, checked live).
 
+> "TIDAL affiliate: sign up for "TIDAL Global" on Awin, then I put your link on the DJ page. Guide me through this step." (Marko, 22.10.2026)
+
+24. Guided step by step: Marko's Awin publisher account, TIDAL Global joined; then his Awin link replaces the plain TIDAL link on the page.
+
+**Status:** guiding.
+
