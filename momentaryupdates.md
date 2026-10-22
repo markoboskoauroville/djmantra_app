@@ -24,4 +24,11 @@
 
 9. A Facebook post about the new app, in the style of the Shruti Box post (natural, not overhyped, English first then Croatian in one post, one screenshot, the page link), written in Facebook in his Chrome and NOT sent: he sends it.
 
+> "Please stay true to original controller. You cannot get any Hercules controller. It must be exactly this white controller, DJ Mix Ultra, the one we are selling. Affiliate link, remember?" (Marko, 22.10.2026)
+
+> "Controller is good on the photo, but the composition is not good. It doesn't look good. And you know, DJ Mantra is coming from jungles of Auroville. Make some kind of jungle tribe." (Marko, 22.10.2026)
+
+10. Every picture shows exactly the white DJControl Mix Ultra, made with its Amazon product photo as a reference (and the app screenshot for the phone).
+11. The scene: the jungles of Auroville, a jungle tribe gathering; a better composition.
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
