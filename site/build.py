@@ -96,6 +96,7 @@ PAGE = f"""<!doctype html>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>DJ Mantra · learn to DJ by ear</title>
+<meta name="awin" content="Awin: this site is run by Marko Boško, publisher of DJ Mantra">
 <meta name="description" content="DJ Mantra, the Android DJ app that trains you to hear beats, phrases and song sections. With the Hercules DJControl Mix Ultra.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Spectral:wght@400&display=swap" rel="stylesheet">
