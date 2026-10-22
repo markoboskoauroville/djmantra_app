@@ -69,4 +69,8 @@
 
 20. A tablet on a stand with the controller under it, as DJs play with a tablet; no phone in the picture.
 
+> "Image is wrong again. First of all, I said replace phone with the tablet. Now I have phone and the tablet. Second of all, I have some desk, some sitting bench in front of this desk. That's bad. And usually DJ is not in the middle. DJ should be next to the door. Crowd are dancing. The DJ can be covered by crowd. And DJ looking at the camera and being happy and dancing also. And the tablet is in front of DJ controller, not behind it or on the side. This is all nonsense. Please fix it. And please don't type letter by letter, this is too slow. Copy paste the whole prompt immediately." (Marko, 22.10.2026)
+
+21. No phone at all, only the tablet; no bench or extra desk; the DJ beside the doorway, not centred, partly covered by the dancing crowd, looking at the camera, happy, dancing; the tablet in front of the controller. Prompts go into Gemini whole (shared in one go), never typed letter by letter.
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
