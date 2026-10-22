@@ -22,7 +22,7 @@ PLAYER_JS = (HERE / "edu_player.js").read_text()
 
 # The tag only once djmantraapp.pages.dev is registered in Amazon PartnerNet (MANTRA_MANIFEST payment-links.md:
 # a new site is registered before it carries affiliate links). Set REGISTERED = True then.
-REGISTERED = False
+REGISTERED = True
 AMAZON = "https://www.amazon.de/dp/B0DMTBMS7D" + ("?tag=markomantresh-21" if REGISTERED else "")
 # TIDAL's programme runs on Awin (TIDAL Global). Until Marko is approved there, the plain link; then his Awin link.
 TIDAL = "https://tidal.com/"
