@@ -61,4 +61,8 @@
 
 18. No Matrimandir and not its Banyan in any picture that sells: a place local to Tamil Nadu on the red desert earth (a village banyan, palmyra palms, red laterite). References: Marko's composition example and the Mix Ultra photo only.
 
+> "It's better to make it like a French colony kind of Pondicherry atmosphere. Let's do that. We are DJing in Pondicherry." (Marko, 22.10.2026)
+
+19. The scene: Pondicherry's French quarter (White Town), a colonial courtyard or street at night; replaces the jungle.
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
