@@ -13,4 +13,11 @@
 5. The page sells it as an educational app: its strength is that it trains you to hear beats and song sections; the beats and song-sections lesson (#guide on djmantra.pages.dev) is carried over to this page, and every feature is promoted.
 6. A TIDAL affiliate link ("title" as dictated = TIDAL): whoever signs up to TIDAL from the page earns Marko a commission (find TIDAL's affiliate programme; Marko registers himself).
 
+> "please in manifest it's written, but you're not doing this. Every page needs fav icon ... Also for the dj app it makes sense, so please do that now and in the future" (Marko, 22.10.2026)
+
+> "We want to affiliate only one, and that's the DJ Control Mix Ultra mobile controller for iOS and Android. That's the one. Nothing else" (Marko, 22.10.2026)
+
+7. The page's favicon is DJ Mantra's app icon.
+8. One affiliate product only: Hercules DJControl Mix Ultra Mobile Controller iOS/Android, amazon.de B0DMTBMS7D (€168.59 on 22.10.2026). Not the DJControl Mix. (TIDAL stays: it is a service, asked in point 6.)
+
 **Status:** asked; starts after TTT Mini.
