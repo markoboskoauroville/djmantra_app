@@ -57,4 +57,8 @@
 
 17. No app screenshot as a reference: a plain phone in front of the controller, facing the DJ.
 
+> "Please don't use Matrimandir. Use something local to Tamil Nadu and Red Desert. Matrimandir will don't use for selling the products. Please change." (Marko, 22.10.2026)
+
+18. No Matrimandir and not its Banyan in any picture that sells: a place local to Tamil Nadu on the red desert earth (a village banyan, palmyra palms, red laterite). References: Marko's composition example and the Mix Ultra photo only.
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
