@@ -24,4 +24,4 @@
 
 9. A Facebook post about the new app, in the style of the Shruti Box post (natural, not overhyped, English first then Croatian in one post, one screenshot, the page link), written in Facebook in his Chrome and NOT sent: he sends it.
 
-**Status:** asked; starts after TTT Mini.
+**Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.

@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>DJ Mantra · learn to DJ by ear</title>
+<meta name="description" content="DJ Mantra, the Android DJ app that trains you to hear beats, phrases and song sections. With the Hercules DJControl Mix Ultra.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Spectral:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070B1C; --bg2:#0B1026; --panel:#151C3D; --tile:#1F2850; --ink:#EEF0FF; --ink2:#9AA3C7; --ink3:#6E77A0;
+  --amber:#FFD54A; --line:rgba(255,213,74,.25); --line2:rgba(255,255,255,.08);
+  --d-low:#FF6B5E; --d-mid:#6CCB72; --d-high:#5AA2F0; --d-blue:#FFD54A;
+  --s-amb:#6b6478; --s-break:#9f7ae0; --s-bridge:#9f7ae0; --s-build:#e9c84a; --s-chorus:#ff3d7a; --s-drop:#ff3d7a;
+  --s-intro:#4fc3c7; --s-main:#ff8a2b; --s-outro:#38b6ec; --s-verse:#6CCB72; --s-pre:#e9c84a;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 Inter,system-ui,sans-serif; overflow-x:hidden}
+a{color:var(--amber)}
+.wrap{max-width:1080px; margin:0 auto; padding:0 16px}
+section{padding:64px 0}
+.eyebrow{font:500 12px "IBM Plex Mono",monospace; letter-spacing:.18em; text-transform:uppercase; color:var(--amber); margin-bottom:10px}
+h1{font:400 clamp(40px,7vw,72px)/1.05 Spectral,Georgia,serif; margin:0 0 18px}
+h2.sec{font:400 clamp(30px,4.5vw,46px)/1.15 Spectral,Georgia,serif; margin:0 0 16px}
+h2.sec em,h1 em{font-style:normal; color:var(--amber)}
+.lede{font-size:19px; color:var(--ink2); max-width:40em}
+.body{color:var(--ink2)}
+.btn{display:inline-block; font:600 16px Inter,sans-serif; text-decoration:none; color:#1A1A1A; background:var(--amber); border-radius:999px; padding:14px 26px; box-shadow:0 0 28px rgba(255,213,74,.35)}
+.btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line); box-shadow:none}
+.links{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px}
+.hero{padding:56px 0 40px; background:radial-gradient(ellipse at 70% 30%,rgba(255,213,74,.10),transparent 60%)}
+.hero .grid{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:40px; align-items:center}
+.hero figure{margin:0; text-align:center}
+.hero img{width:auto; max-width:100%; max-height:560px; border-radius:28px; border:1px solid var(--line2); box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.pill{display:inline-block; font:500 12px "IBM Plex Mono",monospace; letter-spacing:.1em; color:var(--ink2); border:1px solid var(--line2); border-radius:999px; padding:6px 12px; margin:0 6px 8px 0}
+.cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin-top:26px}
+.card{background:var(--bg2); border:1px solid var(--line2); border-radius:16px; padding:20px}
+.card h3{margin:0 0 6px; font-size:17px}
+.card p{margin:0; color:var(--ink2); font-size:15px}
+.learn{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:30px}
+.learn figure{margin:0; background:var(--bg2); border:1px solid var(--line2); border-radius:18px; padding:14px}
+.learn img{width:100%; border-radius:12px; display:block}
+.learn figcaption{font-size:14.5px; color:var(--ink2); margin-top:10px}
+.learn figcaption b{color:var(--ink); display:block; font-size:16px}
+.gear{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; margin-top:26px}
+.gear .card{padding:24px}
+.gear .card .btn{margin-top:16px}
+.note{font-size:13.5px; color:var(--ink3)}
+.get{text-align:center; background:radial-gradient(ellipse at 50% 0%,rgba(255,213,74,.12),transparent 60%)}
+footer{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px solid var(--line2)}
+.guide{background:var(--bg2)}
+.guide .ink-unit{}
+.guide .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:26px 0 22px}
+.guide .tabs button{font:500 12px/1 "IBM Plex Mono",monospace; letter-spacing:.14em; text-transform:uppercase; color:var(--ink2);
+  background:transparent; border:1px solid var(--line); border-radius:40px; padding:11px 18px; cursor:pointer}
+.guide .tabs button[aria-selected="true"]{background:var(--amber); color:#1a1206; border-color:var(--amber)}
+.guide .part[hidden]{display:none}
+.guide .units{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:8px 0 30px}
+.guide .unit{border:1px solid var(--line2); border-radius:12px; padding:14px 16px; background:rgba(255,255,255,.02)}
+.guide .unit b{display:block; font:500 12px/1.3 "IBM Plex Mono",monospace; letter-spacing:.12em; color:var(--amber); text-transform:uppercase; margin-bottom:6px}
+.guide .unit p{margin:0; font-size:14.5px; color:var(--ink2); line-height:1.55}
+.guide .cells{display:flex; gap:2px; margin:10px 0 0; flex-wrap:wrap}
+.guide .cells i{width:9px; height:14px; border-radius:2px; background:rgba(255,255,255,.12)}
+.guide .cells i.one{background:var(--amber)}
+.guide .cells i.gap{margin-right:6px}
+.guide .secs{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin:6px 0 30px}
+.guide .sc{border-radius:12px; padding:16px 18px 14px; background:rgba(255,255,255,.025); border:1px solid var(--line2); border-top:3px solid var(--c)}
+.guide .sc h3{font-family:"IBM Plex Mono",monospace; font-size:15px; font-weight:500; letter-spacing:.12em; color:var(--c); margin:0 0 8px}
+.guide .sc h3 small{font-size:11px; color:var(--ink3); letter-spacing:.1em; margin-left:8px}
+.guide .sc p{font-size:14.5px; line-height:1.6; color:var(--ink2); margin:0 0 8px}
+.guide .sc p.dj{color:var(--ink); border-top:1px solid var(--line2); padding-top:8px; margin:6px 0 0}
+.guide .sc p.dj::before{content:"DJ  "; font:500 10.5px "IBM Plex Mono",monospace; letter-spacing:.14em; color:var(--amber)}
+.guide .ex{margin:10px 0 34px; border:1px solid var(--line); border-radius:14px; padding:14px; background:rgba(11,10,18,.6)}
+.guide .ex .hd{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin:0 2px 10px}
+.guide .ex .hd b{font:500 12px "IBM Plex Mono",monospace; letter-spacing:.14em; text-transform:uppercase; color:var(--amber)}
+.guide .ex .hd span{font-size:14px; color:var(--ink2)}
+.guide .ex .hd code{margin-left:auto; font:500 12.5px "IBM Plex Mono",monospace; color:var(--ink); background:rgba(255,255,255,.06); border-radius:6px; padding:4px 8px}
+.guide .ex canvas{display:block; width:100%; height:150px; cursor:pointer; touch-action:manipulation}
+.guide .ex .lg{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
+.guide .ex .lg button{font:500 11px/1 "IBM Plex Mono",monospace; letter-spacing:.1em; color:#14121c; background:var(--c); border:0; border-radius:20px; padding:7px 11px; cursor:pointer}
+.guide .ex .lg button::before{content:"▶ "}
+.guide .ex p.note{font-size:13.5px; color:var(--ink3); margin:10px 2px 0}
+.guide .codes{font:500 14px/2 "IBM Plex Mono",monospace; color:var(--ink); margin:6px 0 26px; overflow-x:auto}
+.guide .codes div{white-space:nowrap}
+.guide .codes span{color:var(--ink3)}
+.edu{margin:6px 0 34px; border:1px solid #1F2850; border-radius:16px; padding:16px; background:#0B1026; color:#EEF0FF}
+.edu .lead{font-size:14.5px; color:#9AA3C7; margin:0 0 12px}
+.edu .lbl{display:block; font:500 9.5px "IBM Plex Mono",monospace; letter-spacing:.16em; color:#9AA3C7}
+.edu .top{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:10px}
+.edu .top b{font-family:"Spectral",Georgia,serif; font-size:26px; font-weight:400; margin-right:10px}
+.edu .top span{font-size:14px; color:#9AA3C7}
+.edu .cr{font:500 11.5px/1.5 "IBM Plex Mono",monospace; color:#9AA3C7; margin:-4px 0 10px; letter-spacing:.02em}
+.edu .top code{margin-left:auto; font:500 12.5px "IBM Plex Mono",monospace; background:#151C3D; border-radius:6px; padding:5px 9px; color:#FFD54A}
+.edu canvas{display:block; width:100%; height:170px; cursor:pointer; border-radius:10px; background:#070B1C; touch-action:manipulation}
+.edu canvas.stems{height:132px; margin-top:6px}
+.edu .now .in{display:block; margin-top:4px; font:500 10.5px "IBM Plex Mono",monospace; letter-spacing:.08em; color:#9AA3C7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.edu .now .in i{font-style:normal; color:var(--c)}
+.edu .ctl{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:12px 0}
+.edu .ctl button{font:500 13px "IBM Plex Mono",monospace; color:#EEF0FF; background:#1F2850; border:1px solid #2C3870; border-radius:10px; height:42px; min-width:52px; padding:0 14px; cursor:pointer}
+.edu .ctl button.play{background:#FFD54A; color:#1A1A1A; border-color:#FFD54A; min-width:64px; font-size:16px}
+.edu .ctl button.loop[aria-pressed="true"]{background:#FFD54A; color:#1A1A1A; border-color:#FFD54A}
+.edu .ctl .tm{margin-left:auto; font:500 14px "IBM Plex Mono",monospace; color:#9AA3C7; font-variant-numeric:tabular-nums}
+.edu .ctl .tm b{color:#EEF0FF; font-weight:500}
+.edu .now{display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:10px}
+.edu .now > div{background:#151C3D; border-radius:10px; padding:9px 12px; min-width:0}
+.edu .now b{display:block; font:500 19px "IBM Plex Mono",monospace; letter-spacing:.06em; color:var(--c,#FFD54A); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.edu .now span:not(.lbl){font:500 13px "IBM Plex Mono",monospace; color:#EEF0FF; font-variant-numeric:tabular-nums}
+.edu .now .nxt{text-align:right}
+.edu .cnt{display:flex; flex-direction:column; justify-content:center; gap:6px}
+.edu .beats,.edu .phr{display:flex; gap:4px}
+.edu .beats i{width:22px; height:22px; border-radius:5px; background:#1F2850}
+.edu .beats i.on{background:#FFD54A; box-shadow:0 0 10px rgba(255,213,74,.5)}
+.edu .beats i.on.one{background:#fff}
+.edu .phr i{width:10px; height:10px; border-radius:3px; background:#1F2850}
+.edu .phr i.done{background:#2C3870}
+.edu .phr i.on{background:#FFD54A}
+.edu .teach{margin-top:10px; background:#151C3D; border-radius:10px; padding:12px 14px; border-left:3px solid var(--c,#FFD54A)}
+.edu .teach p{margin:0; font-size:15.5px; line-height:1.6; color:#EEF0FF}
+.edu .teach .ev{margin-top:8px; font-size:14px; color:#FFD54A}
+.edu .teach .ev .lbl{display:inline; margin-right:8px}
+.edu .chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:12px}
+.edu .chips button{font:500 11px/1 "IBM Plex Mono",monospace; letter-spacing:.08em; color:#14121c; background:var(--c); border:0; border-radius:20px; padding:8px 11px; cursor:pointer; opacity:.75}
+.edu .chips button.on{opacity:1; outline:2px solid #fff; outline-offset:2px}
+
+@media (max-width:760px){
+  section{padding:46px 0}
+  .hero .grid{grid-template-columns:1fr}
+  .learn{grid-template-columns:1fr}
+  .edu{padding:10px} .edu canvas{height:130px} .edu .top code{margin-left:0}
+  .edu .now{grid-template-columns:1fr 1fr} .edu .now .cnt{grid-column:1 / -1; grid-row:2; flex-direction:row; justify-content:space-between; background:none; padding:0}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap grid">
+    <div>
+      <div class="eyebrow">DJ Mantra · for Android</div>
+      <h1>Learn to DJ <em>by ear</em></h1>
+      <p class="lede">The DJ app that trains you to hear the music: every beat, every phrase, every intro, breakdown and drop. Mix on your phone with the Hercules DJControl Mix Ultra, and understand what you hear while you play.</p>
+      <div><span class="pill">BEAT · BAR · PHRASE</span><span class="pill">SONG SECTIONS</span><span class="pill">HARMONIC KEYS</span><span class="pill">STEMS</span></div>
+      <div class="links">
+        <a class="btn" href="#get">Get DJ Mantra</a>
+        <a class="btn ghost" href="#lesson">Try the free lesson</a>
+      </div>
+    </div>
+    <figure><img src="img/screen-phrasing.jpg" alt="DJ Mantra on a phone: two songs playing, the pads lighting beat 7 of the phrase" width="720" height="1600"></figure>
+  </div>
+</header>
+
+<section id="learn">
+  <div class="wrap">
+    <div class="eyebrow">An app that teaches</div>
+    <h2 class="sec">It shows you what <em>a DJ hears</em></h2>
+    <p class="lede">A DJ mixes parts of songs, not songs. DJ Mantra counts the beats and the phrases for you, names the section you are in and the one that is coming, and lights it on the controller, until you hear it without looking.</p>
+    <div class="learn">
+      <figure><img src="img/screen-phrasing.jpg" alt="The Phrasing view" loading="lazy"><figcaption><b>Phrasing</b>The pads light beat 1 to 8 of the phrase on both decks: bring the next song in on the one.</figcaption></figure>
+      <figure><img src="img/screen-songs.jpg" alt="Two songs playing, their keys in the top bar" loading="lazy"><figcaption><b>Keys and the library</b>Each song's BPM and key; the top bar says when two keys clash, so you learn harmonic mixing as you go.</figcaption></figure>
+      <figure><img src="img/screen-mixer.jpg" alt="The mixer with stems, EQ and tempo" loading="lazy"><figcaption><b>Mixer with stems</b>Harmony, vocals and drums of each song on their own knobs, the filter, a flanger, tempo ±10 %.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="lesson" class="guide">
+  <div class="wrap">
+    <div style="max-width:44em">
+      <div class="eyebrow">The free lesson · song structure</div>
+      <h2 class="sec">How a song is <em>built</em></h2>
+      <p class="lede" style="max-width:none">A DJ doesn&#x27;t mix songs, a DJ mixes parts of songs. If you can hear where the intro starts, where the beat breaks and where it comes back, you know when to come in and when to leave. This guide shows it on two songs from my set: every part is a real waveform you can play.</p>
+    </div>
+    <h3 style="margin:30px 0 8px">First, the counting</h3>
+    <div class="units">
+      <div class="unit"><b>Beat</b><p>One beat. In house music it&#x27;s the kick drum: 120 to 125 beats a minute.</p></div>
+      <div class="unit"><b>Bar · 4 beats</b><p>Four beats. The first is the strongest, and everything important starts on it.</p></div>
+      <div class="unit"><b>Phrase · 8 bars</b><p>Eight bars, 32 beats. Producers change the song on phrase lines: every 8, 16 or 32 bars something comes in or leaves.</p><div class="cells" aria-hidden="true"><i class="one"></i><i class=""></i><i class=""></i><i class=" gap"></i><i class="one"></i><i class=""></i><i class=""></i><i class=" gap"></i><i class="one"></i><i class=""></i><i class=""></i><i class=" gap"></i><i class="one"></i><i class=""></i><i class=""></i><i class=" gap"></i><i class="one"></i><i class=""></i><i class=""></i><i class=" gap"></i><i class="one"></i><i class=""></i><i class=""></i><i class=" gap"></i><i class="one"></i><i class=""></i><i class=""></i><i class=" gap"></i><i class="one"></i><i class=""></i><i class=""></i><i class=" gap"></i></div></div>
+      <div class="unit"><b>Section · 8 / 16 / 32</b><p>One or more phrases of the same character: intro, breakdown, chorus. A section lasts 8, 16 or 32 bars, rarely anything in between.</p></div>
+    </div>
+    <p class="body" style="max-width:44em">Reading the waveform: <b style="color:var(--d-low)">red</b> is bass and kick, <b style="color:var(--d-mid)">green</b> the mids, <b style="color:var(--d-high)">blue</b> the highs. When the red disappears, the beat has stopped; when it comes back at full width, that's the drop.</p>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" aria-selected="true" data-part="gI">Instrumental music</button>
+      <button type="button" role="tab" aria-selected="false" data-part="gV">Vocal-based music</button>
+    </div>
+    <div class="edu" id="edu" aria-label="Educational player">
+      <p class="lead">The educational player: listen and watch the song change. Click a part, repeat it with LOOP, follow the bar count.</p>
+      <div class="top"><div><b id="eT">—</b><span id="eA"></span></div><code id="eC"></code></div>
+      <p class="cr" id="eCr"></p>
+      <canvas id="eWv" aria-label="Waveform: click to jump"></canvas>
+      <canvas id="eSt" class="stems" aria-label="The stems: vocals, drums, bass, others"></canvas>
+      <div class="ctl">
+        <button type="button" id="ePrev" aria-label="Previous section">◀◀</button>
+        <button type="button" id="ePlay" class="play" aria-label="Play">▶</button>
+        <button type="button" id="eNext" aria-label="Next section">▶▶</button>
+        <button type="button" id="eLoop" class="loop" aria-pressed="false">LOOP</button>
+        <span class="tm"><b id="eEl">0:00</b> / <span id="eDu">0:00</span> · <span id="eBpm"></span> BPM</span>
+      </div>
+      <div class="now">
+        <div class="cur"><span class="lbl">NOW</span><b id="eNow">—</b><span id="eBar">—</span><span class="in" id="eIn"></span></div>
+        <div class="cnt"><div class="beats" id="eBeats"><i></i><i></i><i></i><i></i></div><div class="phr" id="ePhr"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="nxt"><span class="lbl">NEXT</span><b id="eNx">—</b><span id="eNt">—</span></div>
+      </div>
+      <div class="teach"><p id="eTxt"></p><p class="ev"><span class="lbl">LISTEN</span> <span id="eEv">—</span></p></div>
+      <div class="chips" id="eChips"></div>
+    </div>
+    <div hidden id="eDict"><span data-i18n="edu.secret-id.i1">The first 16 bars are only kick and bass: a pure DJ intro. At bar 17 the hi-hats come in, but the main melody is still waiting. A 48-bar intro, 16 + 32.</span><span data-i18n="edu.secret-id.b1">Kick and bass leave in a single bar. Chords and space remain. 16 bars.</span><span data-i18n="edu.secret-id.u1">The highs climb bar by bar; in the last four bars the bass is cut, the tension before the drop. 20 bars.</span><span data-i18n="edu.secret-id.d1">Everything returns: kick, bass and the main melody, the mids 5 dB louder than in the intro. 48 bars of main.</span><span data-i18n="edu.secret-id.b2">The second breakdown, again 16 bars without the kick.</span><span data-i18n="edu.secret-id.u2">A short build-up of 8 bars: the tension peaks faster.</span><span data-i18n="edu.secret-id.d2">The second drop, 32 bars of main. This is where a DJ usually brings in the next song.</span><span data-i18n="edu.secret-id.o1">The outro is the intro in reverse: the melody leaves, kick, bass and hi-hats remain, exactly as in bars 17 to 48. 16 bars to mix out.</span><span data-i18n="edu.i-follow-rivers.v1">The song starts with the voice: the first verse, the story. There&#x27;s no DJ intro; this is the short version of the song.</span><span data-i18n="edu.i-follow-rivers.p1">The beat stops and the voice climbs towards the chorus. 8 bars.</span><span data-i18n="edu.i-follow-rivers.c1">The chorus: the song&#x27;s title, the hook. The beat comes back. 8 bars.</span><span data-i18n="edu.i-follow-rivers.n1">8 bars without the voice: the instrumental part, a pause before the second verse.</span><span data-i18n="edu.i-follow-rivers.v2">The second verse: new words on the same melody. 8 bars.</span><span data-i18n="edu.i-follow-rivers.p2">The pre-chorus, shorter this time: only 4 bars.</span><span data-i18n="edu.i-follow-rivers.c2">The chorus again: the same hook, the same 8 bars.</span><span data-i18n="edu.i-follow-rivers.br">The bridge: the beat stops, only an echo of the hook remains. Once in the song, unlike anything else.</span><span data-i18n="edu.i-follow-rivers.c3">The last chorus, twice: 16 bars. The song ends on its chorus, with no outro; for mixing, pick the extended version.</span><span data-i18n="e.kick">Only kick and bass.</span><span data-i18n="e.hats">The hi-hats come in.</span><span data-i18n="e.stop">The beat stops.</span><span data-i18n="e.rise">The tension rises.</span><span data-i18n="e.bascut">The bass is cut: the drop is coming.</span><span data-i18n="e.drop">Drop!</span><span data-i18n="e.out">The melody leaves: outro.</span><span data-i18n="e.end">The end.</span><span data-i18n="e.voice">The voice from the first bar.</span><span data-i18n="e.stopv">The beat stops, the voice stays.</span><span data-i18n="e.hook">The hook: the song&#x27;s title.</span><span data-i18n="e.novoice">The voice leaves.</span><span data-i18n="e.story">A new verse, the story goes on.</span><span data-i18n="e.echo">An echo of the hook, no beat.</span><span data-i18n="e.last">The last chorus.</span><span data-i18n="e.noout">The end, no outro.</span></div>
+    <div class="part" id="gI">
+      <p class="body" style="max-width:44em">House, organic house, techno, trance, drum and bass: music built around the instruments, not around a singer. It&#x27;s made for DJs, so its beginnings and endings are simple and easy to mix. If a voice appears, it&#x27;s usually a short sample used as an instrument. The order is almost always the same: intro, breakdown and build-up, main, breakdown and build-up again, main, outro.</p>
+      <div class="secs">
+<div class="sc" data-s="INTRO"><h3>INTRO<small>16 / 32</small></h3><p>The start of the song, made for mixing. Often just kick and percussion, then one instrument after another every 8 bars. It lasts 16 or 32 bars.</p><p>The waveform is narrow and even, red kicks in a steady row.</p><p class="dj">This is where you come in: the new song&#x27;s intro goes over the outro of the one that&#x27;s playing.</p></div>
+<div class="sc" data-s="BREAKDOWN"><h3>BREAKDOWN<small>8 / 16 / 32</small></h3><p>The beat stops. Kick and bassline drop out; pads, textures, sometimes a voice remain. Room for the dancers to breathe.</p><p>The waveform narrows suddenly and the red disappears.</p><p class="dj">Don&#x27;t leave the song in the middle of a breakdown: the floor is waiting for the drop that comes after it.</p></div>
+<div class="sc" data-s="BUILD-UP"><h3>BUILD-UP<small>4 / 8</small></h3><p>The end of the breakdown that rises: snare rolls, a rising noise sweep, a filter opening. Tension before the return.</p><p>The waveform grows to the right, bar by bar.</p><p class="dj">Don&#x27;t bring anything new in here: let the tension reach its peak.</p></div>
+<div class="sc" data-s="DROP"><h3>DROP<small>1</small></h3><p>The moment everything comes back: kick, bassline, the main melody. The first bar of the main part, the moment the dance floor waits for.</p><p>Full width and the red come back in a single bar.</p><p class="dj">Drop on the drop: bring the other song in exactly on its drop and you lift the room twice.</p></div>
+<div class="sc" data-s="MAIN"><h3>MAIN<small>16 / 32 / 64</small></h3><p>The meat of the song: everything is in, phrase after phrase, something new every 16 bars. Also called the drop or the groove.</p><p>Wide, dense, all three colours.</p><p class="dj">The safest place to mix: there&#x27;s no voice to clash with another voice.</p></div>
+<div class="sc" data-s="OUTRO"><h3>OUTRO<small>16 / 32</small></h3><p>The end of the song, the intro in reverse: instruments leave one by one until only the kick and an echo remain.</p><p>The waveform thins, the colours fade.</p><p class="dj">This is where you leave: the outro and the next song&#x27;s intro play together for 16 or 32 bars.</p></div>
+      </div>
+    </div>
+    <div class="part" id="gV" hidden>
+      <p class="body" style="max-width:44em">Pop, vocal house, soul, mantras and kirtan: music built around a singer and a story. You recognise the parts by the voice: the chorus repeats, the verse tells. Different mixing rules apply here, because two voices must never collide.</p>
+      <div class="secs">
+<div class="sc" data-s="INTRO"><h3>INTRO<small>8 / 16 / 32</small></h3><p>The start, before the first voice or with a short lead-in. Short in radio edits, 16 or 32 bars of beat in DJ versions.</p><p class="dj">Pick the DJ versions (extended mix): a two-bar radio intro can&#x27;t be mixed.</p></div>
+<div class="sc" data-s="VERSE"><h3>VERSE<small>8 / 16</small></h3><p>The verse: the singer tells the story. The words don&#x27;t repeat, but each verse has the same number of bars as the one before.</p><p class="dj">Don&#x27;t cut a verse: a sentence stopped halfway sounds like a mistake.</p></div>
+<div class="sc" data-s="PRE-CHORUS"><h3>PRE-CHORUS<small>4 / 8</small></h3><p>A short climb from the verse into the chorus: the energy gathers, the melody rises. Usually 4 or 8 bars.</p><p class="dj">The sign that the chorus is a few bars away.</p></div>
+<div class="sc" data-s="CHORUS"><h3>CHORUS<small>8 / 16</small></h3><p>The chorus, the hook: the part you remember and sing along to. It almost always carries the song&#x27;s title and repeats, the same number of bars every time.</p><p class="dj">The easiest place to mix in vocal music; the new song&#x27;s chorus sits well on the end of the old song&#x27;s chorus.</p></div>
+<div class="sc" data-s="BRIDGE"><h3>BRIDGE<small>4 / 8</small></h3><p>The bridge: once in a song, different from everything else. It connects the chorus to something else and gives a pause before the last chorus.</p><p class="dj">If it sounds like neither a verse, nor a chorus, nor the end, it&#x27;s the bridge.</p></div>
+<div class="sc" data-s="OUTRO"><h3>OUTRO<small>8 / 16 / 32</small></h3><p>The end: often a repeated chorus fading away, or a beat without the voice, left for the DJ.</p><p class="dj">Leave when the voice is done: two singers at the same time confuse the floor.</p></div>
+      </div>
+    </div>
+    <div class="gear" style="margin-top:10px">
+      <div>
+        <h3 class="sec" style="font:400 30px Spectral,Georgia,serif; margin:0 0 12px">Short codes</h3>
+        <p class="body">A whole song on one line: a letter for the part, a number for the bars. Write it on the record sleeve or into the comment field of your DJ software and you know the structure without listening.</p>
+        <div class="codes"><div><span>Instrumental ·</span> <b>I intro · B breakdown and build-up · M main (drop) · O outro</b></div><div><span>Vocal ·</span> <b>I intro · V verse · C chorus · B bridge · O outro</b></div></div>
+        <p class="body"><b>vo</b> next to a part means there's a voice in it, <b>bt</b> single beats that aren't a full bar.</p>
+      </div>
+      <div>
+        <h3 class="sec" style="font:400 30px Spectral,Georgia,serif; margin:0 0 12px">Mix points</h3>
+        <p class="body">In instrumental music almost everything can be mixed: intro over outro is the classic, main over main is safe, and a breakdown only if a drop follows it. Count phrases: the new song comes in on the first bar of a phrase, never in the middle.</p>
+        <p class="body">In vocal music, watch the voice: mix in the intro, the outro and the chorus, never in the middle of a verse. When two songs overlap, only one of them may sing.</p>
+      </div>
+    </div>
+    <p class="note" style="margin-top:18px">Following the course Instrumental Structure and Vocal-Based Music. The songs in the educational player are from my set; the beat from djay Pro&#x27;s analysis, the sections from the kick, the frequency bands and the voice separated from the song (Demucs, Whisper).</p>
+    <p class="body" style="margin-top:24px"><b style="color:var(--ink)">In the app, this is live:</b> the Phrasing view counts the bars and phrases of the song you are playing, and the controller's pads light the beat, so the lesson goes on while you mix.</p>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="eyebrow">Everything in it</div>
+    <h2 class="sec">A full DJ app <em>in your phone</em></h2>
+    <div class="cards">
+<div class="card"><h3>Phrasing view</h3><p>The pads count the phrase: beat 1 to 8 lights as the song plays, so you bring the next song in on the one. NOW and NEXT name the section you are in and the one coming.</p></div>
+<div class="card"><h3>Beat lights on the controller</h3><p>On the Hercules DJControl Mix Ultra the pads light the beats in every pad mode. SHIFT + pad 1 says “1 is here”.</p></div>
+<div class="card"><h3>Harmonic keys</h3><p>Every song&#x27;s key in Camelot notation; the top bar warns when two keys clash (10A &gt; 7B) and the Keys tab finds what fits.</p></div>
+<div class="card"><h3>Stems in the mixer</h3><p>Turn down the vocals, the drums or the harmony of a song while it plays: the classic way to mix two singers without a clash.</p></div>
+<div class="card"><h3>AutoMix, Tempo Blend, Auto Phase</h3><p>Let the app mix a playlist for you and watch how it lines up beats and phrases, then do it yourself.</p></div>
+<div class="card"><h3>Waveforms in three colours</h3><p>Red bass and drums, green mids, blue highs, as in the lesson: you see the breakdown and the drop coming.</p></div>
+<div class="card"><h3>Mixxx engine</h3><p>The open-source Mixxx 2.5.6 engine: two decks, sync, key lock, pitch, loops, hot cues, EQs, effects, BPM and key analysis.</p></div>
+<div class="card"><h3>USB sticks that keep playing</h3><p>Songs from USB drives and SD cards are copied before they play, so pulling the stick out does not stop the music.</p></div>
+<div class="card"><h3>Folders like in djay</h3><p>Add a folder and it becomes a tree of playlists that stays in the library, even with the drive unplugged.</p></div>
+<div class="card"><h3>A library for DJs</h3><p>★ ratings, every column sortable, an Export column, and lists of missing songs with links to TIDAL, Bandcamp, Beatport and Qobuz.</p></div>
+<div class="card"><h3>Video files as tracks</h3><p>MP4, MOV, MKV and more play their sound; the first picture becomes the cover.</p></div>
+<div class="card"><h3>Sound anywhere</h3><p>The phone&#x27;s speaker, USB audio or Bluetooth, following you when headphones or a speaker are connected.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="gear">
+  <div class="wrap">
+    <div class="eyebrow">What you need</div>
+    <h2 class="sec">A phone, a controller, <em>your music</em></h2>
+    <div class="gear">
+      <div class="card">
+        <h3>Hercules DJControl Mix Ultra</h3>
+        <p>The controller DJ Mantra is made for: two jog wheels, 16 pads that light the beats, mixer, filter, a battery for hours. It connects to the phone over Bluetooth by itself, or with a USB-C cable. Best of NAMM 2025.</p>
+        <a class="btn" href="https://www.amazon.de/dp/B0DMTBMS7D" target="_blank" rel="noopener sponsored">DJControl Mix Ultra on Amazon.de →</a>
+        <p class="note" style="margin:12px 0 0">About €169 on Amazon.de, October 2026.</p>
+      </div>
+      <div class="card">
+        <h3>Your music on TIDAL</h3>
+        <p>DJ Mantra plays your own files. Find the songs you are missing on TIDAL, in full quality: the library's Export lists them with a TIDAL link each.</p>
+        <a class="btn" href="https://tidal.com/" target="_blank" rel="noopener sponsored">Try TIDAL →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="get" class="get">
+  <div class="wrap">
+    <div class="eyebrow">Get DJ Mantra</div>
+    <h2 class="sec">Start <em>today</em></h2>
+    <p class="lede" style="margin:0 auto 26px">For Android phones (64-bit, Android 8 or newer). Install the app, connect the Mix Ultra, and open the Phrasing view with your first song.</p>
+    <a class="btn" href="https://github.com/markoboskoauroville/djmantra_app/releases/tag/android-latest" target="_blank" rel="noopener">Download the latest version</a>
+    <p class="note" style="margin-top:14px">Open source, built on Mixxx (GPL). Install the APK and allow installing from this source when the phone asks.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>DJ Mantra by Marko Boško, Mantra Productions · <a href="https://djmantra.pages.dev">djmantra.pages.dev</a> · <a href="https://github.com/markoboskoauroville/djmantra_app">source code</a></p>
+    <p>Built on Mixxx 2.5.6 (GPL v2 or later). “Hercules” and “DJControl” are trademarks of Guillemot Corporation; DJ Mantra is not affiliated with Hercules. As an Amazon Associate I earn from qualifying purchases; the TIDAL link may also earn a commission.</p>
+    <p>Songs in the lesson player: Secret ID · Moojo &amp; Da Capo · 2023 · Calamar Records; I Follow Rivers · Sean Finn, Play!On · 2025 · ℗ Mukoko Groove, original by Lykke Li. Played for teaching.</p>
+  </div>
+</footer>
+
+<script>
+// The lesson's tabs (instrumental | vocal) and the section colours, as on djmantra.pages.dev.
+(() => {
+  const G = document.getElementById("lesson");
+  const COL = {INTRO:"--s-intro", BREAKDOWN:"--s-break", "BUILD-UP":"--s-build", DROP:"--s-drop", MAIN:"--s-main", OUTRO:"--s-outro",
+    VERSE:"--s-verse", "PRE-CHORUS":"--s-pre", CHORUS:"--s-chorus", BRIDGE:"--s-bridge"};
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || "#888";
+  G.querySelectorAll(".sc").forEach(c => c.style.setProperty("--c", css(COL[c.dataset.s] || "--s-amb")));
+  const tabs = [...G.querySelectorAll(".tabs button")];
+  tabs.forEach(b => b.addEventListener("click", () => {
+    tabs.forEach(x => x.setAttribute("aria-selected", x === b ? "true" : "false"));
+    G.querySelectorAll(".part").forEach(p => p.hidden = p.id !== b.dataset.part);
+  }));
+})();
+// v34: THE EDUCATIONAL PLAYER (Marko, 18.10.2026: "take the songs from my set ... one instrumental song ... one vocal
+// song ... adjust the educational player so it functions as an educational player actually"). Two whole songs
+// (assets/edu/edu.json): the waveform with the sections under it, previous / next section, LOOP the section, the bar and
+// beat count inside the section, NOW and NEXT, what happens in this section of this song and what to listen for now.
+(() => {
+  const E = document.getElementById("edu"); if(!E) return;
+  const $ = id => document.getElementById(id);
+  const COL = {INTRO:"--s-intro", BREAKDOWN:"--s-break", "BUILD-UP":"--s-build", DROP:"--s-drop", MAIN:"--s-main", OUTRO:"--s-outro",
+    VERSE:"--s-verse", "PRE-CHORUS":"--s-pre", CHORUS:"--s-chorus", BRIDGE:"--s-bridge", INSTRUMENTAL:"--s-main"};
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || "#888";
+  const col = n => css(COL[n] || "--s-amb");
+  const mmss = t => Math.floor(t/60) + ":" + String(Math.floor(t%60)).padStart(2, "0");
+  const tx = k => { const el = document.querySelector('#eDict [data-i18n="' + k + '"]'); return el ? el.textContent : ""; };
+  const audio = new Audio(); audio.preload = "metadata";
+  let SONGS = [], S = null, W = null, ST = null, BT = null, DN = null, loop = false, raf = 0;
+  // v36: the stems, Ableton Live's separation: one lane each under the waveform (Marko: "four waveforms ... running
+  // together, plus a whole waveform. So the user can see how the instruments are changing through time")
+  const STEM = [["VOCALS", "--s-verse"], ["DRUMS", "--s-build"], ["BASS", "--d-low"], ["OTHERS", "--d-high"]], sc = $("eSt");
+  const RATE = 25, wc = $("eWv");
+  const below = (a, t) => { let lo = 0, hi = a.length - 1, r = -1; while(lo <= hi){ const m = (lo + hi) >> 1; if(a[m] <= t){ r = m; lo = m + 1; } else hi = m - 1; } return r; };
+  fetch("assets/edu/edu.json").then(r => r.json()).then(j => { SONGS = j.songs; load(0); });
+  function load(i){
+    if(!SONGS[i] || S === SONGS[i]) return;
+    audio.pause(); S = SONGS[i]; W = null; loop = false; pend = null; $("eLoop").setAttribute("aria-pressed", "false");
+    attach(S.src);
+    BT = Float64Array.from(S.beats, b => b[0]); DN = Float64Array.from(S.beats.filter(b => b[1] === 1), b => b[0]);
+    S.secT = S.sections.map(x => x[0]);
+    $("eT").textContent = S.title; $("eA").textContent = S.artist; $("eCr").textContent = "Credits · " + (S.credits || S.title + " · " + S.artist); $("eC").textContent = S.code; $("eBpm").textContent = S.bpm;
+    $("eDu").textContent = mmss(S.dur);
+    const ch = $("eChips"); ch.innerHTML = "";
+    S.sections.forEach(([t, k], n) => { const b = document.createElement("button"); b.type = "button"; b.style.setProperty("--c", col(k));
+      b.textContent = k + " · " + mmss(t); b.addEventListener("click", () => go(n, true)); ch.appendChild(b); });
+    fetch(S.wave).then(r => r.arrayBuffer()).then(b => { W = new Uint8Array(b); paint(); });
+    ST = null; if(S.stems) fetch(S.stems).then(r => r.arrayBuffer()).then(b => { ST = new Uint8Array(b); paint(); });
+    paint();
+  }
+  const secAt = t => Math.max(0, below(S.secT, t + 1e-3));
+  const secEnd = n => n + 1 < S.sections.length ? S.sections[n+1][0] : S.dur;
+  async function play(){ try{ await audio.play(); }catch(e){} }
+  // a jump before the song is loaded waits for it (the browser drops a currentTime set too early)
+  let pend = null;
+  const seekTo = t => { if(audio.readyState > 0) audio.currentTime = t; else pend = t; };
+  audio.addEventListener("loadedmetadata", () => { if(pend != null){ audio.currentTime = pend; pend = null; } });
+  const now = () => pend != null ? pend : (audio.currentTime || 0);
+  // HLS as the mix (10 s segments): Cloudflare Pages answers no byte ranges, so a single file could not be jumped in.
+  // hls.js where the browser needs it (the mix player's copy, loaded once), Safari's own HLS otherwise.
+  let hls = null;
+  function attach(src){
+    if(hls){ hls.destroy(); hls = null; }
+    if(audio.canPlayType("application/vnd.apple.mpegurl")){ audio.src = src; return; }
+    const go2 = () => { if(window.Hls && Hls.isSupported()){ hls = new Hls({maxBufferLength:30}); hls.loadSource(src); hls.attachMedia(audio); } else audio.src = src; };
+    if(window.Hls) go2();
+    else { const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.16/hls.min.js"; sc.onload = go2; sc.onerror = () => { audio.src = src; }; document.head.appendChild(sc); }
+  }
+  function go(n, start){ n = Math.max(0, Math.min(S.sections.length - 1, n)); loopSec = n; seekTo(S.sections[n][0] + .02); if(start && audio.paused) play(); paint(); }
+  $("ePlay").addEventListener("click", () => audio.paused ? play() : audio.pause());
+  $("ePrev").addEventListener("click", () => { const n = secAt(now()); go(now() - S.sections[n][0] > 2 ? n : n - 1); });
+  $("eNext").addEventListener("click", () => go(secAt(now()) + 1));
+  // LOOP holds the section it was pressed in (or the one chosen while it is on), and only acts when playback has just
+  // crossed that section's end: a time read during a seek must not move it
+  let loopSec = 0;
+  $("eLoop").addEventListener("click", () => { loop = !loop; loopSec = secAt(now()); $("eLoop").setAttribute("aria-pressed", loop ? "true" : "false"); });
+  sc.addEventListener("click", e => { const r = sc.getBoundingClientRect(), t = (e.clientX - r.left)/r.width*S.dur; loopSec = secAt(t); seekTo(t); paint(); });
+  wc.addEventListener("click", e => { const r = wc.getBoundingClientRect(), t = (e.clientX - r.left)/r.width*S.dur; loopSec = secAt(t); seekTo(t); paint(); });
+  audio.addEventListener("play", () => { $("ePlay").textContent = "❚❚"; $("ePlay").setAttribute("aria-label", "Pause");
+    document.dispatchEvent(new CustomEvent("mantra-play", {detail:"edu"})); tick(); });
+  audio.addEventListener("pause", () => { $("ePlay").textContent = "▶"; $("ePlay").setAttribute("aria-label", "Play"); paint(); });
+  audio.addEventListener("seeked", paint);
+  document.addEventListener("mantra-play", e => { if(e.detail !== "edu" && !audio.paused) audio.pause(); });
+  // the tabs choose the song: instrumental, vocal
+  document.querySelectorAll(".guide .tabs button").forEach(b => b.addEventListener("click", () => load(b.dataset.part === "gV" ? 1 : 0)));
+  document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setTimeout(paint, 50)));
+  function tick(){ cancelAnimationFrame(raf); const f = () => {
+      if(loop && !audio.seeking){ const e = secEnd(loopSec), t = now(); if(t >= e - .03 && t < e + 1.5) seekTo(S.sections[loopSec][0] + .02); }
+      paint(); if(!audio.paused) raf = requestAnimationFrame(f); }; raf = requestAnimationFrame(f); }
+  function fit(c){ const r = c.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2), w = Math.round(r.width*d), h = Math.round(r.height*d);
+    if(c.width !== w || c.height !== h){ c.width = w; c.height = h; } return [w, h, d]; }
+  let lastSec = -1;
+  function paint(){
+    if(!S) return;
+    const t = now(), n = secAt(t), [k, name] = [S.sections[n][3], S.sections[n][1]];
+    // the waveform, played part dimmed, the sections under it, the current one brighter
+    const [w, h, d] = fit(wc), g = wc.getContext("2d"), strip = 24*d, m = (h - strip)/2, at = x => x/S.dur*w;
+    g.clearRect(0, 0, w, h);
+    if(W){ const low = css("--d-low"), mid = css("--d-mid"), high = css("--d-high"), step = 2*d;
+      for(let x = 0; x < w; x += step){ const s = x/w*S.dur, i = Math.floor(s*RATE)*4; if(i + 2 >= W.length) break;
+        g.globalAlpha = s < t ? .55 : 1;
+        g.fillStyle = low;  let a = W[i]/255*m*.94;   g.fillRect(x, m - a, step - d*.5, a*2);
+        g.fillStyle = mid;  a = W[i+1]/255*m*.94*.75; g.fillRect(x, m - a, step - d*.5, a*2);
+        g.fillStyle = high; a = W[i+2]/255*m*.94*.5;  g.fillRect(x, m - a, step - d*.5, a*2); }
+      g.globalAlpha = 1; }
+    // bar lines every 8 bars, faint
+    g.fillStyle = "rgba(238,240,255,.10)"; for(let q = 0; q < DN.length; q += 8){ g.fillRect(at(DN[q]), 0, d, h - strip); }
+    g.font = "500 " + (11*d) + "px 'IBM Plex Mono', monospace"; g.textBaseline = "middle";
+    S.sections.forEach(([s, nm], q) => { const x0 = at(s), x1 = at(secEnd(q));
+      g.fillStyle = col(nm); g.globalAlpha = q === n ? 1 : .55; g.fillRect(x0, h - strip, Math.max(1, x1 - x0 - 2*d), strip);
+      g.globalAlpha = .6; g.fillRect(x0, 0, 1.5*d, h - strip); g.globalAlpha = 1;
+      if(x1 - x0 > g.measureText(nm).width + 10*d){ g.fillStyle = "#14121c"; g.fillText(nm, x0 + 5*d, h - strip/2); } });
+    g.fillStyle = "#fff"; g.fillRect(at(t) - d, 0, 2*d, h);
+    // the four stem lanes, mirrored, the played part dimmed, the section lines through them
+    { const [sw, sh, sd] = fit(sc), q = sc.getContext("2d"), lane = sh/4, ats = x => x/S.dur*sw;
+      q.clearRect(0, 0, sw, sh); q.font = "500 " + (9.5*sd) + "px 'IBM Plex Mono', monospace"; q.textBaseline = "top";
+      STEM.forEach(([nm, cv], k) => { const y0 = k*lane, mid = y0 + lane/2;
+        q.fillStyle = "rgba(238,240,255,.04)"; q.fillRect(0, y0 + sd, sw, lane - 2*sd);
+        if(ST){ q.fillStyle = css(cv); const step = 2*sd;
+          for(let x = 0; x < sw; x += step){ const s = x/sw*S.dur, i = Math.floor(s*RATE)*4 + k; if(i >= ST.length) break;
+            q.globalAlpha = s < t ? .5 : 1; const a = ST[i]/255*(lane/2 - 3*sd); q.fillRect(x, mid - a, step - sd*.5, Math.max(sd*.6, a*2)); }
+          q.globalAlpha = 1; }
+        const lw = q.measureText(nm).width + 8*sd; q.fillStyle = "rgba(7,11,28,.82)"; q.fillRect(2*sd, y0 + 2*sd, lw, 13*sd);
+        q.fillStyle = css(cv); q.fillText(nm, 6*sd, y0 + 4*sd); });
+      q.fillStyle = "rgba(238,240,255,.18)"; S.sections.forEach(([s0]) => q.fillRect(ats(s0), 0, sd, sh));
+      q.fillStyle = "#fff"; q.fillRect(ats(t) - sd, 0, 2*sd, sh); }
+    // which stems sound now: the average of the last half second over a fixed line
+    if(ST){ const f0 = Math.max(0, Math.floor((t - .5)*RATE)), f1 = Math.max(f0 + 1, Math.floor(t*RATE) + 1), on = [];
+      STEM.forEach(([nm, cv], k) => { let a = 0, n = 0; for(let f = f0; f < f1; f++){ const i = f*4 + k; if(i < ST.length){ a += ST[i]; n++; } }
+        if(n && a/n > 40) on.push('<i style="--c:' + css(cv) + '">' + nm + '</i>'); });
+      $("eIn").innerHTML = "IN · " + (on.length ? on.join(" · ") : "—"); }
+    // NOW, the count, NEXT
+    E.querySelector(".cur").style.setProperty("--c", col(name)); E.querySelector(".teach").style.setProperty("--c", col(name));
+    $("eNow").textContent = name;
+    const total = S.sections[n][2], bi = below(DN, t + 1e-3), b0 = below(DN, S.sections[n][0] + 1e-3), barIn = Math.max(1, bi - b0 + 1);
+    $("eBar").textContent = "BAR " + Math.min(barIn, total) + " / " + total;
+    const k2 = below(BT, t + 1e-3), beat = k2 >= 0 ? S.beats[k2][1] - 1 : -1;
+    [...$("eBeats").children].forEach((e, q) => { e.classList.toggle("on", q === beat); e.classList.toggle("one", q === 0 && beat === 0); });
+    const ph = (barIn - 1) % 8; [...$("ePhr").children].forEach((e, q) => { e.classList.toggle("on", q === ph); e.classList.toggle("done", q < ph); });
+    E.querySelector(".nxt").style.setProperty("--c", n + 1 < S.sections.length ? col(S.sections[n+1][1]) : "#9AA3C7");
+    if(n + 1 < S.sections.length){ const nt = S.sections[n+1][0], bars = below(DN, nt - .05) - bi;
+      $("eNx").textContent = loop ? "LOOP" : S.sections[n+1][1]; $("eNt").textContent = loop ? mmss(secEnd(n) - t) : (bars > 0 ? bars + (bars === 1 ? " bar" : " bars") + " · " : "") + mmss(nt - t); }
+    else { $("eNx").textContent = "END"; $("eNt").textContent = mmss(S.dur - t); }
+    $("eEl").textContent = mmss(t);
+    // the teaching: this section of this song, and the last thing that happened
+    $("eTxt").textContent = tx("edu." + S.id + "." + k);
+    const ev = S.events.filter(x => x[0] <= t + .05).pop(); $("eEv").textContent = ev ? tx(ev[1]) : "—";
+    if(n !== lastSec){ lastSec = n; [...$("eChips").children].forEach((c, q) => c.classList.toggle("on", q === n)); }
+  }
+  new ResizeObserver(paint).observe(E);
+})();
+
+</script>
+<script src="https://speechifykeys.pages.dev/speechify-keys.js" defer></script>
+</body>
+</html>

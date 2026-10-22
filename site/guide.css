@@ -1,0 +1,71 @@
+.guide .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:26px 0 22px}
+.guide .tabs button{font:500 12px/1 "IBM Plex Mono",monospace; letter-spacing:.14em; text-transform:uppercase; color:var(--ink2);
+  background:transparent; border:1px solid var(--line); border-radius:40px; padding:11px 18px; cursor:pointer}
+.guide .tabs button[aria-selected="true"]{background:var(--amber); color:#1a1206; border-color:var(--amber)}
+.guide .part[hidden]{display:none}
+.guide .units{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:8px 0 30px}
+.guide .unit{border:1px solid var(--line2); border-radius:12px; padding:14px 16px; background:rgba(255,255,255,.02)}
+.guide .unit b{display:block; font:500 12px/1.3 "IBM Plex Mono",monospace; letter-spacing:.12em; color:var(--amber); text-transform:uppercase; margin-bottom:6px}
+.guide .unit p{margin:0; font-size:14.5px; color:var(--ink2); line-height:1.55}
+.guide .cells{display:flex; gap:2px; margin:10px 0 0; flex-wrap:wrap}
+.guide .cells i{width:9px; height:14px; border-radius:2px; background:rgba(255,255,255,.12)}
+.guide .cells i.one{background:var(--amber)}
+.guide .cells i.gap{margin-right:6px}
+.guide .secs{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin:6px 0 30px}
+.guide .sc{border-radius:12px; padding:16px 18px 14px; background:rgba(255,255,255,.025); border:1px solid var(--line2); border-top:3px solid var(--c)}
+.guide .sc h3{font-family:"IBM Plex Mono",monospace; font-size:15px; font-weight:500; letter-spacing:.12em; color:var(--c); margin:0 0 8px}
+.guide .sc h3 small{font-size:11px; color:var(--ink3); letter-spacing:.1em; margin-left:8px}
+.guide .sc p{font-size:14.5px; line-height:1.6; color:var(--ink2); margin:0 0 8px}
+.guide .sc p.dj{color:var(--ink); border-top:1px solid var(--line2); padding-top:8px; margin:6px 0 0}
+.guide .sc p.dj::before{content:"DJ  "; font:500 10.5px "IBM Plex Mono",monospace; letter-spacing:.14em; color:var(--amber)}
+.guide .ex{margin:10px 0 34px; border:1px solid var(--line); border-radius:14px; padding:14px; background:rgba(11,10,18,.6)}
+.guide .ex .hd{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin:0 2px 10px}
+.guide .ex .hd b{font:500 12px "IBM Plex Mono",monospace; letter-spacing:.14em; text-transform:uppercase; color:var(--amber)}
+.guide .ex .hd span{font-size:14px; color:var(--ink2)}
+.guide .ex .hd code{margin-left:auto; font:500 12.5px "IBM Plex Mono",monospace; color:var(--ink); background:rgba(255,255,255,.06); border-radius:6px; padding:4px 8px}
+.guide .ex canvas{display:block; width:100%; height:150px; cursor:pointer; touch-action:manipulation}
+.guide .ex .lg{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
+.guide .ex .lg button{font:500 11px/1 "IBM Plex Mono",monospace; letter-spacing:.1em; color:#14121c; background:var(--c); border:0; border-radius:20px; padding:7px 11px; cursor:pointer}
+.guide .ex .lg button::before{content:"▶ "}
+.guide .ex p.note{font-size:13.5px; color:var(--ink3); margin:10px 2px 0}
+.guide .codes{font:500 14px/2 "IBM Plex Mono",monospace; color:var(--ink); margin:6px 0 26px; overflow-x:auto}
+.guide .codes div{white-space:nowrap}
+.guide .codes span{color:var(--ink3)}
+.edu{margin:6px 0 34px; border:1px solid #1F2850; border-radius:16px; padding:16px; background:#0B1026; color:#EEF0FF}
+.edu .lead{font-size:14.5px; color:#9AA3C7; margin:0 0 12px}
+.edu .lbl{display:block; font:500 9.5px "IBM Plex Mono",monospace; letter-spacing:.16em; color:#9AA3C7}
+.edu .top{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:10px}
+.edu .top b{font-family:"Spectral",Georgia,serif; font-size:26px; font-weight:400; margin-right:10px}
+.edu .top span{font-size:14px; color:#9AA3C7}
+.edu .cr{font:500 11.5px/1.5 "IBM Plex Mono",monospace; color:#9AA3C7; margin:-4px 0 10px; letter-spacing:.02em}
+.edu .top code{margin-left:auto; font:500 12.5px "IBM Plex Mono",monospace; background:#151C3D; border-radius:6px; padding:5px 9px; color:#FFD54A}
+.edu canvas{display:block; width:100%; height:170px; cursor:pointer; border-radius:10px; background:#070B1C; touch-action:manipulation}
+.edu canvas.stems{height:132px; margin-top:6px}
+.edu .now .in{display:block; margin-top:4px; font:500 10.5px "IBM Plex Mono",monospace; letter-spacing:.08em; color:#9AA3C7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.edu .now .in i{font-style:normal; color:var(--c)}
+.edu .ctl{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:12px 0}
+.edu .ctl button{font:500 13px "IBM Plex Mono",monospace; color:#EEF0FF; background:#1F2850; border:1px solid #2C3870; border-radius:10px; height:42px; min-width:52px; padding:0 14px; cursor:pointer}
+.edu .ctl button.play{background:#FFD54A; color:#1A1A1A; border-color:#FFD54A; min-width:64px; font-size:16px}
+.edu .ctl button.loop[aria-pressed="true"]{background:#FFD54A; color:#1A1A1A; border-color:#FFD54A}
+.edu .ctl .tm{margin-left:auto; font:500 14px "IBM Plex Mono",monospace; color:#9AA3C7; font-variant-numeric:tabular-nums}
+.edu .ctl .tm b{color:#EEF0FF; font-weight:500}
+.edu .now{display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:10px}
+.edu .now > div{background:#151C3D; border-radius:10px; padding:9px 12px; min-width:0}
+.edu .now b{display:block; font:500 19px "IBM Plex Mono",monospace; letter-spacing:.06em; color:var(--c,#FFD54A); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.edu .now span:not(.lbl){font:500 13px "IBM Plex Mono",monospace; color:#EEF0FF; font-variant-numeric:tabular-nums}
+.edu .now .nxt{text-align:right}
+.edu .cnt{display:flex; flex-direction:column; justify-content:center; gap:6px}
+.edu .beats,.edu .phr{display:flex; gap:4px}
+.edu .beats i{width:22px; height:22px; border-radius:5px; background:#1F2850}
+.edu .beats i.on{background:#FFD54A; box-shadow:0 0 10px rgba(255,213,74,.5)}
+.edu .beats i.on.one{background:#fff}
+.edu .phr i{width:10px; height:10px; border-radius:3px; background:#1F2850}
+.edu .phr i.done{background:#2C3870}
+.edu .phr i.on{background:#FFD54A}
+.edu .teach{margin-top:10px; background:#151C3D; border-radius:10px; padding:12px 14px; border-left:3px solid var(--c,#FFD54A)}
+.edu .teach p{margin:0; font-size:15.5px; line-height:1.6; color:#EEF0FF}
+.edu .teach .ev{margin-top:8px; font-size:14px; color:#FFD54A}
+.edu .teach .ev .lbl{display:inline; margin-right:8px}
+.edu .chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:12px}
+.edu .chips button{font:500 11px/1 "IBM Plex Mono",monospace; letter-spacing:.08em; color:#14121c; background:var(--c); border:0; border-radius:20px; padding:8px 11px; cursor:pointer; opacity:.75}
+.edu .chips button.on{opacity:1; outline:2px solid #fff; outline-offset:2px}
