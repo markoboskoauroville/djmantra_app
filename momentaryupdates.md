@@ -65,4 +65,8 @@
 
 19. The scene: Pondicherry's French quarter (White Town), a colonial courtyard or street at night; replaces the jungle.
 
+> "Don't use phone, use tablet. Please see how DJs are DJing with tablet. So you have stand for tablet and the controller under it. Phone is too small, you cannot see it in the distance." (Marko, 22.10.2026)
+
+20. A tablet on a stand with the controller under it, as DJs play with a tablet; no phone in the picture.
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
