@@ -89,5 +89,7 @@
 
 24. Guided step by step: Marko's Awin publisher account, TIDAL Global joined; then his Awin link replaces the plain TIDAL link on the page.
 
-**Status:** guiding.
+> "They have received my application, see this, and queue email checking for the next run." (Marko, 22.10.2026)
+
+**Status:** 22.10.2026: Marko's Awin publisher application sent (individual, Croatia; Editorial Content primary + Content Creators; promotional space djmantraapp.pages.dev with the "Awin" meta in its source; sectors Entertainment Downloads, Digital TV & VOD, Software Downloads, Electronic Accessories, Electronic Superstore, Music & DVD). Awin: "Application Received". **Next session:** check his Gmail (marko.bosko@auroville.community) for Awin's answer; if approved, guide Advertisers → Join Programmes → TIDAL (Global); after TIDAL approves, Toolbox → Link Builder → his link replaces TIDAL = "https://tidal.com/" in site/build.py.
 
