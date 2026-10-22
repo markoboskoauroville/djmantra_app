@@ -73,4 +73,8 @@
 
 21. No phone at all, only the tablet; no bench or extra desk; the DJ beside the doorway, not centred, partly covered by the dancing crowd, looking at the camera, happy, dancing; the tablet in front of the controller. Prompts go into Gemini whole (shared in one go), never typed letter by letter.
 
+> "Image is good, go for it. But only crowd is not good. Make international crowd, not only Indians. Auroville is international crowd. Make all races, everybody, the UNICEF." (Marko, 22.10.2026)
+
+22. Same picture, the crowd international: every race and nation, as Auroville is.
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
