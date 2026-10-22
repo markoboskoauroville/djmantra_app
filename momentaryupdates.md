@@ -43,4 +43,8 @@
 
 14. The hero composed like his example, set in the jungle of Auroville; the white Mix Ultra and the phone with DJ Mantra on the DJ's table.
 
+> "Almost there, but not quite. Put the DJ under the banyan tree. No fire, but fire lighting. We need to see fire. We don't see fire in the frame, but we see the fire is lighting the people. It's outside of the frame. And the phone is turned, uh, it's turned opposite way. DJ don't see it, man. And also you need to make this controller a bit smaller. It's too big." (Marko, 22.10.2026)
+
+15. The DJ under the banyan tree; the fire outside the frame, only its light on the people; the phone's screen facing the DJ; the controller smaller, at its real size.
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
