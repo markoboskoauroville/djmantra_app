@@ -35,4 +35,8 @@
 
 12. The DJ in the centre of the picture, in view, realistic; Marko sends example images first (waiting).
 
+> "It's not important to see the products completely. You can just maybe put the product as infographics and make image like this I'm going to send" (Marko, 22.10.2026)
+
+13. The hero need not show the whole controller; the product can appear as an infographic, the picture made like Marko's examples (waiting for them).
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
