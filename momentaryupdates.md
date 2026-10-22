@@ -78,3 +78,10 @@
 22. Same picture, the crowd international: every race and nation, as Auroville is.
 
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
+
+> "I found it. It's added. What else is pending?" (Marko, 22.10.2026, after adding djmantraapp.pages.dev in Amazon PartnerNet)
+
+23. The site is registered in PartnerNet: the Mix Ultra link carries the tag markomantresh-21.
+
+**Status:** done 22.10.2026 (REGISTERED = True in site/build.py, deployed, checked live).
+
