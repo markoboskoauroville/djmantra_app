@@ -8,4 +8,9 @@
 3. Screenshots of the app; anything missing is taken on the Pixel.
 4. Hero and lifestyle images made in Gemini on the Pixel 7 and downloaded from the phone, not made on the Mac.
 
+> "for DJ app, its strong side is that it trains you to understand beats and song sections. This you need to get this lesson about beats and song sections for my DJ Mantra web page and transfer it to this page to sell this application. Understand so please make this so it's more like educational app and you know all its features are promoted. Can we get affiliate links also to get people on title? I want that. So whoever registered to my website on title, I get something from them" (Marko, 22.10.2026)
+
+5. The page sells it as an educational app: its strength is that it trains you to hear beats and song sections; the beats and song-sections lesson (#guide on djmantra.pages.dev) is carried over to this page, and every feature is promoted.
+6. A TIDAL affiliate link ("title" as dictated = TIDAL): whoever signs up to TIDAL from the page earns Marko a commission (find TIDAL's affiliate programme; Marko registers himself).
+
 **Status:** asked; starts after TTT Mini.
