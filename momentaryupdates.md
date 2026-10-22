@@ -20,4 +20,8 @@
 7. The page's favicon is DJ Mantra's app icon.
 8. One affiliate product only: Hercules DJControl Mix Ultra Mobile Controller iOS/Android, amazon.de B0DMTBMS7D (€168.59 on 22.10.2026). Not the DJControl Mix. (TIDAL stays: it is a service, asked in point 6.)
 
+> "which means we need to also inform my friends I have a new app. So the same style as the old post, we create a new post. You're going to open Facebook in my browser and right post. I'm just going to send it exactly the same style as last one" (Marko, 22.10.2026)
+
+9. A Facebook post about the new app, in the style of the Shruti Box post (natural, not overhyped, English first then Croatian in one post, one screenshot, the page link), written in Facebook in his Chrome and NOT sent: he sends it.
+
 **Status:** asked; starts after TTT Mini.
