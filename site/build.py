@@ -85,6 +85,9 @@ FEATURES = [
 ]
 features_html = "\n".join(f'<div class="card"><h3>{html.escape(h)}</h3><p>{html.escape(p)}</p></div>' for h, p in FEATURES)
 
+BOWL = (HERE.parent.parent / ".." / "MANTRA_MANIFEST").resolve()
+BOWL = (Path.home() / "Developer/MANTRA_MANIFEST/kits/donation-bowl/donation-bowl.html").read_text()
+
 PAGE = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -117,10 +120,11 @@ h2.sec em,h1 em{{font-style:normal; color:var(--amber)}}
 .btn{{display:inline-block; font:600 16px Inter,sans-serif; text-decoration:none; color:#1A1A1A; background:var(--amber); border-radius:999px; padding:14px 26px; box-shadow:0 0 28px rgba(255,213,74,.35)}}
 .btn.ghost{{background:transparent; color:var(--ink); border:1px solid var(--line); box-shadow:none}}
 .links{{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px}}
-.hero{{padding:56px 0 40px; background:radial-gradient(ellipse at 70% 30%,rgba(255,213,74,.10),transparent 60%)}}
-.hero .grid{{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:40px; align-items:center}}
-.hero figure{{margin:0; text-align:center}}
-.hero img{{width:auto; max-width:100%; max-height:560px; border-radius:28px; border:1px solid var(--line2); box-shadow:0 30px 80px rgba(0,0,0,.6)}}
+.hero{{padding:0 0 40px}}
+.hero .shot{{display:block; width:100%; max-height:82vh; object-fit:cover; object-position:center 60%; margin:0 0 36px;
+  -webkit-mask-image:linear-gradient(180deg,#000 82%,transparent); mask-image:linear-gradient(180deg,#000 82%,transparent)}}
+.hero .grid{{display:block}}
+.hero .grid > div{{max-width:640px}}
 .pill{{display:inline-block; font:500 12px "IBM Plex Mono",monospace; letter-spacing:.1em; color:var(--ink2); border:1px solid var(--line2); border-radius:999px; padding:6px 12px; margin:0 6px 8px 0}}
 .cards{{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin-top:26px}}
 .card{{background:var(--bg2); border:1px solid var(--line2); border-radius:16px; padding:20px}}
@@ -142,7 +146,6 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
 {GUIDE_CSS}
 @media (max-width:760px){{
   section{{padding:46px 0}}
-  .hero .grid{{grid-template-columns:1fr}}
   .learn{{grid-template-columns:1fr}}
   .edu{{padding:10px}} .edu canvas{{height:130px}} .edu .top code{{margin-left:0}}
   .edu .now{{grid-template-columns:1fr 1fr}} .edu .now .cnt{{grid-column:1 / -1; grid-row:2; flex-direction:row; justify-content:space-between; background:none; padding:0}}
@@ -152,9 +155,10 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
 <body>
 
 <header class="hero">
+  <img class="shot" src="img/hero.jpg" alt="A night party in a Pondicherry courtyard: an international crowd dances, the DJ plays DJ Mantra on a tablet over the white Hercules DJControl Mix Ultra" width="1376" height="768">
   <div class="wrap grid">
     <div>
-      <div class="eyebrow">DJ Mantra · for Android</div>
+      <div class="eyebrow">DJ Mantra · from Auroville and Pondicherry</div>
       <h1>Learn to DJ <em>by ear</em></h1>
       <p class="lede">The DJ app that trains you to hear the music: every beat, every phrase, every intro, breakdown and drop. Mix on your phone with the Hercules DJControl Mix Ultra, and understand what you hear while you play.</p>
       <div><span class="pill">BEAT · BAR · PHRASE</span><span class="pill">SONG SECTIONS</span><span class="pill">HARMONIC KEYS</span><span class="pill">STEMS</span></div>
@@ -163,7 +167,6 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
         <a class="btn ghost" href="#lesson">Try the free lesson</a>
       </div>
     </div>
-    <figure><img src="img/screen-phrasing.jpg" alt="DJ Mantra on a phone: two songs playing, the pads lighting beat 7 of the phrase" width="720" height="1600"></figure>
   </div>
 </header>
 
@@ -287,9 +290,11 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
     <h2 class="sec">Start <em>today</em></h2>
     <p class="lede" style="margin:0 auto 26px">For Android phones (64-bit, Android 8 or newer). Install the app, connect the Mix Ultra, and open the Phrasing view with your first song.</p>
     <a class="btn" href="{DOWNLOAD}" target="_blank" rel="noopener">Download the latest version</a>
-    <p class="note" style="margin-top:14px">Open source, built on Mixxx (GPL). Install the APK and allow installing from this source when the phone asks.</p>
+    <p class="note" style="margin-top:14px">Free to download, open source, built on Mixxx (GPL). Install the APK and allow installing from this source when the phone asks. If it helps you learn, pay what you want below.</p>
   </div>
 </section>
+
+{BOWL}
 
 <footer>
   <div class="wrap">
