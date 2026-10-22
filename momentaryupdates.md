@@ -98,4 +98,4 @@
 
 25. Awin approved (email "Congratulations - Your application to join Awin has now been approved", marko.bosko@auroville.community): join TIDAL (Global), then his Awin link replaces the plain TIDAL link.
 
-**Status:** Awin approval found 22.10.2026; waiting for Marko to sign in to Awin in Chrome.
+**Status:** 22.10.2026: Marko signed in (Awin publisher 3131811). **TIDAL is not in Awin's directory** for his account: searched "TIDAL" with Croatia, then Europe + North America, and "music" (748 programmes): no TIDAL. Aggregators now list TIDAL on **Sovrn Commerce (VigLink)**, tidal.com "Program Approval: Open" (viglink.com/merchants/140791), an older FlexOffers "TIDAL US/CA". Waiting for Marko: sign up to Sovrn Commerce, or keep the plain link.
