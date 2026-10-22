@@ -39,4 +39,8 @@
 
 13. The hero need not show the whole controller; the product can appear as an infographic, the picture made like Marko's examples (waiting for them).
 
+> "this kind of compositions, but in the jungles of auroville" (Marko, 22.10.2026, with an example: a DJ in white cotton in the centre, facing the camera behind a white table with a laptop, a dancing crowd with raised arms on both sides, candles, warm light from a tall window behind him)
+
+14. The hero composed like his example, set in the jungle of Auroville; the white Mix Ultra and the phone with DJ Mantra on the DJ's table.
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
