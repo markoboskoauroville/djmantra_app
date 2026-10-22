@@ -31,4 +31,8 @@
 10. Every picture shows exactly the white DJControl Mix Ultra, made with its Amazon product photo as a reference (and the app screenshot for the phone).
 11. The scene: the jungles of Auroville, a jungle tribe gathering; a better composition.
 
+> "The DJ is unrealistic. Why he is hiding from the view? Please make him center. I give you some examples of the images. Wait." (Marko, 22.10.2026)
+
+12. The DJ in the centre of the picture, in view, realistic; Marko sends example images first (waiting).
+
 **Status:** first version live 22.10.2026 at https://djmantraapp.pages.dev (site/build.py → site/public): hero, "It shows you what a DJ hears" (Phrasing, keys, stems, real phone screenshots from round 42), the free lesson carried over word for word with the two-song educational player, 12 features, the Mix Ultra (the only product; Amazon tag waits for the site's PartnerNet registration), TIDAL (plain link until Marko joins TIDAL's programme on Awin), Download the latest version, favicon = app icon. Waiting: Gemini hero and lifestyle images from the Pixel, fresh V92 screenshots, the price / how it is sold, the Facebook post.
