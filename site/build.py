@@ -290,7 +290,7 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
     <div class="eyebrow">Get DJ Mantra</div>
     <h2 class="sec">Start <em>today</em></h2>
     <p class="lede" style="margin:0 auto 26px">For Android phones (64-bit, Android 8 or newer). Install the app, connect the Mix Ultra, and open the Phrasing view with your first song.</p>
-    <a class="btn" href="{DOWNLOAD}" target="_blank" rel="noopener">Download the latest version</a>
+    <a class="btn" href="{DOWNLOAD}" target="_blank" rel="noopener" data-dl-app="djmantra">Download the latest version</a>
     <p class="note" style="margin-top:14px">Free to download, open source, built on Mixxx (GPL). Install the APK and allow installing from this source when the phone asks. If it helps you learn, pay what you want below.</p>
   </div>
 </section>
@@ -322,6 +322,7 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
 {PLAYER_JS}
 </script>
 <script src="https://speechifykeys.pages.dev/speechify-keys.js" defer></script>
+<script src="https://mantra-downloads.marko-bosko-925.workers.dev/counter.js" defer></script>
 </body>
 </html>
 """
