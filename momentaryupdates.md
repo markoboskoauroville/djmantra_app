@@ -108,3 +108,11 @@
 
 **Status:** done 1.11.2026 (site/build.py): banner = img/hero.jpg (the courtyard party) with the icon and the line on it, the introduction with Download the latest version, the technical part (what a DJ hears, the lesson, features, the gear, get), the bowl. The lifestyle picture is still needed (a placeholder comment marks its place): a person learning to DJ with DJ Mantra, to be made in Gemini.
 **Status, 1.11.2026 (later):** the lifestyle picture is in (made in Gemini, lifestyle.jpg); the page order is complete.
+
+## 1.11.2026: the download button gives each new version by itself
+
+> "yes, fix download links so every website gets each new version by itself" (Marko, 1.11.2026)
+
+1. MANTRA_MANIFEST modules/download-always-latest.md: the release run also uploads the phone APK under a fixed name (`DJMantra.apk`, `DJMantra-emulator.apk`) in android-latest; the page's button links `releases/download/android-latest/DJMantra.apk` directly, never a version.
+
+**Status:** in progress 1.11.2026.
