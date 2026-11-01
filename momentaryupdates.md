@@ -116,3 +116,11 @@
 1. MANTRA_MANIFEST modules/download-always-latest.md: the release run also uploads the phone APK under a fixed name (`DJMantra.apk`, `DJMantra-emulator.apk`) in android-latest; the page's button links `releases/download/android-latest/DJMantra.apk` directly, never a version.
 
 **Status, 1.11.2026:** the release step (android.yml on ccr-eb7d1019-d3kubd, the branch that publishes android-latest, commit 4673e8b) copies the phone APK to `DJMantra.apk` and the emulator APK to `DJMantra-emulator.apk`; the V92 release has both now (uploaded by hand once, 200, 55463144 bytes). site/build.py links `releases/download/android-latest/DJMantra.apk`; the page shows no version number. **Not yet live:** the Cloudflare deploy of site/public (wrangler, project djmantraapp) is still to be run.
+
+## 1.11.2026: My studio setup, a link above the bowl
+
+> "Just above the Tibetan bowl for donation, you can just make one link, and then it will open the page with all lifestyle images and images of these products which I'm using in my development studio ... For this link, you can say "My studio setup." ... It is opening a new page, which is going to call studio setup mantra.pages.dev" (Marko, 1.11.2026)
+
+1. One centred link "My studio setup" right above the donation bowl, opening https://studiosetupmantra.pages.dev in a new tab, with the line "The gear these apps are made with · affiliate links on Amazon.de".
+
+**Status:** committed 1.11.2026, NOT pushed or deployed: waiting until Marko registers studiosetupmantra.pages.dev in Amazon PartnerNet and the studio page is live.
