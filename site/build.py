@@ -26,7 +26,7 @@ REGISTERED = True
 AMAZON = "https://www.amazon.de/dp/B0DMTBMS7D" + ("?tag=markomantresh-21" if REGISTERED else "")
 # TIDAL's programme runs on Awin (TIDAL Global). Until Marko is approved there, the plain link; then his Awin link.
 TIDAL = "https://tidal.com/"
-DOWNLOAD = "https://github.com/markoboskoauroville/djmantra_app/releases/tag/android-latest"
+DOWNLOAD = "https://github.com/markoboskoauroville/djmantra_app/releases/download/android-latest/DJMantra.apk"
 REVOLUT = "https://revolut.me/mbosko0612"
 
 

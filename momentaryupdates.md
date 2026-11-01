@@ -115,4 +115,4 @@
 
 1. MANTRA_MANIFEST modules/download-always-latest.md: the release run also uploads the phone APK under a fixed name (`DJMantra.apk`, `DJMantra-emulator.apk`) in android-latest; the page's button links `releases/download/android-latest/DJMantra.apk` directly, never a version.
 
-**Status:** in progress 1.11.2026.
+**Status, 1.11.2026:** the release step (android.yml on ccr-eb7d1019-d3kubd, the branch that publishes android-latest, commit 4673e8b) copies the phone APK to `DJMantra.apk` and the emulator APK to `DJMantra-emulator.apk`; the V92 release has both now (uploaded by hand once, 200, 55463144 bytes). site/build.py links `releases/download/android-latest/DJMantra.apk`; the page shows no version number. **Not yet live:** the Cloudflare deploy of site/public (wrangler, project djmantraapp) is still to be run.
