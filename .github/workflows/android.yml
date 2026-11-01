@@ -345,6 +345,11 @@ jobs:
           SHORT=${GITHUB_SHA::7}
           mv out/djmantra-arm64-v8a.apk "out/DJMantra-${VERSION}-${SHORT}-phone-arm64.apk"
           mv out/djmantra-x86_64.apk "out/DJMantra-${VERSION}-${SHORT}-emulator-x86_64.apk"
+          # the same files under fixed names: the web page's button links
+          # releases/download/android-latest/DJMantra.apk and never changes
+          # (MANTRA_MANIFEST modules/download-always-latest.md, 1.11.2026)
+          cp "out/DJMantra-${VERSION}-${SHORT}-phone-arm64.apk" out/DJMantra.apk
+          cp "out/DJMantra-${VERSION}-${SHORT}-emulator-x86_64.apk" out/DJMantra-emulator.apk
           ls -l out
           gh release delete android-latest --cleanup-tag --yes || true
           gh release create android-latest out/*.apk \
@@ -354,6 +359,7 @@ jobs:
 
           - Phones (Pixel 7 and other 64-bit ARM phones): **DJMantra-${VERSION}-${SHORT}-phone-arm64.apk**
           - Android emulator: DJMantra-${VERSION}-${SHORT}-emulator-x86_64.apk
+          - The same two under fixed names, for links that never change: DJMantra.apk (phone), DJMantra-emulator.apk
 
           Install: open the file on the phone and allow installing from this source, or \`adb install -r <file>\`. Signed with the public test key, so it updates in place over earlier test builds.
 

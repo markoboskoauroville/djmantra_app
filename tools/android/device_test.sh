@@ -38,7 +38,7 @@ cd "$ROOT"
 
 if [ -z "$APK_DIR" ]; then
     APK_DIR="$(mktemp -d)"
-    gh release download android-latest -R "$REPO" -p '*.apk' -D "$APK_DIR" ||
+    gh release download android-latest -R "$REPO" -p 'DJMantra-*-*.apk' -D "$APK_DIR" ||
         { echo "Could not download the android-latest release" >&2; exit 1; }
 fi
 ls "$APK_DIR"/*.apk > /dev/null 2>&1 || { echo "No APK in $APK_DIR" >&2; exit 1; }
