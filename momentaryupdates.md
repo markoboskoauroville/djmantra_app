@@ -99,3 +99,11 @@
 25. Awin approved (email "Congratulations - Your application to join Awin has now been approved", marko.bosko@auroville.community): join TIDAL (Global), then his Awin link replaces the plain TIDAL link.
 
 **Status:** 22.10.2026: Marko signed in (Awin publisher 3131811). **TIDAL is not in Awin's directory** for his account: searched "TIDAL" with Croatia, then Europe + North America, and "music" (748 programmes): no TIDAL. Aggregators now list TIDAL on **Sovrn Commerce (VigLink)**, tidal.com "Program Approval: Open" (viglink.com/merchants/140791), an older FlexOffers "TIDAL US/CA". Waiting for Marko: sign up to Sovrn Commerce, or keep the plain link.
+
+## 1.11.2026: the page order (banner, introduction, lifestyle, technical, donation)
+
+> "the page is perfect. Let's do it all pages" (Marko, 1.11.2026, about mantramiditools.pages.dev)
+
+1. Every public app page in the order of MANTRA_MANIFEST modules/app-page-order.md: the banner (the app at work, name and one line on it), a short introduction with the download button and the version line, the lifestyle picture, the technical part, the donation bowl.
+
+**Status:** done 1.11.2026 (site/build.py): banner = img/hero.jpg (the courtyard party) with the icon and the line on it, the introduction with Download the latest version, the technical part (what a DJ hears, the lesson, features, the gear, get), the bowl. The lifestyle picture is still needed (a placeholder comment marks its place): a person learning to DJ with DJ Mantra, to be made in Gemini.

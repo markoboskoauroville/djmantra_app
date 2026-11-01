@@ -121,11 +121,17 @@ h2.sec em,h1 em{{font-style:normal; color:var(--amber)}}
 .btn{{display:inline-block; font:600 16px Inter,sans-serif; text-decoration:none; color:#1A1A1A; background:var(--amber); border-radius:999px; padding:14px 26px; box-shadow:0 0 28px rgba(255,213,74,.35)}}
 .btn.ghost{{background:transparent; color:var(--ink); border:1px solid var(--line); box-shadow:none}}
 .links{{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px}}
-.hero{{padding:0 0 40px}}
-.hero .shot{{display:block; width:100%; max-height:82vh; object-fit:cover; object-position:center 60%; margin:0 0 36px;
-  -webkit-mask-image:linear-gradient(180deg,#000 82%,transparent); mask-image:linear-gradient(180deg,#000 82%,transparent)}}
-.hero .grid{{display:block}}
-.hero .grid > div{{max-width:640px}}
+/* the page order (MANTRA_MANIFEST app-page-order.md): banner, introduction, lifestyle, technical, donation */
+.pagetop{{padding:24px 0 8px}}
+.banner{{position:relative; border-radius:18px; overflow:hidden; margin:0 0 28px; background:#000}}
+.banner > img{{display:block; width:100%; height:auto; aspect-ratio:1376 / 768; object-fit:cover}}
+.banner .over{{position:absolute; left:0; right:0; bottom:0; padding:60px 26px 22px;
+  background:linear-gradient(transparent, rgba(0,0,0,.82)); display:flex; gap:18px; align-items:center}}
+.banner .over img{{width:64px; height:64px; flex:none; border-radius:14px}}
+.banner h1{{margin:0 0 4px; font-size:clamp(34px,5.5vw,56px)}}
+.banner .by{{color:var(--ink2); font-size:16px}}
+.life{{border-radius:18px; overflow:hidden; margin:8px 0 0}}
+.life img{{display:block; width:100%; height:auto}}
 .pill{{display:inline-block; font:500 12px "IBM Plex Mono",monospace; letter-spacing:.1em; color:var(--ink2); border:1px solid var(--line2); border-radius:999px; padding:6px 12px; margin:0 6px 8px 0}}
 .cards{{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin-top:26px}}
 .card{{background:var(--bg2); border:1px solid var(--line2); border-radius:16px; padding:20px}}
@@ -147,6 +153,7 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
 {GUIDE_CSS}
 @media (max-width:760px){{
   section{{padding:46px 0}}
+  .banner .over{{position:static; background:var(--bg2); padding:16px}}
   .learn{{grid-template-columns:1fr}}
   .edu{{padding:10px}} .edu canvas{{height:130px}} .edu .top code{{margin-left:0}}
   .edu .now{{grid-template-columns:1fr 1fr}} .edu .now .cnt{{grid-column:1 / -1; grid-row:2; flex-direction:row; justify-content:space-between; background:none; padding:0}}
@@ -155,21 +162,35 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
 </head>
 <body>
 
-<header class="hero">
-  <img class="shot" src="img/hero.jpg" alt="A night party in a Pondicherry courtyard: an international crowd dances, the DJ plays DJ Mantra on a tablet over the white Hercules DJControl Mix Ultra" width="1376" height="768">
-  <div class="wrap grid">
-    <div>
-      <div class="eyebrow">DJ Mantra · from Auroville and Pondicherry</div>
-      <h1>Learn to DJ <em>by ear</em></h1>
-      <p class="lede">The DJ app that trains you to hear the music: every beat, every phrase, every intro, breakdown and drop. Mix on your phone with the Hercules DJControl Mix Ultra, and understand what you hear while you play.</p>
-      <div><span class="pill">BEAT · BAR · PHRASE</span><span class="pill">SONG SECTIONS</span><span class="pill">HARMONIC KEYS</span><span class="pill">STEMS</span></div>
-      <div class="links">
-        <a class="btn" href="#get">Get DJ Mantra</a>
-        <a class="btn ghost" href="#lesson">Try the free lesson</a>
+<main class="pagetop">
+  <div class="wrap">
+  <!-- 1. the banner: the app at work -->
+  <div class="banner">
+    <img src="img/hero.jpg" alt="A night party in a Pondicherry courtyard: an international crowd dances, the DJ plays DJ Mantra on a tablet over the white Hercules DJControl Mix Ultra" width="1376" height="768">
+    <div class="over">
+      <img src="apple-touch-icon.png" alt="">
+      <div>
+        <h1>Learn to DJ <em>by ear</em></h1>
+        <div class="by">DJ Mantra · Android · from Auroville and Pondicherry</div>
       </div>
     </div>
   </div>
-</header>
+
+  <!-- 2. the introduction -->
+  <p class="lede">The DJ app that trains you to hear the music: every beat, every phrase, every intro, breakdown and drop. Mix on your phone with the Hercules DJControl Mix Ultra, and understand what you hear while you play. A DJ mixes parts of songs, not songs: DJ Mantra counts the beats and the phrases for you and names the section you are in and the one that is coming.</p>
+  <div><span class="pill">BEAT · BAR · PHRASE</span><span class="pill">SONG SECTIONS</span><span class="pill">HARMONIC KEYS</span><span class="pill">STEMS</span></div>
+  <div class="links">
+    <a class="btn" href="{DOWNLOAD}" target="_blank" rel="noopener" data-dl-app="djmantra">Download the latest version</a>
+    <a class="btn ghost" href="#lesson">Try the free lesson</a>
+  </div>
+  <p class="note" style="margin-top:14px">The latest version · Android 8 or newer, 64-bit · free and open source (GPL)</p>
+
+  <!-- 3. the lifestyle picture -->
+  <!-- LIFESTYLE PICTURE NEEDED: a person learning to DJ with DJ Mantra in real life (see momentaryupdates.md, 1.11.2026) -->
+  </div>
+</main>
+
+<!-- 4. the technical part -->
 
 <section id="learn">
   <div class="wrap">
@@ -295,6 +316,7 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
   </div>
 </section>
 
+<!-- 5. the donation bowl -->
 {BOWL}
 
 <footer>
