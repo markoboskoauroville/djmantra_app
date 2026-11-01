@@ -186,7 +186,7 @@ footer{{padding:40px 0 60px; color:var(--ink3); font-size:13.5px; border-top:1px
   <p class="note" style="margin-top:14px">The latest version · Android 8 or newer, 64-bit · free and open source (GPL)</p>
 
   <!-- 3. the lifestyle picture -->
-  <!-- LIFESTYLE PICTURE NEEDED: a person learning to DJ with DJ Mantra in real life (see momentaryupdates.md, 1.11.2026) -->
+  <div class="life" style="margin-top:28px"><img src="img/lifestyle.jpg" alt="A young woman at home in the evening under fairy lights, headphones on one ear, her hand on the white two-deck DJ controller, DJ Mantra on a tablet on a stand beside it" width="1024" height="765" loading="lazy"></div>
   </div>
 </main>
 
